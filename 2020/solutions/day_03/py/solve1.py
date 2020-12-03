@@ -42,9 +42,9 @@ def main():
     lastRow = len(grid)
     lastColumn = len(grid[0])
     currentPosition = (0, 0)
-    step = (2, 1)
+    step = (1, 3)
     treeCount = 0
-    while currentPosition[0] <= lastRow:
+    while currentPosition[0] < lastRow:
         if grid[currentPosition[0]][currentPosition[1] % lastColumn]:
             treeCount = treeCount + 1
         currentPosition = getNextPosition(currentPosition, step)
