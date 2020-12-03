@@ -13,8 +13,7 @@ def calculateTrees(grid: List[List[int]], step: Tuple[int,int]) -> int:
     currentPosition = (0, 0)
     treeCount = 0
     while currentPosition[0] < lastRow:
-        if grid[currentPosition[0]][currentPosition[1] % lastColumn]:
-            treeCount = treeCount + 1
+        treeCount = treeCount + grid[currentPosition[0]][currentPosition[1] % lastColumn]
         currentPosition = getNextPosition(currentPosition, step)
     return treeCount
 
