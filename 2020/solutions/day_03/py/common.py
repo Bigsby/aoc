@@ -1,7 +1,14 @@
 import sys, os
 from typing import List, Tuple
 
-def getInput(filePath: str) -> List[List[int]]:
+
+def getInput() -> List[List[int]]:
+    if len(sys.argv) != 2:
+        print("Please, add input file path as parameter")
+        sys.exit(1)
+
+
+    filePath = sys.argv[1]
     if not os.path.isfile(filePath):
         print("File not found")
         sys.exit(1)
@@ -31,8 +38,10 @@ def getInput(filePath: str) -> List[List[int]]:
 
     return grid  
 
+
 def getNextPosition(currentPosition: Tuple[int,int], step: Tuple[int,int]) -> Tuple[int,int]:
     return (currentPosition[0] + step[0], currentPosition[1] + step[1])
+
 
 def calculateTrees(grid: List[List[int]], step: Tuple[int,int]) -> int:
     lastRow = len(grid)
