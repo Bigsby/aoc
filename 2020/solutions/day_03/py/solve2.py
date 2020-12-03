@@ -1,13 +1,13 @@
 #! /usr/bin/python3
 
 import sys, os
-from typing import Tuple
+from typing import Tuple, List
 from functools import reduce
 
 def getNextPosition(currentPosition: Tuple[int,int], step: Tuple[int,int]) -> Tuple[int,int]:
     return (currentPosition[0] + step[0], currentPosition[1] + step[1])
 
-def calculateTrees(grid, step: Tuple[int,int]) -> int:
+def calculateTrees(grid: List[List[int]], step: Tuple[int,int]) -> int:
     lastRow = len(grid)
     lastColumn = len(grid[0])
     currentPosition = (0, 0)
