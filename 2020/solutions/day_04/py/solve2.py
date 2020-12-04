@@ -25,19 +25,9 @@ def intTryParse(value):
         return value, False
 
 
-def validate_byr(value):
-    byr, valid = intTryParse(value)
-    return valid and byr >= 1920 and byr <= 2002
- 
-
-def validate_iyr(value):
-    iyr, valid = intTryParse(value)
-    return valid and iyr >= 2010 and iyr <= 2020
-
-
-def validate_eyr(value):
-    eyr, valid = intTryParse(value)
-    return valid and eyr >= 2020 and eyr <= 2030
+def validate_int(value, min, max):
+    parsed, valid = intTryParse(value)
+    return valid and parsed >= min and parsed <= max
 
 
 hgtRegEx = re.compile('^(\d{2,3})(cm|in)$')
@@ -53,28 +43,18 @@ def validate_hgt(value):
 
 
 hclRegEx = re.compile('^#[0-9a-f]{6}$')
-def validate_hcl(value):
-    return hclRegEx.match(value)
-
-
 ecls = [ "amb", "blu", "brn", "gry", "grn", "hzl", "oth" ]
-def validate_ecl(value):
-    return value in ecls
-
-
 pidRegEx = re.compile("^[\d]{9}$")
-def validate_pid(value):
-    return pidRegEx.match(value)
 
 
 validations = {
-    'byr': validate_byr,
-    'iyr': validate_iyr,
-    'eyr': validate_eyr,
+    'byr': lambda value: validate_int(value, 1920, 2002),
+    'iyr': lambda value: validate_int(value, 2010, 2020),
+    'eyr': lambda value: validate_int(value, 2020, 2030),
     'hgt': validate_hgt,
-    'hcl': validate_hcl,
-    'ecl': validate_ecl,
-    'pid': validate_pid
+    'hcl': lambda value: hclRegEx.match(value),
+    'ecl': lambda value: value in ecls,
+    'pid': lambda value: pidRegEx.match(value)
 }
 
 
