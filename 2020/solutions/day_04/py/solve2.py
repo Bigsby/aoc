@@ -54,11 +54,7 @@ def validate_hgt(value):
 
 hclRegEx = re.compile('^#[0-9a-f]{6}$')
 def validate_hcl(value):
-    match = hclRegEx.match(value)
-    if match:
-        return True
-    else:
-        return False
+    return hclRegEx.match(value)
 
 
 ecls = [ "amb", "blu", "brn", "gry", "grn", "hzl", "oth" ]
