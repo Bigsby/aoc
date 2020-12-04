@@ -16,18 +16,14 @@ passportMandatoryFields = [
     'pid', 
    # 'cid' 
     ]
-
    
-def intTryParse(value):
-    try:
-        return int(value), True
-    except:
-        return value, False
-
 
 def validate_int(value, min, max):
-    parsed, valid = intTryParse(value)
-    return valid and parsed >= min and parsed <= max
+    try:
+        parsed = int(value)
+        return parsed >= min and parsed <= max
+    except:
+        return False
 
 
 hgtRegEx = re.compile('^(\d{2,3})(cm|in)$')
