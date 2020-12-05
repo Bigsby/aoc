@@ -11,4 +11,8 @@ def getInput():
         sys.exit(1)
 
     with open(filePath) as file:
-        return file.read()
+        for c in file.read():
+            if c == "(":
+                yield 1
+            elif c == ")":
+                yield -1

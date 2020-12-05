@@ -8,12 +8,9 @@ def main():
 
     currentFloor = 0
     directionCount = 0
-    for c in directions:
+    for direction in directions:
         directionCount = directionCount + 1
-        if c == '(':
-            currentFloor = currentFloor + 1
-        elif c == ')':
-            currentFloor = currentFloor - 1
+        currentFloor = currentFloor + direction
 
     print("Final floor:", currentFloor)
 
