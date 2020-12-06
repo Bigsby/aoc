@@ -15,18 +15,17 @@ def processDirection(visitedHouses, currentPosition, direction):
 
 
 def main():
-    santaVisitedHouses = {} 
-    santaVisitedHouses[str((0, 0))] = 1
-    robotVistedHouses = {}
+    visitedHouses = {}
+    visitedHouses[str((0, 0))] = 1
     santaCurrentPosition = (0, 0)
     robotCurrentPosition = (0, 0)
     for index, direction in enumerate(getInput()):
         if index % 2:
-            santaCurrentPosition = processDirection(santaVisitedHouses, santaCurrentPosition, direction)
+            santaCurrentPosition = processDirection(visitedHouses, santaCurrentPosition, direction)
         else:
-            robotCurrentPosition = processDirection(robotVistedHouses, robotCurrentPosition, direction)
+            robotCurrentPosition = processDirection(visitedHouses, robotCurrentPosition, direction)
 
-    print("Visited houses: ", len({**santaVisitedHouses, **robotVistedHouses}.keys()))
+    print("Visited houses: ", len(visitedHouses.keys()))
 
 
 if __name__ == "__main__":
