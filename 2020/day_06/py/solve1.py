@@ -6,7 +6,7 @@ from common import getInput
 
 
 def countGroupAnswers(group):
-    return reduce(lambda currentCount, letter: currentCount + group[letter], group.keys(), 0)
+    return reduce(lambda currentCount, letter: currentCount + (group["answers"][letter] != 0), group["answers"].keys(), 0)
 
 
 def main():

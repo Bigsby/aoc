@@ -2,19 +2,25 @@ import sys, os
 from string import ascii_lowercase
 
 
-def buildGroupRecord():
-    record = {}
-    for letter in ascii_lowercase:
-        record[letter] = 0
-    return record
+def addToLetterCount(record, letter):
+    if letter in record:
+        record[letter] = record[letter] + 1
+    else:
+        record[letter] = 1
 
 
 def processGroupEntry(groupEntry):
-    record = buildGroupRecord()
+    record = {}
+    peopleCount = 0
     for line in groupEntry.split("\n"):
+        if line:
+            peopleCount = peopleCount + 1
         for c in line:
-            record[c] = 1
-    return record
+            addToLetterCount(record, c)
+    return {
+        "peopleCount": peopleCount,
+        "answers": record
+        }
         
 
 def getInput():
