@@ -10,7 +10,7 @@ def main():
     singleNodes = getSingleNodes(edges)
     possiblePaths = getPossiblePaths(singleNodes)
     minimalDistance = max(map(lambda permutation: getPathDistance(permutation, edges), possiblePaths))
-    print("Minimal distance:", minimalDistance)
+    print("Maximum distanc", minimalDistance)
 
 
 if __name__ == "__main__":
