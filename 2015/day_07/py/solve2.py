@@ -48,10 +48,9 @@ def main():
     startingTarget = "a"
     maxValue = pow(2, 16)
     connections = list(getInput())
-    bConnection = getConnectionFromTarget("b", connections)
-    bConnection.operand1 = Operand("46065")
     startingConnection = getConnectionFromTarget(startingTarget, connections)
-    result = getValueFromConnection(startingConnection, connections)
+    aresult = getValueFromConnection(startingConnection, connections)
+    result = getValueFromConnection(startingConnection, connections, { "b": aresult })
     if result < 0:
         result = maxValue + result
     print("Result for", startingTarget, ":", result)
