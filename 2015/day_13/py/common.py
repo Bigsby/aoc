@@ -1,5 +1,6 @@
 import sys, os, re
 from enum import Enum
+from itertools import permutations
 
 
 lineRegex = re.compile(r"^(\w+)\swould\s(gain|lose)\s(\d+)\shappiness\sunits\sby\ssitting\snext\sto\s(\w+)\.$")
@@ -20,6 +21,35 @@ class Entry():
         return f"{self.target} {self.balance} {self.value} {self.source}"
     def __repr__(self):
         return self.__str__()
+
+def getEntryValue(target, source, entries):
+    entry = next(filter(lambda e: e.target == target and e.source == source, entries))
+    return entry.value if entry.balance == Balance.GAIN else -entry.value
+
+
+def calculateHappiness(arrangement, entries):
+    total = 0
+    length = len(arrangement)
+    for index, person in enumerate(arrangement):
+        total += getEntryValue(person, arrangement[index - 1], entries)        
+        total += getEntryValue(person, arrangement[index + 1 if index < length - 1 else 0], entries)
+    return total
+
+
+def calculateMaximumHappiness(possibleArragements, entries):
+    return max(map(lambda arrangement: calculateHappiness(arrangement, entries), possibleArragements))
+
+
+def getPeople(entries):
+    people = set()
+    for entry in entries:
+        people.add(entry.target)
+        people.add(entry.source)
+    return list(people)
+
+
+def getPossibleArrangements(people):
+    return permutations(people, len(people))
 
 
 def getInput():
