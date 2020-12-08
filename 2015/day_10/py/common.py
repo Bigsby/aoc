@@ -1,18 +1,14 @@
-import sys, os
+import sys, os, re
 
+
+testRegex = re.compile(r"(\d)\1+|\d")
 
 def getNextValue(value):
+    matches = testRegex.finditer(value)
     result = ""
-    currentChar = value[0]
-    currentCharCount = 1
-    for c in value[1:]:
-        if c == currentChar:
-            currentCharCount = currentCharCount + 1
-            continue
-        result = result + str(currentCharCount) + str(currentChar)
-        currentChar = c
-        currentCharCount = 1
-    result = result + str(currentCharCount) + str(currentChar)
+    for match in matches:
+        group = match.group()
+        result = result + str(len(group)) + group[0]
     return result
 
 
