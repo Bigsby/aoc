@@ -10,6 +10,8 @@ class Entry():
         self.speed = int(speed)
         self.duration = int(duration)
         self.rest = int(rest)
+        self.period = self.duration + self.rest
+        
 
     def __str__(self):
         return f"{self.name} s:{self.speed} d:{self.duration} r:{self.rest}"
