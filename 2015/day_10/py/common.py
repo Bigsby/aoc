@@ -5,11 +5,12 @@ testRegex = re.compile(r"(\d)\1+|\d")
 
 def getNextValue(value):
     matches = testRegex.finditer(value)
-    result = ""
+    sequences = []
     for match in matches:
         group = match.group()
-        result = result + str(len(group)) + group[0]
-    return result
+        sequences.append(str(len(group)))
+        sequences.append(group[0])
+    return "".join(sequences)
 
 
 def getInput():
