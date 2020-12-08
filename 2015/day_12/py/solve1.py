@@ -1,12 +1,18 @@
 #! /usr/bin/python3
-
+import re
 from functools import reduce
 
 from common import getInput
 
 
+numberRegex = re.compile(r"[^\d](-?[\d]+)")
+def getNumbers(contents):
+    for match in numberRegex.finditer(contents):
+        yield int(match.group(1))
+        
+
 def main():
-    numbers = getInput()
+    numbers = getNumbers(getInput())
     result = reduce(lambda soFar, number: soFar + number, numbers)
     print("Result:", result)
 
