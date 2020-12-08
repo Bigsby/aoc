@@ -14,6 +14,29 @@ class Instruction():
         return self.__str__()
 
 
+def runInstruction(op, accumulator, instructionPointer):
+    instructionPointer = instructionPointer + op.argument if op.mnemonic == "jmp" else instructionPointer + 1
+    if op.mnemonic == "acc":
+        accumulator = accumulator + op.argument
+    return accumulator, instructionPointer
+
+
+def testBoot(ops):
+    accumulator = 0
+    instructionPointer = 0
+    visited = []
+    bootLength = len(ops)
+    while True:
+        if instructionPointer in visited:
+            return False, accumulator
+        if instructionPointer == bootLength:
+            return True, accumulator
+        visited.append(instructionPointer)
+        op = ops[instructionPointer]
+        accumulator, instructionPointer = runInstruction(op, accumulator, instructionPointer)
+
+
+
 def getInput():
     if len(sys.argv) != 2:
         print("Please, add input file path as parameter")

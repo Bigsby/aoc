@@ -1,27 +1,11 @@
 #! /usr/bin/python3
 
-from common import getInput
+from common import getInput, testBoot
 
 
 def main():
     ops = list(getInput())
-    accumulator = 0
-    instructionPointer = 0
-    visited = []
-    while True:
-        if instructionPointer in visited:
-            break
-        visited.append(instructionPointer)
-        op = ops[instructionPointer]
-
-        if op.mnemonic == "jmp":
-            instructionPointer = instructionPointer + op.argument
-            continue
-
-        if op.mnemonic == "acc":
-            accumulator = accumulator + op.argument
-
-        instructionPointer = instructionPointer + 1
+    success, accumulator = testBoot(ops)
 
     print("Accumulator value:", accumulator)
 
