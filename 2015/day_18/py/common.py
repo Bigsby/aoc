@@ -48,7 +48,10 @@ class Grid():
         return count
 
 
-    def calculateNextStep(self):
+    def calculateNextStep(self, alwaysOn = []):
+        for coordinate in alwaysOn:
+            self.lights[coordinate[0]][coordinate[1]] = 1
+            
         length = len(self.lights)
         newState = [ [0] * length for i in range(length) ]
         for row in range(length):
@@ -59,7 +62,9 @@ class Grid():
                 else:
                     newState[row][column] = 1 if neighbors == 3 else 0
         self.lights = newState
-
+        for coordinate in alwaysOn:
+            self.lights[coordinate[0]][coordinate[1]] = 1
+        
     def lightsOnCount(self):
         return reduce(lambda rowCount, row: rowCount + reduce(lambda columnCount, column: columnCount + column, row, 0), self.lights, 0)
 
