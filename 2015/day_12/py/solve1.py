@@ -5,7 +5,7 @@ from functools import reduce
 from common import getInput
 
 
-numberRegex = re.compile(r"[^\d](-?[\d]+)")
+numberRegex = re.compile(r"(-?[\d]+)")
 def getNumbers(contents):
     for match in numberRegex.finditer(contents):
         yield int(match.group(1))
