@@ -13,7 +13,6 @@ def getWeakness(numbers, targetNumber):
             if currentSum == targetNumber:
                 weakness = min(newSet) + max(newSet)
                 return weakness, newSet
-                break
             length += 1
      
 
