@@ -1,7 +1,5 @@
 #! /usr/bin/python3
 
-from itertools import combinations
-
 from common import getInput
 
 
