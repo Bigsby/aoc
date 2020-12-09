@@ -11,6 +11,23 @@ class Replacement():
 
     def __str__(self):
         return f"{self.source} -> {self.target}"
+    def __repr__(self):
+        return self.__str__()
+
+
+def processReplacement(molecule, replacement):
+    return processReplacementDirect(molecule, replacement.source, replacement.target)
+
+    
+def processReplacementDirect(molecule, source, target):
+    occurrences = False
+    for match in re.finditer(source, molecule):
+        occurrences = True
+        mBefore = molecule[0 : match.start()]
+        mAfter = molecule[match.end() : ]
+        yield "".join([mBefore, target, mAfter])
+    if not occurrences:
+        yield molecule
 
 
 def getInput():

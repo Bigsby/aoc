@@ -2,14 +2,8 @@
 
 import re
 
-from common import getInput
+from common import getInput, processReplacement
 
-def processReplacement(molecule, replacement):
-    for match in re.finditer(replacement.source, molecule):
-        mBefore = molecule[0 : match.start()]
-        mAfter = molecule[match.end() : ]
-        yield mBefore + replacement.target + mAfter
-        
 
 def main():
     replacements, molecule = getInput()
