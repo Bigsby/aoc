@@ -10,4 +10,6 @@ def getInput():
         print("File not found")
         sys.exit(1)
 
-    return None
+    with open(filePath, "r") as file:
+        for line in file.readlines():
+            yield line
