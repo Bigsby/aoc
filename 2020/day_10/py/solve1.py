@@ -4,7 +4,7 @@ from common import getInput
 
 
 def main():
-    numbers = sorted(list(getInput()))
+    numbers = sorted(getInput())
     diff1 = 0
     diff3 = 1
     currentJoltage = 0
