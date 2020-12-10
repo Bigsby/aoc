@@ -20,14 +20,10 @@ def processReplacement(molecule, replacement):
 
     
 def processReplacementDirect(molecule, source, target):
-    occurrences = False
     for match in re.finditer(source, molecule):
-        occurrences = True
         mBefore = molecule[0 : match.start()]
         mAfter = molecule[match.end() : ]
         yield "".join([mBefore, target, mAfter])
-    if not occurrences:
-        yield molecule
 
 
 def getInput():
