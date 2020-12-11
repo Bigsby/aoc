@@ -25,24 +25,12 @@ class Grid():
         for row in self.rows:
             print("".join(map(lambda s: s.value, row)))
 
-    def getNeighbors(self, row, column):
-        return [ 
-            (row - 1, column -1),
-            (row - 1, column),
-            (row - 1, column + 1),
-            (row, column - 1),
-            (row, column + 1),
-            (row + 1, column -1),
-            (row + 1, column),
-            (row + 1, column +1)
-        ]
-
 
     def isNeighborValid(self, coordinate):
         rowLimit = len(self.rows)
         columnLimit = len(self.rows[0])
         return coordinate[0] >= 0 and coordinate[0] < rowLimit and coordinate[1] >= 0 and coordinate[1] < columnLimit
-
+ 
 
     def getOccupiedNeighborsCount(self, row, column):
         count = 0
@@ -60,7 +48,7 @@ class Grid():
         occupiedCount = self.getOccupiedNeighborsCount(row, column)
         if currentState == State.EMPTY and occupiedCount == 0:
             return True, State.OCCUPIED
-        if currentState == State.OCCUPIED and occupiedCount > 3:
+        if currentState == State.OCCUPIED and occupiedCount > self.occupiedTolerance:
             return True, State.EMPTY
         return False, currentState
 
@@ -77,7 +65,7 @@ class Grid():
                 newGrid[row][column] = newState
         self.rows = newGrid
         return seatsChangedCount
-        
+       
 
     def getOccupiedCount(self):
         return reduce(lambda rowCount, row: rowCount + reduce(lambda columnCount, column: columnCount + (column == State.OCCUPIED), row, 0), self.rows, 0)
@@ -85,7 +73,7 @@ class Grid():
 
         
 
-def getInput():
+def getInput(grid):
     if len(sys.argv) != 2:
         print("Please, add input file path as parameter")
         sys.exit(1)
@@ -96,7 +84,5 @@ def getInput():
         sys.exit(1)
 
     with open(filePath, "r") as file:
-        grid = Grid()
         for line in file.readlines():
             grid.addRow(line.strip())
-        return grid
