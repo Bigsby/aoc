@@ -20,13 +20,31 @@ def getCombinations(joltage, adapters, previous = []):
             for combination in getCombinations(nextJoltage, adaptersLeft, previous[:]):
                 yield combination
 
+def calculateCombinations(sequence):
+    if sequence == 1 or sequence == 2:
+        return 1
+    if sequence == 3:
+        return 2
+    return calculateCombinations(sequence - 1) + calculateCombinations(sequence - 2) + calculateCombinations(sequence - 3)
+
+def buildAdapters(length):
+    adapters = []
+    for i in range(length):
+        adapters.append(3 + i)
+    return adapters
+        
 
 def main():
-    adapters = sorted(getInput())
-    combinations = list(getCombinations(0, adapters))
-
-    print()
-    print("Count:", len(combinations))
+#    adapters = sorted(getInput())
+#    combinations = list(getCombinations(0, adapters))
+#
+    for length in range(2, 20):
+        adapters = buildAdapters(length)
+        combinations = list(getCombinations(0, adapters))
+        calculated = calculateCombinations(length)
+        print("Length:", length, "\tCombinations:", len(combinations),"\tCalculated:", calculated)
+#    print("Adapters:", len(adapters))
+#    print("Count:", len(combinations))
 
 
 
