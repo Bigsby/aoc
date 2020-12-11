@@ -52,11 +52,6 @@ class PointInSearch():
             return nextChild
         
 
-    def close(self, caller):
-        self.closed == True
-        del self.children[:]
-
-
 def getValidReplacements(molecule, replacements):
     return list(filter(lambda replacement: replacement.target in molecule, replacements))
 
@@ -66,24 +61,17 @@ def main():
     startingMolecule = "e"
     
     currentPoint = PointInSearch(targetMolecule, replacements)
-    minimumIterations = sys.maxsize
+    iterations = sys.maxsize
 
     while currentPoint:        
         if not currentPoint.populated:
             currentPoint.generateChildren(replacements)
         if currentPoint.origin == startingMolecule:
-            minimumIterations = min(currentPoint.iteration, minimumIterations)
-            currentPoint.close("iterator")
+            iterations = currentPoint.iteration
+            break
         currentPoint = currentPoint.getNextPoint()
 
-    print("Minimum iterations:", minimumIterations)
-
-
-     
-#    print("Failed count:", len(failed))
-#    print("Max iteration tested", max(failed))
-#    print("Success count:", len(successfull))
-#    print("Min iteration:", min(successfull))
+    print("Iterations:", iterations)
 
 
 if __name__ == "__main__":
