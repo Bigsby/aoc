@@ -9,7 +9,7 @@ def getDivisors(number):
     yield number
 
 
-def getPresenCountForHouse(number):
+def getPresentCountForHouse(number):
     return sum(getDivisors(number))
 
 
@@ -21,7 +21,7 @@ def main():
 
     while presentsReceived <= target:
         houseNumber += step
-        presentsReceived = getPresenCountForHouse(houseNumber)
+        presentsReceived = getPresentCountForHouse(houseNumber)
         print('\r', end='') 
         print("House:", houseNumber, "presents:", presentsReceived, end="")
         
