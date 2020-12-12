@@ -1,5 +1,7 @@
 import sys, os, re
 from enum import Enum
+from typing import NamedTuple
+
 
 lineRegex = re.compile(r"^(?P<direction>[NSEWLRF])(?P<value>\d+)$")
 
@@ -29,9 +31,25 @@ def getEnumValueList(cls):
     return [ e.value for e in cls ]
 
 
+class Coordinate(NamedTuple):
+    latitude: int
+    longitude: int
+    
+    def __str__(self):
+        return f"{self.latitude} {self.longitude}"
+
+
 cardinals = getEnumValueList(Cardinal)
 rotates = getEnumValueList(Rotate)
 moves = getEnumValueList(Move)
+
+
+cardinalSteps = {
+    Cardinal.North: Coordinate(-1, 0),
+    Cardinal.South: Coordinate(1, 0),
+    Cardinal.East: Coordinate(0, 1),
+    Cardinal.West: Coordinate(0, -1)
+}
 
 
 class Instruction():
@@ -56,6 +74,10 @@ class Instruction():
             return f"{self.rotate} {self.value}"
         if self.type == InstructionType.Move:
             return f"{self.move} {self.value}"
+
+
+def getPositive(value):
+    return value if value >= 0 else -value
 
 
 def getInput():

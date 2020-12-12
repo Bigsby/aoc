@@ -2,14 +2,7 @@
 
 from typing import NamedTuple
 
-from common import getInput, Cardinal, Rotate, InstructionType
-
-class Coordinate(NamedTuple):
-    latitude: int
-    longitude: int
-    
-    def __str__(self):
-        return f"{self.latitude} {self.longitude}"
+from common import getInput, Coordinate, Cardinal, Rotate, InstructionType, getPositive, cardinalSteps
 
 
 class State(NamedTuple):
@@ -19,13 +12,6 @@ class State(NamedTuple):
     def __str__(self):
         return f"{self.coordinate} {self.heading}"
 
-
-cardinalSteps = {
-    Cardinal.North: Coordinate(-1, 0),
-    Cardinal.South: Coordinate(1, 0),
-    Cardinal.East: Coordinate(0, 1),
-    Cardinal.West: Coordinate(0, -1)
-}
 
 cardinalDegrees = {
     Cardinal.North: 0,
@@ -77,8 +63,6 @@ def processInstruction(instruction, state):
     if instruction.type == InstructionType.Move:
         return State(state.heading, calculateMove(state.coordinate, state.heading, instruction.value))
 
-def getPositive(value):
-    return value if value >= 0 else -value
 
 def main():
     state = State(Cardinal.East, Coordinate(0,0))
