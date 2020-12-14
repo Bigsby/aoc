@@ -1,18 +1,9 @@
 #! /usr/bin/python3
 
-from functools import reduce
-
-from common import getInput, InstructionType
+from common import getInput, InstructionType, Computer
 
 
-class Computer():
-    def __init__(self):
-        self.mask = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-        self.memory = {}
-
-    def setMask(self, mask):
-        self.mask = mask
-        
+class ValueMaskComputer(Computer):
 
     def runValueThroughMask(self, value):
         orMask = int(self.mask.replace("X", "0"), 2)
@@ -21,26 +12,15 @@ class Computer():
         return value & andMask
 
 
-    def setMemory(self, location, value):
-        self.memory[str(location)] = self.runValueThroughMask(value)
-
-
-    def getMemorySum(self):
-        soFar = 0
-        for key in self.memory.keys():
-            soFar += self.memory[key]
-        return soFar
-        
-
     def runInstruction(self, instruction):
         if instruction.type == InstructionType.Mask:
             self.setMask(instruction.mask)
         else:
-            self.setMemory(instruction.location, instruction.value)
+            self.setMemory(instruction.location, self.runValueThroughMask(instruction.value))
 
 
 def main():
-    computer = Computer()
+    computer = ValueMaskComputer()
     for instruction in getInput():
         computer.runInstruction(instruction)
 

@@ -6,6 +6,24 @@ maskRegex = re.compile(r"^mask\s=\s(?P<mask>[X01]+)$")
 memoryRegex = re.compile(r"^mem\[(?P<location>[\d]+)]\s=\s(?P<value>[\d]+)$")
 
 
+class Computer():
+    def __init__(self):
+        self.mask = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+        self.memory = {}
+
+    def setMask(self, mask):
+        self.mask = mask
+        
+    def setMemory(self, location, value):
+        self.memory[str(location)] = value
+
+    def getMemorySum(self):
+        soFar = 0
+        for key in self.memory.keys():
+            soFar += self.memory[key]
+        return soFar
+
+
 class InstructionType(Enum):
     Mask = 0
     Memory = 1
