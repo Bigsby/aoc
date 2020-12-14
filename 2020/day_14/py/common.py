@@ -21,6 +21,13 @@ class Computer():
     def getMemorySum(self):
         return reduce(lambda soFar, key: soFar + self.memory[key], self.memory, 0)
 
+    def runInstruction(self, instruction):
+        if instruction.type == InstructionType.Mask:
+            self.setMask(instruction.mask)
+        else:
+            for location in self.getMemoryLocations(instruction.location):
+                self.setMemory(location, self.getValue(instruction.value))
+
 
 class InstructionType(Enum):
     Mask = 0

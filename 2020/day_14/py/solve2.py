@@ -9,6 +9,10 @@ xRegex = re.compile("X")
 
 class MemoryMaskComputer(Computer):
 
+    def getValue(self, value):
+        return value
+
+
     def getMemoryLocations(self, location):
         orMask = int(self.mask.replace("X", "0"), 2)
         location = location | orMask
@@ -25,13 +29,6 @@ class MemoryMaskComputer(Computer):
                 currentLocation[flipBit] = str(newBit)
             yield int("".join(currentLocation), 2)
 
-
-    def runInstruction(self, instruction):
-        if instruction.type == InstructionType.Mask:
-            self.setMask(instruction.mask)
-        else:
-            for location in self.getMemoryLocations(instruction.location):
-                self.setMemory(location, instruction.value)
 
 
 def main():

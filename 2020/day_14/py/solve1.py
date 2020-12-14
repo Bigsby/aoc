@@ -5,18 +5,16 @@ from common import getInput, InstructionType, Computer
 
 class ValueMaskComputer(Computer):
 
-    def runValueThroughMask(self, value):
+    def getValue(self, value):
         orMask = int(self.mask.replace("X", "0"), 2)
         value = value | orMask
         andMask = int(self.mask.replace("X", "1"), 2)
         return value & andMask
 
+    
+    def getMemoryLocations(self, location):
+        yield location
 
-    def runInstruction(self, instruction):
-        if instruction.type == InstructionType.Mask:
-            self.setMask(instruction.mask)
-        else:
-            self.setMemory(instruction.location, self.runValueThroughMask(instruction.value))
 
 
 def main():
