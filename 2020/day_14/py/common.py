@@ -1,5 +1,6 @@
 import sys, os, re
 from enum import Enum
+from functools import reduce
 
 
 maskRegex = re.compile(r"^mask\s=\s(?P<mask>[X01]+)$")
@@ -18,10 +19,7 @@ class Computer():
         self.memory[str(location)] = value
 
     def getMemorySum(self):
-        soFar = 0
-        for key in self.memory.keys():
-            soFar += self.memory[key]
-        return soFar
+        return reduce(lambda soFar, key: soFar + self.memory[key], self.memory, 0)
 
 
 class InstructionType(Enum):
