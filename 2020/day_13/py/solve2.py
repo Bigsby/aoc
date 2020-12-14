@@ -23,7 +23,6 @@ class BusPair():
 
 
 def buildPair(first, second):
-    print("Building pair", first, second)
     offset = second.index - first.index
     multiplier = 1
     while True:
@@ -43,13 +42,6 @@ def main():
         pairs.append(buildPair(lastBus, bus))
         lastBus = bus
     
-    print("Buses:")
-    for bus in buses:
-        print(bus)
-    print("Pairs:")
-    for pair in pairs:
-        print(pair)
-       
 
     for index in range(len(pairs) - 1):
         currentPair = pairs[index]
@@ -60,8 +52,6 @@ def main():
         nextJump = nextPair.second.id
         nextStep = nextPair.previousStepTested
 
-        print()
-        print(index, ":", currentPair, "->", nextPair, "multiplier", currentPair.stepMultiplier)
         lastMultiplier = 1
 
         while True:            
@@ -71,12 +61,9 @@ def main():
 
             while True:
                 nextMultiplier = nextPair.firstStart + nextStep * nextJump
-                #input(f"c {currentMultiplier}, n {nextMultiplier}")
                 if nextMultiplier > currentMultiplier:
-                    #print("went over")
                     break
                 if nextMultiplier == currentMultiplier:
-                    #print("isEqual")
                     nextPair.previousStepTested = nextStep
                     nextPair.stepMultiplier = currentPair.stepMultiplier * currentPair.first.id
                     lastMultiplier = nextMultiplier
