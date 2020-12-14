@@ -43,49 +43,57 @@ def main():
         pairs.append(buildPair(lastBus, bus))
         lastBus = bus
     
-    for pair in pairs:
-        print(pair)
-    step = 0
-    firstPair = pairs[0]
-    otherPairs = pairs[1:]
-
-    while True:
-        previousMultiplier = firstPair.secondStart + firstPair.first.id * step
-        sequenceFailed = False
-        input(f"step {step}: {previousMultiplier}")
-
-        for pair in otherPairs:
-            nextStep = pair.previousStepTested
-            while True:
-                currentMultiplier = pair.firstStart + pair.second.id * nextStep
-                print("innerStep:", nextStep, "currentMultiplier:", currentMultiplier)
-                if  currentMultiplier > previousMultiplier:
-                    print("sequence failed")
-                    sequenceFailed = True
-                    break
-                if currentMultiplier == previousMultiplier:
-                    if firstPair.stepMultiplier == 1:
-                        firstPair.stepMultiplier = pair.second.id
-                        print("Setting step multiplier to:", pair.second.id)
-                    pair.previousStepTested = nextStep
-                    print("sequence continued - setting", nextStep, "to pair", pair)
-                    break
-                nextStep += 1
-            
-            if sequenceFailed:
-                break
-        if not sequenceFailed:
-            break
-        step += firstPair.stepMultiplier
-
+    print("Buses:")
     for bus in buses:
         print(bus)
-    firstPair = pairs[0]
-    print("Result:", firstPair.first.id * ( firstPair.firstStart + firstPair.second.id * step))
-        
+    print("Pairs:")
+    for pair in pairs:
+        print(pair)
+       
 
-        
-    
+    for index in range(len(pairs) - 1):
+        currentPair = pairs[index]
+        currentJump = currentPair.first.id
+        currentStep = currentPair.previousStepTested
+
+        nextPair = pairs[index + 1]
+        nextJump = nextPair.second.id
+        nextStep = nextPair.previousStepTested
+
+        print()
+        print(index, ":", currentPair, "->", nextPair, "multiplier", currentPair.stepMultiplier)
+        lastMultiplier = 1
+
+        while True:            
+            currentMultiplier = currentPair.secondStart + currentStep * currentJump
+            
+            isEqual = False
+
+            while True:
+                nextMultiplier = nextPair.firstStart + nextStep * nextJump
+                #input(f"c {currentMultiplier}, n {nextMultiplier}")
+                if nextMultiplier > currentMultiplier:
+                    #print("went over")
+                    break
+                if nextMultiplier == currentMultiplier:
+                    #print("isEqual")
+                    nextPair.previousStepTested = nextStep
+                    nextPair.stepMultiplier = currentPair.stepMultiplier * currentPair.first.id
+                    lastMultiplier = nextMultiplier
+                    isEqual = True
+                    break
+                nextStep += 1
+
+            if isEqual:
+                break
+            currentStep += currentPair.stepMultiplier
+
+
+    lastPair = pairs[len(pairs)-1]
+    offset = lastPair.first.index
+    result = lastPair.first.id * lastMultiplier - offset
+    print("Result:", result)
+
 
 
 if __name__ == "__main__":
