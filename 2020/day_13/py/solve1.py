@@ -11,7 +11,7 @@ def main():
     closestBus = None
     for bus in buses:
         if not bus.isX:
-            timeAfter = (int(timestamp / bus.id) + 1) * bus.id - timestamp
+            timeAfter = (timestamp // bus.id + 1) * bus.id - timestamp
             if timeAfter < closestAfter:
                 closestAfter = timeAfter
                 closestBus = bus
