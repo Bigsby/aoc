@@ -15,12 +15,11 @@ class MemoryMaskComputer(Computer):
     def getMemoryLocations(self, location):
         orMask = int(self.mask.replace("X", "0"), 2)
         location = location | orMask
-        flipBits = []
+        maskBitOfffset = len(self.mask) - 1
+        flipBits = [ *map(lambda match: maskBitOfffset - match.start(), xRegex.finditer(self.mask)) ]
         
-        for match in xRegex.finditer(self.mask):
-            flipBits.append(len(self.mask) - match.start() - 1)
 
-        for case in range(2**len(flipBits)):
+        for case in range(1 << len(flipBits)):
             currentLocation = location
             for index, flipBit in enumerate(flipBits):
                 currentLocation &= ~(1 << flipBit)
