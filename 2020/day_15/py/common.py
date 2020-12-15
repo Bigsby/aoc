@@ -2,18 +2,13 @@ import sys, os
 from typing import NamedTuple
 
 
-class LastOccurrences(NamedTuple):
-    last: int
-    second: int
-
-
 def getNthTurn(turns: int) -> int:
     numbers = list(getInput())
     turn = 0
     occurrences = {}
     for number in numbers:
         turn += 1
-        occurrences[number] = LastOccurrences(turn, 0)
+        occurrences[number] = (turn, 0)
 
     lastNumber = numbers[-1]
     
@@ -21,16 +16,16 @@ def getNthTurn(turns: int) -> int:
         turn += 1
         occurrence = occurrences[lastNumber]
 
-        if occurrence.second == 0:
+        if occurrence[1] == 0:
             lastNumber = 0
         else:
-            lastNumber = occurrence.last - occurrence.second
+            lastNumber = occurrence[0] - occurrence[1]
 
         if lastNumber in occurrences:
-            lastNumberOccurrences = occurrences.get(lastNumber)
-            occurrences[lastNumber] = LastOccurrences(turn, lastNumberOccurrences.last)
+            lastNumberOccurrences = occurrences[lastNumber]
+            occurrences[lastNumber] = (turn, lastNumberOccurrences[0])
         else:
-            occurrences[lastNumber] = LastOccurrences(turn, 0)
+            occurrences[lastNumber] = (turn, 0)
 
     return lastNumber
     
