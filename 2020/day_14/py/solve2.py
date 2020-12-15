@@ -12,23 +12,21 @@ class MemoryMaskComputer(Computer):
     def getValue(self, value):
         return value
 
-
     def getMemoryLocations(self, location):
         orMask = int(self.mask.replace("X", "0"), 2)
         location = location | orMask
         flipBits = []
-        locationMask = f"{location:036b}"
         
         for match in xRegex.finditer(self.mask):
-            flipBits.append(match.start())
+            flipBits.append(len(self.mask) - match.start() - 1)
 
         for case in range(2**len(flipBits)):
-            currentLocation = list(locationMask)
+            currentLocation = location
             for index, flipBit in enumerate(flipBits):
-                newBit = ((2**index) & case) >> index
-                currentLocation[flipBit] = str(newBit)
-            yield int("".join(currentLocation), 2)
-
+                currentLocation &= ~(1 << flipBit)
+                newBit = ((1 << index) & case) >> index
+                currentLocation |= newBit << flipBit
+            yield currentLocation
 
 
 def main():
