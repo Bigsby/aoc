@@ -4,6 +4,16 @@ fieldRegex = re.compile(r"^(?P<field>[^:]+):\s(?P<r1s>\d+)-(?P<r1e>\d+)\sor\s(?P
 ticketRegex = re.compile(r"^(?:\d+\,)+(?:\d+$)")
 
 
+def getValidNumbers(rules):
+    validNumbers = []
+    for rule in rules:
+        for number in range(rule[1], rule[2] + 1):
+            validNumbers.append(number)
+        for number in range(rule[3], rule[4] + 1):
+            validNumbers.append(number)
+    return validNumbers
+
+
 def getInput():
     if len(sys.argv) != 2:
         print("Please, add input file path as parameter")

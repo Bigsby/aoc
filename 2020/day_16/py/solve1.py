@@ -1,19 +1,12 @@
 #! /usr/bin/python3
 
-from common import getInput
-
+from common import getInput, getValidNumbers
 
 
 def main():
     rules, myTicket, tickets = getInput()
 
-    validNumbers = {}
-
-    for rule in rules:
-        for number in range(rule[1], rule[2] + 1):
-            validNumbers[number] = True
-        for number in range(rule[3], rule[4] + 1):
-            validNumbers[number] = True
+    validNumbers = getValidNumbers(rules)
 
     invalidNumbers = []
     for ticket in tickets:
