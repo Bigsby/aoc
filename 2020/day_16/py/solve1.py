@@ -11,7 +11,7 @@ def main():
     invalidNumbers = []
     for ticket in tickets:
         for number in ticket:
-            if not number in validNumbers:
+            if number not in validNumbers:
                 invalidNumbers.append(number)
 
     print("Result:", sum(invalidNumbers))

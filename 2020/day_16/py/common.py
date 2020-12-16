@@ -5,12 +5,12 @@ ticketRegex = re.compile(r"^(?:\d+\,)+(?:\d+$)")
 
 
 def getValidNumbers(rules):
-    validNumbers = []
+    validNumbers = set()
     for rule in rules:
         for number in range(rule[1], rule[2] + 1):
-            validNumbers.append(number)
+            validNumbers.add(number)
         for number in range(rule[3], rule[4] + 1):
-            validNumbers.append(number)
+            validNumbers.add(number)
     return validNumbers
 
 

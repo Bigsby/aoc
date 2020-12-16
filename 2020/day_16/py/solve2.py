@@ -19,13 +19,16 @@ def main():
     rangeField = "range"
     positionsField = "positions"
 
-    def purge(ownerName, index):
-        for fieldName in fields:
-            fieldPositions = fields[fieldName][positionsField]
-            if fieldName != ownerName and index in fieldPositions:
-                fieldPositions.remove(index)
-                if len(fieldPositions) == 1:
-                    purge(fieldName, list(fieldPositions)[0])
+    def purge(newOwnerName, newIndex):
+        pairsToRemove = [ (newOwnerName, newIndex) ]
+        while len(pairsToRemove):
+            ownerName, index = pairsToRemove.pop()
+            for fieldName in fields:
+                fieldPositions = fields[fieldName][positionsField]
+                if fieldName != ownerName and index in fieldPositions:
+                    fieldPositions.remove(index)
+                    if len(fieldPositions) == 1:
+                        pairsToRemove.append((fieldName, list(fieldPositions)[0]))
 
     for rule in rules:
         fields[rule[0]] = {
