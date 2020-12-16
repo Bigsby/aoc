@@ -15,40 +15,40 @@ def main():
         if all(number in validNumbers for number in ticket):
             validTickets.append(ticket)
 
-    fieldPositions = {}
+    fields = {}
     rangeField = "range"
     positionsField = "positions"
 
-    def purge(fields, ownerName, index):
+    def purge(ownerName, index):
         for fieldName in fields:
             if fieldName != ownerName:
                 fieldPositions = fields[fieldName][positionsField]
                 if index in fieldPositions:
                     fieldPositions.remove(index)
                     if len(fieldPositions) == 1:
-                        purge(fields, fieldName, fieldPositions[0])
+                        purge(fieldName, fieldPositions[0])
 
     for rule in rules:
-        fieldPositions[rule[0]] = {
+        fields[rule[0]] = {
             rangeField: (rule[1], rule[2], rule[3], rule[4]),
             positionsField: [ i for i in range(0, len(rules)) ]
         }
 
     for ticket in validTickets:
         for index, number in enumerate(ticket):
-            for fieldName in fieldPositions:
-                fieldRecord = fieldPositions[fieldName]
-                if not index in fieldRecord[positionsField]:
+            for fieldName in fields:
+                field = fields[fieldName]
+                if not index in field[positionsField]:
                     continue
 
-                rule = fieldRecord[rangeField]
+                rule = field[rangeField]
                 if number < rule[0] or (number > rule[1] and number < rule[2]) or number > rule[3]:
-                    fieldRecord[positionsField].remove(index)
-                    if len(fieldRecord[positionsField]) == 1:
-                        purge(fieldPositions, fieldName, fieldRecord[positionsField][0])
+                    field[positionsField].remove(index)
+                    if len(field[positionsField]) == 1:
+                        purge(fieldName, field[positionsField][0])
 
                                 
-    departureFieldIndexes = [ fieldPositions[fieldName][positionsField][0] for fieldName in fieldPositions if fieldName.startswith("departure") ]
+    departureFieldIndexes = [ fields[fieldName][positionsField][0] for fieldName in fields if fieldName.startswith("departure") ]
     result = reduce(lambda soFar, index: soFar * myTicket[index], departureFieldIndexes, 1)
      
     print("Result:", result)
