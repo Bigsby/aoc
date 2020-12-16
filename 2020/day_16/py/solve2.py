@@ -21,12 +21,11 @@ def main():
 
     def purge(ownerName, index):
         for fieldName in fields:
-            if fieldName != ownerName:
-                fieldPositions = fields[fieldName][positionsField]
-                if index in fieldPositions:
-                    fieldPositions.remove(index)
-                    if len(fieldPositions) == 1:
-                        purge(fieldName, fieldPositions[0])
+            fieldPositions = fields[fieldName][positionsField]
+            if fieldName != ownerName and index in fieldPositions:
+                fieldPositions.remove(index)
+                if len(fieldPositions) == 1:
+                    purge(fieldName, fieldPositions[0])
 
     for rule in rules:
         fields[rule[0]] = {
