@@ -19,17 +19,6 @@ def main():
     rangeField = "range"
     positionsField = "positions"
 
-    def purge(newOwnerName, newIndex):
-        pairsToRemove = [ (newOwnerName, newIndex) ]
-        while len(pairsToRemove):
-            ownerName, index = pairsToRemove.pop()
-            for fieldName in fields:
-                fieldPositions = fields[fieldName][positionsField]
-                if fieldName != ownerName and index in fieldPositions:
-                    fieldPositions.remove(index)
-                    if len(fieldPositions) == 1:
-                        pairsToRemove.append((fieldName, list(fieldPositions)[0]))
-
     for rule in rules:
         fields[rule[0]] = {
             rangeField: (rule[1], rule[2], rule[3], rule[4]),
@@ -45,9 +34,21 @@ def main():
 
                 rule = field[rangeField]
                 if number < rule[0] or (number > rule[1] and number < rule[2]) or number > rule[3]:
+                    toRemove = []
                     field[positionsField].remove(index)
                     if len(field[positionsField]) == 1:
-                        purge(fieldName, list(field[positionsField])[0])
+                        toRemove.append((fieldName, list(field[positionsField])[0]))
+
+                    while len(toRemove):
+                        ownerName, positionToRemove = toRemove.pop()
+                        for otherFieldName in fields:
+                            otherFieldPositions = fields[otherFieldName][positionsField]
+                            if otherFieldName == ownerName or positionToRemove not in otherFieldPositions:
+                                continue
+                            otherFieldPositions.remove(positionToRemove)
+                            if len(otherFieldPositions) == 1:
+                                toRemove.append((otherFieldName, list(otherFieldPositions)[0]))
+
 
                                 
     departureFieldIndexes = [ list(fields[fieldName][positionsField])[0] for fieldName in fields if fieldName.startswith("departure") ]
