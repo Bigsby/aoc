@@ -1,4 +1,5 @@
 import sys, os
+from itertools import product
 
 class Dimension(list):
     def __init__(self, upperLayer = None, outerDimension = False):
@@ -54,14 +55,13 @@ class Universe(Dimension):
         return True
 
     def getNeighbors(self, position):
-        positionZ, positionX, positionY = position
-        for z in range(positionZ - 1, positionZ + 2):
-            for x in range(positionX - 1, positionX + 2):
-                for y in range(positionY - 1, positionY + 2):
-                    neighbor = (z, x, y)
-                    if neighbor != position:
-                        yield neighbor
-                    
+        cases = map(lambda p: (p - 1, p, p + 1), position)
+        for neighbor in product(*cases):
+            if neighbor != position:
+                yield neighbor
+        return product(*cases)
+
+                   
     def getLimits(self):
         limits = [ ]
         currentDimension = self
