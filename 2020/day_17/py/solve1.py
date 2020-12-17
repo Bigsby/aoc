@@ -10,7 +10,6 @@ def main():
     while cycle < 6:
         cycle += 1
         universe = universe.getNextStep()
-        #input(universe)
     activeCount = universe.getActiveCount()
     print("Active cubes:", activeCount)
 
