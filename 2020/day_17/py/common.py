@@ -38,7 +38,7 @@ class Dimension(list):
             return list.__str__(self)
 
 
-class Cube(Dimension):
+class Universe(Dimension):
     def __init__(self):
         super().__init__(None, True)
 
@@ -74,8 +74,13 @@ class Cube(Dimension):
 
 
     def isPositionActive(self, position):
-        return self.isPositionValid(position) and self[position[0]][position[1]][position[2]]
+        return self.isPositionValid(position) and self.getValue(position)
 
+    def getValue(self, position):
+        currentDimension = self
+        for coordinate in position[:-1]:
+            currentDimension = currentDimension[coordinate]
+        return currentDimension[position[-1]]
 
     def getActiveCountForNeighbors(self, neighbors):
         return sum(map(lambda neighbor: self.isPositionActive(neighbor), neighbors))
@@ -83,7 +88,7 @@ class Cube(Dimension):
 
 
     def getNextStep(self):
-        newState = Cube()
+        newState = Universe()
         zLimits, xLimits, yLimits,= self.getLimits()
 
         for z in range(zLimits[0] - 1, zLimits[1] + 2):
@@ -108,12 +113,37 @@ class Cube(Dimension):
 
     def getActiveCount(self):
         activeCount = 0
-        zLimits, xLimits, yLimits = self.getLimits()
+        limits = self.getLimits()
+        dimensionCount = len(limits)
+        position = []
+        lastPosition = []
+        for limit in limits:
+            position.append(limit[0])
+
+        done = False
+        while not done:
+            activeCount += self.getValue(tuple(position))
+            currentDimension = 0
+            while currentDimension < dimensionCount:
+                if position[currentDimension] < limits[currentDimension][1]:
+                    position[currentDimension] += 1
+                    break
+                elif currentDimension < dimensionCount - 1:
+                    position[currentDimension] = limits[currentDimension][0]
+                    currentDimension += 1
+                else:
+                    done = True
+                    break
+                
+        return activeCount
+                
+
+        
         
         for z in range(zLimits[0], zLimits[1] + 1):
             for x in range(xLimits[0], xLimits[1] + 1):
                 for y in range(yLimits[0], yLimits[1] + 1):
-                    activeCount += self[z][x][y]
+                    activeCount += self.getValue((z, x, y))
         return activeCount
 
 
@@ -128,13 +158,13 @@ def getInput():
         print("File not found")
         sys.exit(1)
 
-    cube = Cube()
+    universe = Universe()
     layer = None
     with open(filePath, "r") as file:
         for line in file.readlines():
             if layer is None:
-                layer = Dimension(cube)
+                layer = Dimension(universe)
             row = Dimension(layer)
             for c in line.strip():
                 row.append(True if c == "#" else False)
-    return cube
+    return universe

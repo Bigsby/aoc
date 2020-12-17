@@ -4,13 +4,14 @@ from common import getInput, Dimension
 
 
 def main():
-    cube = getInput()
-    print(cube)
+    universe = getInput()
+    print(universe)
     cycle = 0
     while cycle < 6:
         cycle += 1
-        cube = cube.getNextStep()
-    activeCount = cube.getActiveCount()
+        universe = universe.getNextStep()
+        #input(universe)
+    activeCount = universe.getActiveCount()
     print("Active cubes:", activeCount)
 
 
