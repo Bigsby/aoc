@@ -12,9 +12,15 @@ class Dimension(list):
         return list.__getitem__(self, key + self.offset)
     def __setitem__(self, key, item):
         list.__setitem__(self, key + self.offset, item)
+
     def append(self, item):
         super().append(item)
         self.offset = len(self) // 2
+
+    def getLimit(self):
+        if len(self) % 2:
+            return -self.offset, self.offset
+        return -self.offset, self.offset - 1
 
 
     def _indexedlayers(self):
@@ -39,7 +45,8 @@ class Cube(Dimension):
     def isPositionValid(self, position):
         currentDimension = self
         for coordinate in position:
-            if coordinate < -currentDimension.offset or coordinate > currentDimension.offset:
+            bottom, top = currentDimension.getLimit()
+            if coordinate < bottom or coordinate > top:
                 return False
             if len(currentDimension) == 0:
                 return False
@@ -55,22 +62,19 @@ class Cube(Dimension):
                     if neighbor != position:
                         yield neighbor
                     
-
     def getLimits(self):
         limits = [ ]
         currentDimension = self
         while isinstance(currentDimension, Dimension):
-            limits.append(currentDimension.offset)
+            limits.append(currentDimension.getLimit())
             if len(currentDimension) == 0:
                 break
             currentDimension = currentDimension[0]
         return tuple(limits)
 
+
     def isPositionActive(self, position):
-        try:
-            return self.isPositionValid(position) and self[position[0]][position[1]][position[2]]
-        except:
-            return False
+        return self.isPositionValid(position) and self[position[0]][position[1]][position[2]]
 
 
     def getActiveCountForNeighbors(self, neighbors):
@@ -80,14 +84,13 @@ class Cube(Dimension):
 
     def getNextStep(self):
         newState = Cube()
-        zLimit, xLimit, yLimit = self.getLimits()
-        newPositions = []
+        zLimits, xLimits, yLimits,= self.getLimits()
 
-        for z in range(-zLimit - 1, zLimit + 2):
+        for z in range(zLimits[0] - 1, zLimits[1] + 2):
             layer = Dimension(newState)
-            for x in range(-xLimit -1, xLimit + 2):
+            for x in range(xLimits[0] - 1, xLimits[1] + 2):
                 row = Dimension(layer)
-                for y in range(-yLimit -1, yLimit + 2):
+                for y in range(yLimits[0] - 1, yLimits[1] + 2):
                     position = (z, x, y)
                     neighbors = self.getNeighbors(position)
                     neighborsActiveCount = self.getActiveCountForNeighbors(neighbors)
@@ -97,7 +100,6 @@ class Cube(Dimension):
                     else:
                         newValue = neighborsActiveCount == 3
 
-                    newPositions.append((position, newValue))
                     row.append(newValue)
             
 
@@ -106,10 +108,11 @@ class Cube(Dimension):
 
     def getActiveCount(self):
         activeCount = 0
-        zLimit, xLimit, yLimit = self.getLimits()
-        for z in range(-zLimit, zLimit + 1):
-            for x in range(-xLimit, xLimit + 1):
-                for y in range(-yLimit, yLimit + 1):
+        zLimits, xLimits, yLimits = self.getLimits()
+        
+        for z in range(zLimits[0], zLimits[1] + 1):
+            for x in range(xLimits[0], xLimits[1] + 1):
+                for y in range(yLimits[0], yLimits[1] + 1):
                     activeCount += self[z][x][y]
         return activeCount
 

@@ -5,7 +5,7 @@ from common import getInput, Dimension
 
 def main():
     cube = getInput()
-
+    print(cube)
     cycle = 0
     while cycle < 6:
         cycle += 1
