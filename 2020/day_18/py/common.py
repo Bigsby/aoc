@@ -32,6 +32,7 @@ def evaluateExpression(text, addFirst):
             text = "".join([text[:match.start()], str(evaluateExpression(match.group("expression"), addFirst)), text[match.end():]])
         else:
             break
+
     if addFirst:
         while True:
             match = plusRegex.search(text)
