@@ -8,12 +8,10 @@ def getNextToken(line):
     currentToken = ""
     for index, c in enumerate(line):
         if c == " ":
-            return currentToken, line[index + 1:]
+            return currentToken, line[index + 1:].strip()
         if currentToken.isdigit() and not c.isdigit():
-            return currentToken, line[index:]
+            return currentToken, line[index:].strip()
         currentToken = "".join([currentToken, c])
-        if currentToken == "(" or currentToken == ")":
-            return currentToken, line[index + 1:]
     return currentToken, ""
         
 
@@ -26,20 +24,16 @@ def performOperation(first, operation, second):
         
 
 def evaluateExpression(text, addFirst):
-    while True:
+    match = parenRegex.search(text)
+    while match:
+        text = "".join([text[:match.start()], str(evaluateExpression(match.group("expression"), addFirst)), text[match.end():]])
         match = parenRegex.search(text)
-        if match:
-            text = "".join([text[:match.start()], str(evaluateExpression(match.group("expression"), addFirst)), text[match.end():]])
-        else:
-            break
 
     if addFirst:
-        while True:
+        match = plusRegex.search(text)
+        while match:
+            text = "".join([text[:match.start()], str(int(match.group("first")) + int(match.group("second"))), text[match.end():]])
             match = plusRegex.search(text)
-            if match:
-                text = "".join([text[:match.start()], str(int(match.group("first")) + int(match.group("second"))), text[match.end():]])
-            else:
-                break
 
     token, text = getNextToken(text)
     currentValue = int(token)
