@@ -1,6 +1,6 @@
 import sys, os, re
 
-parenRegex = re.compile(r"\((?P<expression>[^\\()]+)\)")
+parenRegex = re.compile(r"\((?P<expression>[^()]+)\)")
 plusRegex = re.compile(r"(?P<first>\d+)\s\+\s(?P<second>\d+)")
 
 
