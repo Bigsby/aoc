@@ -1,6 +1,7 @@
 import sys, os, re
 
 parenRegex = re.compile(r"\((?P<expression>[^\\()]+)\)")
+plusRegex = re.compile(r"(?P<first>\d+)\s\+\s(?P<second>\d+)")
 
 
 def getNextToken(line):
@@ -24,13 +25,21 @@ def performOperation(first, operation, second):
     raise Exception(f"Unknow operation {operation}")
         
 
-def evaluateExpression(text):
+def evaluateExpression(text, addFirst):
     while True:
         match = parenRegex.search(text)
         if match:
-            text = "".join([text[:match.start()], str(evaluateExpression(match.group("expression"))), text[match.end():]])
+            text = "".join([text[:match.start()], str(evaluateExpression(match.group("expression"), addFirst)), text[match.end():]])
         else:
             break
+    if addFirst:
+        while True:
+            match = plusRegex.search(text)
+            if match:
+                text = "".join([text[:match.start()], str(int(match.group("first")) + int(match.group("second"))), text[match.end():]])
+            else:
+                break
+
     token, text = getNextToken(text)
     currentValue = int(token)
     operationToPeform = None
@@ -43,7 +52,7 @@ def evaluateExpression(text):
     return currentValue
     
 
-def getInput():
+def getInput(addFirst = False):
     if len(sys.argv) != 2:
         print("Please, add input file path as parameter")
         sys.exit(1)
@@ -55,4 +64,4 @@ def getInput():
 
     with open(filePath, "r") as file:
         for line in file.readlines():
-            yield evaluateExpression(line)
+            yield evaluateExpression(line, addFirst)
