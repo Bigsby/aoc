@@ -8,11 +8,8 @@ from common import getInput, generateRegex
 def main():
     rules, messages = getInput()
 
-    zeroRegeex = generateRegex(rules, 0)
-    count = 0
-    for message in messages:
-        if re.fullmatch(zeroRegeex, message):
-            count += 1
+    zeroRegex = generateRegex(rules, 0)
+    count = reduce(lambda soFar, message: soFar + (1 if re.fullmatch(zeroRegex, message) else 0), messages, 0)
     print("Zero rule matches:", count)
 
 
