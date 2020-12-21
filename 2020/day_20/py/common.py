@@ -3,6 +3,25 @@ import sys, os, re
 
 numberLineRegex = re.compile(r"^Tile\s(?P<number>\d+):$")
 
+def mirrorHorizontal(grid):
+    size = len(grid)
+    return [ [ grid[y][size - 1 - x] for x in range(size) ] for y in range(size) ]
+
+def rotateClockwise(grid):
+    size = len(grid)
+    return [ [ grid[size - 1 - x][y] for x in range(size) ] for y in range(size) ]
+
+def buildPermutations(lines):
+    grid = [list(line) for line in lines]
+    for _ in range(4):
+        yield grid
+        yield mirrorHorizontal(grid)
+        grid = rotateClockwise(grid)
+
+def toString(variation):
+    return "\n".join(["".join(line) for line in variation])
+
+
 def calculatBorders(lines):
     width = len(lines[0])
     top = lines[0]
@@ -17,10 +36,13 @@ class Tile():
         self.number = number
         self.lines = lines
         self.borders = calculatBorders(self.lines)
+        self.permutations = list(buildPermutations(self.lines))
+
     def __str__(self):
         return f"{self.number} {self.borders}"
     def __repr__(self):
         return self.__str__()
+
 
 
 def getInput():

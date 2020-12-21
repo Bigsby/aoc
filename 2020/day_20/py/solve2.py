@@ -1,122 +1,176 @@
 #! /usr/bin/python3
 
-from functools import reduce
+from math import sqrt
 
-from common import getInput
+from common import getInput, toString, buildPermutations
 
 
-def doSidesMatch(thisSides, otherSides):
+def getSide(permutation, side, size):
+    result = []
+    width = size - 1
+    for i in range(size):
+        if side == 0:
+            result.append(permutation[0][i])
+        elif side == 1:
+            result.append(permutation[i][width])
+        elif side == 2:
+            result.append(permutation[width][i])
+        else:
+            result.append(permutation[i][0])
+    return result
+
+
+def getOtherSide(side):
+    if side == 0:
+        return 2
+    if side == 1:
+        return 3
+    if side == 2:
+        return 0
+    if side == 3:
+        return 1
+
+
+def findConnection(currentPermutation, newTile, direction, size):
+    sideToMatch = getSide(currentPermutation, direction, size)
+    otherSide = getOtherSide(direction)
+    for permutation in newTile.permutations:
+        permutationSide = getSide(permutation, otherSide, size)
+        if all(sideToMatch[i] == permutationSide[i] for i in range(size)):
+            return True, permutation
+    return False, None
+
+
+def buildPuzzle(tiles, startTile, firstDirection, secondDirection, tileSize, puzzleWidth):
+    tileCount = len(tiles)
+    lastTile = (startTile.number, startTile.permutations[0])
+    currentRow = [lastTile]
+    puzzle = [currentRow]
+    used = { startTile.number }
+    direction = firstDirection
+    nextDirection = getOtherSide(firstDirection)
+
+    while len(used) < len(tiles):
+        lastTileNumber, lastPermutation = lastTile
+        for tile in tiles:
+            if tile.number in used:
+                continue
+            matched, newPermutation = findConnection(lastPermutation, tile, direction, tileSize)
+            if matched:
+                lastTile = (tile.number, newPermutation)
+                currentRow.insert(0 if direction == 0 or direction == 3 else len(currentRow), lastTile)
+                used.add(tile.number)
+                if direction == secondDirection:
+                    direction = nextDirection
+                    nextDirection = getOtherSide(direction)
+                elif (len(used) % puzzleWidth) == 0 and len(used) < len(tiles):
+                    currentRow = []
+                    puzzle.insert(0 if secondDirection == 0 or secondDirection == 3 else len(puzzle), currentRow)
+                    direction = secondDirection
+                break
+
+    return puzzle
+
+
+def findMatchingSide(thisSides, otherSides):
     for thisIndex, side in enumerate(thisSides):
         for otherIndex, otherSide in enumerate(otherSides):
-            if side == otherSide:
-                return True, thisIndex, otherIndex, False
             if side == otherSide or side == otherSide[::-1]:
-                return True, thisIndex, otherIndex, True
-    return False, 0, 0, False
+                return True, thisIndex, otherIndex
+    return False, 0, 0
 
 
-class TileConnection():
-    def __init__(self, tile1, tile2, side1, side2, flipped):
-        self.tile1 = tile1
-        self.tile2 = tile2
-        self.side1 = side1
-        self.side2 = side2
-        self.flipped = flipped
-
-    def __str__(self):
-        return f"{self.tile1}-{self.side1} > {self.tile2}-{self.side2}"
-    def __repr__(self):
-        return self.__str__()
-
-
-
-class PuzzleTile():
-    def __init__(self, number, rotate, flipped):
-        self.number = number
-        self.rotate = rotate
-        self.flipped = flipped
-    def __str__(self):
-        return f"{self.number}"
-    def __repr__(self):
-        return self.__str__()
-
-
-def findMatchingBorders(tile, tiles):
-    count = 0
+def isCorner(tile, tiles):
     connections = []
     for otherTile in tiles:
         if otherTile.number == tile.number:
             continue
-        matched, thisSide, otherSide, flipped = doSidesMatch(tile.borders, otherTile.borders)
+        matched, thisSide, otherSide = findMatchingSide(tile.borders, otherTile.borders)
         if matched:
-            connections.append(TileConnection(tile.number, otherTile.number, thisSide, otherSide, flipped))
-            count += 1
+            connections.append(thisSide)
+    return len(connections) == 2, connections
+
+
+def findCorner(tiles):
+    for tile in tiles:
+        isTileCorner, connections = isCorner(tile, tiles)
+        if isTileCorner:
+            return tile, connections 
+
+def joinPuzzle(puzzle, tileSize, puzzleWidth):
+    rows = []
+    for tileRow in puzzle:
+        #for y in range(0, tileSize):
+        for y in range(1, tileSize - 1):
+            currentRow = []
+            for x in range(puzzleWidth):
+                #currentRow += tileRow[x][1][y]
+                currentRow += tileRow[x][1][y][1:-1]
+            rows.append(currentRow)
+    return rows
+
+seaMonsterText = [
+    "                  # ",
+    "#    ##    ##    ###",
+    " #  #  #  #  #  #   "
+]
+
+def isMonsterInLocation(x, y, permutation, seaMonster, seaMonsterWidth, seaMonsterHeight):
+    for monsterY in range(seaMonsterHeight):
+        for monsterX in range(seaMonsterWidth):
+            if seaMonster[monsterY][monsterX] == "#" and permutation[y + monsterY][x + monsterX] == ".":
+                return False
+    return True
+
+
+def findSeaMonster(permutation, seaMonster, tileSize, seaMonsterWidth, seaMonsterHeight):
+    locations = []
+    for x in range(0, tileSize - seaMonsterWidth):
+        for y in range(0, tileSize - seaMonsterHeight):
+            if isMonsterInLocation(x, y, permutation, seaMonster, seaMonsterWidth, seaMonsterHeight):
+                locations.append((x, y))
+            
+    return locations
+    
+def getPermutationWithSeaMonster(puzzle, seaMonsterGrid, puzzleSize, seaMonsterWidth, seaMonsterHeight):
+    for permutation in buildPermutations(puzzle):
+        locations = findSeaMonster(permutation, seaMonsterGrid, puzzleSize, seaMonsterWidth, seaMonsterHeight)
+        if len(locations):
+            return permutation, locations
+
+def replaceSeaMonsterInPuzzle(puzzle, seaMonster, locations, monsterWidth, monsterHeight):
+    for location in locations:
+        x, y = location
+        for monsterX in range(monsterWidth):
+            for monsterY in range(monsterHeight):
+                if seaMonster[monsterY][monsterX] == "#":
+                    puzzle[y + monsterY][x + monsterX] = "O"
         
-    return count, connections
-
-
-def getTopLeftTile(corners, connections):
-    for corner in corners:
-        hasRightConnection = any(map(lambda connection: connection.tile1 == corner and connection.side1 == 1, connections))
-        hasDownConnection = any(map(lambda connection: connection.tile1 == corner and connection.side1 == 2, connections))
-        if hasRightConnection and hasDownConnection:
-            return corner
 
 def main():
     tiles = list(getInput())
-    tileCounts = {}
-    connections = []
+    tileSize = len(tiles[0].lines[0])
+    puzzleWidth = int(sqrt(len(tiles)))
+    firstCorner, connections = findCorner(tiles)
+    puzzle = buildPuzzle(tiles, firstCorner, connections[0], connections[1], tileSize, puzzleWidth)
     
-    for tile in tiles:
-        count, tileConnections = findMatchingBorders(tile, tiles)
-        tileCounts[tile.number] = count
-        connections += tileConnections
-
-    for connection in connections:
-        print(connection)
-
-    corners = [ tileNumber for tileNumber in tileCounts if tileCounts[tileNumber] == 2 ]
-    print("corners:", corners)
-
-    puzzle = [[]]
-    currentTile = PuzzleTile(getTopLeftTile(corners, connections), 0, False)
-    direction = 1, 3
-    currentRow = 0
-    puzzle[currentRow].append(currentTile)
-    print(currentTile)
-    turnCorner = True
-
-    while len(connections):
-        print()
-        print(connections)
-        print(puzzle)
-        print(currentTile, ">", direction)
-        connection = next((c for c in connections if c.tile1 == currentTile.number and (c.side1 == direction[0] or c.side == direction[1]), None)
-        input(connection)
-        if connection:
-            newTile = PuzzleTile(connection.tile2, 0, False)
-            if direction == 1 or direction == 2:
-                puzzle[currentRow].append(newTile)
-            else:
-                puzzle[currentRow].insert(0, newTile)
-            if turnCorner:
-                direction = (1, 3)
-                print("D changed direciton to", direction)
-                turnCorner = 0
-            connections = list(filter(lambda c: c.tile1 != currentTile.number and c.tile2 != newTile.number, connections))
-            currentTile = newTile
-        else:
-            puzzle.append([])
-            currentRow += 1
-            direction = (2, 0)
-            tir
-            print("changed direction to", direction)
-
-    print(puzzle)
-
+    jointPuzzle = joinPuzzle(puzzle, tileSize, puzzleWidth)
+    jointPuzzleSize = len(jointPuzzle)
     
 
+    seaMonsterGrid = [ list(line) for line in seaMonsterText ]
+    seaMonsterWidth = len(seaMonsterGrid[0])
+    seaMonsterHeight = len(seaMonsterGrid)
+
+
+    permutation, locations = getPermutationWithSeaMonster(jointPuzzle, seaMonsterGrid, jointPuzzleSize, seaMonsterWidth, seaMonsterHeight)
     
+    replaceSeaMonsterInPuzzle(permutation, seaMonsterGrid, locations, seaMonsterWidth, seaMonsterHeight)
+    count = 0
+    for row in permutation:
+        count += row.count("#")
+    print("Rough waters count:", count)
+
 
 
 if __name__ == "__main__":
