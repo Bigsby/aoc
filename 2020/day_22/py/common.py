@@ -5,6 +5,8 @@ class Player():
     def __init__(self, name, cards):
         self.name = name
         self.cards = cards
+        self.previousHands = [ ] 
+        self.lastCard = None
 
     @staticmethod
     def fromLines(lines):
@@ -17,11 +19,20 @@ class Player():
         return f"Player {self.name}: {self.cards}"
 
     def getTopCard(self):
-        return self.cards.pop(0)
-
+        self.previousHands.append(set(self.cards))
+        self.lastCard = self.cards.pop(0)
+        return self.lastCard
 
     def addCards(self, cards):
         self.cards += cards
+
+
+    def hasRepeatedHand(self):
+        return set(self.cards) in self.previousHands
+
+    def clone(self):
+        return Player(self.name, list(self.cards[:self.lastCard]))
+        
         
 
 def getInput():
