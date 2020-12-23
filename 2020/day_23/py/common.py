@@ -1,8 +1,16 @@
 import sys, os
 
 
-debug = False
-singleLineDebug = True
+debug = True
+
+
+class Node:
+    def __init__(self, value):
+        self.next = None
+        self.value = value
+    def __str__(self):
+        return f"{self.value} > {self.next.value if self.next else 0}"
+
 
 def getInput():
     if len(sys.argv) != 2:
@@ -19,38 +27,42 @@ def getInput():
             yield int(c)
 
 
-def getDestinationCupIndex(current, others):
-    under = current - 1
-    while under:
-        if under in  others:
-            return others.index(under)
-        under -= 1
-    return others.index(max(others))
+def buildLinkedList(cups):
+    start = previous = last = Node(cups[0])
+    values = [None] * len(cups)
+    values[start.value - 1] = start
+    for cup in cups[1:]:
+        last = Node(cup)
+        previous.next = last
+        values[last.value - 1] = last
+        previous = last
+    last.next = start
+    return start, values
 
 
 def playGame(cups, moves):
     global debug
     move = 0
+    start, values = buildLinkedList(cups)
+    maxValue = max(cups)
+    current = start
+
 
     while move < moves:
         move += 1
-        currentCup = cups[0]
-        selectedCups = cups[1:4]
-        otherCups = cups[4:]
-        destinationIndex = getDestinationCupIndex(currentCup, otherCups)
-        if debug:
-            print("-- move", move, "--")
-            print("cups:", "".join(["(", str(currentCup), ")"]), " ".join(map(str, selectedCups)), " ".join(map(str, otherCups)))
-            print("pick up:", ", ".join(map(str, selectedCups)))
-            print("destination:", otherCups[destinationIndex])
-            print()
-        if singleLineDebug and move % 1000 == 0:
-            print("Move:", move, "\tCurrent:", currentCup, "\r", end="")
-        cups = otherCups[:destinationIndex + 1]
-        cups += selectedCups
-        cups += otherCups[destinationIndex + 1:]
-        cups.append(currentCup)
-    print()
+        firstRemoved = current.next
+        lastRemoved = firstRemoved.next.next
+        removedValues = {firstRemoved.value, firstRemoved.next.value, lastRemoved.value}
+        current.next = lastRemoved.next
 
-    return cups
+        destinationValue = current.value - 1
+        while destinationValue in removedValues or destinationValue < 1:
+            destinationValue -= 1
+            if destinationValue < 0:
+                destinationValue = maxValue
+        destinationLink = values[destinationValue - 1]
+        lastRemoved.next = destinationLink.next
+        destinationLink.next = firstRemoved
 
+        current = current.next
+    return values[0]
