@@ -4,7 +4,7 @@ from common import getInput, flipInitialTiles, steps, getTotalBlackCount
 
 def getNeighbors(tile):
     for _, step in steps.items():
-        yield tile[0] + step[0], tile[1] + step[1], tile[2] + step[2]
+        yield (tile[0] + step[0], tile[1] + step[1], tile[2] + step[2])
 
 
 def getBlackCount(neighbors, tiles):
@@ -24,10 +24,10 @@ def getNewState(tile, tiles):
 
 def runDay(tiles):
     newState = {}
-    edgesToTest = []
+    edgesToTest = set()
     for tile in tiles:
         neighbors = list(getNeighbors(tile))
-        edgesToTest += [ neighbor for neighbor in neighbors if neighbor not in tiles ]
+        edgesToTest.update({ neighbor for neighbor in neighbors if neighbor not in tiles })
         newState[tile] = getNewState(tile, tiles)
     for tile in edgesToTest:
         newState[tile] = getNewState(tile, tiles)
