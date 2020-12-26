@@ -5,8 +5,10 @@ from common import getInput
 baseSubjectNumber = 7
 divider = 20201227
 
+
 def getNextValue(value, subjectNumber = baseSubjectNumber):
     return (value * subjectNumber) % divider
+
 
 def getLoopSize(target):
     value = 1
