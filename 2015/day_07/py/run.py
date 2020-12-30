@@ -1,11 +1,7 @@
-import sys, os, re
+#! /usr/bin/python3
 
-
-sourceTargetRegex = re.compile("^(.*)\s->\s(\w+)$")
-inputRegex = re.compile("^[^\s]+$")
-unaryRegex = re.compile("NOT\s(\w+)$")
-binaryRegex = re.compile("^(\w+|\d+)\s+(AND|OR|LSHIFT|RSHIFT)\s+(\w+|\d+)")
-binaryOperations = [ "AND", "OR", "LSHIFT", "RSHIFT" ]
+import sys, os, time
+import re
 
 
 class Circuit():
@@ -65,6 +61,7 @@ class Operand():
         except:
             self.value = value
             self.type = "wire"
+
     def __str__(self):
         return str(self.value)
     def __repr__(self):
@@ -78,6 +75,7 @@ class Connection():
         self.operand1 = Operand(operand1)
         self.operand2 = Operand(operand2)
         self.target = target
+        
     def __str__(self):
         if self.type == "input":
             return f"{self.operand1} -> {self.target}"
@@ -88,6 +86,11 @@ class Connection():
         return self.__str__()
 
 
+sourceTargetRegex = re.compile("^(.*)\s->\s(\w+)$")
+inputRegex = re.compile("^[^\s]+$")
+unaryRegex = re.compile("NOT\s(\w+)$")
+binaryRegex = re.compile("^(\w+|\d+)\s+(AND|OR|LSHIFT|RSHIFT)\s+(\w+|\d+)")
+binaryOperations = [ "AND", "OR", "LSHIFT", "RSHIFT" ]
 def processLine(line):
     sourceTargetMatch = sourceTargetRegex.match(line)
     if sourceTargetMatch:
@@ -105,16 +108,52 @@ def processLine(line):
         raise Exception("Unrecognized operation line:", line)
 
 
-def getInput():
-    if len(sys.argv) != 2:
-        print("Please, add input file path as parameter")
-        sys.exit(1)
+def runCode(puzzleInput, rerunB = False):
+    startingTarget = "a"
+    maxValue = pow(2, 16)
+    result = puzzleInput.solveFor(startingTarget)
 
-    filePath = sys.argv[1]
+    if rerunB:
+        solutions = { "b": result }
+        result = puzzleInput.solveFor(startingTarget, solutions)    
+
+    if result < 0:
+        result = maxValue + result
+    return result
+
+
+def part1(puzzleInput):
+    return runCode(puzzleInput)
+
+
+def part2(puzzleInput):
+    return runCode(puzzleInput, True)
+
+
+def getInput(filePath):
     if not os.path.isfile(filePath):
-        print("File not found")
-        sys.exit(1)
-
-
+        raise FileNotFoundError(filePath)
+    
     with open(filePath, "r") as file:
         return Circuit(map(lambda line: processLine(line), file.readlines()))
+
+
+def main():
+    if len(sys.argv) != 2:
+        raise Exception("Please, add input file path as parameter")
+
+    puzzleInput = getInput(sys.argv[1])
+    start = time.perf_counter()
+    part1Result = part1(puzzleInput)
+    middle = time.perf_counter()
+    part2Result = part2(puzzleInput)
+    end = time.perf_counter()
+    print("P1:", part1Result)
+    print("P2:", part2Result)
+    print()
+    print(f"P1 time: {middle - start:.8f}")
+    print(f"P2 time: {end - middle:.8f}")
+
+
+if __name__ == "__main__":
+    main()
