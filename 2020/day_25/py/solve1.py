@@ -30,6 +30,9 @@ def transform(subjectNumber, cycles):
 def main():
     card, door = getInput()
     doorLoopSize = getLoopSize(door)
+    cardLoopSize = getLoopSize(card)
+    print("card Loop Size:", cardLoopSize)
+    print("Door Loop Size:", doorLoopSize)
     encrytionKey = transform(card, doorLoopSize)
     print("Encryption key:", encrytionKey)
     
