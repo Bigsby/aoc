@@ -79,7 +79,7 @@ def part2(puzzleInput):
 lineRegex = re.compile(r"^(\w+)\swould\s(gain|lose)\s(\d+)\shappiness\sunits\sby\ssitting\snext\sto\s(\w+)\.$")
 def parseLine(line):
     match = lineRegex.match(line)
-    return Entry(match.group(1), match.group(2), match.group(3), match.group(4))
+    return Entry(*match.group(1, 2, 3, 4))
 
 
 def getInput(filePath):
