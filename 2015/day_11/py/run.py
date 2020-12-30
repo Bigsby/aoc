@@ -8,9 +8,6 @@ forbiddenLetters = [ ord("i"), ord("o"), ord("l") ]
 pairsRegex = re.compile(r"^.*(.)\1{1}.*(.)\2{1}.*$")
 def isPasswordValid(password):
     ords = list(map(lambda c: ord(c), password))
-    # for testOrd in forbiddenLetters:
-    #     if testOrd in ords:
-    #         return False
 
     if not pairsRegex.match(password):
         return False
