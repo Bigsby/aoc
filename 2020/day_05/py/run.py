@@ -9,36 +9,27 @@ def calculateValue(text, one):
         value = 0
         for index, c in enumerate(text[::-1]):
             if c == one:
-                value = value + pow(2, index)
+                value += 2 ** index
         return value
 
 
-class BoardingPass:
-    def __init__(self, rowText, columnText):
-        self.rowText = rowText
-        self.columnText = columnText
-        self.row = calculateValue(rowText, "B")
-        self.column = calculateValue(columnText, "R")
-        self.id = self.row * 8 + self.column
-
-
 def part1(puzzleInput):
-    return reduce(lambda currentMax, bp: max(currentMax, bp.id), puzzleInput, 0)
+    return max(puzzleInput)
 
 
 def part2(puzzleInput):
-    boardingPasses = sorted(puzzleInput, key=lambda bp: bp.id)
-    mySeatId = boardingPasses[0].id
-    for bp in boardingPasses:
-        if bp.id - mySeatId == 2:
-            return mySeatId + 1
-        mySeatId = bp.id
+    ids = sorted(puzzleInput)
+    lastId = ids[0]
+    for currentId in ids:
+        if currentId - lastId == 2:
+            return lastId + 1
+        lastId = currentId
 
 
 lineRegex = re.compile("^([BF]{7})([LR]{3})$")
 def parseLine(line):
     match = lineRegex.match(line)
-    return BoardingPass(match.group(1), match.group(2))
+    return calculateValue(match.group(1), "B") * 8 + calculateValue(match.group(1), "R")
 
 
 def getInput(filePath):
