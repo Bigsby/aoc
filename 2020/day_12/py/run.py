@@ -77,14 +77,6 @@ class Instruction():
             return f"{self.move} {self.value}"
 
 
-cardinalDegrees = {
-    Cardinal.North: 0,
-    Cardinal.South: 180,
-    Cardinal.East: 90,
-    Cardinal.West: 270
-}
-
-
 def degreesToCardinal(degrees):
     if degrees == 0:
         return Cardinal.North
@@ -97,12 +89,16 @@ def degreesToCardinal(degrees):
     raise Exception(f"Unknown degrees {degrees}")
 
 
+cardinalDegrees = {
+    Cardinal.North: 0,
+    Cardinal.South: 180,
+    Cardinal.East: 90,
+    Cardinal.West: 270
+}
 rotateDirection = {
     Rotate.Left: -1,
     Rotate.Right: 1
 }
-
-
 def calculateHeading(start, rotate, value):
     direction = rotateDirection[rotate]
     currentValue = cardinalDegrees[start]
@@ -135,7 +131,7 @@ def part1(puzzleInput):
     return abs(state[1].latitude) + abs(state[1].longitude)
 
 
-def calculateCardinalMove(cardinal, value, waypoint):
+def calculateCardinalMove2(cardinal, value, waypoint):
     step = cardinalSteps[cardinal]
     return Coordinate(waypoint.latitude + step.latitude * value, waypoint.longitude + step.longitude * value)
 
@@ -156,10 +152,10 @@ def calculateMove(coordinate, waypoint, value):
     return Coordinate(coordinate.latitude + waypoint.latitude * value, coordinate.longitude + waypoint.longitude * value)
 
 
-def processInstruction(instruction, state):
+def processInstruction2(instruction, state):
     coordinate, waypoint = state
     if instruction.type == InstructionType.Cardinal:
-        return (coordinate, calculateCardinalMove(instruction.cardinal, instruction.value, waypoint))
+        return (coordinate, calculateCardinalMove2(instruction.cardinal, instruction.value, waypoint))
     if instruction.type == InstructionType.Rotate:
         return (coordinate, calculateRotation(instruction.rotate, instruction.value, waypoint))
     if instruction.type == InstructionType.Move:
@@ -169,7 +165,7 @@ def processInstruction(instruction, state):
 def part2(puzzleInput):
     state = (Coordinate(0,0), Coordinate(-1, 10))
     for instruction in puzzleInput:
-        state = processInstruction(instruction, state)
+        state = processInstruction2(instruction, state)
     return abs(state[0].latitude) + abs(state[0].longitude)
 
 
