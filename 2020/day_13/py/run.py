@@ -41,7 +41,7 @@ def modularMultipliactiveInverse(a, b):
     return x1
  
 
-def chineseBusIndex(first, second):
+def getNextIndex(first, second):
     sum = 0
     prod = first.id * second.id
     pFirst = prod // first.id
@@ -55,7 +55,7 @@ def part2(puzzleInput):
     _, busses = puzzleInput
     lastBus = busses[0]
     for bus in busses[1:]:
-        lastBus = Bus(lastBus.id * bus.id, chineseBusIndex(lastBus, bus))
+        lastBus = Bus(lastBus.id * bus.id, getNextIndex(lastBus, bus))
     return lastBus.index
 
 
