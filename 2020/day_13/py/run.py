@@ -27,7 +27,7 @@ def part1(puzzleInput):
     return closestAfter * closestBus.id
 
 
-def modularMultipliactiveInverse(a, b):
+def modularMultiplicativeInverse(a, b):
     b0 = b
     x0, x1 = 0, 1
     if b == 1: 
@@ -45,9 +45,9 @@ def getNextIndex(first, second):
     sum = 0
     prod = first.id * second.id
     pFirst = prod // first.id
-    sum = first.index * modularMultipliactiveInverse(pFirst, first.id) * pFirst
+    sum = first.index * modularMultiplicativeInverse(pFirst, first.id) * pFirst
     pSecond = prod // second.id
-    sum -= second.index * modularMultipliactiveInverse(pSecond, second.id) * pSecond
+    sum -= second.index * modularMultiplicativeInverse(pSecond, second.id) * pSecond
     return sum % prod
 
 
