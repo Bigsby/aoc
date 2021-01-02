@@ -1,7 +1,7 @@
-import sys, os, re
+#! /usr/bin/python3
 
-parenRegex = re.compile(r"\((?P<expression>[^()]+)\)")
-plusRegex = re.compile(r"(?P<first>\d+)\s\+\s(?P<second>\d+)")
+import sys, os, time
+import re
 
 
 def getNextToken(line):
@@ -23,6 +23,8 @@ def performOperation(first, operation, second):
     raise Exception(f"Unknow operation {operation}")
         
 
+parenRegex = re.compile(r"\((?P<expression>[^()]+)\)")
+plusRegex = re.compile(r"(?P<first>\d+)\s\+\s(?P<second>\d+)")
 def evaluateExpression(text, addFirst):
     match = parenRegex.search(text)
     while match:
@@ -45,18 +47,44 @@ def evaluateExpression(text, addFirst):
         else:
             operationToPeform = token
     return currentValue
+
+
+def evaluateExpressions(addFirst, puzzleInput):
+    return sum([ evaluateExpression(line, addFirst) for line in puzzleInput ])
     
 
-def getInput(addFirst = False):
-    if len(sys.argv) != 2:
-        print("Please, add input file path as parameter")
-        sys.exit(1)
+def part1(puzzleInput):
+    return evaluateExpressions(False, puzzleInput)
 
-    filePath = sys.argv[1]
+
+def part2(puzzleInput):
+    return evaluateExpressions(True, puzzleInput)
+
+
+def getInput(filePath):
     if not os.path.isfile(filePath):
-        print("File not found")
-        sys.exit(1)
-
+        raise FileNotFoundError(filePath)
+    
     with open(filePath, "r") as file:
-        for line in file.readlines():
-            yield evaluateExpression(line, addFirst)
+        return file.readlines()
+
+
+def main():
+    if len(sys.argv) != 2:
+        raise Exception("Please, add input file path as parameter")
+
+    puzzleInput = getInput(sys.argv[1])
+    start = time.perf_counter()
+    part1Result = part1(puzzleInput)
+    middle = time.perf_counter()
+    part2Result = part2(puzzleInput)
+    end = time.perf_counter()
+    print("P1:", part1Result)
+    print("P2:", part2Result)
+    print()
+    print(f"P1 time: {middle - start:.8f}")
+    print(f"P2 time: {end - middle:.8f}")
+
+
+if __name__ == "__main__":
+    main()
