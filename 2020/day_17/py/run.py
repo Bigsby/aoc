@@ -1,4 +1,6 @@
-import sys, os
+#! /usr/bin/python3
+
+import sys, os, time
 from itertools import product
 
 class Dimension(list):
@@ -9,17 +11,14 @@ class Dimension(list):
             self.upperLayer.append(self)
         self.outerDimension = outerDimension
 
-
     def __getitem__(self, key):
         return list.__getitem__(self, key + self.offset)
     def __setitem__(self, key, item):
         list.__setitem__(self, key + self.offset, item)
 
-
     def append(self, item):
         super().append(item)
         self.offset = len(self) // 2
-
 
     def getLimit(self):
         if len(self) % 2:
@@ -39,10 +38,8 @@ class Dimension(list):
             for item in self:
                 result.append(False)
 
-
     def _indexedlayers(self):
         return [ (index, layer) for index, layer in enumerate(self) ]
-
 
     def __str__(self):
         if len(self):
@@ -57,9 +54,8 @@ class Dimension(list):
 
 
 class Universe(Dimension):
-    def __init__(self):
+    def __init__(_):
         super().__init__(None, True)
-
 
     def isPositionValid(self, position):
         currentDimension = self
@@ -71,14 +67,21 @@ class Universe(Dimension):
                 return False
             currentDimension = currentDimension[0]
         return True
+    
+    def addDimension(self):
+        newDimension = Dimension(None, False)
+        for innerDimension in self:
+            newDimension.append(innerDimension)
+            innerDimension.upperLayer = newDimension
+        self.clear()
+        self.append(newDimension)
 
 
-    def getNeighbors(self, position):
+    def getNeighbors(_, position):
         cases = map(lambda p: (p - 1, p, p + 1), position)
         for neighbor in product(*cases):
             if neighbor != position:
                 yield neighbor
-
                    
     def getLimits(self):
         limits = [ ]
@@ -90,10 +93,8 @@ class Universe(Dimension):
             currentDimension = currentDimension[0]
         return tuple(limits)
 
-
     def isPositionActive(self, position):
         return self.isPositionValid(position) and self.getValue(position)
-
 
     def getValue(self, position):
         currentDimension = self
@@ -101,17 +102,14 @@ class Universe(Dimension):
             currentDimension = currentDimension[coordinate]
         return currentDimension[position[-1]]
 
-
     def setValue(self, position, value):
         currentDimension = self
         for coordinate in position[:-1]:
             currentDimension = currentDimension[coordinate]
         currentDimension[position[-1]] = value
 
-
     def getActiveCountForNeighbors(self, neighbors):
         return sum(map(lambda neighbor: self.isPositionActive(neighbor), neighbors))
-
 
     def copyGrowUniverse(self):
         newState = Universe()
@@ -121,7 +119,6 @@ class Universe(Dimension):
         self[0].copyGrow(newState)
         return newState
             
-
     def getNextStep(self):
         newState = self.copyGrowUniverse()
         limits = self.getLimits()
@@ -141,7 +138,6 @@ class Universe(Dimension):
             else:
                 newValue = neighborsActiveCount == 3
             newState.setValue(position, newValue)
-            #input(f"{position} {self.isPositionActive(position)} {neighborsActiveCount} {newValue}")
 
             currentDimension = dimensionCount - 1
             while currentDimension >= 0:
@@ -157,13 +153,11 @@ class Universe(Dimension):
 
         return newState
 
-
     def getActiveCount(self):
         activeCount = 0
         limits = self.getLimits()
         dimensionCount = len(limits)
         position = []
-        lastPosition = []
         for limit in limits:
             position.append(limit[0])
 
@@ -183,28 +177,55 @@ class Universe(Dimension):
                     break
                 
         return activeCount
-                
 
 
-def getInput(extraLayer = False):
-    if len(sys.argv) != 2:
-        print("Please, add input file path as parameter")
-        sys.exit(1)
+def runCycles(universe):
+    cycle = 0
+    while cycle < 6:
+        cycle += 1
+        universe = universe.getNextStep()
+    return universe.getActiveCount()
 
-    filePath = sys.argv[1]
+def part1(puzzleInput):
+    return runCycles(puzzleInput)
+
+
+def part2(puzzleInput):
+    puzzleInput.addDimension()
+    return runCycles(puzzleInput)
+
+
+def getInput(filePath):
     if not os.path.isfile(filePath):
-        print("File not found")
-        sys.exit(1)
-
+        raise FileNotFoundError(filePath)
+    
     universe = Universe()
-
-    layer = Dimension(universe)
-    if extraLayer:
-        layer = Dimension(layer)
-
+    dimension = Dimension(universe)
     with open(filePath, "r") as file:
         for line in file.readlines():
-            row = Dimension(layer)
+            row = Dimension(dimension)
             for c in line.strip():
                 row.append(True if c == "#" else False)
+
     return universe
+
+
+def main():
+    if len(sys.argv) != 2:
+        raise Exception("Please, add input file path as parameter")
+
+    puzzleInput = getInput(sys.argv[1])
+    start = time.perf_counter()
+    part1Result = part1(puzzleInput)
+    middle = time.perf_counter()
+    part2Result = part2(puzzleInput)
+    end = time.perf_counter()
+    print("P1:", part1Result)
+    print("P2:", part2Result)
+    print()
+    print(f"P1 time: {middle - start:.8f}")
+    print(f"P2 time: {end - middle:.8f}")
+
+
+if __name__ == "__main__":
+    main()
