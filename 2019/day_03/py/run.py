@@ -10,7 +10,7 @@ STEPS = {
     "L": -1,
     "D": 1j
 }
-def getWirePoints(wire):
+def getWirePositions(wire):
     currentPosition = 0j
     for direction, distance in wire:
         step = STEPS[direction]
@@ -21,32 +21,19 @@ def getWirePoints(wire):
 
 def part1(puzzleInput):
     wireA, wireB = puzzleInput
-    wireApoints = set()
-    for position in getWirePoints(wireA):
-        wireApoints.add(position)
-    
-    minIntersectionDistance = sys.maxsize
-    for position in getWirePoints(wireB):
-        if position in wireApoints:
-            minIntersectionDistance = min(minIntersectionDistance, abs(position.real) + abs(position.imag))
-    
-    return int(minIntersectionDistance)
+    wireApoints = set(getWirePositions(wireA))
+    return int(min([ abs(position.real) + abs(position.imag) for position in getWirePositions(wireB) if position in wireApoints ]))
 
 
 def part2(puzzleInput):
     wireA, wireB = puzzleInput
     wireApoints = {}
-    for steps, position in enumerate(getWirePoints(wireA)):
+    for steps, position in enumerate(getWirePositions(wireA)):
         if position in wireApoints:
             continue
         wireApoints[position] = steps + 1
 
-    minIntersectionDistance = sys.maxsize
-    for steps, position in enumerate(getWirePoints(wireB)):
-        if position in wireApoints:
-            minIntersectionDistance = min(minIntersectionDistance, wireApoints[position] + steps + 1)
-    
-    return minIntersectionDistance
+    return min([ wireApoints[position] + steps + 1 for steps, position in enumerate(getWirePositions(wireB)) if position in wireApoints ])
 
 
 lineRegex = re.compile(r"(?P<direction>R|U|L|D)(?P<distance>\d+)")
