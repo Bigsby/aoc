@@ -15,15 +15,19 @@ def part1(targetNumber):
     return halfSide + offsetToMiddle
 
 
+DIRECTIONS = [
+    - 1 - 1j,
+        - 1j,
+    + 1 - 1j,
+    - 1,
+    + 1,
+    - 1 + 1j,
+        + 1j,
+    + 1 + 1j
+]
 def getNeighbors(pos):
-    yield pos - 1 - 1j
-    yield pos     - 1j
-    yield pos + 1 - 1j
-    yield pos - 1
-    yield pos + 1
-    yield pos - 1 + 1j
-    yield pos     + 1j
-    yield pos + 1 + 1j
+    for direction in DIRECTIONS:
+        yield pos + direction
 
 
 def getSumForNeighbors(grid, pos):
