@@ -12,18 +12,12 @@ def getSize(tile, imag = False):
 
 def mirrorHorizontal(tile):
     size = getSize(tile)
-    result = {}
-    for key, value in tile.items():
-        result[ key.imag * 1j + size - key.real] = value
-    return result
+    return { key.imag * 1j + size - key.real: value for key, value in tile.items()}
 
 
 def rotateClockwise(tile):
     size = getSize(tile)
-    result = {}
-    for key, value in tile.items():
-        result[ key.real * 1j + size - key.imag] = value
-    return result
+    return { key.real * 1j + size - key.imag: value for key, value in tile.items() }
 
 
 def buildPermutations(tile):
