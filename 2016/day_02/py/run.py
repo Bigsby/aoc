@@ -9,40 +9,41 @@ DIRECTIONS = {
     "L": -1,
     "R":  1
 }
-def getCodeForButton(position, moves, keypad):
-    for move in moves:
+def getButtonForPath(position, path, keypad):
+    for move in path:
         newPosition = position + DIRECTIONS[move]
         if newPosition in keypad:
             position = newPosition
     return position, keypad[position]
 
 
-def getCode(buttons, keypad):
+def getCode(paths, keypad):
     position = 0
     code = []
-    for button in buttons:
-        position, digit = getCodeForButton(position, button, keypad)
+    for path in paths:
+        position, digit = getButtonForPath(position, path, keypad)
         code.append(digit)
     return "".join(code)
 
+
 KEYPAD1 = {
     -1 - 1j: "1", -1j: "2",  1 - 1j: "3",
-    -1:      "4",   0: "5",       1: "6",
+    -1     : "4",   0: "5",  1     : "6",
     -1 + 1j: "7",  1j: "8",  1 + 1j: "9"
 }
-def part1(buttons):
-    return getCode(buttons, KEYPAD1)
+def part1(paths):
+    return getCode(paths, KEYPAD1)
 
 
 KEYPAD2 = {
                             -2j: "1",
-               -1 -1j: "2", -1j: "3", 1 - 1j: "4",
-    -2: "5",       -1: "6",   0: "7",      1: "8", 2: "9",
+              -1 - 1j: "2", -1j: "3", 1 - 1j: "4",
+    -2: "5",  -1     : "6",   0: "7", 1     : "8", 2: "9",
               -1 + 1j: "A",  1j: "B", 1 + 1j: "C",
                              2j: "D"
 }
-def part2(buttons):
-    return getCode(buttons, KEYPAD2)
+def part2(paths):
+    return getCode(paths, KEYPAD2)
 
 
 def getInput(filePath):
