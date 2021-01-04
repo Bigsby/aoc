@@ -7,58 +7,49 @@ from itertools import cycle
 
 def part1(targetNumber):
     side = floor(sqrt(targetNumber)) + 1
-    excess = targetNumber - (side - 1) ** 2
+    pastLastSquare = targetNumber - (side - 1) ** 2
     halfSide = side // 2
-    if excess >= side:
-        excess -= side
-    sideOffset = abs(halfSide - excess)
-    return halfSide + sideOffset
+    if pastLastSquare >= side:
+        pastLastSquare -= side
+    offsetToMiddle = abs(halfSide - pastLastSquare)
+    return halfSide + offsetToMiddle
 
 
-def getNeighbors(x, y):
-    yield (x - 1, y - 1)
-    yield (x    , y - 1)
-    yield (x + 1, y - 1)
-    yield (x - 1, y    )
-    yield (x + 1, y    )
-    yield (x - 1, y + 1)
-    yield (x    , y + 1)
-    yield (x + 1, y + 1)
+def getNeighbors(pos):
+    yield pos - 1 - 1j
+    yield pos     - 1j
+    yield pos + 1 - 1j
+    yield pos - 1
+    yield pos + 1
+    yield pos - 1 + 1j
+    yield pos     + 1j
+    yield pos + 1 + 1j
 
 
-moves = cycle([
-    lambda x, y: (x + 1, y),
-    lambda x, y: (x, y + 1), 
-    lambda x, y: (x - 1, y), 
-    lambda x, y: (x, y - 1)
-])
-def generateSpiralPositions(end):
-    count = 1
-    position = (0, 0)
+def getSumForNeighbors(grid, pos):
+    total = 0
+    for neighbor in getNeighbors(pos):
+        total += grid[neighbor] if neighbor in grid else 0
+    return total
+
+
+def part2(target):
+    grid = {
+        0j: 1
+    }
+    newValue = 0
+    position = 0j
+    move = 1
     movesInDirection = 1
     while True:
         for _ in range(2):
-            move = next(moves)
+            move *= 1j
             for _ in range(movesInDirection):
-                if count >= end:
-                    return
-                position = move(*position)
-                count +=1
-                yield position
+                position += move
+                grid[position] = newValue = getSumForNeighbors(grid, position)
+                if newValue > target:
+                    return newValue
         movesInDirection += 1
-
-
-def part2(puzzleInput):
-    side = 9
-    grid = [ [ 0 for _ in range(side) ] for _ in range(side) ]
-    middle = side // 2
-    grid[middle][middle] = 1
-    for x, y in generateSpiralPositions(side ** 2):
-        ajustedX, ajustedY = (middle - x, middle - y)
-        newValue = sum([ grid[x][y] for x, y in getNeighbors(ajustedX, ajustedY) ])
-        if newValue > puzzleInput:
-            return newValue
-        grid[ajustedX][ajustedY] = newValue
 
 
 def getInput(filePath):
