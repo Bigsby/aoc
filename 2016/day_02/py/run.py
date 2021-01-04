@@ -3,72 +3,46 @@
 import sys, os, time
 
 
-MOVES = {
-    "U": (-1, 0),
-    "D": (1, 0),
-    "L": (0, -1),
-    "R": (0, 1)
+DIRECTIONS = {
+    "U": -1j,
+    "D":  1j,
+    "L": -1,
+    "R":  1
 }
-
-
-def getCodeForButton(currentPosition, moves, keypad, getNewPositionFunc):
+def getCodeForButton(position, moves, keypad):
     for move in moves:
-        currentPosition = getNewPositionFunc(currentPosition, move)
-    return currentPosition, keypad[currentPosition[0]][currentPosition[1]]
+        newPosition = position + DIRECTIONS[move]
+        if newPosition in keypad:
+            position = newPosition
+    return position, keypad[position]
 
 
-def getCode(currentPosition, buttons, keypad, getNewPositionFunc):
+def getCode(buttons, keypad):
+    position = 0
     code = []
     for button in buttons:
-        currentPosition, digit = getCodeForButton(currentPosition, button, keypad, getNewPositionFunc)
+        position, digit = getCodeForButton(position, button, keypad)
         code.append(digit)
     return "".join(code)
 
-
-KEYPAD1 = [
-   [ "1", "2", "3" ],
-   [ "4", "5", "6" ],
-   [ "7", "8", "9" ]
-]
-
-
-def getNewPosition1(current, move):
-    step = MOVES[move]
-    newPosition = (current[0] + step[0], current[1] + step[1])
-    if newPosition[0] < 0 or newPosition[0] > 2 or newPosition[1] < 0 or newPosition[1] > 2:
-        return current
-    return newPosition
-
-
+KEYPAD1 = {
+    -1 - 1j: "1", -1j: "2",  1 - 1j: "3",
+    -1:      "4",   0: "5",       1: "6",
+    -1 + 1j: "7",  1j: "8",  1 + 1j: "9"
+}
 def part1(buttons):
-    return getCode((1,1), buttons, KEYPAD1, getNewPosition1)
+    return getCode(buttons, KEYPAD1)
 
 
-N_A = None
-KEYPAD2 = [
-    [ N_A, N_A, "1", N_A, N_A ],
-    [ N_A, "2", "3", "4", N_A ],
-    [ "5", "6", "7", "8", "9" ],
-    [ N_A, "A", "B", "C", N_A ],
-    [ N_A, N_A, "D", N_A, N_A ]
-]
-
-
-def getNewPosition2(current, move):
-    stepX, stepY = MOVES[move]
-    currentX, currentY = current
-    newX, newY = (currentX + stepX, currentY + stepY)
-    if newX < 0 \
-        or newX > 4 \
-        or newY < 0 \
-        or newY > 4 \
-        or KEYPAD2[newX][newY] == N_A:
-        return current
-    return (newX, newY)
-
-
+KEYPAD2 = {
+                            -2j: "1",
+               -1 -1j: "2", -1j: "3", 1 - 1j: "4",
+    -2: "5",       -1: "6",   0: "7",      1: "8", 2: "9",
+              -1 + 1j: "A",  1j: "B", 1 + 1j: "C",
+                             2j: "D"
+}
 def part2(buttons):
-    return getCode((2,0), buttons, KEYPAD2, getNewPosition2)
+    return getCode(buttons, KEYPAD2)
 
 
 def getInput(filePath):
