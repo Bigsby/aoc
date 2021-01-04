@@ -6,15 +6,15 @@ from math import sqrt
 
 
 def getSize(tile):
-    return int(max(map(lambda key: key.real, tile.keys())))
+    return int(max(map(lambda value: value.real, tile)))
 
 
 def mirrorHorizontal(tile, size):
-    return { key.imag * 1j + size - key.real: value for key, value in tile.items()}
+    return [ position.imag * 1j + size - position.real for position in tile ]
 
 
 def rotateClockwise(tile, size):
-    return { key.real * 1j + size - key.imag: value for key, value in tile.items() }
+    return [ position.real * 1j + size - position.imag for position in tile ]
 
 
 def buildPermutations(tile):
@@ -29,7 +29,8 @@ def printTile(tile):
     side = getSize(tile) + 1
     for row in range(side):
         for column in range(side):
-            print(tile[column + row * 1j], end="")
+            position = column + row * 1j
+            print("#" if position in tile else ".", end="")
         print()
     print()
 
@@ -45,7 +46,7 @@ def testSides(tileA, tileB, test, size):
     positionA = positionAStart * size
     positionB = positionBStart * size
     for _ in range(size + 1):
-        if tileA[positionA] != tileB[positionB]:
+        if not (((positionA in tileA) and (positionB in tileB)) or ((positionA not in tileA) and (positionB not in tileB))):
             return False
         positionA += step
         positionB += step
@@ -146,30 +147,13 @@ def buildPuzzle(tiles, tileSize):
     return puzzle
 
 
-def printAllTiles(puzzle):
-    puzzleTileSize = getSize(puzzle)
-    tileSize = getSize(puzzle[0][1])
-    for puzzleRow in range(puzzleTileSize + 1):
-        for tileRow in range(tileSize + 1):
-            for puzzleColumn in range(puzzleTileSize + 1):
-                for tileColumn in range(tileSize + 1):
-                    print(puzzle[puzzleColumn + puzzleRow * 1j][1][tileColumn + tileRow * 1j], end="")
-                print(" ", end=" ")
-            print(" ")
-        print() 
-
-
 def removeBordersAndJoin(puzzle, tileSize):
-    puzzleTileSize = getSize(puzzle) + 1
     offsetFactor = tileSize - 1
-    reduced = {}
-    for puzzleRow in range(puzzleTileSize):
-        for puzzleColumn in range(puzzleTileSize):
-            for tileRow in range(1, tileSize):
-                for tileColumn in range(1, tileSize):
-                    row = puzzleRow * offsetFactor + tileRow - 1
-                    column = puzzleColumn * offsetFactor + tileColumn - 1
-                    reduced[column + row * 1j ] = puzzle[ puzzleColumn + puzzleRow * 1j ][1][ tileColumn + tileRow * 1j]
+    reduced = []
+    for puzzlePosition, tile in puzzle.items():
+        for position in tile[1]:
+            if position.real > 0 and position.real < tileSize and position.imag > 0 and position.imag < tileSize:
+                reduced.append((puzzlePosition.real * offsetFactor + position.real - 1) + (puzzlePosition.imag * offsetFactor + position.imag - 1) * 1j)
     return reduced
 
 
@@ -189,13 +173,13 @@ def getSeaMonster():
 
 def isMonsterInLocation(location, puzzle, seaMonster):
     for monsterPosition in seaMonster:
-        if puzzle[location + monsterPosition] != "#":
+        if not location + monsterPosition in puzzle:
             return False
     return True
 
 
 def getSeamonsterLocations(puzzle, seaMonster, seaMonsterHeight, seaMonsterWidth):
-    puzzleSize = getSize(puzzle)
+    puzzleSize = getSize(puzzle) + 1
     locations = []
     for puzzleRow in range(0, puzzleSize - seaMonsterHeight):
         for puzzleColumn in range(0, puzzleSize - seaMonsterWidth):
@@ -212,11 +196,11 @@ def getPermutationWithSeamonster(puzzle, seaMonster, seaMonsterHeight, seaMonste
     return None, []
 
 
-def replaceSeaMonster(puzzle, seaMonster, locations):
-    puzzle = dict(puzzle)
+def removeSeaMonster(puzzle, seaMonster, locations):
+    puzzle = list(puzzle)
     for location in locations:
         for seaMonsterPosition in seaMonster:
-            puzzle[location + seaMonsterPosition] = "O"
+            puzzle.remove(location + seaMonsterPosition)
     return puzzle
     
 
@@ -226,9 +210,8 @@ def part2(tiles):
     reduced = removeBordersAndJoin(puzzle, tileSize)
     seaMonster, seaMonsterHeight, seaMonsterWidth = getSeaMonster()
     permutation, locations = getPermutationWithSeamonster(reduced, seaMonster, seaMonsterHeight, seaMonsterWidth)
-    withMonster = replaceSeaMonster(permutation, seaMonster, locations)
-    roughWatersCount = sum(map(lambda value: value == "#", withMonster.values()))
-    return roughWatersCount
+    withMonster = removeSeaMonster(permutation, seaMonster, locations)
+    return len(withMonster)
 
 
 numberLineRegex = re.compile(r"^Tile\s(?P<number>\d+):$")
@@ -239,19 +222,20 @@ def getInput(filePath):
     with open(filePath, "r") as file:
         tiles = []
         tileNumber = 0
-        tile = {}
+        tile = []
         position = 0j
         for line in file.readlines():
             numberMatch = numberLineRegex.match(line)
             if numberMatch:
                 tileNumber = int(numberMatch.group("number"))
-                tile = {}
+                tile = []
                 position = 0j
             elif line.strip() == "":
                 tiles.append((tileNumber, tile))
             else:
                 for c in line.strip():
-                    tile[position] = c
+                    if c == "#":
+                        tile.append(position)
                     position += 1
                 position += 1j - position.real
             
