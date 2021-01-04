@@ -1,241 +1,217 @@
 #! /usr/bin/python3
-
 import sys, os, time
 import re
 from functools import reduce
 from math import sqrt
 
 
-def mirrorHorizontal(grid):
-    size = len(grid)
-    return [ [ grid[y][size - 1 - x] for x in range(size) ] for y in range(size) ]
+def getSize(tile):
+    return int(max(map(lambda value: value.real, tile)))
 
 
-def rotateClockwise(grid):
-    size = len(grid)
-    return [ [ grid[size - 1 - x][y] for x in range(size) ] for y in range(size) ]
+def mirrorHorizontal(tile, size):
+    return [ position.imag * 1j + size - position.real for position in tile ]
 
 
-def buildPermutations(lines):
-    grid = [list(line) for line in lines]
+def rotateClockwise(tile, size):
+    return [ position.real * 1j + size - position.imag for position in tile ]
+
+
+def buildPermutations(tile):
+    size = getSize(tile)
     for _ in range(4):
-        yield grid
-        yield mirrorHorizontal(grid)
-        grid = rotateClockwise(grid)
+        yield tile
+        yield mirrorHorizontal(tile, size)
+        tile = rotateClockwise(tile, size)
+    
+
+def printTile(tile):
+    side = getSize(tile) + 1
+    for row in range(side):
+        for column in range(side):
+            position = column + row * 1j
+            print("#" if position in tile else ".", end="")
+        print()
+    print()
 
 
-def toString(variation):
-    return "\n".join(["".join(line) for line in variation])
+TESTS = [
+    ( 0 , 1j, 1 ), # top > bottom
+    ( 1 , 0, 1j ), # right > left
+    ( 1j, 0, 1  ), # bottom > top
+    ( 0 , 1, 1j )  # left > right
+]
+def testSides(tileA, tileB, test, size):
+    positionAStart, positionBStart, step = test
+    positionA = positionAStart * size
+    positionB = positionBStart * size
+    for _ in range(size + 1):
+        if not (((positionA in tileA) and (positionB in tileB)) or ((positionA not in tileA) and (positionB not in tileB))):
+            return False
+        positionA += step
+        positionB += step
+    return True
 
 
-def calculatBorders(lines):
-    width = len(lines[0])
-    top = lines[0]
-    right = "".join(map(lambda line: line[width - 1], lines))
-    bottom = lines[width - 1]
-    left = "".join(map(lambda line: line[0], lines))
-    return top, right, bottom, left
-     
+def doPermutationsMatch(permutationA, permutationB, size):
+    for side, test in enumerate(TESTS):
+        if testSides(permutationA, permutationB, test, size):
+            return True, side
+    return False, -1
+    
 
-class Tile():
-    def __init__(self, number, lines):
-        self.number = number
-        self.lines = lines
-        self.borders = calculatBorders(self.lines)
-        self.permutations = list(buildPermutations(self.lines))
-
-    def __str__(self):
-        return f"{self.number} {self.borders}"
-    def __repr__(self):
-        return self.__str__()
+def doTilesMatch(tileA, tileB, size):
+    for permutation in buildPermutations(tileB):
+        matched, side = doPermutationsMatch(tileA, permutation, size)
+        if matched:
+            return True, side
+    return False, -1
 
 
-def doSidesMatch(thisSides, otherSides):
-    for side in thisSides:
-        for otherSide in otherSides:
-            if side == otherSide or side == otherSide[::-1]:
-                return True
-    return False
-
-
-def findMatchingBorders(tile, tiles):
-    count = 0
-    for otherTile in tiles:
-        if otherTile.number == tile.number:
+def getMatchingSides(tile, tiles, size):
+    number, tile = tile
+    matchedSides = []
+    for otherNumber, otherTile in tiles:
+        if otherNumber == number:
             continue
-        if doSidesMatch(tile.borders, otherTile.borders):
-            count += 1        
-    return count
+        matched, side = doTilesMatch(tile, otherTile, size)
+        if matched:
+            matchedSides.append(side)
+    return matchedSides
 
 
 def part1(tiles):
-    tileCounts = {}
-    
-    for tile in tiles:
-        tileCounts[tile.number] = findMatchingBorders(tile, tiles)
-
-    corners = [ tileNumber for tileNumber in tileCounts if tileCounts[tileNumber] == 2 ]
-    return reduce(lambda soFar, tileNumber: soFar * tileNumber, corners)
+    size = getSize(tiles[0][1])
+    tilesMatchesSides = { number: getMatchingSides((number, tile), tiles, size) for number, tile in tiles }
+    corners = [ number for number, matchedSides in tilesMatchesSides.items() if len(matchedSides) == 2 ]
+    return reduce(lambda soFar, number: soFar * number, corners)
 
 
-def getSide(permutation, side, size):
-    result = []
-    width = size - 1
-    for i in range(size):
-        if side == 0:
-            result.append(permutation[0][i])
-        elif side == 1:
-            result.append(permutation[i][width])
-        elif side == 2:
-            result.append(permutation[width][i])
-        else:
-            result.append(permutation[i][0])
-    return result
-
-
-def getOtherSide(side):
-    if side == 0:
-        return 2
-    if side == 1:
-        return 3
-    if side == 2:
-        return 0
-    if side == 3:
-        return 1
-
-
-def findConnection(currentPermutation, newTile, direction, size):
-    sideToMatch = getSide(currentPermutation, direction, size)
-    otherSide = getOtherSide(direction)
-    for permutation in newTile.permutations:
-        permutationSide = getSide(permutation, otherSide, size)
-        if all(sideToMatch[i] == permutationSide[i] for i in range(size)):
+def findTileForSide(tile, permutations, side, size):
+    _, thisTile = tile
+    for permutation in permutations:
+        if testSides(thisTile, permutation, TESTS[side], size):
             return True, permutation
     return False, None
 
 
-def buildPuzzle(tiles, startTile, firstDirection, secondDirection, tileSize, puzzleWidth):
-    lastTile = (startTile.number, startTile.permutations[0])
-    currentRow = [lastTile]
-    puzzle = [currentRow]
-    used = { startTile.number }
-    direction = firstDirection
-    nextDirection = getOtherSide(firstDirection)
+def printPuzzleNumbers(puzzle):
+    size = getSize(puzzle)
+    for row in range(size + 1):
+        for column in range(size + 1):
+            print(f" {puzzle[column + row * 1j][0]} ", end="")
+        print()
+
+
+def getNextDirection(direction):
+    return (direction + 2) % 4
+
+
+SIDE_DIRECTION = {
+    0: -1j, # up
+    1: 1,   # right
+    2: 1j,  # down
+    3: -1   # left
+}
+def buildPuzzle(tiles, tileSize):
+    tilesMatchesSides = { number: getMatchingSides((number, tile), tiles, tileSize) for number, tile in tiles }    
+    firstCornerNumber, (sideOne, sideTwo) = next((number, matchedSides) for number, matchedSides in tilesMatchesSides.items() if len(matchedSides) == 2)
+    allPermutations = { number: list(buildPermutations(tile)) for number, tile in tiles }
+    lastTile = firstCornerNumber, allPermutations[firstCornerNumber][0]
+    puzzleWidth = int(sqrt(len(tiles)))
+    puzzle = { }
+    puzzlePosition = ((1 if sideOne == 3 or sideTwo == 3 else 0) + (1j if sideOne == 0 or sideTwo == 0 else 0)) * (puzzleWidth - 1)
+    puzzle[puzzlePosition] = lastTile
+    used = { firstCornerNumber }
+    direction = sideOne
+    nextDirection = getNextDirection(direction)
+    puzzlePosition += SIDE_DIRECTION[direction]
 
     while len(used) < len(tiles):
-        _, lastPermutation = lastTile
-        for tile in tiles:
-            if tile.number in used:
+        for tileNumber, _ in tiles:
+            if tileNumber in used:
                 continue
-            matched, newPermutation = findConnection(lastPermutation, tile, direction, tileSize)
+            matched, newPermutation = findTileForSide(lastTile, allPermutations[tileNumber], direction, tileSize)
             if matched:
-                lastTile = (tile.number, newPermutation)
-                currentRow.insert(0 if direction == 0 or direction == 3 else len(currentRow), lastTile)
-                used.add(tile.number)
-                if direction == secondDirection:
+                lastTile = (tileNumber, newPermutation)
+                puzzle[puzzlePosition] = lastTile
+                used.add(tileNumber)
+                if direction == sideTwo:
                     direction = nextDirection
-                    nextDirection = getOtherSide(direction)
-                elif (len(used) % puzzleWidth) == 0 and len(used) < len(tiles):
-                    currentRow = []
-                    puzzle.insert(0 if secondDirection == 0 or secondDirection == 3 else len(puzzle), currentRow)
-                    direction = secondDirection
+                    nextDirection = getNextDirection(direction)
+                elif len(used) % puzzleWidth == 0:
+                    direction = sideTwo    
+                puzzlePosition += SIDE_DIRECTION[direction]
                 break
 
     return puzzle
 
 
-def findMatchingSide(thisSides, otherSides):
-    for thisIndex, side in enumerate(thisSides):
-        for otherSide in otherSides:
-            if side == otherSide or side == otherSide[::-1]:
-                return True, thisIndex
-    return False, 0
+def removeBordersAndJoin(puzzle, tileSize):
+    offsetFactor = tileSize - 1
+    reduced = []
+    for puzzlePosition, tile in puzzle.items():
+        for position in tile[1]:
+            if position.real > 0 and position.real < tileSize and position.imag > 0 and position.imag < tileSize:
+                reduced.append((puzzlePosition.real * offsetFactor + position.real - 1) + (puzzlePosition.imag * offsetFactor + position.imag - 1) * 1j)
+    return reduced
 
 
-def isCorner(tile, tiles):
-    connections = []
-    for otherTile in tiles:
-        if otherTile.number == tile.number:
-            continue
-        matched, thisSide = findMatchingSide(tile.borders, otherTile.borders)
-        if matched:
-            connections.append(thisSide)
-    return len(connections) == 2, connections
-
-
-def findCorner(tiles):
-    for tile in tiles:
-        isTileCorner, connections = isCorner(tile, tiles)
-        if isTileCorner:
-            return tile, connections 
-
-def joinPuzzle(puzzle, tileSize, puzzleWidth):
-    rows = []
-    for tileRow in puzzle:
-        for y in range(1, tileSize - 1):
-            currentRow = []
-            for x in range(puzzleWidth):
-                currentRow += tileRow[x][1][y][1:-1]
-            rows.append(currentRow)
-    return rows
-
-
-def isMonsterInLocation(x, y, permutation, seaMonster, seaMonsterWidth, seaMonsterHeight):
-    for monsterY in range(seaMonsterHeight):
-        for monsterX in range(seaMonsterWidth):
-            if seaMonster[monsterY][monsterX] == "#" and permutation[y + monsterY][x + monsterX] == ".":
-                return False
-    return True
-
-
-def findSeaMonster(permutation, seaMonster, tileSize, seaMonsterWidth, seaMonsterHeight):
-    locations = []
-    for x in range(0, tileSize - seaMonsterWidth):
-        for y in range(0, tileSize - seaMonsterHeight):
-            if isMonsterInLocation(x, y, permutation, seaMonster, seaMonsterWidth, seaMonsterHeight):
-                locations.append((x, y))
-            
-    return locations
-
-
-def getPermutationWithSeaMonster(puzzle, seaMonsterGrid, puzzleSize, seaMonsterWidth, seaMonsterHeight):
-    for permutation in buildPermutations(puzzle):
-        locations = findSeaMonster(permutation, seaMonsterGrid, puzzleSize, seaMonsterWidth, seaMonsterHeight)
-        if len(locations):
-            return permutation, locations
-
-
-def replaceSeaMonsterInPuzzle(puzzle, seaMonster, locations, monsterWidth, monsterHeight):
-    for location in locations:
-        x, y = location
-        for monsterX in range(monsterWidth):
-            for monsterY in range(monsterHeight):
-                if seaMonster[monsterY][monsterX] == "#":
-                    puzzle[y + monsterY][x + monsterX] = "O"
-
-
-seaMonsterText = [
+SEA_MONSTER = [
     "                  # ",
     "#    ##    ##    ###",
     " #  #  #  #  #  #   "
 ]
-def part2(tiles):
-    tileSize = len(tiles[0].lines[0])
-    puzzleWidth = int(sqrt(len(tiles)))
-    firstCorner, connections = findCorner(tiles)
-    puzzle = buildPuzzle(tiles, firstCorner, connections[0], connections[1], tileSize, puzzleWidth)
-    jointPuzzle = joinPuzzle(puzzle, tileSize, puzzleWidth)
-    jointPuzzleSize = len(jointPuzzle)
-    seaMonsterGrid = [ list(line) for line in seaMonsterText ]
-    seaMonsterWidth = len(seaMonsterGrid[0])
-    seaMonsterHeight = len(seaMonsterGrid)
-    permutation, locations = getPermutationWithSeaMonster(jointPuzzle, seaMonsterGrid, jointPuzzleSize, seaMonsterWidth, seaMonsterHeight)
+def getSeaMonster():
+    seaMonster = []
+    for rowIndex, row in enumerate(SEA_MONSTER):
+        for columnIndex, c in enumerate(row):
+            if c == "#":
+                seaMonster.append(columnIndex + rowIndex * 1j)
+    return seaMonster, len(SEA_MONSTER), len(SEA_MONSTER[0])
+
+
+def isMonsterInLocation(location, puzzle, seaMonster):
+    for monsterPosition in seaMonster:
+        if not location + monsterPosition in puzzle:
+            return False
+    return True
+
+
+def getSeamonsterLocations(puzzle, seaMonster, seaMonsterHeight, seaMonsterWidth):
+    puzzleSize = getSize(puzzle) + 1
+    locations = []
+    for puzzleRow in range(0, puzzleSize - seaMonsterHeight):
+        for puzzleColumn in range(0, puzzleSize - seaMonsterWidth):
+            if isMonsterInLocation(puzzleColumn + puzzleRow * 1j, puzzle, seaMonster):
+                locations.append(puzzleColumn + puzzleRow * 1j)
+    return locations
+
+
+def getPermutationWithSeamonster(puzzle, seaMonster, seaMonsterHeight, seaMonsterWidth):
+    for permutation in buildPermutations(puzzle):
+        locations = getSeamonsterLocations(permutation, seaMonster, seaMonsterHeight, seaMonsterWidth)
+        if locations:
+            return permutation, locations
+    return None, []
+
+
+def removeSeaMonster(puzzle, seaMonster, locations):
+    puzzle = list(puzzle)
+    for location in locations:
+        for seaMonsterPosition in seaMonster:
+            puzzle.remove(location + seaMonsterPosition)
+    return puzzle
     
-    replaceSeaMonsterInPuzzle(permutation, seaMonsterGrid, locations, seaMonsterWidth, seaMonsterHeight)
-    count = 0
-    for row in permutation:
-        count += row.count("#")
-    return count
+
+def part2(tiles):
+    tileSize = getSize(tiles[0][1])
+    puzzle = buildPuzzle(tiles, tileSize)
+    reduced = removeBordersAndJoin(puzzle, tileSize)
+    seaMonster, seaMonsterHeight, seaMonsterWidth = getSeaMonster()
+    permutation, locations = getPermutationWithSeamonster(reduced, seaMonster, seaMonsterHeight, seaMonsterWidth)
+    withMonster = removeSeaMonster(permutation, seaMonster, locations)
+    return len(withMonster)
 
 
 numberLineRegex = re.compile(r"^Tile\s(?P<number>\d+):$")
@@ -246,17 +222,23 @@ def getInput(filePath):
     with open(filePath, "r") as file:
         tiles = []
         tileNumber = 0
-        lines = []
+        tile = []
+        position = 0j
         for line in file.readlines():
             numberMatch = numberLineRegex.match(line)
             if numberMatch:
                 tileNumber = int(numberMatch.group("number"))
-                lines = []
+                tile = []
+                position = 0j
             elif line.strip() == "":
-                tiles.append(Tile(tileNumber, lines))
+                tiles.append((tileNumber, tile))
             else:
-                lines.append(line.strip())
-        
+                for c in line.strip():
+                    if c == "#":
+                        tile.append(position)
+                    position += 1
+                position += 1j - position.real
+            
         return tiles
 
 
