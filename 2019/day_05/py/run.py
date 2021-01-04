@@ -25,34 +25,34 @@ def run(memory, input):
     output = 0
     while memory[pointer] != HALT:
         instruction = memory[pointer]
-        opcode, param1mode, param2mode = instruction % 100, (instruction // 100) % 10, (instruction // 1000) % 10
+        opcode, p1mode, p2mode = instruction % 100, (instruction // 100) % 10, (instruction // 1000) % 10
         if opcode == ADD:
-            memory[memory[pointer + 3]] = getValue(memory, pointer, 1, param1mode) + getValue(memory, pointer, 2, param2mode)
+            memory[memory[pointer + 3]] = getValue(memory, pointer, 1, p1mode) + getValue(memory, pointer, 2, p2mode)
             pointer += 4
         elif opcode == MUL:
-            memory[memory[pointer + 3]] = getValue(memory, pointer, 1, param1mode) * getValue(memory, pointer, 2, param2mode)
+            memory[memory[pointer + 3]] = getValue(memory, pointer, 1, p1mode) * getValue(memory, pointer, 2, p2mode)
             pointer += 4
         elif opcode == INPUT:
             memory[memory[pointer + 1]] = input
             pointer += 2
         elif opcode == OUTPUT:
-            output = getValue(memory, pointer, 1, param1mode)
+            output = getValue(memory, pointer, 1, p1mode)
             pointer += 2
         elif opcode == JMP_TRUE:
-            if getValue(memory, pointer, 1, param1mode):
-                pointer = getValue(memory, pointer, 2, param2mode)
+            if getValue(memory, pointer, 1, p1mode):
+                pointer = getValue(memory, pointer, 2, p2mode)
             else:
                 pointer += 3
         elif opcode == JMP_FALSE:
-            if not getValue(memory, pointer, 1, param1mode):
-                pointer = getValue(memory, pointer, 2, param2mode)
+            if not getValue(memory, pointer, 1, p1mode):
+                pointer = getValue(memory, pointer, 2, p2mode)
             else:
                 pointer += 3
         elif opcode == LESS_THAN:
-            memory[memory[pointer + 3]] = 1 if getValue(memory, pointer, 1, param1mode) < getValue(memory, pointer, 2, param2mode) else 0
+            memory[memory[pointer + 3]] = 1 if getValue(memory, pointer, 1, p1mode) < getValue(memory, pointer, 2, p2mode) else 0
             pointer += 4
         elif opcode == EQUALS:
-            memory[memory[pointer + 3]] = 1 if getValue(memory, pointer, 1, param1mode) == getValue(memory, pointer, 2, param2mode) else 0
+            memory[memory[pointer + 3]] = 1 if getValue(memory, pointer, 1, p1mode) == getValue(memory, pointer, 2, p2mode) else 0
             pointer += 4
         else:
             raise Exception(f"Unknown instruction", pointer, instruction)
