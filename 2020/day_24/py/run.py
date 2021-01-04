@@ -4,23 +4,22 @@ import sys, os, time
 import re
 
 
-STEPS = {
-    "e": (1,-1,0),
-    "se": (0,-1,1),
-    "sw": (-1,0,1),
-    "w": (-1,1,0),
-    "nw": (0,1,-1),
-    "ne": (1,0,-1)
+DIRECTIONS = {
+    "e":   1,
+    "se":      1j,
+    "sw": -1 + 1j,
+    "w":  -1     ,
+    "ne":  1 - 1j,
+    "nw":    - 1j
 }
 
 
 def flipInitialTiles(tilePaths):
     tiles = {}
     for path in tilePaths:
-        current = (0,0,0)
+        current = 0
         for direction in path:
-            step = STEPS[direction]
-            current = current[0] + step[0], current[1] + step[1], current[2] + step[2]
+            current += DIRECTIONS[direction]
         if current in tiles:
             tiles[current] = not tiles[current]
         else:
@@ -28,18 +27,12 @@ def flipInitialTiles(tilePaths):
     return tiles
 
 
-def getTotalBlackCount(tiles):
-    return sum([tiles[position] for position in tiles if tiles[position] ])
-
-
 def part1(tilePaths):
-    tiles = flipInitialTiles(tilePaths)
-    return getTotalBlackCount(tiles)
+    return sum(flipInitialTiles(tilePaths).values())
 
 
 def getNeighbors(tile):
-    tileX, tileY, tileZ = tile
-    return [ (tileX + stepX, tileY + stepY, tileZ + stepZ) for stepX, stepY, stepZ in STEPS.values() ]
+    return [ tile + direction for direction in DIRECTIONS.values() ]
 
 
 def getBlackCount(neighbors, tiles):
@@ -72,11 +65,9 @@ def runDay(tiles):
 
 def part2(tilePaths):
     tiles = flipInitialTiles(tilePaths)
-    day = 0
-    while day < 100:
-        day += 1
+    for _ in range(100):
         tiles = runDay(tiles)
-    return sum([tiles[position] for position in tiles if tiles[position] ])
+    return sum(tiles.values())
 
 
 lineRegex = re.compile(r"e|se|sw|w|nw|ne")
