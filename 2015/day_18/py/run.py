@@ -3,92 +3,51 @@
 import sys, os, time
 
 
-def getNeighbors(row, column):
-    return [ 
-        (row - 1, column -1),
-        (row - 1, column),
-        (row - 1, column + 1),
-        (row, column - 1),
-        (row, column + 1),
-        (row + 1, column -1),
-        (row + 1, column),
-        (row + 1, column +1)
-    ]
+def getNeighbors(pos):
+    yield pos - 1 - 1j
+    yield pos     - 1j
+    yield pos + 1 - 1j
+    yield pos - 1
+    yield pos + 1
+    yield pos - 1 + 1j
+    yield pos     + 1j
+    yield pos + 1 + 1j
 
-class Grid():
-    def __init__(self, lights = []):
-        self.lights = lights
 
-    def addLine(self, line):
-        newLine = []
-        for c in line:
-            newLine.append(1 if c == "#" else 0)
-        self.lights.append(newLine)
-    
-    @staticmethod
-    def _fromLights(lights):
-        return Grid(lights)
-
-    def __str__(self):        
-        return str(self.lights)
-
-    def print(self):
-        length = len(self.lights)
-        for row in range(length):
-            print(row, self.lights[row])
-
-    def isNeighborValid(self, coordinate):
-        limit = len(self.lights)
-        return coordinate[0] >= 0 and coordinate[0] < limit and coordinate[1] >= 0 and coordinate[1] < limit
-
-    def getNeighborsOnCount(self, row, column):
-        count = 0
-        neighbors = getNeighbors(row, column)
-        for neighbor in neighbors:
-            if self.isNeighborValid(neighbor):
-                count += self.lights[neighbor[0]][neighbor[1]]
-        return count
-
-    def calculateNextStep(self, alwaysOn = []):
-        for coordinate in alwaysOn:
-            self.lights[coordinate[0]][coordinate[1]] = 1
-            
-        length = len(self.lights)
-        newState = [ [0] * length for i in range(length) ]
-        for row in range(length):
-            for column in range(length):
-                neighbors = self.getNeighborsOnCount(row, column)
-                if self.lights[row][column]:
-                    newState[row][column] = 1 if neighbors == 2 or neighbors == 3 else 0
-                else:
-                    newState[row][column] = 1 if neighbors == 3 else 0
-        for coordinate in alwaysOn:
-            newState[coordinate[0]][coordinate[1]] = 1
-        return Grid._fromLights(newState)
-        
-    def lightsOnCount(self):
-        return sum([ sum([ column for column in row]) for row in self.lights ])
+def getNextState(grid, alwaysOn = []):
+    for position in alwaysOn:
+            grid[position] = 1
+    newState = dict(grid)
+    for position in grid:
+        neighbors = sum(map(lambda neighbor: grid[neighbor] if neighbor in grid else 0, getNeighbors(position)))
+        if grid[position]:
+            newState[position] = 1 if neighbors == 2 or neighbors == 3 else 0
+        else:
+            newState[position] = 1 if neighbors == 3 else 0
+    for position in alwaysOn:
+            newState[position] = 1
+    return newState
 
 
 def runSteps(grid, alwaysOn = []):
     for _ in range(100):
-        grid = grid.calculateNextStep(alwaysOn)
-    return grid.lightsOnCount()
+        grid = getNextState(grid, alwaysOn)
+    return sum(grid.values())
 
 
-def part1(puzzleInput):
-    return runSteps(puzzleInput)
+def part1(grid):
+    return runSteps(grid)
 
 
-def part2(puzzleInput):
-    limit = len(puzzleInput.lights) - 1
+def part2(grid):
+    side = max(map(lambda key: key.real, grid.keys()))
     alwaysOn = [
-        (0, 0),
-        (0, limit),
-        (limit, 0),
-        (limit, limit)
+        0,
+        side * 1j,
+        side,
+        side * (1 + 1j)
     ]
-    return runSteps(puzzleInput, alwaysOn)
+    return runSteps(grid, alwaysOn)
 
 
 def getInput(filePath):
@@ -96,9 +55,13 @@ def getInput(filePath):
         raise FileNotFoundError(filePath)
     
     with open(filePath, "r") as file:
-        grid = Grid()
+        grid = {}
+        pos = 0j
         for line in file.readlines():
-            grid.addLine(line.strip())
+            for c in line.strip():
+                grid[pos] = 1 if c == "#" else 0
+                pos += 1
+            pos += 1j - pos.real
         return grid
 
 
