@@ -29,7 +29,7 @@ def part1(planetOrbits: Dict[str, str]) -> int:
             else:
                 orbitCounts[planet] = 1
     
-    return sum(map(lambda kv: kv[1], orbitCounts.items()))
+    return sum(orbitCounts.values())
 
 
 def getPathToCenterOfMass(planet:str, planetOrbits: Dict[str, str]) -> List[str]:
