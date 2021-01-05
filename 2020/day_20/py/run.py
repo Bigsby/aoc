@@ -125,9 +125,9 @@ def buildPuzzle(tiles, tileSize):
     used = { firstCornerNumber }
     direction = sideOne
     nextDirection = getNextDirection(direction)
-    puzzlePosition += SIDE_DIRECTION[direction]
-
+    
     while len(used) < len(tiles):
+        puzzlePosition += SIDE_DIRECTION[direction]
         for tileNumber, _ in tiles:
             if tileNumber in used:
                 continue
@@ -141,7 +141,6 @@ def buildPuzzle(tiles, tileSize):
                     nextDirection = getNextDirection(direction)
                 elif len(used) % puzzleWidth == 0:
                     direction = sideTwo    
-                puzzlePosition += SIDE_DIRECTION[direction]
                 break
 
     return puzzle
