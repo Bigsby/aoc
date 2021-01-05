@@ -5,7 +5,9 @@ from functools import reduce
 from math import sqrt
 
 
-def getSize(tile):
+def getSize(tile, height = False):
+    if height:
+        return int(max(map(lambda value: value.imag, tile)))
     return int(max(map(lambda value: value.real, tile)))
 
 
@@ -167,7 +169,7 @@ def getSeaMonster():
         for columnIndex, c in enumerate(row):
             if c == "#":
                 seaMonster.append(columnIndex + rowIndex * 1j)
-    return seaMonster, len(SEA_MONSTER), len(SEA_MONSTER[0])
+    return seaMonster
 
 
 def isMonsterInLocation(location, puzzle, seaMonster):
@@ -187,7 +189,9 @@ def getSeamonsterLocations(puzzle, seaMonster, seaMonsterHeight, seaMonsterWidth
     return locations
 
 
-def getPermutationWithSeamonster(puzzle, seaMonster, seaMonsterHeight, seaMonsterWidth):
+def getPermutationWithSeamonster(puzzle, seaMonster):
+    seaMonsterWidth = getSize(seaMonster) + 1
+    seaMonsterHeight = getSize(seaMonster, True) + 1
     for permutation in buildPermutations(puzzle):
         locations = getSeamonsterLocations(permutation, seaMonster, seaMonsterHeight, seaMonsterWidth)
         if locations:
@@ -207,8 +211,8 @@ def part2(tiles):
     tileSize = getSize(tiles[0][1])
     puzzle = buildPuzzle(tiles, tileSize)
     reduced = removeBordersAndJoin(puzzle, tileSize)
-    seaMonster, seaMonsterHeight, seaMonsterWidth = getSeaMonster()
-    permutation, locations = getPermutationWithSeamonster(reduced, seaMonster, seaMonsterHeight, seaMonsterWidth)
+    seaMonster = getSeaMonster()
+    permutation, locations = getPermutationWithSeamonster(reduced, seaMonster)
     withMonster = removeSeaMonster(permutation, seaMonster, locations)
     return len(withMonster)
 
