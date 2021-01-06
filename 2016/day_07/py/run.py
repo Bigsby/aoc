@@ -1,8 +1,10 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import List, Set
 import re
-from typing import Iterator, List
+from functools import reduce
+from itertools import product
 
 
 abbaRegex = re.compile(r"([a-z])((?!\1)[a-z])\2\1")
@@ -16,19 +18,15 @@ def part1(ips: List[List[str]]) -> int:
     return sum(map(supportsTLS, ips))
 
 
-def findABAs(supernet: str) -> Iterator[str]:
-    for i in range(len(supernet) - 2):
-        if supernet[i] == supernet[i + 2]:
-            yield supernet[i:i+2]
+def findBABs(supernet: str) -> Set[str]:
+    return { "".join([supernet[i+1], supernet[i], supernet[i+1] ]) \
+            for i in range(len(supernet) - 2) \
+            if supernet[i] == supernet[i + 2] }
 
 
 def supportsSSL(ip: List[str]) -> bool:
-    for supernet in ip[::2]:
-        for aba in findABAs(supernet):
-            bab = "".join([ aba[1], aba[0], aba[1]])
-            if any(bab in hypernet for hypernet in ip[1::2]):
-                return True
-    return False
+    babs: Set[str] = reduce(lambda soFar, supernet: soFar | findBABs(supernet), ip[::2], set())
+    return any(bab in hypernet for bab, hypernet in product(babs, ip[1::2]))
 
 
 def part2(ips: List[List[str]]):
