@@ -5,6 +5,7 @@ from typing import Counter, Dict, List, Tuple
 import re
 from functools import reduce
 
+
 def part1(records: Dict[str, Tuple[ int, List[str]]]) -> str:
     allChildren: List[str] = list(reduce(lambda soFar, children: [ *soFar, *children[1] ], records.values(), []))
     for name in records.keys():
@@ -26,15 +27,15 @@ def part2(records: Dict[str, Tuple[ int, List[str]]]):
                 combinedWeights[name] = reduce(lambda soFar, child: soFar + combinedWeights[child], children, weight)
     
     currentTower = records[part1(records)]
-    difference = 0
+    weightDifference = 0
     while True:
         weight, children = currentTower
         weightCounts = Counter([ combinedWeights[child] for child in children ])
         if len(weightCounts) == 1:
-            return weight + difference
-        single: int = next(k for k, v in weightCounts.items() if v == 1)
-        difference = next(k for k, v in weightCounts.items() if v > 1) - single
-        currentTower = records[next(child for child in currentTower[1] if combinedWeights[child] == single)]
+            return weight + weightDifference
+        singleWeight: int = next(k for k, v in weightCounts.items() if v == 1)
+        weightDifference = next(k for k, v in weightCounts.items() if v > 1) - singleWeight
+        currentTower = records[next(child for child in currentTower[1] if combinedWeights[child] == singleWeight)]
 
 
 lineRegex = re.compile(r"^(?P<name>[a-z]+)\s\((?P<weight>\d+)\)(?P<children>.*)")
@@ -54,7 +55,6 @@ def getInput(filePath: str) -> Dict[str, Tuple[ int, List[str]]]:
     with open(filePath, "r") as file:
         return { name: (weight, children) for name, weight, children in map(parseLine, file.readlines()) }
             
-
 
 def main():
     if len(sys.argv) != 2:
