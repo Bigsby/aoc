@@ -1,6 +1,5 @@
 #! /usr/bin/python3
 
-from re import L
 import sys, os, time
 from typing import Dict, List, Tuple
 from enum import Enum
