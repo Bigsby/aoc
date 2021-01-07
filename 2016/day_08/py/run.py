@@ -196,10 +196,10 @@ def part1(instructions: List[Tuple[InstructionType, int, int]]) -> int:
 
 
 def getCharacterInScreen(screen: List[complex], index: int, width: int, height: int) -> str:
-    characterValue = sum(2**(width - 1 - x) << (y * width) \
+    screenValue = sum(2**(width - 1 - x) << (y * width) \
         for y, x in product(range(height), range(width)) \
         if (width * index + x) + y * 1j in screen)
-    return LETTERS[characterValue]
+    return LETTERS[screenValue]
 
 
 def part2(instructions: List[Tuple[InstructionType, int, int]]):
