@@ -15,11 +15,10 @@ class Marble():
         self.next.previous = self
         
 
-
 def playerGame(playerCount: int, lastMarble:int) -> int:
     scores = { player + 1: 0 for player in range(playerCount) }
     players = cycle(scores.keys())
-    currentPlayer = next(players)#
+    currentPlayer = next(players)
     currentMarble = Marble(0, None, None)
     nextNumber = 0
     while nextNumber <= lastMarble:
