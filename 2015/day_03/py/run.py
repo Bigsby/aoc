@@ -1,49 +1,46 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import Dict, List
 
 
 directions = {
-    "^": (0, -1),
-    "v": (0, 1),
-    ">": (1, 0),
-    "<": (-1,0)
+    "^": -1j,
+    "v": 1j,
+    ">": 1,
+    "<": -1
     }
 
 
-def part1(puzzleInput):
+def part1(directions: List[complex]):
     visitedHouses = {} 
-    visitedHouses[str((0, 0))] = 1
-    currentPosition = (0, 0)
-    for direction in puzzleInput:
-        x, y = direction
-        currentPosition = (x + currentPosition[0], y + currentPosition[1])
-        houseKey = str(currentPosition)
-        if houseKey in visitedHouses:
-            visitedHouses[houseKey] = visitedHouses[houseKey] + 1
+    visitedHouses[0] = 1
+    currentPosition = 0
+    for direction in directions:
+        currentPosition += direction
+        if currentPosition in visitedHouses:
+            visitedHouses[currentPosition] += 1
         else:
-            visitedHouses[houseKey] = 1
+            visitedHouses[currentPosition] = 1
 
     return len(visitedHouses.keys())
 
 
-def processDirection(visitedHouses, currentPosition, direction):
-    x, y = direction
-    currentPosition = (x + currentPosition[0], y + currentPosition[1])
+def processDirection(visitedHouses: Dict[complex,int], currentPosition: complex, direction: complex):
+    currentPosition += direction
     houseKey = str(currentPosition)
     if houseKey in visitedHouses:
-        visitedHouses[houseKey] = visitedHouses[houseKey] + 1
+        visitedHouses[currentPosition] += 1
     else:
-        visitedHouses[houseKey] = 1
+        visitedHouses[currentPosition] = 1
     return currentPosition
 
 
-def part2(puzzleInput):
+def part2(directions: List[complex]):
     visitedHouses = {}
-    visitedHouses[str((0, 0))] = 1
-    santaCurrentPosition = (0, 0)
-    robotCurrentPosition = (0, 0)
-    for index, direction in enumerate(puzzleInput):
+    visitedHouses[0] = 1
+    santaCurrentPosition = robotCurrentPosition = 0
+    for index, direction in enumerate(directions):
         if index % 2:
             santaCurrentPosition = processDirection(visitedHouses, santaCurrentPosition, direction)
         else:
@@ -52,12 +49,12 @@ def part2(puzzleInput):
     return len(visitedHouses.keys())
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> List[complex]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     
     with open(filePath, "r") as file:
-        return [ directions[c] for c in file.read() if c in directions ]
+        return [ directions[c] for c in file.read().strip() if c in directions ]
 
 
 def main():
