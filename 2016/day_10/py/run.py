@@ -1,13 +1,26 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from typing import Any, Callable, Dict, List, Tuple
+from typing import Dict, List, Tuple
 import re
 from functools import reduce
 
 
-def run(instructions: Tuple[List[Tuple[int,int]],Dict[int,Tuple[str,int,str,int]]], \
-        outCondition: Callable[[int,int,int,Dict[int,int]], Tuple[bool,int]]) -> int:
+LOW_VALUE = 17
+HIGH_VALUE = 61
+TARGET_OUTPUTS = [ 0, 1, 2 ]
+def isComplete(test: int, bot: int, lowChip: int, highChip: int, outputs: Dict[int,int]):
+    if test == 1:
+        if lowChip == LOW_VALUE and highChip == HIGH_VALUE:
+            return True, bot
+        return False, -1
+    else:
+        if all(output in outputs for output in TARGET_OUTPUTS):
+            return True, reduce(lambda soFar, output: soFar * outputs[output], TARGET_OUTPUTS, 1)
+        return False, -1
+
+
+def run(instructions: Tuple[List[Tuple[int,int]],Dict[int,Tuple[str,int,str,int]]], test: int) -> int:
     valueInstructions, compareInstructions = instructions
     bots: Dict[int, List[int]] = {}
     for bot, value in valueInstructions:
@@ -15,7 +28,6 @@ def run(instructions: Tuple[List[Tuple[int,int]],Dict[int,Tuple[str,int,str,int]
             bots[bot] = []
         bots[bot].append(value)
     outputs: Dict[int,int] = {}
-    
     while True:
         bot = next(bot for bot, chips in bots.items() if len(chips) == 2)
         lowChip = min(bots[bot])
@@ -36,32 +48,17 @@ def run(instructions: Tuple[List[Tuple[int,int]],Dict[int,Tuple[str,int,str,int]
         bots[bot].remove(lowChip)
         bots[bot].remove(highChip)
 
-        complete, result = outCondition(bot, lowChip, highChip, outputs)
+        complete, result = isComplete(test, bot, lowChip, highChip, outputs)
         if complete:
             return result
 
 
-LOW_VALUE = 17
-HIGH_VALUE = 61
-def part1Complete(bot: int, lowChip: int, highChip: int, _: Dict[int,int]) -> Tuple[bool,int]:
-    if lowChip == LOW_VALUE and highChip == HIGH_VALUE:
-        return True, bot
-    return False, 0
-
-
 def part1(instructions: Tuple[List[Tuple[int,int]],Dict[int,Tuple[str,int,str,int]]]) -> int:
-    return run(instructions, part1Complete)
-
-
-TARGET_OUTPUTS = [ 0, 1, 2 ]
-def part2Complete(bot: int, minChip: int, maxChip: int, outputs: Dict[int,int]) -> Tuple[bool,int]:
-    if all(output in outputs for output in TARGET_OUTPUTS):
-        return True, reduce(lambda soFar, output: soFar * outputs[output], TARGET_OUTPUTS, 1)
-    return False, 0
+    return run(instructions, 1)
 
 
 def part2(instructions: Tuple[List[Tuple[int,int]],Dict[int,Tuple[str,int,str,int]]]) -> int:
-    return run(instructions, part2Complete)
+    return run(instructions, 2)
 
 
 valueRegex = re.compile(r"^value\s(?P<value>\d+)\sgoes to bot\s(?P<bot>\d+)$")
