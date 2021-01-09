@@ -4,12 +4,11 @@ import sys, os, time
 from hashlib import md5
 
 
-ENCODING = "utf-8"
 def findHash(secretKey: str, prefixCount: int) -> int:
     prefix = "0" * prefixCount
     guess = 1
     while True:
-        result = md5((secretKey + str(guess)).encode(ENCODING)).hexdigest()
+        result = md5((secretKey + str(guess)).encode("utf-8")).hexdigest()
         if result.startswith(prefix):
             break
         guess = guess + 1
