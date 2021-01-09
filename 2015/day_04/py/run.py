@@ -3,29 +3,28 @@
 import sys, os, time
 from hashlib import md5
 
-def part1(puzzleInput):
+
+ENCODING = "utf-8"
+def findHash(secretKey: str, prefixCount: int) -> int:
+    prefix = "0" * prefixCount
     guess = 1
     while True:
-        result = md5((puzzleInput + str(guess)).encode("utf-8")).hexdigest()
-        if result.startswith("00000"):
+        result = md5((secretKey + str(guess)).encode(ENCODING)).hexdigest()
+        if result.startswith(prefix):
             break
         guess = guess + 1
-
     return guess
 
 
-def part2(puzzleInput):
-    guess = 1
-    while True:
-        result = md5((puzzleInput + str(guess)).encode("utf-8")).hexdigest()
-        if result.startswith("000000"):
-            break
-        guess = guess + 1
-
-    return guess
+def part1(secretKey: str) -> int:
+    return findHash(secretKey, 5)
 
 
-def getInput(filePath):
+def part2(secretKey: str) -> int:
+    return findHash(secretKey, 6)
+
+
+def getInput(filePath: str) -> str:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     
