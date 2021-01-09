@@ -1,49 +1,67 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import List
 from itertools import product
 
 
-HALT = 99
-ADD = 1
-MUL = 2
-def runProgram(memory, noun, verb):
+class IntCodeComputer():
+    def __init__(self, memory: List[int]):
+        self.memory = list(memory)
+        self.pointer = 0
+        self.running = True
+    
+    def runUntilHalt(self) -> int:
+        while self.running:
+            self.tick()
+        return self.memory[0]
+    
+    def getParameter(self, offset: int) -> int:
+        return self.memory[self.memory[self.pointer + offset]]
+
+    def getAddress(self, offset: int) -> int:
+        return self.memory[self.pointer + offset]
+    
+    def tick(self):
+        opcode = self.memory[self.pointer]
+        if not self.running:
+            return
+        if opcode == 1: # ADD
+            self.memory[self.getAddress(3)] = self.getParameter(1) + self.getParameter(2)
+            self.pointer += 4
+        elif opcode == 2: # MUL
+            self.memory[self.getAddress(3)] = self.getParameter(1) * self.getParameter(2)
+            self.pointer += 4
+        elif opcode == 99: # HALT
+            self.running = False
+        else:
+            raise Exception(f"Unknown instruction", self.pointer, opcode)
+    
+    def __str__(self):
+        return f"s {self.running} p {self.pointer}"
+
+
+def runProgram(memory: List[int], noun: int, verb: int) -> int:
     memory[1] = noun
     memory[2] = verb
-    instructionPointer = 0
-
-    while memory[instructionPointer] != HALT:
-        instruction = memory[instructionPointer]
-        operand1 = memory[instructionPointer + 1]
-        operand2 = memory[instructionPointer + 2]
-        output = memory[instructionPointer + 3]
-
-        if instruction == ADD:
-            memory[output] = memory[operand1] + memory[operand2]
-        elif instruction == MUL:
-            memory[output] = memory[operand1] * memory[operand2]
-        else:
-            raise Exception(f"Unknown instruction at {instructionPointer}: {instruction}")
-
-        instructionPointer += 4
-        
-    return memory[0]
+    return IntCodeComputer(memory).runUntilHalt()    
 
 
-def part1(memory):
+def part1(memory: List[int]) -> int:
     return runProgram(list(memory), 12, 2)
 
 
 TARGET_VALUE = 19690720
-def part2(memory):
+def part2(memory: List[int]) -> int:
     values = [ i for i in range(100) ]
     for noun, verb in product(values, repeat=2):
         result = runProgram(list(memory), noun, verb)
         if result == TARGET_VALUE:
             return 100 * noun + verb
+    raise Exception("Target value not found")
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> List[int]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     

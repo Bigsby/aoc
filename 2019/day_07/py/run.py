@@ -2,109 +2,80 @@
 
 import sys, os, time
 from typing import List, Tuple
-from enum import Enum
 from itertools import permutations
 
 
-def getValue(memory: List[int], pointer: int, offset: int, mode: int) -> int:
-    value = memory[pointer + offset]
-    if mode:
-        return value
-    return memory[value]
-
-
-class IntCodeState(Enum):
-    Halted = 0
-    Polling = 1
-    Running = 2
-    Outputting = 3
-
-
-HALT = 99
-ADD = 1
-MUL = 2
-INPUT = 3
-OUTPUT = 4
-JMP_TRUE = 5
-JMP_FALSE = 6
-LESS_THAN = 7
-EQUALS = 8
-def runInstruction(memory: List[int], state: IntCodeState, pointer: int, input: List[int]):
-    memory = list(memory)
-    instruction = memory[pointer]
-    opcode, p1mode, p2mode = instruction % 100, (instruction // 100) % 10, (instruction // 1000) % 10
-    output = 0
-    if state == IntCodeState.Halted:
-        return memory, state, pointer, output
-    newState = IntCodeState.Running
-    if opcode == ADD:
-        memory[memory[pointer + 3]] = getValue(memory, pointer, 1, p1mode) + getValue(memory, pointer, 2, p2mode)
-        pointer += 4
-    elif opcode == MUL:
-        memory[memory[pointer + 3]] = getValue(memory, pointer, 1, p1mode) * getValue(memory, pointer, 2, p2mode)
-        pointer += 4
-    elif opcode == INPUT:
-        if input:
-            memory[memory[pointer + 1]] = input.pop()
-            pointer += 2
-        else:
-            newState = IntCodeState.Polling
-    elif opcode == OUTPUT:
-        output = getValue(memory, pointer, 1, p1mode)
-        pointer += 2
-        newState = IntCodeState.Outputting
-    elif opcode == JMP_TRUE:
-        if getValue(memory, pointer, 1, p1mode):
-            pointer = getValue(memory, pointer, 2, p2mode)
-        else:
-            pointer += 3
-    elif opcode == JMP_FALSE:
-        if not getValue(memory, pointer, 1, p1mode):
-            pointer = getValue(memory, pointer, 2, p2mode)
-        else:
-            pointer += 3
-    elif opcode == LESS_THAN:
-        memory[memory[pointer + 3]] = 1 if getValue(memory, pointer, 1, p1mode) < getValue(memory, pointer, 2, p2mode) else 0
-        pointer += 4
-    elif opcode == EQUALS:
-        memory[memory[pointer + 3]] = 1 if getValue(memory, pointer, 1, p1mode) == getValue(memory, pointer, 2, p2mode) else 0
-        pointer += 4
-    elif opcode == HALT:
-        newState = IntCodeState.Halted
-    else:
-        raise Exception(f"Unknown instruction", pointer, instruction)
-    return memory, newState, pointer, output
-
-
 class IntCodeComputer():
-    def __init__(self, memory: List[int], input: List[int]):
-        self.memory = memory
-        self.state = IntCodeState.Running
+    def __init__(self, memory: List[int], inputs: List[int]):
+        self.memory = list(memory)
         self.pointer = 0
-        self.input = input
-        self.output = 0
+        self.inputs = inputs
+        self.outputs = [ ]
+        self.running = True
     
-    def setInput(self, value: int):
-        self.input.insert(0, value)
+    def runUntilHalt(self) -> List[int]:
+        while self.running:
+            self.tick()
+        return self.outputs
+    
+    def getParameter(self, offset: int, mode: int) -> int:
+        value = self.memory[self.pointer + offset]
+        if mode == 0: # POSITION
+            return self.memory[value]
+        if mode == 1: # IMMEDIATE
+            return value
+        raise Exception("Unrecognized parameter mode", mode)
+
+    def getAddress(self, offset: int) -> int:
+        return self.memory[self.pointer + offset]
     
     def tick(self):
-        self.memory, self.state, self.pointer, newOutput = runInstruction(self.memory, self.state, self.pointer, self.input)
-        if self.state == IntCodeState.Outputting:
-            self.output = newOutput
-    
-    def runUntilHalt(self) -> int:
-        while self.state != IntCodeState.Halted:
-            self.tick()
-        return self.output
+        instruction = self.memory[self.pointer]
+        opcode, p1mode, p2mode = instruction % 100, (instruction // 100) % 10, (instruction // 1000) % 10
+        if not self.running:
+            return
+        if opcode == 1: # ADD
+            self.memory[self.getAddress(3)] = self.getParameter(1, p1mode) + self.getParameter(2, p2mode)
+            self.pointer += 4
+        elif opcode == 2: # MUL
+            self.memory[self.getAddress(3)] = self.getParameter(1, p1mode) * self.getParameter(2, p2mode)
+            self.pointer += 4
+        elif opcode == 3: # INPUT
+            if self.inputs:
+                self.memory[self.getAddress(1)] = self.inputs.pop(0)
+                self.pointer += 2
+        elif opcode == 4: # OUTPUT
+            self.outputs.append(self.getParameter(1, p1mode))
+            self.pointer += 2
+        elif opcode == 5: # JMP_TRUE
+            if self.getParameter(1, p1mode):
+                self.pointer = self.getParameter(2, p2mode)
+            else:
+                self.pointer += 3
+        elif opcode == 6: # JMP_FALSE
+            if not self.getParameter(1, p1mode):
+                self.pointer = self.getParameter(2, p2mode)
+            else:
+                self.pointer += 3
+        elif opcode == 7: # LESS_THAN
+            self.memory[self.getAddress(3)] = 1 if self.getParameter(1, p1mode) < self.getParameter(2, p2mode) else 0
+            self.pointer += 4
+        elif opcode == 8: # EQUALS
+            self.memory[self.getAddress(3)] = 1 if self.getParameter(1, p1mode) == self.getParameter(2, p2mode) else 0
+            self.pointer += 4
+        elif opcode == 99: # HALT
+            self.running = False
+        else:
+            raise Exception(f"Unknown instruction", self.pointer, instruction, opcode, p1mode, p2mode)
     
     def __str__(self):
-        return f"s {self.state} p {self.pointer} i {self.input} o {self.output}"
+        return f"s {self.running} p {self.pointer} i {self.inputs} o {self.outputs}"
 
 
 def runPhasesPermutation(memory: List[int], phases: Tuple[int, ...]) -> int:
     output = 0
     for phase in phases:
-        output = IntCodeComputer(memory, [output, phase]).runUntilHalt()
+        output = IntCodeComputer(memory, [phase, output]).runUntilHalt()[0]
     return output
 
 
@@ -114,14 +85,14 @@ def part1(memory: List[int]):
 
 def runFeedbackPhasesPermutation(memory: List[int], phases: Tuple[int,...]) -> int:
     amplifiers = [ IntCodeComputer(memory, [ phase ]) for phase in phases ]
-    amplifiers[0].setInput(0)
-    while any(amplifier.state != IntCodeState.Halted for amplifier in amplifiers):
-        for index, amplifier in enumerate(amplifiers):
+    amplifiers[0].inputs.append(0)
+    for i in range(len(amplifiers)):
+        amplifiers[i].outputs = amplifiers[(i + 1) % len(amplifiers)].inputs
+    while any(amplifier.running for amplifier in amplifiers):
+        for amplifier in amplifiers:
             amplifier.tick()
-            if amplifier.state == IntCodeState.Outputting:
-                amplifiers[ index + 1 if index < len(amplifiers) - 1 else 0 ].setInput(amplifier.output)
 
-    return amplifiers[-1].output
+    return amplifiers[-1].outputs[0]
 
 
 def part2(memory: List[int]):
@@ -143,10 +114,11 @@ def main():
     puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
     part1Result = part1(puzzleInput)
+    print("P1:", part1Result)
     middle = time.perf_counter()
     part2Result = part2(puzzleInput)
     end = time.perf_counter()
-    print("P1:", part1Result)
+    
     print("P2:", part2Result)
     print()
     print(f"P1 time: {middle - start:.8f}")

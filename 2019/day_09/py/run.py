@@ -31,7 +31,6 @@ class IntCodeComputer():
         elif mode == 2: # RELATIVE
             return self.memory[self.base + value]
         raise Exception("Unrecognized parameter mode", mode)
-
     
     def getAddress(self, offset: int, mode: int) -> int:
         value = self.memory[self.pointer + offset]
@@ -41,7 +40,6 @@ class IntCodeComputer():
             return self.base + value
         raise Exception("Unrecognized address mode", mode)
 
-    
     def tick(self):
         instruction = self.memory[self.pointer]
         opcode, p1mode, p2mode, p3mode = instruction % 100, (instruction // 100) % 10, (instruction // 1000) % 10, (instruction // 10000) % 10
