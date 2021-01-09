@@ -1,60 +1,54 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import Callable, Dict, List, Tuple
 import re
 from functools import reduce
+from itertools import product
 
 
-def getTurnedOn(matrix):
+def getTurnedOn(matrix: List[List[int]]):
     return reduce(lambda rowCount, row: rowCount + reduce(lambda columnCount, column: columnCount + column, row), matrix, 0)
 
 
-def runMatrix(updateFunc, puzzleInput):
-    matrix = [ [0] * 1000 for i in range(1000) ]
-    for action, xstart, ystart, xend, yend in puzzleInput:
-        updateFunc(matrix, action, xstart, ystart, xend, yend) 
-    return getTurnedOn(matrix)
+def runMatrix(updateFuncs: Dict[str,Callable[[int],int]], instructions: List[Tuple[str,int,int,int,int]]):
+    matrix = { x + y *1j: 0 for x,y in product(range(1000), range(1000)) }
+    for action, xstart, ystart, xend, yend in instructions:
+        updateFunc = updateFuncs[action]
+        for x in range(xstart, xend + 1):
+            for y in range(ystart, yend + 1):
+                position = x + y * 1j
+                matrix[position] = updateFunc(matrix[position])
+    return sum(matrix.values())
 
 
-def updateMatrix1(matrix, action, xstart, ystart, xend, yend):
-    actionFun = lambda _: 0
-    if action == "turn on":
-        actionFun = lambda _: 1
-    elif action == "toggle":
-        actionFun = lambda value: 0 if value else 1
-
-    for x in range(xstart, xend + 1):
-        for y in range(ystart, yend + 1):
-            matrix[x][y] = actionFun(matrix[x][y])
+matrix1Updates: Dict[str,Callable[[int],int]] = {
+    "turn on": lambda _: 1,
+    "toggle": lambda value: not value,
+    "turn off": lambda _: 0
+}
+def part1(instructions: List[Tuple[str,int,int,int,int]]):
+    return runMatrix(matrix1Updates, instructions)
 
 
-def part1(puzzleInput):
-    return runMatrix(updateMatrix1, puzzleInput)
+matrix2Updates: Dict[str,Callable[[int],int]] = {
+    "turn on": lambda value: value + 1,
+    "toggle": lambda value: value + 2,
+    "turn off": lambda value: value - 1 if value > 0 else 0
+}
+def part2(instructions: List[Tuple[str,int,int,int,int]]):
+    return runMatrix(matrix2Updates, instructions)
 
 
-def updateMatrix2(matrix, action, xstart, ystart, xend, yend):
-    actionFun = lambda value: value - 1 if value > 0 else 0
-    if action == "turn on":
-        actionFun = lambda value: value + 1
-    elif action == "toggle":
-        actionFun = lambda value: value + 2 
-
-    for x in range(xstart, xend + 1):
-        for y in range(ystart, yend + 1):
-            matrix[x][y] = actionFun(matrix[x][y])
-
-
-def part2(puzzleInput):
-    return runMatrix(updateMatrix2, puzzleInput)
-
-
-instructionRegex = re.compile("^(toggle|turn off|turn on)\s(\d{1,3}),(\d{1,3})\sthrough\s(\d{1,3}),(\d{1,3})$")
-def parseLine(line):
+instructionRegex = re.compile(r"^(toggle|turn off|turn on)\s(\d{1,3}),(\d{1,3})\sthrough\s(\d{1,3}),(\d{1,3})$")
+def parseLine(line: str) -> Tuple[str,int,int,int,int]:
     match = instructionRegex.match(line)
-    return (match.group(1), int(match.group(2)), int(match.group(3)), int(match.group(4)), int(match.group(5)))
+    if match:
+        return (match.group(1), int(match.group(2)), int(match.group(3)), int(match.group(4)), int(match.group(5)))
+    raise Exception("Bad format", line)
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> List[Tuple[str,int,int,int,int]]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     
