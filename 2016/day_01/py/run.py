@@ -54,6 +54,7 @@ def parseInstruction(instructionText: str) -> Instruction:
         return (match.group("direction"), int(match.group("distance")))
     raise Exception("Bad format", instructionText)
 
+
 def getInput(filePath: str) -> List[Instruction]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
