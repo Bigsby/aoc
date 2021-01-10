@@ -1,9 +1,12 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import Dict, List
 import re
 
-
+Directions = List[str]
+Tile = complex
+Floor = Dict[Tile,bool]
 DIRECTIONS = {
     "e":   1,
     "se":      1j,
@@ -14,64 +17,64 @@ DIRECTIONS = {
 }
 
 
-def flipInitialTiles(tilePaths):
-    tiles = {}
+def flipInitialTiles(tilePaths: List[Directions]) -> Floor:
+    floor = {}
     for path in tilePaths:
         current = 0
         for direction in path:
             current += DIRECTIONS[direction]
-        if current in tiles:
-            tiles[current] = not tiles[current]
+        if current in floor:
+            floor[current] = not floor[current]
         else:
-            tiles[current] = True
-    return tiles
+            floor[current] = True
+    return floor
 
 
-def part1(tilePaths):
+def part1(tilePaths: List[Directions]) -> int:
     return sum(flipInitialTiles(tilePaths).values())
 
 
-def getNeighbors(tile):
+def getNeighbors(tile: Tile) -> List[Tile]:
     return [ tile + direction for direction in DIRECTIONS.values() ]
 
 
-def getBlackCount(neighbors, tiles):
-    return sum([ 1 for neighbor in neighbors if neighbor in tiles and tiles[neighbor] ])
+def getBlackCount(neighbors: List[Tile], floor: Floor) -> int:
+    return sum([ 1 for neighbor in neighbors if neighbor in floor and floor[neighbor] ])
 
 
-def getTileState(tile, tiles):
-    return tile in tiles and tiles[tile]
+def getTileState(tile: Tile, floor: Floor):
+    return tile in floor and floor[tile]
 
 
-def getNewState(tile, tiles):
-    adjacentBlackCount = getBlackCount(getNeighbors(tile), tiles)
-    tileState = getTileState(tile, tiles)
+def getNewState(tile: Tile, floor: Floor):
+    adjacentBlackCount = getBlackCount(getNeighbors(tile), floor)
+    tileState = getTileState(tile, floor)
     if tileState and adjacentBlackCount == 0 or adjacentBlackCount > 2:
         return False
     return (not tileState and adjacentBlackCount == 2) or tileState
 
 
-def runDay(tiles):
-    newState = {}
+def runDay(floor: Floor) -> Floor:
+    newFloor = {}
     edgesToTest = set()
-    for tile in tiles:
-        edgesToTest.update({ neighbor for neighbor in getNeighbors(tile) if neighbor not in tiles })
-        newState[tile] = getNewState(tile, tiles)
+    for tile in floor:
+        edgesToTest.update({ neighbor for neighbor in getNeighbors(tile) if neighbor not in floor })
+        newFloor[tile] = getNewState(tile, floor)
     for tile in edgesToTest:
-        newState[tile] = getNewState(tile, tiles)
+        newFloor[tile] = getNewState(tile, floor)
 
-    return newState
+    return newFloor
 
 
-def part2(tilePaths):
-    tiles = flipInitialTiles(tilePaths)
+def part2(tilePaths: List[Directions]) -> int:
+    floor = flipInitialTiles(tilePaths)
     for _ in range(100):
-        tiles = runDay(tiles)
-    return sum(tiles.values())
+        floor = runDay(floor)
+    return sum(floor.values())
 
 
 lineRegex = re.compile(r"e|se|sw|w|nw|ne")
-def getInput(filePath):
+def getInput(filePath: str) -> List[Directions]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     

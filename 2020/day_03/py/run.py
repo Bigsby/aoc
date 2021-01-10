@@ -1,10 +1,12 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import List, Tuple
 from functools import reduce
 
 
-def calculateTrees(grid, step):
+Grid = List[List[int]]
+def calculateTrees(grid: Grid, step: Tuple[int,int]):
     lastRow = len(grid)
     lastColumn = len(grid[0])
     currentPosition = (0, 0)
@@ -15,12 +17,12 @@ def calculateTrees(grid, step):
     return treeCount
 
 
-def part1(puzzleInput):
-    treeCount = calculateTrees(puzzleInput, (1, 3))
+def part1(grid: Grid) -> int:
+    treeCount = calculateTrees(grid, (1, 3))
     return treeCount
 
 
-def part2(puzzleInput):
+def part2(grid: Grid) -> int:
     steps = [
         (1, 1),
         (1, 3),
@@ -28,10 +30,10 @@ def part2(puzzleInput):
         (1, 7),
         (2, 1)
        ]
-    return reduce(lambda current, step: current * calculateTrees(puzzleInput, step), steps, 1)
+    return reduce(lambda current, step: current * calculateTrees(grid, step), steps, 1)
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> Grid:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     

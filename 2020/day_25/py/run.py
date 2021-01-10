@@ -1,15 +1,16 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import Tuple
 
 
 baseSubjectNumber = 7
 divider = 20201227
-def getNextValue(value, subjectNumber = baseSubjectNumber):
+def getNextValue(value: int, subjectNumber: int = baseSubjectNumber) -> int:
     return (value * subjectNumber) % divider
 
 
-def getLoopSize(target):
+def getLoopSize(target: int) -> int:
     value = 1
     cycle = 0
     while value != target:
@@ -18,7 +19,7 @@ def getLoopSize(target):
     return cycle
 
 
-def transform(subjectNumber, cycles):
+def transform(subjectNumber: int, cycles: int) -> int:
     value = 1
     while cycles:
         cycles -= 1
@@ -26,7 +27,7 @@ def transform(subjectNumber, cycles):
     return value
 
 
-def part1(puzzleInput):
+def part1(puzzleInput: Tuple[int,...]) -> int:
     card, door = puzzleInput
     return transform(card, getLoopSize(door))
 
@@ -35,7 +36,7 @@ def part2(_):
     pass
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> Tuple[int,...]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     

@@ -1,20 +1,16 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import List, Tuple
 
 
 class Bus():
-    def __init__(self, id, index):
+    def __init__(self, id: int, index: int):
         self.id = id
         self.index = index
-          
-    def __str__(self):
-        return f"id:{self.id} index:{self.index}"
-    def __repr__(self):
-        return self.__str__()
 
 
-def part1(puzzleInput):
+def part1(puzzleInput: Tuple[int,List[Bus]]) -> int:
     timestamp, busses = puzzleInput
     closestAfter = sys.maxsize
     closestBus = None
@@ -24,10 +20,13 @@ def part1(puzzleInput):
             closestAfter = timeAfter
             closestBus = bus
 
-    return closestAfter * closestBus.id
+    if closestBus:
+        return closestAfter * closestBus.id
+    raise Exception("Closest bus not found")
 
 
-def modularMultiplicativeInverse(a, b):
+
+def modularMultiplicativeInverse(a: int, b:int) -> int:
     b0 = b
     x0, x1 = 0, 1
     if b == 1: 
@@ -41,17 +40,17 @@ def modularMultiplicativeInverse(a, b):
     return x1
  
 
-def getNextIndex(first, second):
+def getNextIndex(first: Bus, second: Bus) -> int:
     sum = 0
     prod = first.id * second.id
     pFirst = prod // first.id
-    sum = first.index * modularMultiplicativeInverse(pFirst, first.id) * pFirst
     pSecond = prod // second.id
-    sum -= second.index * modularMultiplicativeInverse(pSecond, second.id) * pSecond
+    sum = first.index * modularMultiplicativeInverse(pFirst, first.id) * pFirst \
+        - second.index * modularMultiplicativeInverse(pSecond, second.id) * pSecond
     return sum % prod
 
 
-def part2(puzzleInput):
+def part2(puzzleInput: Tuple[int,List[Bus]]) -> int:
     _, busses = puzzleInput
     lastBus = busses[0]
     for bus in busses[1:]:
@@ -59,7 +58,7 @@ def part2(puzzleInput):
     return lastBus.index
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> Tuple[int,List[Bus]]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     

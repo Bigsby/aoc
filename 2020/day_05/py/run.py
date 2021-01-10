@@ -1,43 +1,30 @@
 #! /usr/bin/python3
 
 import sys, os, time
-import re
-from functools import reduce
+from typing import List
 
 
-def calculateValue(text, one):
-        value = 0
-        for index, c in enumerate(text[::-1]):
-            if c == one:
-                value += 2 ** index
-        return value
-
-
-def part1(puzzleInput):
+def part1(puzzleInput: List[int]) -> int:
     return max(puzzleInput)
 
 
-def part2(puzzleInput):
+def part2(puzzleInput: List[int]) -> int:
     ids = sorted(puzzleInput)
+    print(ids)
     lastId = ids[0]
     for currentId in ids:
         if currentId - lastId == 2:
             return lastId + 1
         lastId = currentId
+    raise Exception("Not found")
 
 
-lineRegex = re.compile("^([BF]{7})([LR]{3})$")
-def parseLine(line):
-    match = lineRegex.match(line)
-    return calculateValue(match.group(1), "B") * 8 + calculateValue(match.group(1), "R")
-
-
-def getInput(filePath):
+def getInput(filePath: str) -> List[int]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     
     with open(filePath, "r") as file:
-        return [ parseLine(line) for line in file.readlines() ]
+        return [ int(line.replace("B", "1").replace("F", "0").replace("R", "1").replace("L", "0"), 2) for line in file.readlines() ]
 
 
 def main():

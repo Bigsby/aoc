@@ -1,11 +1,15 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import Dict, List, Set, Tuple
 import re
 from functools import reduce
 
+Ticket = List[int]
+Rule = Tuple[str,int,int,int,int]
 
-def getValidNumbers(rules):
+
+def getValidNumbers(rules: List[Rule]) -> Set[int]:
     validNumbers = set()
     for _, startOne, endOne, startTwo, endTwo in rules:
         for number in range(startOne, endOne + 1):
@@ -15,7 +19,7 @@ def getValidNumbers(rules):
     return validNumbers
 
 
-def part1(puzzleInput):
+def part1(puzzleInput: Tuple[List[Rule],Ticket,List[Ticket]]) -> int:
     rules, _, tickets = puzzleInput
 
     validNumbers = getValidNumbers(rules)
@@ -29,7 +33,7 @@ def part1(puzzleInput):
     return sum(invalidNumbers)
 
 
-def part2(puzzleInput):
+def part2(puzzleInput: Tuple[List[Rule],Ticket,List[Ticket]]) -> int:
     rules, myTicket, tickets = puzzleInput
     validNumbers = getValidNumbers(rules)
     validTickets = []
@@ -37,8 +41,8 @@ def part2(puzzleInput):
         if all(number in validNumbers for number in ticket):
             validTickets.append(ticket)
 
-    ranges = dict()
-    positions = dict()
+    ranges: Dict[str,Tuple[int,int,int,int]] = dict()
+    positions: Dict[str,Set[int]] = dict()
     names = []
 
     for name, *fieldRanges in rules:
@@ -76,13 +80,13 @@ def part2(puzzleInput):
 
 fieldRegex = re.compile(r"^(?P<field>[^:]+):\s(?P<r1s>\d+)-(?P<r1e>\d+)\sor\s(?P<r2s>\d+)-(?P<r2e>\d+)$")
 ticketRegex = re.compile(r"^(?:\d+\,)+(?:\d+$)")
-def getInput(filePath):
+def getInput(filePath: str) -> Tuple[List[Rule],Ticket,List[Ticket]]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     
     with open(filePath, "r") as file:
         rules = []
-        myTicket = None
+        myTicket = []
         tickets = []
         doingRules = True
         doingMyTicket = True
@@ -99,10 +103,10 @@ def getInput(filePath):
                 continue
 
             if doingMyTicket:
-                myTicket = list(map(lambda i: int(i), line.split(",")))
+                myTicket = list(map(int, line.split(",")))
                 doingMyTicket = False
             else:
-                tickets.append(list(map(lambda i: int(i), line.split(","))))
+                tickets.append(list(map(int, line.split(","))))
 
         return rules, myTicket, tickets
 

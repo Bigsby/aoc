@@ -1,25 +1,28 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import List
 from itertools import combinations
 
 
-def part1(puzzleInput):
-    for number in puzzleInput:
+def part1(numbers: List[int]) -> int:
+    for number in numbers:
         numberToFind = 2020 - number
-        if numberToFind in puzzleInput:
+        if numberToFind in numbers:
             return number * numberToFind
+    raise Exception("Numbers not found")
 
 
-def part2(puzzleInput):
-    for combination in combinations(puzzleInput, 2):
+def part2(numbers: List[int]) -> int:
+    for combination in combinations(numbers, 2):
         numberA, numberB = combination
         numberToFind = 2020 - numberA - numberB
-        if numberToFind in puzzleInput:
+        if numberToFind in numbers:
             return numberA * numberB * numberToFind
+    raise Exception("Numbers not found")
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> List[int]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     

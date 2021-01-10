@@ -1,17 +1,20 @@
 #! /usr/bin/python3
 import sys, os, time
+from typing import Dict, Iterable, List, Optional, Tuple
 import re
 from functools import reduce
 from math import sqrt
 
+Tile = List[complex]
 
-def getSize(tile, height = False):
+
+def getSize(tile: Tile, height: bool = False) -> int:
     if height:
         return int(max(map(lambda value: value.imag, tile)))
     return int(max(map(lambda value: value.real, tile)))
 
 
-def printTile(tile):
+def printTile(tile: Tile):
     startX = int(min(map(lambda value: value.imag, tile)))
     endX = int(max(map(lambda value: value.imag, tile)))
     startY = int(min(map(lambda value: value.real, tile)))
@@ -24,15 +27,15 @@ def printTile(tile):
     print()
 
 
-def mirrorHorizontal(tile, size):
+def mirrorHorizontal(tile: Tile, size: int) -> Tile:
     return [ position.imag * 1j + size - position.real for position in tile ]
 
 
-def rotateClockwise(tile, size):
+def rotateClockwise(tile: Tile, size: int) -> Tile:
     return [ position.real * 1j + size - position.imag for position in tile ]
 
 
-def generatePermutations(tile):
+def generatePermutations(tile: Tile) -> Iterable[Tile]:
     size = getSize(tile)
     for _ in range(4):
         yield tile
@@ -40,7 +43,7 @@ def generatePermutations(tile):
         tile = rotateClockwise(tile, size)
 
 
-def generateAllTilesPermutations(tiles):
+def generateAllTilesPermutations(tiles: List[Tuple[int,Tile]]) -> Dict[int,List[Tile]]:
     return { number: list(generatePermutations(tile)) for number, tile in tiles }
 
 
@@ -50,7 +53,7 @@ TESTS = {  # ( startOfTileA, StartOfTileB, StepToNextPosition )
      1j: ( 1j,  0, 1  ), # match bottom with top left to right
      -1: ( 0 ,  1, 1j )  # mathc left with right top to bottom
 }
-def testSides(tileA, tileB, side, size):
+def testSides(tileA: Tile, tileB: Tile, side: complex, size: int) -> bool:
     positionAStart, positionBStart, step = TESTS[side]
     positionA = positionAStart * size
     positionB = positionBStart * size
@@ -62,14 +65,14 @@ def testSides(tileA, tileB, side, size):
     return True
 
 
-def doPermutationsMatch(permutationA, permutationB, size, sides):
+def doPermutationsMatch(permutationA: Tile, permutationB:Tile, size:int, sides: List[complex]) -> Tuple[bool, complex]:
     for side in sides:
         if testSides(permutationA, permutationB, side, size):
             return True, side
     return False, 0
     
 
-def doTilesMatch(tileA, permutations, size, sides = TESTS.keys()):
+def doTilesMatch(tileA: Tile, permutations: List[Tile], size: int, sides: List[complex] = list(TESTS.keys())) -> Tuple[bool,complex, Optional[Tile]]:
     for permutation in permutations:
         matched, side = doPermutationsMatch(tileA, permutation, size, sides)
         if matched:
@@ -77,30 +80,30 @@ def doTilesMatch(tileA, permutations, size, sides = TESTS.keys()):
     return False, 0, None
 
 
-def getMatchingSides(tile, tiles, size, permutations):
-    number, tile = tile
+def getMatchingSides(tile: Tuple[int,Tile], tiles:List[Tuple[int,Tile]], size: int, allPermutations: Dict[int,List[Tile]]) -> List[complex]:
+    number, thisTile = tile
     matchedSides = []
     for otherNumber, _ in tiles:
         if otherNumber == number:
             continue
-        matched, side, _ = doTilesMatch(tile, permutations[otherNumber], size)
+        matched, side, _ = doTilesMatch(thisTile, allPermutations[otherNumber], size)
         if matched:
             matchedSides.append(side)
     return matchedSides
 
 
-def getCorners(tiles, size, permutations):
-    tilesMatchesSides = { number: getMatchingSides((number, tile), tiles, size, permutations) for number, tile in tiles }
+def getCorners(tiles: List[Tuple[int,Tile]], size: int, allPermutations: Dict[int,List[Tile]]) -> List[Tuple[int,List[complex]]]:
+    tilesMatchesSides = { number: getMatchingSides((number, tile), tiles, size, allPermutations) for number, tile in tiles }
     return [ ( number, matchedSides ) for number, matchedSides in tilesMatchesSides.items() if len(matchedSides) == 2 ]
 
 
-def part1(tiles):
+def part1(tiles: List[Tuple[int,Tile]]) -> int:
     permutations = generateAllTilesPermutations(tiles)
     size = getSize(tiles[0][1])
     return reduce(lambda soFar, corner: soFar * corner[0], getCorners(tiles, size, permutations), 1)
 
 
-def buildPuzzle(tiles, tileSize):
+def buildPuzzle(tiles: List[Tuple[int,Tile]], tileSize: int) -> Dict[complex,Tile]:
     tilePermutations = generateAllTilesPermutations(tiles)
     firstCornerNumber, (sideOne, sideTwo) = getCorners(tiles, tileSize, tilePermutations)[0]
     puzzleWidth = int(sqrt(len(tiles)))
@@ -115,7 +118,7 @@ def buildPuzzle(tiles, tileSize):
         puzzlePosition += direction
         for tileNumber, permutations in tilePermutations.items():
             matched, _, matchedPermutation = doTilesMatch(lastTile, permutations, tileSize, [ direction ])
-            if matched:
+            if matched and matchedPermutation:
                 puzzle[puzzlePosition] = lastTile = matchedPermutation
                 del tilePermutations[tileNumber]
                 if direction == sideTwo:
@@ -126,7 +129,7 @@ def buildPuzzle(tiles, tileSize):
     return puzzle
 
 
-def removeBordersAndJoin(puzzle, tileSize):
+def removeBordersAndJoin(puzzle: Dict[complex,Tile], tileSize: int) -> List[complex]:
     offsetFactor = tileSize - 1
     reduced = []
     for puzzlePosition, tile in puzzle.items():
@@ -141,7 +144,7 @@ SEA_MONSTER = [
     "#    ##    ##    ###",
     " #  #  #  #  #  #   "
 ]
-def getSeaMonster():
+def getSeaMonster() -> Tile:
     seaMonster = []
     for rowIndex, row in enumerate(SEA_MONSTER):
         for columnIndex, c in enumerate(row):
@@ -150,14 +153,14 @@ def getSeaMonster():
     return seaMonster
 
 
-def isMonsterInLocation(location, puzzle, seaMonster):
+def isMonsterInLocation(location: complex, puzzle: Tile, seaMonster: Tile) -> bool:
     for monsterPosition in seaMonster:
         if not location + monsterPosition in puzzle:
             return False
     return True
 
 
-def getSeaMonsterCount(puzzle, seaMonster):
+def getSeaMonsterCount(puzzle: Tile, seaMonster: Tile) -> int:
     seaMonsterWidth = getSize(seaMonster) + 1
     seaMonsterHeight = getSize(seaMonster, True) + 1
     puzzleSize = getSize(puzzle) + 1
@@ -172,7 +175,7 @@ def getSeaMonsterCount(puzzle, seaMonster):
     return 0
     
 
-def part2(tiles):
+def part2(tiles: List[Tuple[int,Tile]]) -> int:
     tileSize = getSize(tiles[0][1])
     puzzle = buildPuzzle(tiles, tileSize)
     reduced = removeBordersAndJoin(puzzle, tileSize)
@@ -182,7 +185,7 @@ def part2(tiles):
 
 
 numberLineRegex = re.compile(r"^Tile\s(?P<number>\d+):$")
-def getInput(filePath):
+def getInput(filePath: str) -> List[Tuple[int,Tile]]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     

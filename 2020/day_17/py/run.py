@@ -2,30 +2,35 @@
 
 import sys, os, time
 from itertools import product
+from typing import Iterable, List, Optional, Tuple, TypeVar, Union, cast
 
-class Dimension(list):
-    def __init__(self, upperLayer, outerDimension = False):
+ItemType = Union['Dimension',bool]
+Position = List[int]
+
+
+class Dimension(List[ItemType]):
+    def __init__(self, upperLayer: Optional['Dimension'], outerDimension: bool = False):
         self.offset = 0
         self.upperLayer = upperLayer
         if self.upperLayer is not None:
             self.upperLayer.append(self)
         self.outerDimension = outerDimension
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: int) -> ItemType:
         return list.__getitem__(self, key + self.offset)
-    def __setitem__(self, key, item):
+    def __setitem__(self, key: int, item: ItemType):
         list.__setitem__(self, key + self.offset, item)
 
-    def append(self, item):
+    def append(self, item: ItemType):
         super().append(item)
         self.offset = len(self) // 2
 
-    def getLimit(self):
+    def getLimit(self) -> Tuple[int,...]:
         if len(self) % 2:
             return -self.offset, self.offset
         return -self.offset, self.offset - 1
 
-    def copyGrow(self, upperLayer):
+    def copyGrow(self, upperLayer: 'Dimension'):
         result = Dimension(upperLayer)
         if isinstance(self[0], self.__class__):
             self[0].copyGrow(result)
@@ -57,8 +62,8 @@ class Universe(Dimension):
     def __init__(_):
         super().__init__(None, True)
 
-    def isPositionValid(self, position):
-        currentDimension = self
+    def isPositionValid(self, position: Position) -> bool:
+        currentDimension: Dimension = self
         for coordinate in position:
             bottom, top = currentDimension.getLimit()
             if coordinate < bottom or coordinate > top:
@@ -77,13 +82,13 @@ class Universe(Dimension):
         self.append(newDimension)
 
 
-    def getNeighbors(_, position):
+    def getNeighbors(_, position: Position) -> Iterable[Position]:
         cases = map(lambda p: (p - 1, p, p + 1), position)
         for neighbor in product(*cases):
             if neighbor != position:
-                yield neighbor
+                yield list(neighbor)
                    
-    def getLimits(self):
+    def getLimits(self) -> Tuple[int,...]:
         limits = [ ]
         currentDimension = self
         while isinstance(currentDimension, Dimension):
@@ -93,25 +98,25 @@ class Universe(Dimension):
             currentDimension = currentDimension[0]
         return tuple(limits)
 
-    def isPositionActive(self, position):
+    def isPositionActive(self, position: Position) -> bool:
         return self.isPositionValid(position) and self.getValue(position)
 
-    def getValue(self, position):
-        currentDimension = self
+    def getValue(self, position: Position) -> bool:
+        currentDimension: Dimension = self
         for coordinate in position[:-1]:
             currentDimension = currentDimension[coordinate]
         return currentDimension[position[-1]]
 
-    def setValue(self, position, value):
+    def setValue(self, position: Position, value: bool):
         currentDimension = self
         for coordinate in position[:-1]:
             currentDimension = currentDimension[coordinate]
         currentDimension[position[-1]] = value
 
-    def getActiveCountForNeighbors(self, neighbors):
+    def getActiveCountForNeighbors(self, neighbors: Iterable[Position]) -> int:
         return sum(map(lambda neighbor: self.isPositionActive(neighbor), neighbors))
 
-    def copyGrowUniverse(self):
+    def copyGrowUniverse(self) -> 'Universe':
         newState = Universe()
         self[0].copyGrow(newState)
         for dimension in self:
@@ -119,12 +124,12 @@ class Universe(Dimension):
         self[0].copyGrow(newState)
         return newState
             
-    def getNextStep(self):
+    def getNextStep(self) -> 'Universe':
         newState = self.copyGrowUniverse()
-        limits = self.getLimits()
+        limits = list(self.getLimits())
         dimensionCount = len(limits)
 
-        position = []
+        position: Position = []
         for limit in limits:
             position.append(limit[0] - 1)
 
@@ -153,17 +158,17 @@ class Universe(Dimension):
 
         return newState
 
-    def getActiveCount(self):
+    def getActiveCount(self) -> int:
         activeCount = 0
         limits = self.getLimits()
         dimensionCount = len(limits)
-        position = []
+        position: Position = []
         for limit in limits:
             position.append(limit[0])
 
         done = False
         while not done:
-            activeCount += self.getValue(tuple(position))
+            activeCount += self.getValue(position)
             currentDimension = 0
             while currentDimension < dimensionCount:
                 if position[currentDimension] < limits[currentDimension][1]:
@@ -179,23 +184,23 @@ class Universe(Dimension):
         return activeCount
 
 
-def runCycles(universe):
+def runCycles(universe: Universe) -> int:
     cycle = 0
     while cycle < 6:
         cycle += 1
         universe = universe.getNextStep()
     return universe.getActiveCount()
 
-def part1(puzzleInput):
-    return runCycles(puzzleInput)
+def part1(universe: Universe) -> int:
+    return runCycles(universe)
 
 
-def part2(puzzleInput):
-    puzzleInput.addDimension()
-    return runCycles(puzzleInput)
+def part2(universe: Universe) -> int:
+    universe.addDimension()
+    return runCycles(universe)
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> Universe:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     

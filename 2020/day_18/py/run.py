@@ -1,10 +1,11 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import List, Tuple
 import re
 
 
-def getNextToken(line):
+def getNextToken(line: str) -> Tuple[str,str]:
     currentToken = ""
     for index, c in enumerate(line):
         if c == " ":
@@ -15,7 +16,7 @@ def getNextToken(line):
     return currentToken, ""
         
 
-def performOperation(first, operation, second):
+def performOperation(first: int, operation: str, second: int) -> int:
     if operation == "*":
         return first * second
     if operation == "+":
@@ -25,23 +26,23 @@ def performOperation(first, operation, second):
 
 parenRegex = re.compile(r"\((?P<expression>[^()]+)\)")
 plusRegex = re.compile(r"(?P<first>\d+)\s\+\s(?P<second>\d+)")
-def evaluateExpression(text, addFirst):
-    match = parenRegex.search(text)
-    while match:
-        text = "".join([text[:match.start()], str(evaluateExpression(match.group("expression"), addFirst)), text[match.end():]])
-        match = parenRegex.search(text)
+def evaluateExpression(expression: str, addFirst: bool) -> int:
+    parenMatch = parenRegex.search(expression)
+    while parenMatch:
+        expression = "".join([expression[:parenMatch.start()], str(evaluateExpression(parenMatch.group("expression"), addFirst)), expression[parenMatch.end():]])
+        parenMatch = parenRegex.search(expression)
 
     if addFirst:
-        match = plusRegex.search(text)
-        while match:
-            text = "".join([text[:match.start()], str(int(match.group("first")) + int(match.group("second"))), text[match.end():]])
-            match = plusRegex.search(text)
+        plusMatch = plusRegex.search(expression)
+        while plusMatch:
+            expression = "".join([expression[:plusMatch.start()], str(int(plusMatch.group("first")) + int(plusMatch.group("second"))), expression[plusMatch.end():]])
+            plusMatch = plusRegex.search(expression)
 
-    token, text = getNextToken(text)
+    token, expression = getNextToken(expression)
     currentValue = int(token)
-    operationToPeform = None
-    while text:
-        token, text = getNextToken(text)
+    operationToPeform = ""
+    while expression:
+        token, expression = getNextToken(expression)
         if token.isdigit():
             currentValue = performOperation(currentValue, operationToPeform, int(token))
         else:
@@ -49,19 +50,19 @@ def evaluateExpression(text, addFirst):
     return currentValue
 
 
-def evaluateExpressions(addFirst, puzzleInput):
-    return sum([ evaluateExpression(line, addFirst) for line in puzzleInput ])
+def evaluateExpressions(addFirst: bool, expression: List[str]) -> int:
+    return sum([ evaluateExpression(line, addFirst) for line in expression ])
     
 
-def part1(puzzleInput):
-    return evaluateExpressions(False, puzzleInput)
+def part1(expressions: List[str]) -> int:
+    return evaluateExpressions(False, expressions)
 
 
-def part2(puzzleInput):
-    return evaluateExpressions(True, puzzleInput)
+def part2(expression: List[str]) -> int:
+    return evaluateExpressions(True, expression)
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> List[str]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     

@@ -1,40 +1,45 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import Callable, List, Tuple
 import re
 
-
-def countValid(puzzleInput, validationFunc):
-    return len([ 1 for line in puzzleInput if validationFunc(line) ])
+Line = Tuple[int,int,str,str]
 
 
-def isLineValid(line):
+def countValid(lines: List[Line], validationFunc: Callable[[Line],bool]):
+    return len([ 1 for line in lines if validationFunc(line) ])
+
+
+def isLineValid(line: Line) -> bool:
     minimum, maximum, letter, password = line
     occurenceCount = password.count(letter) 
     return occurenceCount >= minimum and occurenceCount <= maximum
 
 
-def part1(puzzleInput):
-    return countValid(puzzleInput, isLineValid)
+def part1(lines: List[Line]):
+    return countValid(lines, isLineValid)
 
 
-def isLineValid2(line):
+def isLineValid2(line: Line) -> bool:
     first, second, letter, password = line 
     return (password[first - 1] == letter) ^ (password[second - 1] == letter)
 
 
-def part2(puzzleInput):
-    return countValid(puzzleInput, isLineValid2)
+def part2(lines: List[Line]):
+    return countValid(lines, isLineValid2)
 
 
-lineReEx = re.compile("^(\d+)-(\d+)\s([a-z]):\s(.*)$")
-def parseLine(line):
+lineReEx = re.compile(r"^(\d+)-(\d+)\s([a-z]):\s(.*)$")
+def parseLine(line: str) -> Line:
     match = lineReEx.match(line)
-    min, max, letter, password = match.group(1, 2, 3, 4)
-    return (int(min), int(max), letter, password)
+    if match:
+        min, max, letter, password = match.group(1, 2, 3, 4)
+        return (int(min), int(max), letter, password)
+    raise Exception("Bad format", line)
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> List[Line]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     

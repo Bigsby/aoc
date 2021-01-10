@@ -1,9 +1,11 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import List, Tuple
 import re
 
 
+Instruction = Tuple[str,int]
 CARDINAL_DIRECTIONS = {
     "N": 1j, 
     "S": -1j, 
@@ -16,7 +18,7 @@ ROTATIONS = {
 }
 
 
-def navigate(instructions, heading,  headingOnCardinal = False):
+def navigate(instructions: List[Instruction], heading: complex,  headingOnCardinal: bool = False) -> int:
     position = 0j
     for direction, value in instructions:
         if direction in CARDINAL_DIRECTIONS:
@@ -28,25 +30,26 @@ def navigate(instructions, heading,  headingOnCardinal = False):
             heading *= ROTATIONS[direction] ** (value // 90)
         elif direction == "F":
             position += heading * value
-
     return int(abs(position.real) + abs(position.imag))
 
 
-def part1(instructions):
+def part1(instructions: List[Instruction]) -> int:
     return navigate(instructions, 1 + 0j)
     
 
-def part2(instructions):
+def part2(instructions: List[Instruction]) -> int:
     return navigate(instructions, 10 + 1j, True)
 
 
 lineRegex = re.compile(r"^(?P<direction>[NSEWLRF])(?P<value>\d+)$")
-def parseLine(line):
+def parseLine(line: str) -> Instruction:
     match = lineRegex.match(line)
-    return match.group("direction"), int(match.group("value"))
+    if match:
+        return match.group("direction"), int(match.group("value"))
+    raise Exception("Bad format", line)
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> List[Instruction]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     

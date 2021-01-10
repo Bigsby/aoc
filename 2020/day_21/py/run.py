@@ -1,12 +1,13 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import Dict, List, Set
 import re
 from functools import reduce
 
 
 class Food():
-    def __init__(self, ingredients, allergens):
+    def __init__(self, ingredients: List[str], allergens: List[str]):
         self.ingredients = ingredients
         self.allergens = allergens
 
@@ -14,7 +15,7 @@ class Food():
         return " ".join(self.ingredients) + " (contains " + ", ".join(self.allergens) + ")"
 
 
-def getAllergens(foods):
+def getAllergens(foods: List[Food]) -> Set[str]:
     allergens = set()
     for food in foods:
         for allergen in food.allergens:
@@ -22,7 +23,7 @@ def getAllergens(foods):
     return allergens
 
 
-def buildAllergenGraph(foods, allergens):
+def buildAllergenGraph(foods: List[Food], allergens: Set[str]) -> Dict[str,Set[str]]:
     return {
         allergen: reduce(lambda soFar, foodAllergens: soFar & foodAllergens, \
             (set(food.ingredients) for food in foods if allergen in food.allergens)) \
@@ -30,7 +31,7 @@ def buildAllergenGraph(foods, allergens):
     }
 
 
-def part1(foods):
+def part1(foods: List[Food]) -> int:
     allergens = getAllergens(foods)
     allergenGraph = buildAllergenGraph(foods, allergens)
     foundIngredients = reduce(lambda soFar, ingredientsForAllergen: \
@@ -43,7 +44,7 @@ def part1(foods):
     return count
 
 
-def part2(foods):
+def part2(foods: List[Food]) -> str:
     allergens = getAllergens(foods)
     allergenGraph = buildAllergenGraph(foods, allergens)
 
@@ -62,12 +63,14 @@ def part2(foods):
 
 
 lineRegex = re.compile(r"^(?P<ingredients>[^\(]+)\s\(contains\s(?P<allergens>[^\)]+)\)$")
-def parseLine(line):
+def parseLine(line: str) -> Food:
     match = lineRegex.match(line)
-    return Food(match.group("ingredients").split(" "), match.group("allergens").split(", "))
+    if match:
+        return Food(match.group("ingredients").split(" "), match.group("allergens").split(", "))
+    raise Exception("Bad format", line)
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> List[Food]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     

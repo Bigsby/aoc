@@ -1,28 +1,26 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import List
 from functools import reduce
 
 
-def part1(puzzleInput):
-    numbers = sorted(puzzleInput)
+def part1(numbers: List[int]) -> int:
     diff1 = 0
     diff3 = 1
     currentJoltage = 0
-    
-    while len(numbers):
-        newJoltage = numbers.pop(0)
-        diff = newJoltage - currentJoltage
+    for number in sorted(numbers):
+        diff = number - currentJoltage
         if diff == 1:
             diff1 += 1
         elif diff == 3:
             diff3 += 1
-        currentJoltage = newJoltage
+        currentJoltage = number
 
     return diff1 * diff3
 
 
-def calculateCombinations(sequence):
+def calculateCombinations(sequence: int) -> int:
     if sequence < 3:
         return 1
     if sequence == 3:
@@ -30,8 +28,8 @@ def calculateCombinations(sequence):
     return calculateCombinations(sequence - 1) + calculateCombinations(sequence - 2) + calculateCombinations(sequence - 3)
 
 
-def part2(puzzleInput):
-    adapters = sorted(puzzleInput)
+def part2(numbers: List[int]) -> int:
+    adapters = sorted(numbers)
     adapters.append(adapters[len(adapters) - 1])
     sequences = []
     currentSequenceLength = 1
@@ -47,7 +45,7 @@ def part2(puzzleInput):
     return reduce(lambda soFar, length: soFar * calculateCombinations(length), sequences, 1)
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> List[int]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     

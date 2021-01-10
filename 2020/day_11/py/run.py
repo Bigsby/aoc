@@ -1,14 +1,18 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import Callable, Dict, Tuple
 from enum import Enum
-from functools import reduce
 
 
 class State(Enum):
     OCCUPIED = '#'
     EMPTY = 'L'
     FLOOR = '.'
+
+
+Grid = Dict[complex,State]
+NeighborFinder = Callable[[Grid,complex,complex],complex]
 
 
 NEIGHBOR_DIRECTIONS = [
@@ -21,7 +25,7 @@ NEIGHBOR_DIRECTIONS = [
          + 1j,
      + 1 + 1j
 ]
-def getOccupiedCount(grid, position, getNeighborFunc):
+def getOccupiedCount(grid: Grid, position: complex, getNeighborFunc: NeighborFinder) -> int:
     total = 0
     for direction in NEIGHBOR_DIRECTIONS:
         neighbor = getNeighborFunc(grid, position, direction)
@@ -30,7 +34,7 @@ def getOccupiedCount(grid, position, getNeighborFunc):
     return total
 
 
-def getPositionNewState(grid, position, tolerance, getNeighborFunc):
+def getPositionNewState(grid: Grid, position: complex, tolerance: int, getNeighborFunc: NeighborFinder) -> Tuple[bool,State]:
     currentState = grid[position]
     if currentState == State.FLOOR:
         return False, State.FLOOR
@@ -42,7 +46,7 @@ def getPositionNewState(grid, position, tolerance, getNeighborFunc):
     return False, currentState
 
 
-def getNextState(grid, tolerance, getNeighborFunc):
+def getNextState(grid: Grid, tolerance: int, getNeighborFunc: NeighborFinder) -> Tuple[int,Grid]:
     newState = dict(grid)
     changedCount = 0
     for position in grid:
@@ -52,7 +56,7 @@ def getNextState(grid, tolerance, getNeighborFunc):
     return changedCount, newState
         
 
-def runGrid(grid, tolerance, getNeighborFunc):
+def runGrid(grid: Grid, tolerance: int, getNeighborFunc: NeighborFinder) -> int:
     grid = dict(grid)
     changed = 1
     while changed:
@@ -60,22 +64,22 @@ def runGrid(grid, tolerance, getNeighborFunc):
     return sum(map(lambda value: 1 if value == State.OCCUPIED else 0, grid.values()))
 
 
-def part1(grid):
+def part1(grid: Grid) -> int:
     return runGrid(grid, 3, lambda _, position, direction: position + direction)
 
 
-def getDirectionalNeighbor(grid, position, direction):
+def getDirectionalNeighbor(grid: Grid, position: complex, direction: complex) -> complex:
     position += direction
     while position in grid and grid[position] == State.FLOOR:
         position += direction
     return position
 
 
-def part2(grid):
+def part2(grid: Grid) -> int:
     return runGrid(grid, 4, getDirectionalNeighbor)
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> Grid:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     

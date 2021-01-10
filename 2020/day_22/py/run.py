@@ -1,42 +1,43 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import List, Tuple
 
 
 class Player():
-    def __init__(self, name, cards):
+    def __init__(self, name: str, cards: List[int]):
         self.name = name
         self.cards = cards
         self.previousHands = [ ] 
-        self.lastCard = None
+        self.lastCard = 0
 
     @staticmethod
-    def fromLines(lines):
+    def fromLines(lines: str) -> 'Player':
         name, *cards = lines.split("\n")
         name = name.replace("Player", "").replace(":", "").strip()
         cards = [ c for c in cards if c ]
         return Player(name, list(map(lambda i: int(i.strip()), cards)))
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Player {self.name}: {self.cards}"
 
-    def getTopCard(self):
+    def getTopCard(self) -> int:
         self.previousHands.append(set(self.cards))
         self.lastCard = self.cards.pop(0)
         return self.lastCard
 
-    def addCards(self, cards):
+    def addCards(self, cards: List[int]):
         self.cards += cards
 
-    def hasRepeatedHand(self):
+    def hasRepeatedHand(self) -> bool:
         return set(self.cards) in self.previousHands
 
-    def clone(self, keepState = False):
+    def clone(self, keepState: bool  = False) -> 'Player':
         if keepState:
             return Player(self.name, list(self.cards[:self.lastCard]))
         return Player(self.name, list(self.cards))
     
-    def getScore(self):
+    def getScore(self) -> int:
         worth = 1
         result = 0
         for card in self.cards[::-1]:
@@ -45,13 +46,13 @@ class Player():
         return result
 
 
-def getPlayersFromInput(puzzleInput):
-    player1, player2 = puzzleInput
+def getPlayersFromInput(players: Tuple[Player,Player]) -> Tuple[Player,Player]:
+    player1, player2 = players
     return player1.clone(), player2.clone()
 
 
-def part1(puzzleInput):
-    player1, player2 = getPlayersFromInput(puzzleInput)
+def part1(players: Tuple[Player,Player]) -> int:
+    player1, player2 = getPlayersFromInput(players)
     while len(player1.cards) and len(player2.cards):
         player1Card = player1.getTopCard()
         player2Card = player2.getTopCard()
@@ -64,7 +65,7 @@ def part1(puzzleInput):
     return winner.getScore()
 
 
-def decideRound(player1, player2):
+def decideRound(player1: Player, player2: Player) -> Tuple[Player,Player]:
     if all(player.lastCard <= len(player.cards) for player in [player1, player2]):
         winner = playGame(player1.clone(True), player2.clone(True))
         if winner.name == player1.name:
@@ -78,7 +79,7 @@ def decideRound(player1, player2):
             return player2, player1
 
 
-def playGame(player1, player2):
+def playGame(player1: Player, player2: Player) -> Player:
     while len(player1.cards) and len(player2.cards):
         if player1.hasRepeatedHand() or player2.hasRepeatedHand():
             return player1
@@ -93,13 +94,13 @@ def playGame(player1, player2):
         return player2
 
 
-def part2(puzzleInput):
-    player1, player2 = getPlayersFromInput(puzzleInput)
+def part2(players: Tuple[Player,Player]) -> int:
+    player1, player2 = getPlayersFromInput(players)
     winner = playGame(player1, player2)
     return winner.getScore()
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> Tuple[Player,Player]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     

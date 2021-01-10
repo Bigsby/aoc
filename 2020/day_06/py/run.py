@@ -1,46 +1,44 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from functools import reduce
+from typing import Dict, List, Tuple
+
+Group = Tuple[int,Dict[str,int]]
 
 
-def countGroupAnswers(group):
+def countGroupAnswers(group: Group) -> int:
     _, record = group
     return sum(map(lambda letter: record[letter] != 0, record.keys()))
 
 
-def part1(puzzleInput):
-    return sum(map(lambda group: countGroupAnswers(group), puzzleInput))
+def part1(groups: List[Group]) -> int:
+    return sum(map(lambda group: countGroupAnswers(group), groups))
 
 
-def getGroupCommonAnswers(group):
+def getGroupCommonAnswers(group: Group) -> int:
     peopleCount, record = group
     return sum(map(lambda letter: record[letter] == peopleCount, record.keys()))
 
 
-def part2(puzzleInput):
-    return sum(map(lambda group: getGroupCommonAnswers(group), puzzleInput))
+def part2(groups: List[Group]) -> int:
+    return sum(map(lambda group: getGroupCommonAnswers(group), groups))
 
 
-def addToLetterCount(record, letter):
-    if letter in record:
-        record[letter] = record[letter] + 1
-    else:
-        record[letter] = 1
-
-
-def processEntry(entry):
-    record = {}
+def processEntry(entry: str) -> Group:
+    record: Dict[str,int] = {}
     peopleCount = 0
     for line in entry.split("\n"):
         if line:
             peopleCount = peopleCount + 1
         for c in line:
-            addToLetterCount(record, c)
+            if c in record:
+                record[c] += 1
+            else:
+                record[c] = 1
     return (peopleCount, record)
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> List[Group]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     

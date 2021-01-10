@@ -1,36 +1,9 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import Iterable, List
 import re
 from enum import Enum
-
-
-class Computer():
-    def __init__(self):
-        self.mask = "X" * 36
-        self.memory = {}
-
-    def setMask(self, mask):
-        self.mask = mask
-        
-    def setMemory(self, location, value):
-        self.memory[str(location)] = value
-
-    def getMemorySum(self):
-        return sum([ value for _, value in self.memory.items() ])
-    
-    def getMemoryLocations(_, location):
-        yield location
-    
-    def getValue(_, value):
-        return value
-
-    def runInstruction(self, instruction):
-        if instruction.type == InstructionType.Mask:
-            self.setMask(instruction.mask)
-        else:
-            for location in self.getMemoryLocations(instruction.location):
-                self.setMemory(location, self.getValue(instruction.value))
 
 
 class InstructionType(Enum):
@@ -54,39 +27,61 @@ class Instruction():
                 self.value = int(memoryMatch.group("value"))
             else:
                 raise Exception(f"Unrecognized instruction: {inputLine}")
+
+
+class Computer():
+    def __init__(self):
+        self.mask = "X" * 36
+        self.memory = {}
+
+    def setMask(self, mask: str):
+        self.mask = mask
+        
+    def setMemory(self, location:int, value:int):
+        self.memory[str(location)] = value
+
+    def getMemorySum(self) -> int:
+        return sum([ value for _, value in self.memory.items() ])
     
-    def __str__(self):
-        return f"Mask = {self.mask}" if self.type == InstructionType.Mask else f"mem[{self.location}] = {self.value}"
-    def __repr__(self):
-        return self.__str__()
+    def getMemoryLocations(self, location: int) -> Iterable[int]:
+        yield location
+    
+    def getValue(self, value: int) -> int:
+        return value
+
+    def runInstruction(self, instruction: Instruction):
+        if instruction.type == InstructionType.Mask:
+            self.setMask(instruction.mask)
+        else:
+            for location in self.getMemoryLocations(instruction.location):
+                self.setMemory(location, self.getValue(instruction.value))
 
 
-def runComputer(computer, puzzleInput):
+def runComputer(computer: Computer, puzzleInput: List[Instruction]) -> int:
     for instruction in puzzleInput:
         computer.runInstruction(instruction)
     return computer.getMemorySum()
 
 
 class ValueMaskComputer(Computer):
-    def getValue(self, value):
+    def getValue(self, value: int) -> int:
         orMask = int(self.mask.replace("X", "0"), 2)
         value = value | orMask
         andMask = int(self.mask.replace("X", "1"), 2)
         return value & andMask
 
 
-def part1(puzzleInput):
-    return runComputer(ValueMaskComputer(), puzzleInput)
+def part1(instructions: List[Instruction]) -> int:
+    return runComputer(ValueMaskComputer(), instructions)
 
 
 xRegex = re.compile("X")
 class MemoryMaskComputer(Computer):
-    def getMemoryLocations(self, location):
+    def getMemoryLocations(self, location: int) -> Iterable[int]:
         orMask = int(self.mask.replace("X", "0"), 2)
         location = location | orMask
         maskBitOfffset = len(self.mask) - 1
         flipBits = [ *map(lambda match: maskBitOfffset - match.start(), xRegex.finditer(self.mask)) ]
-        
         for case in range(1 << len(flipBits)):
             currentLocation = location
             for index, flipBit in enumerate(flipBits):
@@ -96,11 +91,11 @@ class MemoryMaskComputer(Computer):
             yield currentLocation
 
 
-def part2(puzzleInput):
+def part2(puzzleInput: List[Instruction]) -> int:
     return runComputer(MemoryMaskComputer(), puzzleInput)
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> List[Instruction]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     

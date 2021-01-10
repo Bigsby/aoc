@@ -1,17 +1,18 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import List, Tuple
 
 
 class Node:
-    def __init__(self, value):
-        self.next = None
+    def __init__(self, value: int):
+        self.next = self
         self.value = value
 
 
-def buildLinkedList(cups):
+def buildLinkedList(cups: List[int]) -> Tuple[Node,List[Node]]:
     start = previous = last = Node(cups[0])
-    values = [None] * len(cups)
+    values = [start] * len(cups)
     values[start.value - 1] = start
     for cup in cups[1:]:
         last = Node(cup)
@@ -22,7 +23,7 @@ def buildLinkedList(cups):
     return start, values
 
 
-def playGame(cups, moves):
+def playGame(cups: List[int], moves: int) -> Node:
     start, values = buildLinkedList(cups)
     maxValue = max(cups)
     current = start
@@ -48,7 +49,7 @@ def playGame(cups, moves):
     return values[0]
 
 
-def part1(cups):
+def part1(cups: List[int]) -> str:
     oneNode = playGame(cups, 100)
     result = []
     currentNode = oneNode.next
@@ -58,13 +59,13 @@ def part1(cups):
     return "".join(map(str, result))
 
 
-def part2(cups):
+def part2(cups: List[int]) -> int:
     cups += [ *range(10, 10**6 + 1) ]
     oneNode = playGame(cups, 10**7)
     return oneNode.next.value * oneNode.next.next.value
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> List[int]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     

@@ -3,6 +3,7 @@
 import sys, os, time
 import re
 from enum import Enum
+from typing import Dict, List, Tuple
 
 
 class RuleType(Enum):
@@ -12,7 +13,7 @@ class RuleType(Enum):
 
 letterRegex = re.compile(r"^\"(?P<letter>a|b)\"$")
 class Rule():
-    def __init__(self, number, definition):
+    def __init__(self, number: str, definition: str):
         match = letterRegex.match(definition)
         self.number = int(number)
         if match:
@@ -25,7 +26,7 @@ class Rule():
                 self.sets.append(list(map(lambda rule: int(rule), set.strip().split(" "))))
 
 
-def generateRegex(rules, ruleNumber):
+def generateRegex(rules: Dict[int,Rule], ruleNumber: int) -> str:
     rule = rules[ruleNumber]
     if rule.type == RuleType.Letter:
         return rule.letter
@@ -35,20 +36,20 @@ def generateRegex(rules, ruleNumber):
         return "(?:" + "|".join("".join(generateRegex(rules, innerNumber) for innerNumber in ruleSet) for ruleSet in rule.sets) + ")"
 
 
-def part1(puzzleInput):
+def part1(puzzleInput: Tuple[Dict[int,Rule],List[str]]) -> int:
     rules, messages = puzzleInput
     zeroRegex = generateRegex(rules, 0)
     return sum(1 for message in messages if re.fullmatch(zeroRegex, message))
 
 
-def isInnerMatch(rule, message, position):
+def isInnerMatch(rule: str, message: str, position: int) -> Tuple[bool,int]:
     match = re.match(rule, message[position:])
     if match:
         return True, position + match.end()
     return False, position
 
   
-def isMatch(firstRule, secondRule, message):
+def isMatch(firstRule: str, secondRule: str, message: str) -> bool:
     count = 0
     matched, position = isInnerMatch(firstRule, message, 0)
     while matched and position <= len(message):
@@ -66,7 +67,7 @@ def isMatch(firstRule, secondRule, message):
     return False
 
 
-def part2(puzzleInput):
+def part2(puzzleInput: Tuple[Dict[int,Rule],List[str]]) -> int:
     rules, messages = puzzleInput
     rule42 = generateRegex(rules, 42)
     rule31 = generateRegex(rules, 31)
@@ -74,7 +75,7 @@ def part2(puzzleInput):
 
 
 ruleRegex = re.compile(r"(?P<number>^\d+):\s(?P<rule>.+)$")
-def getInput(filePath):
+def getInput(filePath: str) -> Tuple[Dict[int,Rule],List[str]]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     

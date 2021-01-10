@@ -1,9 +1,10 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import List
 
 
-def hasValidPair(numberIndex, numbers):
+def hasNoValidPair(numberIndex: int, numbers: List[int]) -> bool:
     number = numbers[numberIndex]
     for testindex in range(numberIndex - 25, numberIndex):
         testNumber = numbers[testindex]
@@ -11,18 +12,15 @@ def hasValidPair(numberIndex, numbers):
             if pairIndex == testindex:
                 continue
             if testNumber + numbers[pairIndex] == number:
-                return True
-    return False
+                return False
+    return True
 
 
-def part1(puzzleInput):
-    numbers = puzzleInput
-    for index in range(25, len(numbers)):
-        if not hasValidPair(index, numbers):
-            return numbers[index]
+def part1(numbers: List[int]) -> int:
+    return next(numbers[index] for index in range(25, len(numbers)) if hasNoValidPair(index, numbers))
 
 
-def getWeakness(numbers, targetNumber):
+def getWeakness(numbers: List[int], targetNumber: int) -> int:
     for startIndex in range(0, len(numbers)):
         currentSum = 0
         length = 1
@@ -33,15 +31,14 @@ def getWeakness(numbers, targetNumber):
                 weakness = min(newSet) + max(newSet)
                 return weakness
             length += 1
+    raise Exception("Weakness not found")
 
 
-part1Result = 1
-def part2(puzzleInput):
-    numbers = puzzleInput
+def part2(numbers: List[int], part1Result: int) -> int:
     return getWeakness(numbers, part1Result)
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> List[int]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     
@@ -58,7 +55,7 @@ def main():
     start = time.perf_counter()
     part1Result = part1(puzzleInput)
     middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part2Result = part2(puzzleInput, part1Result)
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
