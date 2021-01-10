@@ -1,10 +1,15 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import Dict, List, Tuple
 import re
 
+Date = Tuple[int,int,int]
+Time = Tuple[int,int]
+LogRecord = Tuple[Date,Time,str]
+GuardRecord = Tuple[int,Dict[int,int]]
 
-def recordGuardTimes(id, guards, lastAsleep, woke):
+def recordGuardTimes(id: int, guards: Dict[int,GuardRecord], lastAsleep: int, woke: int) -> GuardRecord:
     guardRecord = guards[id] if id in guards else None
     if not guardRecord:
         guardRecord = ( 0, { minute: 0 for minute in range(60) } )
@@ -18,13 +23,13 @@ def recordGuardTimes(id, guards, lastAsleep, woke):
 shiftStartRegex = re.compile(r"^Guard\s#(?P<id>\d+)\sbegins\sshift")
 FALL_ASLEEP = "falls asleep"
 WAKE_UP = "wakes up"
-def buildGuardRecords(log):
+def buildGuardRecords(log: List[LogRecord]) -> Dict[int,GuardRecord]:
     log = sorted(log, key=lambda values: (values[0], values[1]))
-    guards = {}
+    guards: Dict[int,GuardRecord] = {}
     guardId = 0
     guardAsleep = False
-    lastAsleep = (0, 0, 0), (0, 0)
-    for _, time, message in log:
+    lastAsleep = 0
+    for _, (_, minutes), message in log:
         match = shiftStartRegex.match(message)
         if match:
             if guardAsleep:
@@ -33,17 +38,15 @@ def buildGuardRecords(log):
             guardId = int(match.group("id"))
             continue
         if message == FALL_ASLEEP:
-            lastAsleep = time[1]
+            lastAsleep = minutes
             guardAsleep = True
         if message == WAKE_UP:
             guardAsleep = False
-            guards[guardId] = recordGuardTimes(guardId, guards, lastAsleep, time[1])
+            guards[guardId] = recordGuardTimes(guardId, guards, lastAsleep, minutes)
     return guards
         
 
-def part1(log):
-    guards = buildGuardRecords(log)
-
+def part1(guards: Dict[int,GuardRecord]) -> int:
     maxTotal = 0
     guardId = 0
     for id, guardRecord in guards.items():
@@ -51,7 +54,6 @@ def part1(log):
         if total > maxTotal:
             maxTotal = total
             guardId = id
-    
     maxTotal = 0
     maxMinute = -1
     for minute, total in guards[guardId][1].items():
@@ -62,8 +64,7 @@ def part1(log):
     return guardId * maxMinute
 
 
-def part2(log):
-    guards = buildGuardRecords(log)
+def part2(guards: Dict[int,GuardRecord]) -> int:
     maxTotal = 0
     maxMinute = -1
     guardId = 0
@@ -78,19 +79,21 @@ def part2(log):
 
 
 lineRegex = re.compile(r"\[(?P<year>\d{4})-(?P<month>\d{2})-(?P<day>\d{2})\s(?P<hours>\d{2}):(?P<minutes>\d{2})\]\s(?P<message>.*)$")
-def parseLine(line):
+def parseLine(line: str) -> LogRecord:
     match = lineRegex.match(line)
-    return (int(match.group("year")), int(match.group("month")), int(match.group("day"))), \
-            (int(match.group("hours")), int(match.group("minutes"))), \
-            match.group("message")
+    if match:
+        return (int(match.group("year")), int(match.group("month")), int(match.group("day"))), \
+                (int(match.group("hours")), int(match.group("minutes"))), \
+                match.group("message")
+    raise Exception("Bad format", line)
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> Dict[int,GuardRecord]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     
     with open(filePath, "r") as file:
-        return [ parseLine(line) for line in file.readlines() ]
+        return buildGuardRecords([ parseLine(line) for line in file.readlines() ])
 
 
 def main():

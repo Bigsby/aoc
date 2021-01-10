@@ -1,14 +1,14 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import List
 
 
-def part1(puzzleInput):
-    return sum(puzzleInput)
+def part1(changes: List[int]) -> int:
+    return sum(changes)
 
 
-def part2(puzzleInput):
-    changes = puzzleInput
+def part2(changes: List[int]):
     changesLength = len(changes)
     frequency = 0
     previous = set() 
@@ -21,7 +21,7 @@ def part2(puzzleInput):
     return frequency
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> List[int]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     

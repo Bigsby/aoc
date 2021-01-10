@@ -4,23 +4,23 @@ import sys, os, time
 import re
 
 
-def part1(polymer):
-    polymer = [ ord(c) for c in polymer]
+def part1(polymer: str) -> int:
+    polymerInts = [ ord(c) for c in polymer]
     hadChanges = True
     while hadChanges:
         hadChanges = False
         index = 0
-        while index < len(polymer) - 1:
-            if abs(polymer[index] - polymer[index + 1]) == 32:
-                del polymer[index]
-                del polymer[index]
+        while index < len(polymerInts) - 1:
+            if abs(polymerInts[index] - polymerInts[index + 1]) == 32:
+                del polymerInts[index]
+                del polymerInts[index]
                 hadChanges = True
             else:      
                 index += 1
-    return len(polymer)
+    return len(polymerInts)
 
 
-def part2(polymer):
+def part2(polymer: str) -> int:
     minUnits = sys.maxsize
     for cOrd in range(ord("A"), ord("Z") + 1):
         strippedPolymer = re.sub("".join([ "[", chr(cOrd), chr(cOrd + 32), "]" ]), "", polymer)
@@ -28,7 +28,7 @@ def part2(polymer):
     return minUnits
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> str:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     

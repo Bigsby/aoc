@@ -1,10 +1,11 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import List
 from itertools import combinations
 
 
-def part1(ids):
+def part1(ids: List[str]) -> int:
     twiceCount = 0
     thriceCount = 0
 
@@ -16,8 +17,8 @@ def part1(ids):
     return twiceCount * thriceCount
     
 
-def part2(ids):
-    result = None
+def part2(ids: List[str]) -> str:
+    result = ""
     for id1, id2 in combinations(ids, 2):
         differences = [ i for i in range(len(id1)) if id1[i] != id2[i] ]
         if len(differences) == 1:
@@ -27,7 +28,7 @@ def part2(ids):
     return result
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> List[str]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     
