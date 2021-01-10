@@ -1,79 +1,60 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import Iterable, List, Tuple
 import re
 
-def getNewHeading(currentHeading, direction):
-    newHeading = currentHeading + (90 if direction == "R" else -90)
-    if newHeading < 0:
-        return 360 + newHeading
-    if newHeading > 270:
-        return newHeading - 360
-    return newHeading
+Instruction = Tuple[str,int]
 
 
-headingSteps = {
-    0: (0,1),       # facing North
-    90: (1,0),      # facing East
-    180: (0,-1),    # facing South
-    270: (-1,0)     # facing West
-}
+def getNewHeading(currentHeading: complex, direction: str) -> complex:
+    return currentHeading * (1 if direction == "L" else -1) * 1j
 
 
-def getNewPosition(currentPosition, heading, distance):
-    step = headingSteps[heading]
-    return currentPosition[0] + distance * step[0], currentPosition[1] + distance * step[1]
+def getManhatanDistance(position: complex) -> int:
+    return int(abs(position.real) + abs(position.imag))
 
 
-def getDistanceToOrigin(position):
-    return abs(position[0]) + abs(position[1])
+def part1(instructions: List[Instruction]):
+    currentPosition = 0
+    currentHeading = 1j
 
-
-def part1(puzzleInput):
-    currentPosition = (0,0)
-    currentHeading = 0
-
-    for direction, distance in puzzleInput:
+    for direction, distance in instructions:
         currentHeading = getNewHeading(currentHeading, direction)
-        currentPosition = getNewPosition(currentPosition, currentHeading, distance)
+        currentPosition += currentHeading * distance
 
-    return getDistanceToOrigin(currentPosition)
+    return getManhatanDistance(currentPosition)
 
 
-def getVisitedPositions(position, heading, distance):
-    step = headingSteps[heading]
+def getVisitedPositions(position: complex, heading: complex, distance: int) -> Iterable[complex]:
     for i in range(1, distance + 1):
-        yield position[0] - (i * step[0]), position[1] - (i * step[1])
+        yield position + (i * heading)
 
 
-def part2(puzzleInput):
-    currentPosition = (0,0)
-    currentHeading = 0
-    visitedPositions = [ currentPosition ]
-    done = False
+def part2(instructions: List[Instruction]) -> int:
+    currentPosition = 0
+    currentHeading = 1j
+    visitedPositions: List[complex] = [ currentPosition ]
 
-    for direction, distance in puzzleInput:
+    for direction, distance in instructions:
         currentHeading = getNewHeading(currentHeading, direction)
-        newPositions = getVisitedPositions(currentPosition, currentHeading, distance)
-        for newPosition in newPositions:
-            currentPosition = newPosition
+        for i in range(1, distance + 1):
+            currentPosition += currentHeading
             if currentPosition in visitedPositions:
-                done = True
-                break
+                return getManhatanDistance(currentPosition)
             else:
                 visitedPositions.append(currentPosition)
-        if done:
-            break
-
-    return getDistanceToOrigin(currentPosition)
+    raise Exception("Never returned to previous locations")
 
 
-instructionRegex = re.compile("^(?P<direction>[RL])(?P<distance>\d+),?\s?$")
-def parseInstruction(instructionText):
+instructionRegex = re.compile(r"^(?P<direction>[RL])(?P<distance>\d+),?\s?$")
+def parseInstruction(instructionText: str) -> Instruction:
     match = instructionRegex.match(instructionText)
-    return (match.group("direction"), int(match.group("distance")))
+    if match:
+        return (match.group("direction"), int(match.group("distance")))
+    raise Exception("Bad format", instructionText)
 
-def getInput(filePath):
+def getInput(filePath: str) -> List[Instruction]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     
