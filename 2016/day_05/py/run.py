@@ -4,33 +4,37 @@ import sys, os, time
 from hashlib import md5
 
 
-def part1(puzzleInput):
+PREFIX = "0" * 5
+ENCODING = "utf-8"
+
+def part1(doorId: str) -> str:
     index = 0
     password = ""
     while len(password) < 8:
-        result = md5((puzzleInput + str(index)).encode("utf-8")).hexdigest()
-        if result.startswith("00000"):
+        result = md5((doorId + str(index)).encode(ENCODING)).hexdigest()
+        if result.startswith(PREFIX):
             password += result[5]
         index += 1
     return password
 
 
-def part2(puzzleInput):
+MISSING_INDEXES = list("01234567")
+def part2(doorId: str) -> str:
     index = 0
     password = [ "_" for _ in range(8) ]
-    missingDigits = "01234567"
-    while missingDigits:
-        result = md5((puzzleInput + str(index)).encode("utf-8")).hexdigest()
-        if result.startswith("00000"):
+    
+    while MISSING_INDEXES:
+        result = md5((doorId + str(index)).encode(ENCODING)).hexdigest()
+        if result.startswith(PREFIX):
             digitIndex, digit = result[5], result[6]
-            if digitIndex in missingDigits:
+            if digitIndex in MISSING_INDEXES:
                 password[int(digitIndex)] = digit
-                missingDigits = missingDigits.replace(digitIndex, "")
+                MISSING_INDEXES.remove(digitIndex)
         index += 1
     return "".join(password)
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> str:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     

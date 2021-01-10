@@ -1,20 +1,21 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import Dict, List, Tuple
+from collections import Counter
 import re
-from functools import reduce
+
+Room = Tuple[str,int,str]
 
 
-def isRoomValid(name, checksum):
+def isRoomValid(name: str, checksum: str) -> bool:
     name = name.replace("-", "")
-    counts = {}
-    for letter in name:
-        counts[letter] = name.count(letter)
+    counts: Dict[str,int] = Counter(name)
     processedChecksum = "".join([ letter for letter, _ in sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))[:5] ])
     return processedChecksum == checksum
 
 
-def part1(rooms):
+def part1(rooms: List[Room]):
     return sum([ id for name, id, checksum in rooms if isRoomValid(name, checksum)])
 
 
@@ -22,7 +23,7 @@ A_ORD = ord("a")
 Z_ORD = ord("z")
 DASH_ORD = ord("-")
 SPACE_ORD = ord(" ")
-def getNextChar(c):
+def getNextChar(c: int) -> int:
     if c == DASH_ORD or c == SPACE_ORD:
         return SPACE_ORD
     if c == Z_ORD:
@@ -31,28 +32,30 @@ def getNextChar(c):
         return c + 1
 
 
-def rotateName(name, count):
-    name = [ ord(c) for c in name ]
+def rotateName(name: str, count: int) -> str:
+    nameInts = [ ord(c) for c in name ]
     for _ in range(count):
-        for i in range(len(name)):
-            name[i] = getNextChar(name[i])
-    return "".join([ chr(c) for c in name ])
+        for i in range(len(nameInts)):
+            nameInts[i] = getNextChar(nameInts[i])
+    return "".join([ chr(c) for c in nameInts ])
 
 
 SEARCH_NAME = "northpole object storage"
-def part2(rooms):
+def part2(rooms: List[Room]):
     for name, id, checksum in rooms:
         if isRoomValid(name, checksum) and rotateName(name, id) == SEARCH_NAME:
             return id
 
 
 lineRegex = re.compile(r"^(?P<name>[a-z\-]+)-(?P<id>\d+)\[(?P<checksum>\w+)\]$")
-def parseLine(line):
+def parseLine(line: str) -> Room:
     match = lineRegex.match(line)
-    return match.group("name"), int(match.group("id")), match.group("checksum")
+    if match:
+        return match.group("name"), int(match.group("id")), match.group("checksum")
+    raise Exception("Bad format", line)
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> List[Room]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     

@@ -1,36 +1,39 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import List
 import re
+from itertools import product
+
+TriangleSides = List[List[int]]
 
 
-def isPossibleTriangle(sideA, sideB, sideC):
+def isPossibleTriangle(sideA: int, sideB: int, sideC: int) -> bool:
     return sideA < (sideB + sideC) \
             and sideB < (sideA + sideC) \
             and sideC < (sideA + sideB)
 
 
-def part1(triangleSides):
+def part1(triangleSides: TriangleSides) -> int:
     return sum([ isPossibleTriangle(sideA, sideB, sideC) for sideA, sideB, sideC in triangleSides ])
 
 
-def part2(triangleSides):
+def part2(triangleSides: TriangleSides) -> int:
     return sum(
-        [ sum([ isPossibleTriangle( \
+            isPossibleTriangle( \
                 triangleSides[rowIndex * 3][columnIndex], \
                 triangleSides[rowIndex * 3 + 1][columnIndex], \
                 triangleSides[rowIndex * 3 + 2][columnIndex]) \
-                for columnIndex in range(3) ]) \
-            for rowIndex in range(len(triangleSides) // 3)
-        ])
+                for columnIndex, rowIndex in product(range(3), range(len(triangleSides) // 3)) \
+        )
 
 
 lineRegex = re.compile(r"\d+")
-def parseLine(line):
+def parseLine(line: str) -> List[int]:
     return [ int(i) for i in  lineRegex.findall(line) ]
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> List[List[int]]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     

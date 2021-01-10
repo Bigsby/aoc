@@ -1,15 +1,16 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import Dict, List, Tuple
 
 
-DIRECTIONS = {
+DIRECTIONS: Dict[str,complex] = {
     "U": -1j,
     "D":  1j,
     "L": -1,
     "R":  1
 }
-def getButtonForPath(position, path, keypad):
+def getButtonForPath(position: complex, path: str, keypad: Dict[complex,str]) -> Tuple[complex,str]:
     for move in path:
         newPosition = position + DIRECTIONS[move]
         if newPosition in keypad:
@@ -17,7 +18,7 @@ def getButtonForPath(position, path, keypad):
     return position, keypad[position]
 
 
-def getCode(paths, keypad):
+def getCode(paths: List[str], keypad: Dict[complex,str]) -> str:
     position = 0
     code = []
     for path in paths:
@@ -26,27 +27,27 @@ def getCode(paths, keypad):
     return "".join(code)
 
 
-KEYPAD1 = {
+KEYPAD1: Dict[complex,str] = {
     -1 - 1j: "1", -1j: "2",  1 - 1j: "3",
     -1     : "4",   0: "5",  1     : "6",
     -1 + 1j: "7",  1j: "8",  1 + 1j: "9"
 }
-def part1(paths):
+def part1(paths: List[str]) -> str:
     return getCode(paths, KEYPAD1)
 
 
-KEYPAD2 = {
+KEYPAD2: Dict[complex,str] = {
                             -2j: "1",
               -1 - 1j: "2", -1j: "3", 1 - 1j: "4",
     -2: "5",  -1     : "6",   0: "7", 1     : "8", 2: "9",
               -1 + 1j: "A",  1j: "B", 1 + 1j: "C",
                              2j: "D"
 }
-def part2(paths):
+def part2(paths: List[str]) -> str:
     return getCode(paths, KEYPAD2)
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> List[str]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     
