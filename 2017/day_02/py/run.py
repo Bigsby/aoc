@@ -1,11 +1,12 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import List
 import re
 from itertools import permutations
 
 
-def part1(lines):
+def part1(lines: List[List[int]]) -> int:
     total = 0
     for line in lines:
         maximum = max(line)
@@ -15,7 +16,7 @@ def part1(lines):
     return total
 
 
-def part2(lines):
+def part2(lines: List[List[int]]) -> int:
     total = 0
     for line in lines:
         pairs = permutations(line, 2)
@@ -27,7 +28,7 @@ def part2(lines):
 
 
 lineRegex = re.compile(r"\d+")
-def getInput(filePath):
+def getInput(filePath: str) -> List[List[int]]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     

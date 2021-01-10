@@ -1,9 +1,10 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import Callable, List
 
 
-def doJumps(jumps, newJumpFunc):
+def doJumps(jumps: List[int], newJumpFunc: Callable[[int],int]) -> int:
     jumps = list(jumps)
     maxIndex = len(jumps)
     currentIndex = 0
@@ -17,15 +18,15 @@ def doJumps(jumps, newJumpFunc):
     return count
 
 
-def part1(jumps):
+def part1(jumps: List[int]) -> int:
     return doJumps(jumps, lambda offset: offset + 1)
 
 
-def part2(jumps):
+def part2(jumps: List[int]) -> int:
     return doJumps(jumps, lambda offset: offset + (1 if offset < 3 else - 1))
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> List[int]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     

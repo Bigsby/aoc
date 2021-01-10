@@ -1,12 +1,13 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import List
 
 
-def part1(puzzleInput):
+def part1(numbers: List[int]) -> int:
     count = 0
-    previous = puzzleInput[-1]
-    for number in puzzleInput:
+    previous = numbers[-1]
+    for number in numbers:
         if number == previous:
             count += number
         previous = number
@@ -14,12 +15,10 @@ def part1(puzzleInput):
     return count
 
 
-def part2(puzzleInput):
-    numbers = puzzleInput
+def part2(numbers: List[int]) -> int:
     listLength = len(numbers)
     halfLength = listLength // 2
     numbers += numbers
-    
     count = 0
     for index in range(listLength):
         if numbers[index] == numbers[index + halfLength]:
@@ -28,7 +27,7 @@ def part2(puzzleInput):
     return count
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> List[int]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     

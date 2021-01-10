@@ -1,20 +1,25 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import Callable, List
 
 
-def hasRepeatedWords(passphrase):
+def runTests(passphrases: List[List[str]], validationFunc: Callable[[List[str]],bool]) -> int:
+    return sum(map(lambda passphrase: validationFunc(passphrase), passphrases))
+
+
+def hasNoRepeatedWords(passphrase: List[str]) -> bool:
     for word in passphrase:
         if passphrase.count(word) > 1:
-            return True
-    return False
+            return False
+    return True
 
 
-def part1(passphrases):
-    return sum([ not hasRepeatedWords(passphrase) for passphrase in passphrases ])
+def part1(passphrases: List[List[str]]):
+    return runTests(passphrases, hasNoRepeatedWords)
 
 
-def isAnagram(word1, word2):
+def isAnagram(word1: str, word2: str) -> bool:
     if len(word1) != len(word2):
         return False
     for c in word1:
@@ -23,19 +28,19 @@ def isAnagram(word1, word2):
     return True
 
 
-def hasAnagram(passphrase):
+def hasNoAnagram(passphrase: List[str]) -> bool:
     for index, word in enumerate(passphrase):
         for otherWord in passphrase[:index] + passphrase[index + 1:]:
             if isAnagram(word, otherWord):
-                return True
-    return False
+                return False
+    return True
 
 
-def part2(passphrases):
-    return sum([ not hasAnagram(passphrase) for passphrase in passphrases ])
+def part2(passphrases: List[List[str]]):
+    return runTests(passphrases, hasNoAnagram)
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> List[List[str]]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     
