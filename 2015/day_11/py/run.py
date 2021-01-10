@@ -4,9 +4,9 @@ import sys, os, time
 import re
 
 
-forbiddenLetters = [ ord("i"), ord("o"), ord("l") ]
+FORBIDDEN_LETTERS = [ ord("i"), ord("o"), ord("l") ]
 pairsRegex = re.compile(r"^.*(.)\1{1}.*(.)\2{1}.*$")
-def isPasswordValid(password):
+def isPasswordValid(password: str):
     ords = list(map(lambda c: ord(c), password))
 
     if not pairsRegex.match(password):
@@ -19,44 +19,43 @@ def isPasswordValid(password):
     return False
     
 
-def getNextChar(c):
+def getNextChar(c: int):
     c += 1
-    while c in forbiddenLetters:
+    while c in FORBIDDEN_LETTERS:
         c += 1
     return chr(c)
 
 
-aOrd = ord("a")
-zOrd = ord("z")
-def getNextPassword(current):
-    result = list(current)
+A_ORD = ord("a")
+Z_ORD = ord("z")
+def getNextPassword(currentPassword: str):
+    result = list(currentPassword)
     for index in range(len(result) - 1, 0, -1):
         cOrd = ord(result[index])
-        if cOrd == zOrd:
-            result[index] = chr(aOrd)
+        if cOrd == Z_ORD:
+            result[index] = chr(A_ORD)
             continue
         result[index] = getNextChar(cOrd)
         break
     return "".join(result)
 
 
-def getNextValidPassword(currentPassword):
+def getNextValidPassword(currentPassword: str):
     currentPassword = getNextPassword(currentPassword)
     while not isPasswordValid(currentPassword):
         currentPassword = getNextPassword(currentPassword)
-
     return currentPassword
 
 
-def part1(puzzleInput):
-    return getNextValidPassword(puzzleInput)
+def part1(currentPassword: str):
+    return getNextValidPassword(currentPassword)
 
 
-def part2(puzzleInput):
-    return getNextValidPassword(getNextValidPassword(puzzleInput))
+def part2(currentPassword: str):
+    return getNextValidPassword(getNextValidPassword(currentPassword))
 
 
-def getInput(filePath):
+def getInput(filePath: str):
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     

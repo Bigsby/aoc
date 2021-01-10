@@ -1,23 +1,19 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import Iterator, List, Tuple
 import re
 from itertools import permutations
 
 
 class Edge():
-    def __init__(self, nodeA, nodeB, distance):
+    def __init__(self, nodeA: str, nodeB: str, distance: str):
         self.nodeA = nodeA
         self.nodeB = nodeB
         self.distance = int(distance)
 
-    def __str__(self):
-        return f"{self.nodeA} - {self.nodeB} = {self.distance}"
-    def __repr__(self):
-        return self.__str__()
 
-
-def getPathDistance(permutation, paths):
+def getPathDistance(permutation: Tuple[str,...], paths: List[Edge]) -> int:
     distance = 0
     for index in range(0, len(permutation) - 1):
         path = next(filter(lambda p: p.nodeA == permutation[index] and p.nodeB == permutation[index + 1] or p.nodeA == permutation[index + 1] and p.nodeB == permutation[index], paths))
@@ -25,41 +21,43 @@ def getPathDistance(permutation, paths):
     return distance
 
 
-def getSingleNodes(edges):
-    nodes = []
+def getSingleNodes(edges: List[Edge]) -> List[str]:
+    nodes: List[str] = []
     for path in edges:
         nodes.append(path.nodeA)
         nodes.append(path.nodeB)
     return list(set(nodes))
  
 
-def getPossiblePaths(nodes):
+def getPossiblePaths(nodes: List[str]) -> Iterator[Tuple[str,...]]:
     return permutations(nodes, len(nodes))
 
 
-def getMinOrMax(puzzleInput, getMax = False):
-    singleNodes = getSingleNodes(puzzleInput)
+def getMinOrMax(edges: List[Edge], getMax: bool = False) -> int:
+    singleNodes = getSingleNodes(edges)
     possiblePaths = getPossiblePaths(singleNodes)
     if getMax:
-        return max(map(lambda permutation: getPathDistance(permutation, puzzleInput), possiblePaths))
-    return min(map(lambda permutation: getPathDistance(permutation, puzzleInput), possiblePaths))
+        return max(map(lambda permutation: getPathDistance(permutation, edges), possiblePaths))
+    return min(map(lambda permutation: getPathDistance(permutation, edges), possiblePaths))
 
 
-def part1(puzzleInput):
-    return getMinOrMax(puzzleInput)
+def part1(edges: List[Edge]):
+    return getMinOrMax(edges)
 
 
-def part2(puzzleInput):
-    return getMinOrMax(puzzleInput, True)
+def part2(edges: List[Edge]):
+    return getMinOrMax(edges, True)
 
 
-lineRegex = re.compile("^(.*)\sto\s(.*)\s=\s(\d+)$")
-def parseLine(line):
+lineRegex = re.compile(r"^(.*)\sto\s(.*)\s=\s(\d+)$")
+def parseLine(line: str) -> Edge:
     match = lineRegex.match(line)
-    return Edge(match.group(1), match.group(2), match.group(3))
+    if match:
+        return Edge(match.group(1), match.group(2), match.group(3))
+    raise Exception("Bad format", line)
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> List[Edge]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     

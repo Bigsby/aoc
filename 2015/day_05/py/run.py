@@ -1,25 +1,26 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import List
 import re
 from functools import reduce
 
 
-forbidenPairs = [ "ab", "cd", "pq", "xy" ]
+FORBIDEN_PAIRS = [ "ab", "cd", "pq", "xy" ]
 vowelRegex = re.compile("[aeiou]")
 repeatRegex = re.compile("(.)\\1{1,}")
-def isWordNice(word):
-    for pair in forbidenPairs:
+def isWordNice(word: str):
+    for pair in FORBIDEN_PAIRS:
         if pair in word:
             return False
     return len(vowelRegex.findall(word)) > 2 and len(repeatRegex.findall(word)) != 0
 
 
-def part1(puzzleInput):
+def part1(puzzleInput: List[str]):
     return reduce(lambda currentCount, word: currentCount + isWordNice(word), puzzleInput, 0)
 
 
-def hasRepeatingPair(word):
+def hasRepeatingPair(word: str):
     for pairStart in range(0, len(word) - 2):
         pairToTest = word[pairStart : pairStart + 2]
         startOfWord = word[0 : pairStart] 
@@ -29,18 +30,18 @@ def hasRepeatingPair(word):
     return False
 
 
-def hasRepeatingLetter(word):
+def hasRepeatingLetter(word: str):
     for index in range(0, len(word) - 2):
         if word[index] == word[index + 2]:
             return True
     return False
 
 
-def part2(puzzleInput):
+def part2(puzzleInput: List[str]):
     return reduce(lambda currentCount, word: currentCount + (hasRepeatingPair(word) and hasRepeatingLetter(word)), puzzleInput, 0)
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> List[str]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     

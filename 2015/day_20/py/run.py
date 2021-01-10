@@ -1,10 +1,11 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import Iterable
 import math
 
 
-def getDivisors(number):
+def getDivisors(number: int) -> Iterable[int]:
     large_divisors = []
     for i in range(1, int(math.sqrt(number) + 1)):
         if number % i == 0:
@@ -15,11 +16,11 @@ def getDivisors(number):
         yield divisor
 
 
-def getPresentCountForHouse(number):
+def getPresentCountForHouse(number: int) -> int:
     return sum(getDivisors(number))
 
 
-def part1(puzzleInput):
+def part1(puzzleInput: int) -> int:
     houseNumber = 0 
     presentsReceived = 0
     step = 2 * 3 * 5 * 7 * 11 
@@ -30,7 +31,7 @@ def part1(puzzleInput):
     return houseNumber
 
 
-def getPresentCountForHouse2(number):
+def getPresentCountForHouse2(number: int) -> int:
     presents = 0
     for divisor in getDivisors(number):
         if number / divisor < 50:
@@ -38,9 +39,7 @@ def getPresentCountForHouse2(number):
     return presents
 
 
-part1Result = 1
-def part2(puzzleInput):
-    houseNumber = part1Result
+def part2(puzzleInput: int, houseNumber: int) -> int:
     step = 1
     presentsReceived = 0
     while presentsReceived <= puzzleInput:
@@ -49,7 +48,7 @@ def part2(puzzleInput):
     return houseNumber
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> int:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     
@@ -66,7 +65,7 @@ def main():
     start = time.perf_counter()
     part1Result = part1(puzzleInput)
     middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part2Result = part2(puzzleInput, part1Result)
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)

@@ -2,12 +2,13 @@
 
 import sys, os, time
 import re
+from typing import Dict, Iterable, List, Tuple
 from functools import reduce
 from itertools import combinations_with_replacement
 
 
 class Entry():
-    def __init__(self, name, capacity, durability, flavor, texture, calories):
+    def __init__(self, name: str, capacity: str, durability: str, flavor: str, texture: str, calories: str):
         self.name = name
         self.capacity = int(capacity)
         self.durability = int(durability)
@@ -15,41 +16,36 @@ class Entry():
         self.texture = int(texture)
         self.calories = int(calories)
 
-    def __str__(self):
-        return f"{self.name}: cap:{self.capacity} dur:{self.durability} fla:{self.flavor} tex:{self.texture} cal:{self.calories}"
-    def __repr__(self):
-        return self.__str__()
 
-
-def getValueForProperty(solution, entries, property):
+def getValueForProperty(solution: Dict[str,int], entries: List[Entry], property: str) -> int:
     return reduce(lambda soFar, entry: soFar + getattr(entry, property) * solution[entry.name], entries, 0)
 
 
-valueProperties = [ "capacity", "durability", "flavor", "texture" ]
-def findValueForSolution(solution, entries):
-    values = {}
-    for property in valueProperties:
+VALUE_PROPERTIES = [ "capacity", "durability", "flavor", "texture" ]
+def findValueForSolution(solution: Dict[str,int], entries: List[Entry]) -> Tuple[int,int]:
+    values: Dict[str,int] = {}
+    for property in VALUE_PROPERTIES:
         values[property] = getValueForProperty(solution, entries, property)
     totalScore = reduce(lambda soFar, key: soFar * (values[key] if values[key] > 0 else 1), values, 1)
     calories = getValueForProperty(solution, entries, "calories")
     return totalScore, calories
 
 
-def getPossibleCombinations(ingredients, totalSpoons):
+def getPossibleCombinations(ingredients: List[str], totalSpoons: int) -> Iterable[Tuple[str,...]]:
     return combinations_with_replacement(ingredients, totalSpoons)
 
 
-def createSolutionFromCombination(combination, ingredients):
+def createSolutionFromCombination(combination: Tuple[str,...], ingredients: List[str]) -> Dict[str,int]:
     return { ingredient: combination.count(ingredient) for ingredient in ingredients }
 
 
-def getIngredientCombinations(entries, totalSpoons):
+def getIngredientCombinations(entries: List[Entry], totalSpoons: int) -> Tuple[List[str],Iterable[Tuple[str,...]]]:
     totalSpoons = 100
     ingredients = list(map(lambda entry: entry.name, entries))
     return ingredients, getPossibleCombinations(ingredients, totalSpoons)
 
 
-def getMaxValue(entries, requireCalories = False):
+def getMaxValue(entries: List[Entry], requireCalories: bool = False) -> int:
     ingredients, possibleCombinations = getIngredientCombinations(entries, 100)
     maxValue = 0
     for combination in possibleCombinations:
@@ -61,20 +57,23 @@ def getMaxValue(entries, requireCalories = False):
     return maxValue
 
 
-def part1(puzzleInput):
-    return getMaxValue(puzzleInput)
+def part1(entries: List[Entry]) -> int:
+    return getMaxValue(entries)
 
 
-def part2(puzzleInput):
-    return getMaxValue(puzzleInput, True)
+def part2(entries: List[Entry]) -> int:
+    return getMaxValue(entries, True)
 
 
 lineRegex = re.compile(r"^(\w+):\scapacity\s(-?\d+),\sdurability\s(-?\d+),\sflavor\s(-?\d+),\stexture\s(-?\d+),\scalories\s(-?\d+)$")
-def parseLine(line):
-    return Entry(*lineRegex.match(line).group(1, 2, 3, 4, 5, 6))
+def parseLine(line: str) -> Entry:
+    match = lineRegex.match(line)
+    if match:
+        return Entry(*match.group(1, 2, 3, 4, 5, 6))
+    raise Exception("Bad format", line)
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> List[Entry]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     

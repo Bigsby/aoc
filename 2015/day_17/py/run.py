@@ -1,31 +1,30 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import List, Tuple
 from itertools import combinations
 
-
-def getValidCombinations(containers):
-    targetTotal = 150
+TARGET_TOTAL = 150
+def getValidCombinations(containers: List[int]) -> List[Tuple[int,...]]:
     validCombinations = []
     for containerCount in range(2, len(containers)):
         for combination in combinations(containers, containerCount):
-            if sum(combination) == targetTotal:
+            if sum(combination) == TARGET_TOTAL:
                 validCombinations.append(combination)
-
     return validCombinations
 
 
-def part1(puzzleInput):
-    return len(getValidCombinations(puzzleInput))
+def part1(containers: List[int]) -> int:
+    return len(getValidCombinations(containers))
 
 
-def part2(puzzleInput):
-    validCombinations = getValidCombinations(puzzleInput)
+def part2(containers: List[int]) -> int:
+    validCombinations = getValidCombinations(containers)
     minCount = min([ len(combination) for combination in validCombinations ])
     return len([ combination for combination in validCombinations if len(combination) == minCount ])
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> List[int]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     

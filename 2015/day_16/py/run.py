@@ -1,33 +1,29 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import Dict, List
 import re
 from enum import Enum
 
 
+PROPS = [ "children", "cats", "samoyeds", "pomeranians", "akitas", "vizslas", "goldfish", "trees", "cars", "perfumes" ]
+NA_PROP = -1
 
-props = [ "children", "cats", "samoyeds", "pomeranians", "akitas", "vizslas", "goldfish", "trees", "cars", "perfumes" ]
-NA_PROP = "N/A"
 
-def buildPropDict():
-    return { prop: NA_PROP for prop in props }
+def buildPropDict() -> Dict[str,int]:
+    return { prop: NA_PROP for prop in PROPS }
     
 
 class AuntRecord():
-    def __init__(self, number, prop1Name, prop1Value, prop2Name, prop2Value, prop3Name, prop3Value):
+    def __init__(self, number: str, prop1Name: str, prop1Value: str, prop2Name: str, prop2Value: str, prop3Name: str, prop3Value: str):
         self.number = int(number)
         self.props = buildPropDict()
         self.setProp(prop1Name, prop1Value)
         self.setProp(prop2Name, prop2Value)
         self.setProp(prop3Name, prop3Value)
 
-    def setProp(self, name, value):
+    def setProp(self, name:str, value:str):
         self.props[name] = int(value)
-
-    def __str__(self):
-        return f"{self.number} => {self.props}"
-    def __repr__(self):
-        return self.__str__()
 
 
 class Operator(Enum):
@@ -37,12 +33,12 @@ class Operator(Enum):
 
 
 class Reading():
-    def __init__(self, value, operator = Operator.EQUAL):
+    def __init__(self, value: int, operator: Operator = Operator.EQUAL):
         self.value = value
         self.operator = operator
 
 
-mfcsamReading = {
+MFCSAN_READING: Dict[str,Reading] = {
     "children": Reading(3),
     "cats": Reading(7, Operator.GREATER),
     "samoyeds": Reading(2),
@@ -54,12 +50,12 @@ mfcsamReading = {
     "cars": Reading(2),
     "perfumes": Reading(1)
 }
-def isValidRecord(record, checkOperator = False):
-    for prop in mfcsamReading:
+def isValidRecord(record: AuntRecord, checkOperator: bool = False) -> bool:
+    for prop in MFCSAN_READING:
         recordValue = record.props[prop]
         if recordValue == NA_PROP:
             continue
-        reading = mfcsamReading[prop]
+        reading = MFCSAN_READING[prop]
         readingValue = reading.value
         if checkOperator:
             if reading.operator == Operator.EQUAL and recordValue != readingValue:
@@ -73,26 +69,23 @@ def isValidRecord(record, checkOperator = False):
     return True
 
 
-def getAuntNumber(aunts, checkOperator = False):
-    for record in aunts:
-        if isValidRecord(record, checkOperator):
-            return record.number
+def part1(aunts: List[AuntRecord]) -> int:
+    return next(filter(lambda record: isValidRecord(record), aunts)).number
 
 
-def part1(puzzleInput):
-    return getAuntNumber(puzzleInput)
-
-
-def part2(puzzleInput):
-    return getAuntNumber(puzzleInput, True)
+def part2(aunts: List[AuntRecord]) -> int:
+    return next(filter(lambda record: isValidRecord(record, True), aunts)).number
 
 
 lineRegex = re.compile(r"^Sue\s(\d+):\s(\w+):\s(\d+),\s(\w+):\s(\d+),\s(\w+):\s(\d+)$")
-def parseLine(line):
-    return AuntRecord(*lineRegex.match(line).group(1, 2, 3, 4, 5, 6, 7))
+def parseLine(line: str):
+    match = lineRegex.match(line)
+    if match:
+        return AuntRecord(*match.group(1, 2, 3, 4, 5, 6, 7))
+    raise Exception("Bad format", line)
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> List[AuntRecord]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     

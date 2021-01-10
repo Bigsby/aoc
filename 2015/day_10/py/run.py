@@ -2,11 +2,10 @@
 
 import sys, os, time
 import re
-from functools import reduce
 
 
 testRegex = re.compile(r"(\d)\1+|\d")
-def getNextValue(value):
+def getNextValue(value: str):
     matches = testRegex.finditer(value)
     sequences = []
     for match in matches:
@@ -16,22 +15,22 @@ def getNextValue(value):
     return "".join(sequences)
 
 
-def runLookAndSay(puzzleInput, turns):
+def runLookAndSay(puzzleInput: str, turns: int):
     currentValue = puzzleInput
     for _ in range(0, turns):
         currentValue = getNextValue(currentValue)
     return len(currentValue)
 
 
-def part1(puzzleInput):
+def part1(puzzleInput: str):
     return runLookAndSay(puzzleInput, 40)
 
 
-def part2(puzzleInput):
+def part2(puzzleInput: str):
     return runLookAndSay(puzzleInput, 50)
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> str:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     

@@ -1,9 +1,10 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import Dict, Iterable, List
 
 
-NEIGHBOR_DIRECTIONS = [
+NEIGHBOR_DIRECTIONS: List[complex] = [
      - 1 - 1j,
          - 1j,
      + 1 - 1j,
@@ -13,12 +14,12 @@ NEIGHBOR_DIRECTIONS = [
          + 1j,
      + 1 + 1j
 ]
-def getNeighbors(pos):
+def getNeighbors(pos: complex) -> Iterable[complex]:
     for direction in NEIGHBOR_DIRECTIONS:
         yield pos + direction
 
 
-def getNextState(grid, alwaysOn = []):
+def getNextState(grid: Dict[complex,int], alwaysOn: List[complex] = []) -> Dict[complex,int]:
     for position in alwaysOn:
             grid[position] = 1
     newState = dict(grid)
@@ -33,19 +34,19 @@ def getNextState(grid, alwaysOn = []):
     return newState
 
 
-def runSteps(grid, alwaysOn = []):
+def runSteps(grid: Dict[complex,int], alwaysOn: List[complex] = []) -> int:
     for _ in range(100):
         grid = getNextState(grid, alwaysOn)
     return sum(grid.values())
 
 
-def part1(grid):
+def part1(grid: Dict[complex,int]) -> int:
     return runSteps(grid)
 
 
-def part2(grid):
+def part2(grid: Dict[complex,int]) -> int:
     side = max(map(lambda key: key.real, grid.keys()))
-    alwaysOn = [
+    alwaysOn: List[complex] = [
         0,
         side * 1j,
         side,
@@ -54,7 +55,7 @@ def part2(grid):
     return runSteps(grid, alwaysOn)
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> Dict[complex,int]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     

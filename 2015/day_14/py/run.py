@@ -1,24 +1,20 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import Any, Dict, List
 import re
 
 
 class Entry():
-    def __init__(self, name, speed, duration, rest):
+    def __init__(self, name: str, speed:str, duration: str, rest: str):
         self.name = name
         self.speed = int(speed)
         self.duration = int(duration)
         self.rest = int(rest)
         self.period = self.duration + self.rest
-        
-    def __str__(self):
-        return f"{self.name} s:{self.speed} d:{self.duration} r:{self.rest}"
-    def __repr__(self):
-        return self.__str__()
 
 
-def calculateDistance(entry, totalDuration):
+def calculateDistance(entry: Entry, totalDuration: int) -> int:
     period = entry.duration + entry.rest
     periods, remainder = divmod(totalDuration, period)
     total = periods * entry.speed * entry.duration
@@ -27,19 +23,19 @@ def calculateDistance(entry, totalDuration):
     return total
 
 
-def part1(puzzleInput):
+def part1(entries: List[Entry]) -> int:
     totalDuration = 2503
-    return max(map(lambda entry: calculateDistance(entry, totalDuration), puzzleInput))
+    return max(map(lambda entry: calculateDistance(entry, totalDuration), entries))
 
 
-def getDistanceForTime(entry, time):
+def getDistanceForTime(entry: Entry, time: int) -> int:
     timeInPeriod = time % entry.period
     return entry.speed if timeInPeriod < entry.duration else 0
 
 
-def part2(puzzleInput):
+def part2(entries: List[Entry]) -> int:
     totalTime = 2503
-    deers = { entry.name: { "distance": 0, "points": 0, "entry": entry } for entry in puzzleInput }
+    deers: Dict[str,Dict[str,Any]] = { entry.name: { "distance": 0, "points": 0, "entry": entry } for entry in entries }
 
     for time in range(0, totalTime):
         maxDistance = 0
@@ -55,12 +51,14 @@ def part2(puzzleInput):
 
 
 lineRegex = re.compile(r"^(\w+)\scan\sfly\s(\d+)\skm/s\sfor\s(\d+)\sseconds,\sbut\sthen\smust\srest\sfor\s(\d+)\sseconds.$")
-def parseLine(line):
+def parseLine(line: str) -> Entry:
     match = lineRegex.match(line)
-    return Entry(*match.group(1, 2, 3, 4))
+    if match:
+        return Entry(*match.group(1, 2, 3, 4))
+    raise Exception("Bad format", line)
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> List[Entry]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     

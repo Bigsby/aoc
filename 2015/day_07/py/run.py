@@ -1,38 +1,59 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import Callable, Dict, List, Union
 import re
 
 
-class Circuit():
-    def __init__(self, connections):
-        self.connections = list(connections)
-        self.solutions = {}
+class Operand():
+    def __init__(self, value):
+        try:
+            self.type = "scalar"
+            self.scalar = int(value)
+        except:
+            self.type = "wire"
+            self.wire:str = value
 
-    def getConnectionFromTarget(self, target):
-        return next(filter(lambda conn: conn.target == target, self.connections), None)
 
-    def getConnectionFromOperand(self, operand):
-        if operand and operand.type == "wire":
-            return self.getConnectionFromTarget(operand.value)
-        return None
+class Connection():
+    def __init__(self, operation: Union[str,None], type: str, operand1: str, operand2: Union[str,None], target: str):
+        self.operation = operation
+        self.type = type
+        self.operand1 = Operand(operand1)
+        self.operand2 = Operand(operand2)
+        self.target = target
 
-    def getValueFromOperand(self, operand):
-        if operand.type == "scalar":
-            return operand.value
-        return self.getValueFromConnection(self.getConnectionFromTarget(operand.value))
-
-    binaryOperations = {
+BINARY_OPERATIONS: Dict[str,Callable[[int,int],int]] = {
         "AND": lambda x, y: x & y,
         "OR": lambda x, y: x | y,
         "LSHIFT": lambda x, y: x << y,
         "RSHIFT": lambda x, y: x >> y
-    }
-    def getValueFromBinaryConneciton(self, connection):
-        operation = Circuit.binaryOperations[connection.operation]
-        return operation(self.getValueFromOperand(connection.operand1), self.getValueFromOperand(connection.operand2))
+}
+class Circuit():
+    def __init__(self, connections: List[Connection]):
+        self.connections = connections
+        self.solutions: Dict[str,int] = {}
 
-    def getNewValueForConnection(self, connection):
+    def getConnectionFromTarget(self, target: Union[str,int]) -> Connection:
+        return next(filter(lambda conn: conn.target == target, self.connections))
+
+    def getConnectionFromOperand(self, operand: Operand) -> Union[Connection,None]:
+        if operand and operand.type == "wire":
+            return self.getConnectionFromTarget(operand.wire)
+        return None
+
+    def getValueFromOperand(self, operand: Operand) -> int:
+        if operand.type == "scalar":
+            return operand.scalar
+        return self.getValueFromConnection(self.getConnectionFromTarget(operand.wire))
+    
+    def getValueFromBinaryConneciton(self, connection: Connection) -> int:
+        if connection.operation:
+            operation = BINARY_OPERATIONS[connection.operation]
+            return operation(self.getValueFromOperand(connection.operand1), self.getValueFromOperand(connection.operand2))
+        raise Exception("Operation no defined in connection")
+
+    def getNewValueForConnection(self, connection: Connection):
         if connection.type == "input":
             return self.getValueFromOperand(connection.operand1)
         if connection.type == "unary":
@@ -41,57 +62,45 @@ class Circuit():
             return self.getValueFromBinaryConneciton(connection)
         raise Exception("Unknown operation:", connection)
 
-    def getValueFromConnection(self, connection):
+    def getValueFromConnection(self, connection: Connection) -> int:
         if connection.target in self.solutions:
             return self.solutions[connection.target]
         result = self.getNewValueForConnection(connection)
         self.solutions[connection.target] = result
         return result
 
-    def solveFor(self, target, initialState = {}):
+    def solveFor(self, target: str, initialState: Dict[str,int] = {}) -> int:
         self.solutions = initialState
         return self.getValueFromConnection(self.getConnectionFromTarget(target))
 
 
-class Operand():
-    def __init__(self, value):
-        try:
-            self.value = int(value)
-            self.type = "scalar"
-        except:
-            self.value = value
-            self.type = "wire"
+def runCode(circuit: Circuit, rerunB: bool = False) -> int:
+    startingTarget = "a"
+    maxValue = pow(2, 16)
+    result = circuit.solveFor(startingTarget)
 
-    def __str__(self):
-        return str(self.value)
-    def __repr__(self):
-        return self.__str__()
+    if rerunB:
+        solutions = { "b": result }
+        result = circuit.solveFor(startingTarget, solutions)    
 
-
-class Connection():
-    def __init__(self, operation, type, operand1, operand2, target):
-        self.operation = operation
-        self.type = type
-        self.operand1 = Operand(operand1)
-        self.operand2 = Operand(operand2)
-        self.target = target
-        
-    def __str__(self):
-        if self.type == "input":
-            return f"{self.operand1} -> {self.target}"
-        if self.type == "unary":
-            return f"NOT {self.operand1} -> {self.target}"
-        return f"{self.operand1} {self.operation} {self.operand2} -> {self.target} ({self.type})"
-    def __repr__(self):
-        return self.__str__()
+    if result < 0:
+        result += maxValue
+    return result
 
 
-sourceTargetRegex = re.compile("^(.*)\s->\s(\w+)$")
-inputRegex = re.compile("^[^\s]+$")
-unaryRegex = re.compile("NOT\s(\w+)$")
-binaryRegex = re.compile("^(\w+|\d+)\s+(AND|OR|LSHIFT|RSHIFT)\s+(\w+|\d+)")
-binaryOperations = [ "AND", "OR", "LSHIFT", "RSHIFT" ]
-def processLine(line):
+def part1(circuit: Circuit) -> int:
+    return runCode(circuit)
+
+
+def part2(circuit: Circuit) -> int:
+    return runCode(circuit, True)
+
+
+sourceTargetRegex = re.compile(r"^(.*)\s->\s(\w+)$")
+inputRegex = re.compile(r"^[^\s]+$")
+unaryRegex = re.compile(r"NOT\s(\w+)$")
+binaryRegex = re.compile(r"^(\w+|\d+)\s+(AND|OR|LSHIFT|RSHIFT)\s+(\w+|\d+)")
+def processLine(line: str) -> Connection:
     sourceTargetMatch = sourceTargetRegex.match(line)
     if sourceTargetMatch:
         source, target = sourceTargetMatch.group(1, 2)
@@ -108,34 +117,12 @@ def processLine(line):
         raise Exception("Unrecognized operation line:", line)
 
 
-def runCode(puzzleInput, rerunB = False):
-    startingTarget = "a"
-    maxValue = pow(2, 16)
-    result = puzzleInput.solveFor(startingTarget)
-
-    if rerunB:
-        solutions = { "b": result }
-        result = puzzleInput.solveFor(startingTarget, solutions)    
-
-    if result < 0:
-        result = maxValue + result
-    return result
-
-
-def part1(puzzleInput):
-    return runCode(puzzleInput)
-
-
-def part2(puzzleInput):
-    return runCode(puzzleInput, True)
-
-
-def getInput(filePath):
+def getInput(filePath: str) -> Circuit:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     
     with open(filePath, "r") as file:
-        return Circuit(map(lambda line: processLine(line), file.readlines()))
+        return Circuit([ processLine(line) for line in file.readlines() ])
 
 
 def main():

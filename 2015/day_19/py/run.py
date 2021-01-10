@@ -1,29 +1,25 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import List, Optional, Tuple
 import re
 
 
 class Replacement():
-    def __init__(self, source, target):
+    def __init__(self, source: str, target: str):
         self.source = source
         self.target = target
 
-    def __str__(self):
-        return f"{self.source} -> {self.target}"
-    def __repr__(self):
-        return self.__str__()
 
-
-def processReplacement(molecule, replacement):
+def processReplacement(molecule: str, replacement: Replacement) -> List[str]:
     return processReplacementDirect(molecule, replacement.source, replacement.target)
 
     
-def processReplacementDirect(molecule, source, target):
+def processReplacementDirect(molecule: str, source: str, target: str) -> List[str]:
     return [ "".join([ molecule[0 : match.start()], target, molecule[match.end() : ] ]) for match in re.finditer(source, molecule) ]
 
 
-def part1(puzzleInput):
+def part1(puzzleInput: Tuple[List[Replacement],str]) -> int:
     replacements, molecule = puzzleInput
     newMolecules = []
     for replacement in replacements:
@@ -33,54 +29,49 @@ def part1(puzzleInput):
     return len(set(newMolecules))
 
 
-def getValidReplacements(molecule, replacements):
+def getValidReplacements(molecule: str, replacements: List[Replacement]) -> List[Replacement]:
     return [ replacement for replacement in replacements if replacement.target in molecule ]
 
 
 class PointInSearch():
-    def __init__(self, origin, replacements, replacement = None, parent = None):
+    def __init__(self, origin: str, replacements: List[Replacement], replacement: Optional[Replacement] = None, parent: Optional['PointInSearch'] = None):
         self.origin = origin
         self.parent = parent
         self.replacement = replacement
         self.validReplacements = getValidReplacements(origin, replacements)
         self.hasValidReplacements = len(self.validReplacements) != 0
-        self.iteration = parent.iteration + 1 if parent else 0
+        if parent:
+            self.iteration = parent.iteration + 1
+        else:
+            self.iteration = 0
         self.closed = False
         self.populated = False
         self.children = []
-    
-    def __str__(self):
-        return f"{self.iteration} {self.hasValidReplacements} {self.origin} r:{len(self.replacements)} c:{len(self.children)}"
-    def __repr__(self):
-        return self.__str__()
 
-    def generateChildren(self, replacements):
+    def generateChildren(self, replacements: List[Replacement]):
         for replacement in self.validReplacements:
             branches = processReplacementDirect(self.origin, replacement.target, replacement.source)
             for branch in branches:
                 self.children.append(PointInSearch(branch, replacements, replacement, self))
         self.populated = True
 
-    def getNextChild(self):
-        childFound = next(filter(lambda c: not c.closed, self.children), None)
-        return childFound
+    def getNextChild(self) -> Optional['PointInSearch']:
+        return next(filter(lambda c: not c.closed, self.children), None)
 
-    def getNextPoint(self, childToRemove = None):
+    def getNextPoint(self, childToRemove: Optional['PointInSearch'] = None) -> Optional['PointInSearch']:
         if childToRemove:
             self.children.remove(childToRemove)
-        if self.closed:
+        if self.closed and self.parent:
             return self.parent.getNextPoint(self)
         nextChild = self.getNextChild()
-        if nextChild == None:
-            if self.parent:
-                return self.parent.getNextPoint(self)
-            else:
-                return None
-        else:
+        if nextChild:
             return nextChild
+        if self.parent:
+            return self.parent.getNextPoint(self)
+        return None            
 
 
-def part2(puzzleInput):
+def part2(puzzleInput: Tuple[List[Replacement],str]):
     replacements, targetMolecule = puzzleInput
     startingMolecule = "e"
     currentPoint = PointInSearch(targetMolecule, replacements)
@@ -93,7 +84,7 @@ def part2(puzzleInput):
 
 
 lineRegex = re.compile(r"^(\w+)\s=>\s(\w+)$")
-def getInput(filePath):
+def getInput(filePath: str) -> Tuple[List[Replacement],str]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     

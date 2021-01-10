@@ -1,21 +1,24 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import Any, Dict, List, Union
 import re
 import json
 from functools import reduce
 
+JSONType = Union[str, int, float, bool, None, Dict[str, Any], List[Any]]
+
 
 numberRegex = re.compile(r"(-?[\d]+)")
-def part1(puzzleInput):
+def part1(puzzleInput: str):
     return reduce(lambda soFar, match: soFar + int(match.group(1)), numberRegex.finditer(puzzleInput), 0)
 
 
-def getTotal(obj):
+def getTotal(obj: JSONType) -> int:
     if isinstance(obj, dict):
-        if any(filter(lambda key: obj[key] == "red", obj.keys())):
+        if any(filter(lambda value: value == "red", obj.values())):
             return 0
-        return reduce(lambda total, key: total + getTotal(obj[key]), obj.keys(), 0)
+        return reduce(lambda total, value: total + getTotal(value), obj.values(), 0)
     if isinstance(obj, int):
         return int(obj)
     if isinstance(obj, list):
@@ -23,12 +26,12 @@ def getTotal(obj):
     return 0
 
 
-def part2(puzzleInput):
+def part2(puzzleInput: str):
     report = json.loads(puzzleInput)
     return getTotal(report)
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> str:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     

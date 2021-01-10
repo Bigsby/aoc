@@ -1,12 +1,13 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import List, Tuple
 import re
 
 
-def part1(puzzleInput):
+def part1(dimensions: List[Tuple[int,int,int]]):
     totalPaper = 0
-    for dimension in puzzleInput:
+    for dimension in dimensions:
         w, l, h = dimension
         wl = w * l
         wh = w * h
@@ -17,9 +18,9 @@ def part1(puzzleInput):
     return totalPaper
 
 
-def part2(puzzleInput):
+def part2(dimensions: List[Tuple[int,int,int]]):
     totalRibbon = 0
-    for dimension in puzzleInput:
+    for dimension in dimensions:
         w, l, h = dimension
         sidesList = [w, l, h]
         sidesList.remove(max(sidesList))
@@ -28,14 +29,15 @@ def part2(puzzleInput):
     return totalRibbon
 
 
-lineRegex = re.compile("^(\d+)x(\d+)x(\d+)$")
-def parseLine(line):
+lineRegex = re.compile(r"^(\d+)x(\d+)x(\d+)$")
+def parseLine(line:str) -> Tuple[int,int,int]:
     match = lineRegex.match(line)
     if match:
         return (int(match.group(1)), int(match.group(2)), int(match.group(3)))
+    raise Exception("Bad format", line)
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> List[Tuple[int,int,int]]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     

@@ -1,20 +1,21 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import List
 
 
-def part1(puzzleInput):
+def part1(diretions: List[int]):
     currentFloor = 0
-    for direction in puzzleInput:
+    for direction in diretions:
         currentFloor = currentFloor + direction
 
     return currentFloor
 
 
-def part2(puzzleInput):
+def part2(directions: List[int]):
     currentFloor = 0
     currentPosition = 1
-    for direction in puzzleInput:
+    for direction in directions:
         currentFloor = currentFloor + direction
         if currentFloor == -1:
             break
@@ -23,12 +24,12 @@ def part2(puzzleInput):
     return currentPosition
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> List[int]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     
     with open(filePath) as file:
-        return [ 1 if c == "(" else -1 for c in file.read() ]
+        return [ 1 if c == "(" else -1 for c in file.read().strip() ]
 
 
 def main():
