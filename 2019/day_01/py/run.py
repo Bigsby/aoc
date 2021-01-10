@@ -1,13 +1,14 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import List
 
 
-def part1(puzzleInput):
-    return sum((mass // 3) - 2 for mass in puzzleInput)
+def part1(masses: List[int]) -> int:
+    return sum((mass // 3) - 2 for mass in masses)
 
 
-def getFuel(mass):
+def getFuel(mass: int) -> int:
     total = 0
     currentMass = mass
     while True:
@@ -19,11 +20,11 @@ def getFuel(mass):
     return total
 
 
-def part2(puzzleInput):
-    return sum(getFuel(mass) for mass in puzzleInput)
+def part2(masses: List[int]) -> int:
+    return sum(getFuel(mass) for mass in masses)
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> List[int]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     
