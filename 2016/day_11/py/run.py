@@ -97,8 +97,7 @@ def getValidMoves(state: State) -> List[Move]:
 
 
 def solve(floors: Floors) -> int:
-    initialState: State = (0,floors)
-    queue: List[Tuple[State,int]] = [(initialState, 0)]
+    queue: List[Tuple[State,int]] = [((0,floors), 0)]
     while queue:
         state, movesCount = queue.pop()
         for move in getValidMoves(state):
