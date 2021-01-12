@@ -22,9 +22,7 @@ def isGroupValid(group: Iterable[int]) -> bool:
         if -generator in testGroup:
             testGroup.remove(-generator)
             testGroup.remove(generator)
-    if not testGroup:
-        return True
-    return any(map(lambda part: part > 0, testGroup)) ^ any(map(lambda part: part < 0, testGroup))
+    return  not testGroup or any(map(lambda part: part > 0, testGroup)) ^ any(map(lambda part: part < 0, testGroup))
 
 
 def isMoveValid(currentFloor: Floor, nextFloor: Floor, elevator: Elevator) -> bool:
@@ -36,21 +34,17 @@ def isMoveValid(currentFloor: Floor, nextFloor: Floor, elevator: Elevator) -> bo
     for part in elevator:
         if part != EMPTY_SLOT:
             nextTestFloor.append(part)
-    
     return isGroupValid(currentTestFloor) and  isGroupValid(nextTestFloor)
 
 
 def makeMove(floors: Floors, move: Move) -> State:
-    try: 
-        floors = [ list(floor) for floor in floors ]
-        currentFloor, nextFloor, parts = move
-        for part in parts:
-            if part != EMPTY_SLOT:
-                floors[currentFloor].remove(part)
-                floors[nextFloor].append(part)
-        return nextFloor, floors
-    except:
-        raise Exception("failed to do move", floors, move)
+    floors = [ list(floor) for floor in floors ]
+    currentFloor, nextFloor, parts = move
+    for part in parts:
+        if part != EMPTY_SLOT:
+            floors[currentFloor].remove(part)
+            floors[nextFloor].append(part)
+    return nextFloor, floors
 
 
 def getValidDirectionalMoves(state: State, direction: int, possibleMovesGroups: List[Elevator]):
@@ -58,16 +52,18 @@ def getValidDirectionalMoves(state: State, direction: int, possibleMovesGroups: 
     nextFloor = currentFloor + direction
     validMoves = []
 
+    if nextFloor < 0 or nextFloor >= len(floors):
+        return []
     if nextFloor == 0:
         if not len(floors[nextFloor]):
             return []
     if nextFloor == 1 and not (len(floors[1]) or len(floors[0])):
         return []
 
-    if 0 <= nextFloor < 4:
-        for moveGroup in sorted(possibleMovesGroups, key=lambda group: abs(group[0]) + abs(group[1])):
-            if isMoveValid(floors[currentFloor], floors[nextFloor], moveGroup):
-                validMoves.append((currentFloor, nextFloor, moveGroup))
+    for moveGroup in possibleMovesGroups:
+        if isMoveValid(floors[currentFloor], floors[nextFloor], moveGroup):
+            validMoves.append((currentFloor, nextFloor, moveGroup))
+
     return sorted(validMoves, key=lambda move: (abs(move[2][0]), abs(move[2][1])))
 
 
@@ -100,45 +96,18 @@ def getValidMoves(state: State) -> List[Move]:
     return pruneMoves(validMoves)
 
 
-def getFloorStateRepresentation(floor: Floor) -> str:
-    return "".join(map(str,sorted(floor)))
-
-
-def getStateRepresentation(state: State):
-    currentFloor, floors = state
-    radios: Dict[int,str] = {}
-    nextLetter = ord("A")
-    groups = []
-    for floor in floors:
-        group = []
-        for part in floor:
-            number = abs(part)
-            if number not in radios:
-                radios[number] = chr(nextLetter)
-                nextLetter += 1
-            letter = radios[number]
-            group.append(letter if part > 0 else letter.lower())
-        groups.append(group)
-
-    return "|".join([ str(currentFloor) , *map(lambda group: "".join(sorted(group)), groups) ])
-
-
 def solve(floors: Floors) -> int:
     initialState: State = (0,floors)
-    queue: List[Tuple[State,List[str]]] = [(initialState, [])]
-
+    queue: List[Tuple[State,int]] = [(initialState, 0)]
     while queue:
-        state, past = queue.pop()
+        state, movesCount = queue.pop()
         for move in getValidMoves(state):
             newState = makeMove(state[1], move)
-            if newState[0] == 3 and len(newState[1][-1]) == len(radioisotopes) * 2:
-                return len(past) + 1
+            newCurrent, newFloors = newState
+            if newCurrent == len(floors) - 1 and len(newFloors[-1]) == len(radioisotopes) * 2:
+                return movesCount + 1
             else:
-                newStateRepresentation = getStateRepresentation(newState)
-                if newStateRepresentation not in past:
-                    newPast = list(past)
-                    newPast.append(newStateRepresentation)
-                    queue.append((newState, newPast))
+                queue.append((newState, movesCount + 1))
     raise Exception("Solution not found")
 
 
