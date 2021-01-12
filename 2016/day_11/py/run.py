@@ -64,7 +64,7 @@ def getValidDirectionalMoves(state: State, direction: int, possibleMovesGroups: 
         if isMoveValid(floors[currentFloor], floors[nextFloor], moveGroup):
             validMoves.append((currentFloor, nextFloor, moveGroup))
 
-    return sorted(validMoves, key=lambda move: (abs(move[2][0]), abs(move[2][1])))
+    return validMoves
 
 
 def pruneMoves(moves: List[Move]) -> List[Move]:
