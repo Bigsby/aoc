@@ -5,6 +5,14 @@ from typing import List
 import re
 
 
+def getHexManhatanDistance(position: complex) -> int:
+    xSignal = True if position.real > 0 else False
+    ySignal = True if position.imag > 0 else False
+    if xSignal ^ ySignal:
+        return int(max(abs(position.real) , abs(position.imag)))
+    return int(abs(position.real) +  abs(position.imag))
+
+
 DIRECTIONS = {
     "s" :       1j,
     "se":   1     ,
@@ -18,10 +26,10 @@ def part1(instructions: List[str]):
     currentHex = 0
     for instrucion in instructions:
         currentHex += DIRECTIONS[instrucion]
-        distance = int(max(abs(currentHex.real) , abs(currentHex.imag)))
+        distance = getHexManhatanDistance(currentHex)
         furthest = max(furthest, distance)
 
-    return int(max(abs(currentHex.real) , abs(currentHex.imag))), furthest
+    return getHexManhatanDistance(currentHex), furthest
 
 
 def part2(result: int) -> int:
