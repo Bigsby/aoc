@@ -4,7 +4,6 @@ import sys, os, time
 from typing import Dict, Iterable, Tuple
 from itertools import product
 
-
 Grid = Dict[complex,int]
 GRID_SIZE = 300
 
@@ -22,13 +21,6 @@ def buildGrid(serialNumber: int) -> Dict[complex,int]:
     return { x + y * 1j: calculatePowerLevel(x + 1, y + 1, serialNumber) for y, x in product(range(GRID_SIZE), range(GRID_SIZE)) }
 
 
-def sumFromAreaTable(grid: Grid, x: int, y: int, size: int) -> int:
-    return  grid[x - 1        + (y - 1)        * 1j] \
-          - grid[x - 1 + size + (y - 1)        * 1j] \
-          - grid[x - 1        + (y - 1 + size) * 1j] \
-          + grid[x - 1 + size + (y - 1 + size) * 1j]        
-
-
 def buildSummedAreaTable(grid: Grid) -> Grid:
     grid = dict(grid)
     for y in range(GRID_SIZE):
@@ -41,12 +33,18 @@ def buildSummedAreaTable(grid: Grid) -> Grid:
     return grid
 
 
+def sumFromAreaTable(grid: Grid, x: int, y: int, size: int) -> int:
+    return  grid[x - 1        + (y - 1)        * 1j] \
+          - grid[x - 1 + size + (y - 1)        * 1j] \
+          - grid[x - 1        + (y - 1 + size) * 1j] \
+          + grid[x - 1 + size + (y - 1 + size) * 1j]
+
+
 def findLargestPower(serialNumber: int, sizes: Iterable[int]) -> Tuple[Tuple[int,int], int]:
     grid = buildGrid(serialNumber)
     summedAreaTable = buildSummedAreaTable(grid)
-    maxFuel = 0
+    maxFuel = maxSize = 0
     maxCell = (-1, -1)
-    maxSize = 0
     for size in sizes:
         for y, x in product(range(1, GRID_SIZE - size), range(1, GRID_SIZE - size)):
             fuel = sumFromAreaTable(summedAreaTable, x, y, size)
