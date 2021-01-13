@@ -26,7 +26,7 @@ def findValueForSolution(solution: Dict[str,int], entries: List[Entry]) -> Tuple
     values: Dict[str,int] = {}
     for property in VALUE_PROPERTIES:
         values[property] = getValueForProperty(solution, entries, property)
-    totalScore = reduce(lambda soFar, key: soFar * (values[key] if values[key] > 0 else 1), values, 1)
+    totalScore = reduce(lambda soFar, key: soFar * (values[key] if values[key] > 0 else 0), values, 1)
     calories = getValueForProperty(solution, entries, "calories")
     return totalScore, calories
 
