@@ -34,7 +34,6 @@ def part1(number: int) -> int:
     raise Exception("Path not found")
 
 
-
 def part2(number: int) -> int:
     startPosition = 1 + 1j
     queue: List[Tuple[complex,List[complex]]] = [(startPosition, [startPosition])]
