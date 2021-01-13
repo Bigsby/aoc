@@ -12,26 +12,27 @@ def getStateValue(index: int, state: State):
     return sum([ 2 ** i for i in range(5) if i + index - 2 in state ])
 
 
-def runGenerations(puzzleInput: Tuple[State,Notes], generations: int) -> int:
+def runGenerations(puzzleInput: Tuple[State,Notes], generations: int) -> List[int]:
     state, notes = puzzleInput
     generation = 0
     while generation < generations:
         state = [ index for index in range(min(state) - 2, max(state) + 2) if notes[getStateValue(index, state)] ]
         generation += 1
-
-    return sum(state)
+    return state
 
 
 def part1(puzzleInput: Tuple[State,Notes]) -> int:
-    return runGenerations(puzzleInput, 20)
+    return sum(runGenerations(puzzleInput, 20))
 
 
 def part2(puzzleInput: Tuple[State,Notes]) -> int:
-    thousands = runGenerations(puzzleInput,  1000)
-    twoThousands = runGenerations(puzzleInput,  2000)
-    diff = twoThousands - thousands
+    jump = 200
+    firstState = runGenerations(puzzleInput, jump)
+    firstSum = sum(firstState)
+    secondState = runGenerations((firstState, puzzleInput[1]), jump)
+    diff = sum(secondState) - firstSum
     target = 5 * 10 ** 10
-    return thousands + diff * ( target // 1000 - 1)
+    return firstSum + diff * ( target // jump - 1)
 
 
 initialStateRegex = re.compile(r"#|\.")
