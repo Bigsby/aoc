@@ -2,10 +2,10 @@
 
 import sys, os, time
 from math import floor, sqrt
-from itertools import cycle
+from typing import Dict, Iterable, List
 
 
-def part1(targetNumber):
+def part1(targetNumber: int) -> int:
     side = floor(sqrt(targetNumber)) + 1
     pastLastSquare = targetNumber - (side - 1) ** 2
     halfSide = side // 2
@@ -15,7 +15,7 @@ def part1(targetNumber):
     return halfSide + offsetToMiddle
 
 
-DIRECTIONS = [
+DIRECTIONS: List[complex] = [
     - 1 - 1j,
         - 1j,
     + 1 - 1j,
@@ -25,20 +25,20 @@ DIRECTIONS = [
         + 1j,
     + 1 + 1j
 ]
-def getNeighbors(pos):
+def getNeighbors(pos: complex) -> Iterable[complex]:
     for direction in DIRECTIONS:
         yield pos + direction
 
 
-def getSumForNeighbors(grid, pos):
+def getSumForNeighbors(grid: Dict[complex,int], pos:complex) -> int:
     total = 0
     for neighbor in getNeighbors(pos):
         total += grid[neighbor] if neighbor in grid else 0
     return total
 
 
-def part2(target):
-    grid = {
+def part2(target: int) -> int:
+    grid: Dict[complex,int] = {
         0j: 1
     }
     newValue = 0
@@ -56,7 +56,7 @@ def part2(target):
         movesInDirection += 1
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> int:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     
