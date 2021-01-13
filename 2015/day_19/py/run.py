@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from typing import List, Optional, Set, Tuple
+from typing import List, Tuple
 import re
 
 
@@ -36,7 +36,6 @@ def part2(puzzleInput: Tuple[List[Replacement],str]) -> int:
     while molecule != targetMolecule:
         molecule = re.sub("|".join(repDict.keys()), lambda match: repDict[match.group()], molecule, 1)
         count += 1
-    
     return count
 
 
