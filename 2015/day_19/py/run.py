@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from typing import List, Optional, Tuple
+from typing import List, Optional, Set, Tuple
 import re
 
 
@@ -9,14 +9,12 @@ class Replacement():
     def __init__(self, source: str, target: str):
         self.source = source
         self.target = target
+    def __str__(self) -> str:
+        return f"{self.source} => {self.target}"
 
 
 def processReplacement(molecule: str, replacement: Replacement) -> List[str]:
-    return processReplacementDirect(molecule, replacement.source, replacement.target)
-
-    
-def processReplacementDirect(molecule: str, source: str, target: str) -> List[str]:
-    return [ "".join([ molecule[0 : match.start()], target, molecule[match.end() : ] ]) for match in re.finditer(source, molecule) ]
+    return [ "".join([ molecule[0 : match.start()], replacement.target, molecule[match.end() : ] ]) for match in re.finditer(replacement.source, molecule) ]
 
 
 def part1(puzzleInput: Tuple[List[Replacement],str]) -> int:
@@ -29,58 +27,17 @@ def part1(puzzleInput: Tuple[List[Replacement],str]) -> int:
     return len(set(newMolecules))
 
 
-def getValidReplacements(molecule: str, replacements: List[Replacement]) -> List[Replacement]:
-    return [ replacement for replacement in replacements if replacement.target in molecule ]
-
-
-class PointInSearch():
-    def __init__(self, origin: str, replacements: List[Replacement], replacement: Optional[Replacement] = None, parent: Optional['PointInSearch'] = None):
-        self.origin = origin
-        self.parent = parent
-        self.replacement = replacement
-        self.validReplacements = getValidReplacements(origin, replacements)
-        self.hasValidReplacements = len(self.validReplacements) != 0
-        if parent:
-            self.iteration = parent.iteration + 1
-        else:
-            self.iteration = 0
-        self.closed = False
-        self.populated = False
-        self.children = []
-
-    def generateChildren(self, replacements: List[Replacement]):
-        for replacement in self.validReplacements:
-            branches = processReplacementDirect(self.origin, replacement.target, replacement.source)
-            for branch in branches:
-                self.children.append(PointInSearch(branch, replacements, replacement, self))
-        self.populated = True
-
-    def getNextChild(self) -> Optional['PointInSearch']:
-        return next(filter(lambda c: not c.closed, self.children), None)
-
-    def getNextPoint(self, childToRemove: Optional['PointInSearch'] = None) -> Optional['PointInSearch']:
-        if childToRemove:
-            self.children.remove(childToRemove)
-        if self.closed and self.parent:
-            return self.parent.getNextPoint(self)
-        nextChild = self.getNextChild()
-        if nextChild:
-            return nextChild
-        if self.parent:
-            return self.parent.getNextPoint(self)
-        return None            
-
-
-def part2(puzzleInput: Tuple[List[Replacement],str]):
-    replacements, targetMolecule = puzzleInput
-    startingMolecule = "e"
-    currentPoint = PointInSearch(targetMolecule, replacements)
-    while currentPoint:        
-        if not currentPoint.populated:
-            currentPoint.generateChildren(replacements)
-        if currentPoint.origin == startingMolecule:
-            return currentPoint.iteration
-        currentPoint = currentPoint.getNextPoint()
+def part2(puzzleInput: Tuple[List[Replacement],str]) -> int:
+    replacements, molecule = puzzleInput
+    targetMolecule = "e"
+    molecule = molecule[::-1]
+    repDict = { rep.target[::-1]: rep.source[::-1] for rep in replacements }
+    count = 0
+    while molecule != targetMolecule:
+        molecule = re.sub("|".join(repDict.keys()), lambda match: repDict[match.group()], molecule, 1)
+        count += 1
+    
+    return count
 
 
 lineRegex = re.compile(r"^(\w+)\s=>\s(\w+)$")
