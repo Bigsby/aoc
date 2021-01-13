@@ -12,15 +12,16 @@ class Entry():
         self.duration = int(duration)
         self.rest = int(rest)
         self.period = self.duration + self.rest
+    def __str__(self):
+        return f"{self.name} {self.speed} {self.duration} {self.rest}"
+    def __repr__(self) -> str:
+        return self.__str__()
 
 
 def calculateDistance(entry: Entry, totalDuration: int) -> int:
-    period = entry.duration + entry.rest
-    periods, remainder = divmod(totalDuration, period)
+    periods, remainder = divmod(totalDuration, entry.period)
     total = periods * entry.speed * entry.duration
-    remainderTotal = entry.speed if remainder >= entry.duration else entry.speed * (entry.duration - remainder)
-    total += remainderTotal
-    return total
+    return total + entry.speed * min(remainder, entry.duration)
 
 
 def part1(entries: List[Entry]) -> int:
@@ -37,7 +38,7 @@ def part2(entries: List[Entry]) -> int:
     totalTime = 2503
     deers: Dict[str,Dict[str,Any]] = { entry.name: { "distance": 0, "points": 0, "entry": entry } for entry in entries }
 
-    for time in range(0, totalTime):
+    for time in range(totalTime):
         maxDistance = 0
         for name in deers:
             deer = deers[name]
