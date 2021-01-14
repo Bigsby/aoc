@@ -1,30 +1,32 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import Tuple
 from collections import Counter
 
 
-def isValidPassword(password, check2):
+def isValidPassword(password: str, check2: bool) -> bool:
     if "".join(sorted(password)) == password:
         counts = Counter(password).values()
-        return any([ count > 1 for count in counts ]) and 2 in counts or not check2
+        return any([ count > 1 for count in counts ]) and (2 in counts or not check2)
     return False
 
 
-def getValidPasswordCount(limits, check2):
+def getValidPasswordCount(limits: Tuple[int,int], check2: bool) -> int:
     start, end = limits
     return sum([ isValidPassword(str(password), check2) for password in range(start, end) ])
 
 
-def part1(limits):
+def part1(limits: Tuple[int,int]) -> int:
+    print(limits)
     return getValidPasswordCount(limits, False)
 
 
-def part2(limits):
+def part2(limits: Tuple[int,int]) -> int:
     return getValidPasswordCount(limits, True)
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> Tuple[int,int]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     
