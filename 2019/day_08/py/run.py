@@ -190,8 +190,6 @@ def part2(pixels: List[int]) -> str:
             if image[x + y * 1j] < 2:
                 continue
             image[x + y * 1j] = layer[x + y * IMAGE_WIDTH]
-    
-    printImage(image)
     return "".join(map(lambda index: getCharacterInImage(image, index, CHARACTER_WIDTH, IMAGE_HEIGHT), range(IMAGE_WIDTH // CHARACTER_WIDTH)))
 
 
