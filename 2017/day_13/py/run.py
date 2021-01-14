@@ -6,26 +6,32 @@ from typing import Dict, Tuple
 Scanners = Dict[int,int]
 
 
-def runPacket(scanners: Scanners, offset: int) -> int:
-    positions: Dict[int,int] = { layer: 0 for layer in scanners.keys() }
-    currentLayer: int = 0
+def getCycles(scanners: Scanners) -> Dict[int,int]:
+    return { layer: 2 * (range - 1) for layer, range in scanners.items() }
+
+
+def part1(scanners: Scanners) -> int:
+    cycles = getCycles(scanners)
     severity: int = 0
-    while currentLayer < max(scanners.keys()) + 1:
-        if currentLayer in positions and (currentLayer + offset) % (scanners[currentLayer] * 2 - 2) == 0:
+    for currentLayer in range(max(scanners.keys()) + 1):
+        if currentLayer in cycles and currentLayer % cycles[currentLayer] == 0:
             severity += currentLayer * scanners[currentLayer]
         currentLayer += 1
     return severity
 
 
-def part1(scanners: Scanners) -> int:
-    return runPacket(scanners, 0)
+def runPacketUntilCaught(cycles: Scanners, offset: int) -> int:
+    for currentLayer in range(max(cycles.keys()) + 1):
+        if currentLayer in cycles and (currentLayer + offset) % cycles[currentLayer] == 0:
+            return False
+        currentLayer += 1
+    return True
 
 
 def part2(scanners: Scanners):
+    cycles = getCycles(scanners)
     offset = 1
-    firstScannerCycle = scanners[0] * 2 - 2
-
-    while offset % firstScannerCycle == 0 or runPacket(scanners, offset):
+    while not runPacketUntilCaught(cycles, offset):
         offset += 1
     return offset
 
