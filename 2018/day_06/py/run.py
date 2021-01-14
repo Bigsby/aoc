@@ -24,8 +24,8 @@ def findClosestLocation(mapLocation: complex, locations: List[complex]) -> int:
         if distance < closesDistance:
             closest = index
             closesDistance = distance
-        if distance == closesDistance:
-            closest -1
+        elif distance == closesDistance:
+            closest = -1
     return closest
 
 
@@ -48,7 +48,6 @@ def part1(locations: List[complex]):
     for x in range(startX, endX + 1):
         edgeLocations.add(mapLocations[x + startY * 1j])
         edgeLocations.add(mapLocations[x + endY * 1j])
-    
     return max([ value for index, value in enumerate(locationCounts) if index not in edgeLocations ])
 
 
