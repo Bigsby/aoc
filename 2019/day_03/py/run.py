@@ -1,8 +1,12 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import Iterable, List, Tuple
 import re
 
+
+Wire = List[Tuple[str,int]]
+Position = complex
 
 STEPS = {
     "R": 1,
@@ -10,7 +14,7 @@ STEPS = {
     "L": -1,
     "D": 1j
 }
-def getWirePositions(wire):
+def getWirePositions(wire: Wire) -> Iterable[Position]:
     currentPosition = 0j
     for direction, distance in wire:
         step = STEPS[direction]
@@ -19,14 +23,14 @@ def getWirePositions(wire):
             yield currentPosition
 
 
-def part1(puzzleInput):
-    wireA, wireB = puzzleInput
+def part1(wires: Tuple[Wire,Wire]) -> int:
+    wireA, wireB = wires
     wireApoints = set(getWirePositions(wireA))
     return int(min([ abs(position.real) + abs(position.imag) for position in getWirePositions(wireB) if position in wireApoints ]))
 
 
-def part2(puzzleInput):
-    wireA, wireB = puzzleInput
+def part2(wires: Tuple[Wire,Wire]) -> int:
+    wireA, wireB = wires
     wireApoints = {}
     for steps, position in enumerate(getWirePositions(wireA)):
         if position in wireApoints:
@@ -37,11 +41,11 @@ def part2(puzzleInput):
 
 
 lineRegex = re.compile(r"(?P<direction>R|U|L|D)(?P<distance>\d+)")
-def parseLine(line):
+def parseLine(line: str) -> Wire:
     return [ (match.group("direction"), int(match.group("distance"))) for match in lineRegex.finditer(line) ]
 
 
-def getInput(filePath):
+def getInput(filePath: str) -> Tuple[Wire,Wire]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     
