@@ -165,61 +165,16 @@ def runGame(memory: List[int]) -> Tuple[int,int]:
                     screen[x + y * 1j] = tile
     return list(screen.values()).count(Tile.Block), score    
 
+
 def part1(memory: List[int]):
     blocks, _ = runGame(memory)
     return blocks
-    # cabinet = IntCodeComputer(memory)
-    # screen: Dict[complex,Tile] = {}
-    # currentOuput = []
-    # while cabinet.running:
-    #     cabinet.tick()
-    #     if cabinet.outputing:
-    #         currentOuput.append(cabinet.getOutput())
-    #         if len(currentOuput) == 3:
-    #             tile = Tile(currentOuput.pop())
-    #             y = currentOuput.pop()
-    #             x = currentOuput.pop()
-    #             screen[x + y * 1j] = tile
-    
 
 
 def part2(memory: List[int]):
     memory[0] = 2
     _, score = runGame(memory)
     return score
-    # cabinet = IntCodeComputer(memory)
-    # screen: Dict[complex,Tile] = {}
-    # currentOuput = []
-    # ball = 0
-    # paddle = 0
-    # score = 0
-    # while cabinet.running:
-    #     cabinet.tick()
-    #     if cabinet.polling:
-    #         joystick = 0
-    #         if ball > paddle:
-    #             joystick = 1
-    #         elif ball < paddle:
-    #             joystick = -1
-    #         cabinet.inputs.append(joystick)
-    #     if cabinet.outputing:
-    #         currentOuput.append(cabinet.getOutput())
-    #         if len(currentOuput) == 3:
-    #             value = currentOuput.pop()
-    #             y = currentOuput.pop()
-    #             x = currentOuput.pop()
-    #             position = x + y * 1j
-    #             if position == -1:
-    #                 score = value
-    #             else: 
-    #                 tile = Tile(value)
-    #                 if tile == Tile.Ball:
-    #                     ball = x
-    #                 elif tile == Tile.Paddle:
-    #                     paddle = x
-    #                 screen[x + y * 1j] = tile
-    
-    # return score
 
 
 def getInput(filePath: str) -> List[int]:
