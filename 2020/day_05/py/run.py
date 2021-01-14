@@ -10,7 +10,6 @@ def part1(puzzleInput: List[int]) -> int:
 
 def part2(puzzleInput: List[int]) -> int:
     ids = sorted(puzzleInput)
-    print(ids)
     lastId = ids[0]
     for currentId in ids:
         if currentId - lastId == 2:
