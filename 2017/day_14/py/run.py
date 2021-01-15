@@ -45,12 +45,12 @@ def part1(key: str) -> int:
 
 
 DIRECTIONS = [ 1j, 1, -1j, -1 ]
-def findAdjacent(point: complex, points: Set[complex], visited: Set[complex]):
+def findAdjacent(point: complex, grid: Set[complex], visited: Set[complex]):
     for direction in DIRECTIONS:
         adjacent = point + direction
-        if adjacent in points and adjacent not in visited:
+        if adjacent in grid and adjacent not in visited:
             visited.add(adjacent)
-            findAdjacent(adjacent, points, visited)
+            findAdjacent(adjacent, grid, visited)
 
 
 def part2(key: str) -> int:
