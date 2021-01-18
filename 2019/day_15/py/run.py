@@ -149,10 +149,12 @@ def runUntilOxygenSystem(memory: List[int], completeMap: bool = False) -> Tuple[
             newPosition = position + direction
             if newPosition not in visited:
                 visited.append(newPosition)
+
                 newDroid = droid.clone()
                 newDroid.inputs.append(command)
                 while not newDroid.outputing:
                     newDroid.tick()
+
                 status = newDroid.getOutput()
                 if status == 2: # Oxygen system
                     if not completeMap:
@@ -160,8 +162,10 @@ def runUntilOxygenSystem(memory: List[int], completeMap: bool = False) -> Tuple[
                     oxygenPosition = newPosition
                 if status == 1: # Open space
                     openSpaces.append(newPosition)
+
                     while not newDroid.polling:
                         newDroid.tick()
+                    
                     newPath = list(path)
                     newPath.append(newPosition)
                     queue.append((newPosition, newPath, newDroid))
