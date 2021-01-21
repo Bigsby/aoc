@@ -11,7 +11,7 @@ def part2(puzzleInput):
     pass
 
 
-def getInput(filePath):
+def getInput(filePath: str):
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     
