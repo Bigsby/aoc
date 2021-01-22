@@ -12,7 +12,7 @@ class Program:
         self.instructions = instructions
         self.id = id
         self.outputOnRcv = outputOnRcv
-        self.registers: Dict[str,int] = defaultdict(int) # { chr(c): 0 for c in range(ord("a"), ord("z") + 1) }
+        self.registers: Dict[str,int] = defaultdict(int)
         self.registers["p"] = id
         self.pointer = 0
         self.outputs: List[int] = []
