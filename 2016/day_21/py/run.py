@@ -16,7 +16,6 @@ MOVE = 6
 
 def process(start: str, instructions: List[Instruction], reverse: bool = False):
     password: Deque[int] = deque(ord(value) for value in start)
-    print("".join(chr(c) for c in password))
     if reverse:
         instructions.reverse()
     for opCode, a, b in instructions:
