@@ -9,7 +9,8 @@ from itertools import combinations
 def getMinimumGroupEntanglement(weights: List[int], groupCount: int) -> int:
     groupWeight = sum(weights) // groupCount
     for size in range(1, len(weights)):
-        entanglements = [ reduce(lambda soFar, weight: soFar * weight, group) for group in combinations(weights, size) if sum(group) == groupWeight ] 
+        entanglements = [ reduce(lambda soFar, weight: soFar * weight, group) \
+            for group in combinations(weights, size) if sum(group) == groupWeight ] 
         if entanglements:
             return min(entanglements)
     raise Exception("Group not found")
