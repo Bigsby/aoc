@@ -41,7 +41,10 @@ def findLeastSteps(data: Tuple[Maze,Dict[Location,int]], returnHome: bool) -> in
     numbersBesidesStart = [ number for number in numbers.values() if number != 0 ]
     minumSteps = sys.maxsize
     for combination in permutations(numbersBesidesStart, len(numbersBesidesStart)):
-        steps = getStepsForPath(list(combination) + ([ 0 ] if returnHome else []), pathsFromNumbers)
+        path = list(combination)
+        if returnHome:
+            path.append(0)
+        steps = getStepsForPath(path, pathsFromNumbers)
         minumSteps = min(minumSteps, steps)
     return minumSteps
 
