@@ -110,17 +110,6 @@ class IntCodeComputer():
             self.running = False
         else:
             raise Exception(f"Unknown instruction", self.pointer, instruction, opcode, p1mode, p2mode, p3mode)
-    
-    def clone(self):
-        cloneComputer = IntCodeComputer([])
-        cloneComputer.memory = dict(self.memory)
-        cloneComputer.pointer = self.pointer
-        cloneComputer.base = self.base
-        cloneComputer.running = self.running
-        cloneComputer.polling = self.polling
-        cloneComputer.paused = self.paused
-        cloneComputer.outputing = self.outputing
-        return cloneComputer
 
 
 def parseRoomOutput(output:str) -> Tuple[str,List[str],List[str]]:
