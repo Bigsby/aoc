@@ -18,10 +18,6 @@ namespace AoC
 
         public char Direction { get; }
         public int Distance { get; }
-        public override string ToString()
-        {
-            return $"{Direction}{Distance}";
-        }
     }
 
     class Program
