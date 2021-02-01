@@ -15,14 +15,12 @@ def getManhatanDistance(position: complex) -> int:
     return int(abs(position.real) + abs(position.imag))
 
 
-def part1(instructions: List[Instruction]):
+def part1(instructions: List[Instruction]) -> int:
     currentPosition = 0
     currentHeading = 1j
-
     for direction, distance in instructions:
         currentHeading = getNewHeading(currentHeading, direction)
         currentPosition += currentHeading * distance
-
     return getManhatanDistance(currentPosition)
 
 
