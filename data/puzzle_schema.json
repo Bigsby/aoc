@@ -1,0 +1,108 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "type": "object",
+    "definitions": {
+        "day": {
+            "type": "object",
+            "additionalProperties":  false,
+            "required": [
+                "day",
+                "name"
+            ],
+            "properties": {
+                "day": {
+                    "type": "number"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "results": {
+                    "type": "object",
+                    "additionalProperties":  false,
+                    "required": [
+                        "p1"
+                    ],
+                    "properties": {
+                        "p1": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "p2": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "times": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "language",
+                            "machine"
+                        ],
+                        "additionalProperties":  false,
+                        "properties": {
+                            "language": {
+                                "type": "string"
+                            },
+                            "machine": {
+                                "type": "string"
+                            },
+                            "p1": {
+                                "type": "array",
+                                "items": {
+                                    "type": "number"
+                                }
+                            },
+                            "p2": {
+                                "type": "array",
+                                "items": {
+                                    "type": "number"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "year": {
+            "type": "object",
+            "required": [
+                "year",
+                "days"
+            ],
+            "additionalProperties":  false,
+            "properties": {
+                "year": {
+                    "type": "number"
+                },
+                "days": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/day"
+                    }
+                }
+            }
+        }
+    },
+    "required": [
+        "years"
+    ],
+    "additionalProperties":  false,
+    "properties": {
+        "$schema": {
+            "type": "string"
+        },
+        "years": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/year"
+            }
+        }
+    }
+}

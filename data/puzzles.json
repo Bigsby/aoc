@@ -1,0 +1,48 @@
+{
+    "$schema": "./puzzle_schema.json",
+    "years": [
+        {
+            "year": 2015,
+            "days": [
+                {
+                    "day": 1,
+                    "name": "Follow 1D directions '(' and ')'",
+                    "results": {
+                        "p1": [ "280" ],
+                        "p2": [ "1797" ]
+                    },
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "p1": [ 0.0002845 ],
+                            "p2": [ 0.0001446 ]
+                        },
+                        {
+                            "language": "cs",
+                            "machine": "i9",
+                            "p1": [ 0.0000364 ],
+                            "p2": [ 0.0000249 ]
+                        }
+                    ]
+                },
+                {
+                    "day": 2,
+                    "name": "I Was Told There Would Be No Math",
+                    "results": {
+                        "p1": [ "1588178", "1606483" ],
+                        "p2": [ "3783758", "3842356" ]
+                    },
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "p1": [ 0.0002898, 0.0002898 ],
+                            "p2": [ 0.0002837, 0.0002801 ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
