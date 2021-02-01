@@ -228,21 +228,18 @@ def findPassword(memory: List[int]):
     # go to Security Checkpoint
     _ = navigateRooms(droid, command, SECURITY_CHECKPOINT, False)    
     # test combinations of items
-    for item in inventory:
-        runCommand(droid, DROP + item)
-    previousInventory = tuple()
     for newInventory in combinations(inventory, 4):
         for item in newInventory:
-            if item not in previousInventory:
+            if item not in inventory:
                 runCommand(droid, TAKE + item)
-        for item in previousInventory:
+        for item in inventory:
             if item not in newInventory:
                 runCommand(droid, DROP + item)
         output = runCommand(droid, pressureRoomWayIn)
         passwordMatch = re.search(r"typing (?P<password>\d+)", output)
         if passwordMatch:
             return passwordMatch.group("password")
-        previousInventory = newInventory
+        inventory = newInventory
 
 
 def part1(memory: List[int]):
