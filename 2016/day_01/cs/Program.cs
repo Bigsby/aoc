@@ -27,14 +27,10 @@ namespace AoC
     class Program
     {
         static Complex GetNewHeading(Complex currentHeading, char direction)
-        {
-            return currentHeading * (direction == 'L' ? Complex.ImaginaryOne : -Complex.ImaginaryOne);
-        }
+            => currentHeading * (direction == 'L' ? Complex.ImaginaryOne : -Complex.ImaginaryOne);
 
         static int GetManhatanDistance(Complex position)
-        {
-            return (int)(Math.Abs(position.Real) + Math.Abs(position.Imaginary));
-        }
+            => (int)(Math.Abs(position.Real) + Math.Abs(position.Imaginary));
 
         static int Part1(IEnumerable<Instruction> instructions)
         {
@@ -48,12 +44,11 @@ namespace AoC
             return GetManhatanDistance(currentPosition);
         }
 
-        static object Part2(IEnumerable<Instruction> instructions)
+        static int Part2(IEnumerable<Instruction> instructions)
         {   
             var currentPosition = Complex.Zero;
             var currentHeading = Complex.ImaginaryOne;
             var visitedPositions = new List<Complex>();
-
             foreach (var instruction in instructions)
             {
                 currentHeading = GetNewHeading(currentHeading, instruction.Direction);
