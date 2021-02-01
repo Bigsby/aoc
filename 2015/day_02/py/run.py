@@ -7,24 +7,22 @@ import re
 
 def part1(dimensions: List[Tuple[int,int,int]]):
     totalPaper = 0
-    for dimension in dimensions:
-        w, l, h = dimension
+    for w, l, h in dimensions:
         wl = w * l
         wh = w * h
         hl = h * l
         smallest = min(wl, wh, hl)
-        totalPaper = totalPaper + (2 * wl) + (2 * wh) + (2 * hl) + smallest
+        totalPaper += 2 * (wl + wh + hl) + smallest
 
     return totalPaper
 
 
 def part2(dimensions: List[Tuple[int,int,int]]):
     totalRibbon = 0
-    for dimension in dimensions:
-        w, l, h = dimension
+    for w, l, h in dimensions:
         sidesList = [w, l, h]
         sidesList.remove(max(sidesList))
-        totalRibbon = totalRibbon + 2 * sidesList[0] + 2 * sidesList[1] + w * l * h
+        totalRibbon += 2 * (sidesList[0] + sidesList[1]) + w * l * h
 
     return totalRibbon
 
@@ -58,8 +56,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
