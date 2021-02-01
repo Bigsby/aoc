@@ -43,7 +43,8 @@
                         "type": "object",
                         "required": [
                             "language",
-                            "machine"
+                            "machine",
+                            "os"
                         ],
                         "additionalProperties":  false,
                         "properties": {
@@ -51,6 +52,9 @@
                                 "type": "string"
                             },
                             "machine": {
+                                "type": "string"
+                            },
+                            "os": {
                                 "type": "string"
                             },
                             "p1": {
