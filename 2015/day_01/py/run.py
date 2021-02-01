@@ -4,23 +4,21 @@ import sys, os, time
 from typing import List
 
 
-def part1(diretions: List[int]):
+def part1(diretions: List[int]) -> int:
     currentFloor = 0
     for direction in diretions:
-        currentFloor = currentFloor + direction
-
+        currentFloor += direction
     return currentFloor
 
 
-def part2(directions: List[int]):
+def part2(directions: List[int]) -> int:
     currentFloor = 0
     currentPosition = 1
     for direction in directions:
-        currentFloor = currentFloor + direction
+        currentFloor += direction
         if currentFloor == -1:
             break
-        currentPosition = currentPosition + 1
-
+        currentPosition += 1
     return currentPosition
 
 
@@ -45,8 +43,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
