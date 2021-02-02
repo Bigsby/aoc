@@ -8,7 +8,7 @@ def part1(changes: List[int]) -> int:
     return sum(changes)
 
 
-def part2(changes: List[int]):
+def part2(changes: List[int]) -> int:
     changesLength = len(changes)
     frequency = 0
     previous = set() 
@@ -17,7 +17,6 @@ def part2(changes: List[int]):
         previous.add(frequency)
         frequency += changes[index]
         index = (index + 1) % changesLength
-
     return frequency
 
 
@@ -42,8 +41,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
