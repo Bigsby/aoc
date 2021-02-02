@@ -7,8 +7,8 @@ import re
 Line = Tuple[int,int,str,str]
 
 
-def countValid(lines: List[Line], validationFunc: Callable[[Line],bool]):
-    return len([ 1 for line in lines if validationFunc(line) ])
+def countValid(lines: List[Line], validationFunc: Callable[[Line],bool]) -> int:
+    return len(list(filter(validationFunc, lines)))
 
 
 def isLineValid(line: Line) -> bool:
@@ -17,7 +17,7 @@ def isLineValid(line: Line) -> bool:
     return occurenceCount >= minimum and occurenceCount <= maximum
 
 
-def part1(lines: List[Line]):
+def part1(lines: List[Line]) -> int:
     return countValid(lines, isLineValid)
 
 
@@ -26,13 +26,13 @@ def isLineValid2(line: Line) -> bool:
     return (password[first - 1] == letter) ^ (password[second - 1] == letter)
 
 
-def part2(lines: List[Line]):
+def part2(lines: List[Line]) -> int:
     return countValid(lines, isLineValid2)
 
 
-lineReEx = re.compile(r"^(\d+)-(\d+)\s([a-z]):\s(.*)$")
+lineRegex = re.compile(r"^(\d+)-(\d+)\s([a-z]):\s(.*)$")
 def parseLine(line: str) -> Line:
-    match = lineReEx.match(line)
+    match = lineRegex.match(line)
     if match:
         min, max, letter, password = match.group(1, 2, 3, 4)
         return (int(min), int(max), letter, password)
@@ -60,8 +60,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
