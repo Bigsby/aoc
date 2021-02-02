@@ -36,9 +36,6 @@ class IntCodeComputer():
             self.running = False
         else:
             raise Exception(f"Unknown instruction", self.pointer, opcode)
-    
-    def __str__(self):
-        return f"s {self.running} p {self.pointer}"
 
 
 def runProgram(memory: List[int], noun: int, verb: int) -> int:
@@ -48,15 +45,13 @@ def runProgram(memory: List[int], noun: int, verb: int) -> int:
 
 
 def part1(memory: List[int]) -> int:
-    return runProgram(list(memory), 12, 2)
+    return runProgram(memory, 12, 2)
 
 
 TARGET_VALUE = 19690720
 def part2(memory: List[int]) -> int:
-    values = [ i for i in range(100) ]
-    for noun, verb in product(values, repeat=2):
-        result = runProgram(list(memory), noun, verb)
-        if result == TARGET_VALUE:
+    for noun, verb in product([ i for i in range(100) ], repeat=2):
+        if runProgram(memory, noun, verb) == TARGET_VALUE:
             return 100 * noun + verb
     raise Exception("Target value not found")
 
@@ -82,8 +77,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
