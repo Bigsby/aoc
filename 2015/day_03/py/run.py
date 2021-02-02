@@ -4,12 +4,13 @@ import sys, os, time
 from typing import Dict, List
 
 
-directions = {
-    "^": -1j,
-    "v": 1j,
-    ">": 1,
-    "<": -1
-    }
+def processDirection(visitedHouses: Dict[complex,int], currentPosition: complex, direction: complex):
+    currentPosition += direction
+    if currentPosition in visitedHouses:
+        visitedHouses[currentPosition] += 1
+    else:
+        visitedHouses[currentPosition] = 1
+    return currentPosition
 
 
 def part1(directions: List[complex]):
@@ -17,23 +18,8 @@ def part1(directions: List[complex]):
     visitedHouses[0] = 1
     currentPosition = 0
     for direction in directions:
-        currentPosition += direction
-        if currentPosition in visitedHouses:
-            visitedHouses[currentPosition] += 1
-        else:
-            visitedHouses[currentPosition] = 1
-
+        currentPosition = processDirection(visitedHouses, currentPosition, direction)
     return len(visitedHouses.keys())
-
-
-def processDirection(visitedHouses: Dict[complex,int], currentPosition: complex, direction: complex):
-    currentPosition += direction
-    houseKey = str(currentPosition)
-    if houseKey in visitedHouses:
-        visitedHouses[currentPosition] += 1
-    else:
-        visitedHouses[currentPosition] = 1
-    return currentPosition
 
 
 def part2(directions: List[complex]):
@@ -49,12 +35,18 @@ def part2(directions: List[complex]):
     return len(visitedHouses.keys())
 
 
+DIRECTIONS = {
+    "^": -1j,
+    "v": 1j,
+    ">": 1,
+    "<": -1
+}
 def getInput(filePath: str) -> List[complex]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     
     with open(filePath, "r") as file:
-        return [ directions[c] for c in file.read().strip() if c in directions ]
+        return [ DIRECTIONS[c] for c in file.read().strip() if c in DIRECTIONS ]
 
 
 def main():
@@ -70,8 +62,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
