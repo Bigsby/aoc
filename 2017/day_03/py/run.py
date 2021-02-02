@@ -2,7 +2,7 @@
 
 import sys, os, time
 from math import floor, sqrt
-from typing import Dict, Iterable, List
+from typing import Dict, List
 
 
 def part1(targetNumber: int) -> int:
@@ -16,32 +16,17 @@ def part1(targetNumber: int) -> int:
 
 
 DIRECTIONS: List[complex] = [
-    - 1 - 1j,
-        - 1j,
-    + 1 - 1j,
-    - 1,
-    + 1,
-    - 1 + 1j,
-        + 1j,
-    + 1 + 1j
+    - 1 - 1j, - 1j, 1 - 1j,
+    - 1,            1,
+    - 1 + 1j,   1j, 1 + 1j
 ]
-def getNeighbors(pos: complex) -> Iterable[complex]:
-    for direction in DIRECTIONS:
-        yield pos + direction
-
-
-def getSumForNeighbors(grid: Dict[complex,int], pos:complex) -> int:
-    total = 0
-    for neighbor in getNeighbors(pos):
-        total += grid[neighbor] if neighbor in grid else 0
-    return total
+def getSumForNeighbors(grid: Dict[complex,int], position:complex) -> int:
+    return sum(map(lambda neighbor: grid[neighbor] if neighbor in grid else 0, \
+        map(lambda direction: position + direction, DIRECTIONS)))
 
 
 def part2(target: int) -> int:
-    grid: Dict[complex,int] = {
-        0j: 1
-    }
-    newValue = 0
+    grid: Dict[complex,int] = { 0j: 1 }
     position = 0j
     move = 1
     movesInDirection = 1
@@ -50,9 +35,9 @@ def part2(target: int) -> int:
             move *= 1j
             for _ in range(movesInDirection):
                 position += move
-                grid[position] = newValue = getSumForNeighbors(grid, position)
-                if newValue > target:
-                    return newValue
+                grid[position] = getSumForNeighbors(grid, position)
+                if grid[position] > target:
+                    return grid[position]
         movesInDirection += 1
 
 
@@ -77,8 +62,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
