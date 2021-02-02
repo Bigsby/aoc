@@ -16,6 +16,12 @@
                 "name": {
                     "type": "string"
                 },
+                "description": {
+                    "type": "string"
+                },
+                "comments": {
+                    "type": "string"
+                },
                 "results": {
                     "type": "object",
                     "additionalProperties":  false,
