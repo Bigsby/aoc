@@ -24,21 +24,19 @@ namespace AoC
             {
                 var newPosition = position + DIRECTIONS[move];
                 if (keypad.ContainsKey(newPosition))
-                {
                     position = newPosition;
-                }
             }
             return Tuple.Create(position, keypad[position]);
         }
 
         static string GetCode(string[] paths, Dictionary<Complex, char> keypad)
         {
-            Complex position = 0;
             List<char> code = new List<char>();
+            Complex position = 0;
+            char digit = '\0';
             foreach (var path in paths)
             {
-                var (newPosition, digit) = GetButtonForPath(position, path, keypad);
-                position = newPosition;
+                (position, digit) = GetButtonForPath(position, path, keypad);
                 code.Add(keypad[position]);
             }
             return new string(code.ToArray());
