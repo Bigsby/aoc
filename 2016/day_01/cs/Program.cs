@@ -30,7 +30,7 @@ namespace AoC
 
         static int Part1(IEnumerable<Instruction> instructions)
         {
-            var currentPosition = Complex.Zero;
+            Complex currentPosition = 0;
             var currentHeading = Complex.ImaginaryOne;
             foreach (var instruction in instructions)
             {
@@ -42,7 +42,7 @@ namespace AoC
 
         static int Part2(IEnumerable<Instruction> instructions)
         {   
-            var currentPosition = Complex.Zero;
+            Complex currentPosition = 0;
             var currentHeading = Complex.ImaginaryOne;
             var visitedPositions = new List<Complex>();
             foreach (var instruction in instructions)
