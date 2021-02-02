@@ -3,7 +3,6 @@
 import sys, os, time
 from typing import List
 import re
-from itertools import product
 
 TriangleSides = List[List[int]]
 
@@ -19,13 +18,12 @@ def part1(triangleSides: TriangleSides) -> int:
 
 
 def part2(triangleSides: TriangleSides) -> int:
-    return sum(
-            isPossibleTriangle( \
-                triangleSides[rowIndex * 3][columnIndex], \
-                triangleSides[rowIndex * 3 + 1][columnIndex], \
-                triangleSides[rowIndex * 3 + 2][columnIndex]) \
-                for columnIndex, rowIndex in product(range(3), range(len(triangleSides) // 3)) \
-        )
+    return sum(map(lambda index: isPossibleTriangle(\
+                triangleSides[(index // 3) * 3][index % 3], \
+                triangleSides[(index // 3) * 3 + 1][index % 3], \
+                triangleSides[(index // 3) * 3 + 2][index % 3]), \
+                range(len(triangleSides))
+        ))
 
 
 lineRegex = re.compile(r"\d+")
@@ -54,8 +52,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
