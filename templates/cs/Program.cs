@@ -2,25 +2,24 @@
 using static System.Console;
 using System.IO;
 using System.Diagnostics;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace AoC
 {
     class Program
     {
-        static object Part1(object puzzleInput)
+        static void Part1(object puzzleInput)
         {
-            return null;
         }
 
-        static object Part2(object puzzleInput)
+        static void Part2(object puzzleInput)
         {
-            return null;
         }
 
-        static object GetInput(string filePath)
+        static void GetInput(string filePath)
         {
             if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            return null;
         }
 
         static void Main(string[] args)
