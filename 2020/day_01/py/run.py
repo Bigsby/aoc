@@ -3,23 +3,22 @@
 import sys, os, time
 from typing import List
 from itertools import combinations
+from functools import reduce
+
+
+def getCombination(numbers: List[int], length: int) -> int:
+    for combination in combinations(numbers, length):
+        if sum(combination) == 2020:
+            return reduce(lambda soFar, number: soFar * number, combination)
+    raise Exception("Numbers not found")
 
 
 def part1(numbers: List[int]) -> int:
-    for number in numbers:
-        numberToFind = 2020 - number
-        if numberToFind in numbers:
-            return number * numberToFind
-    raise Exception("Numbers not found")
+    return getCombination(numbers, 2)
 
 
 def part2(numbers: List[int]) -> int:
-    for combination in combinations(numbers, 2):
-        numberA, numberB = combination
-        numberToFind = 2020 - numberA - numberB
-        if numberToFind in numbers:
-            return numberA * numberB * numberToFind
-    raise Exception("Numbers not found")
+    return getCombination(numbers, 3)
 
 
 def getInput(filePath: str) -> List[int]:
@@ -43,8 +42,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
