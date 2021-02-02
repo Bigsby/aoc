@@ -28,13 +28,13 @@ def getSumForNeighbors(grid: Dict[complex,int], position:complex) -> int:
 def part2(target: int) -> int:
     grid: Dict[complex,int] = { 0j: 1 }
     position = 0j
-    move = 1
+    direction = 1
     movesInDirection = 1
     while True:
         for _ in range(2):
-            move *= 1j
+            direction *= 1j
             for _ in range(movesInDirection):
-                position += move
+                position += direction
                 grid[position] = getSumForNeighbors(grid, position)
                 if grid[position] > target:
                     return grid[position]

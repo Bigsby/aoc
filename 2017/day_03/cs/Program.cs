@@ -37,16 +37,16 @@ namespace AoC
         {
             var grid = new Dictionary<Complex, int> { { 0, 1 } };
             Complex position = 0;
-            Complex move = 1;
+            Complex direction = 1;
             var movesInDirection = 1;
             while (true)
             {
                 foreach (var length in Enumerable.Range(0, 2))
                 {
-                    move *= I;
+                    direction *= I;
                     foreach (var _ in Enumerable.Range(0, movesInDirection))
                     {
-                        position += move;
+                        position += direction;
                         grid[position] = GetSumForNeighbors(grid, position);
                         if (grid[position] > targetNumber)
                             return grid[position];
