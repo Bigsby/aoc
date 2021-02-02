@@ -5,7 +5,7 @@ from typing import List, Tuple
 import re
 
 
-def part1(dimensions: List[Tuple[int,int,int]]):
+def part1(dimensions: List[Tuple[int,int,int]]) -> int:
     totalPaper = 0
     for w, l, h in dimensions:
         wl = w * l
@@ -17,7 +17,7 @@ def part1(dimensions: List[Tuple[int,int,int]]):
     return totalPaper
 
 
-def part2(dimensions: List[Tuple[int,int,int]]):
+def part2(dimensions: List[Tuple[int,int,int]]) -> int:
     totalRibbon = 0
     for w, l, h in dimensions:
         sidesList = [w, l, h]
