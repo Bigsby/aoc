@@ -35,7 +35,7 @@ namespace AoC
             foreach (var instruction in instructions)
             {
                 currentHeading = GetNewHeading(currentHeading, instruction.Direction);
-                currentPosition += currentHeading * new Complex(instruction.Distance, 0);
+                currentPosition += currentHeading * instruction.Distance;
             }
             return GetManhatanDistance(currentPosition);
         }
