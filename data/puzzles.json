@@ -176,7 +176,33 @@
         },
         {
             "year": 2018,
-            "days": []
+            "days": [
+                {
+                    "day": 1,
+                    "name": "Chronal Calibration",
+                    "description": "Summing numbers and changes",
+                    "results": {
+                        "p1": [ "435", "416" ],
+                        "p2": [ "245", "56752" ]
+                    },
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.0000076, 0.0000081 ],
+                            "p2": [ 0.0193893, 0.0226987 ]
+                        },
+                        {
+                            "language": "cs",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.0004013, 0.0009436 ],
+                            "p2": [ 0.0062405, 0.0087793 ]
+                        }
+                    ]
+                }
+            ]
         },
         {
             "year": 2019,
