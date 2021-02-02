@@ -6,7 +6,8 @@
             "days": [
                 {
                     "day": 1,
-                    "name": "Follow 1D directions '(' and ')'",
+                    "name": "Not Quite Lisp",
+                    "description": "Follow 1D directions '(' and ')'",
                     "results": {
                         "p1": [
                             "280"
@@ -43,6 +44,7 @@
                 {
                     "day": 2,
                     "name": "I Was Told There Would Be No Math",
+                    "comments": "Ribbon around packages",
                     "results": {
                         "p1": [
                             "1588178",
@@ -85,6 +87,7 @@
                 {
                     "day": 3,
                     "name": "Perfectly Spherical Houses in a Vacuum",
+                    "comments": "Follow 2D directions '<', '>', '^' and 'v'",
                     "results": {
                         "p1": [
                             "2592"
@@ -92,6 +95,96 @@
                     }
                 }
             ]
+        },
+        {
+            "year": 2016,
+            "days": [
+                {
+                    "day": 1,
+                    "name": "No Time for a Taxicab",
+                    "description": "Follow 2D directions",
+                    "results": {
+                        "p1": [
+                            "271",
+                            "209"
+                        ],
+                        "p2": [
+                            "153",
+                            "136"
+                        ]
+                    },
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [
+                                0.00002300,
+                                0.00002570
+                            ],
+                            "p2": [
+                                0.00090580,
+                                0.00245870
+                            ]
+                        },
+                        {
+                            "language": "cs",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [
+                                0.0275399,
+                                0.0227066
+                            ],
+                            "p2": [
+                                0.0022703,
+                                0.0027043
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "year": 2017,
+            "days": [
+                {
+                    "day": 1,
+                    "name": "Inverse Captcha",
+                    "description": "Sum digits that macth next digit",
+                    "results": {
+                        "p1": [ "1175", "1182" ],
+                        "p2": [ "1166", "1152" ]
+                    },
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.0001559, 0.0000712 ],
+                            "p2": [ 0.0003083, 0.0002855 ]
+                        },
+                        {
+                            "language": "cs",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.0512103, 0.0436072 ],
+                            "p2": [ 0.0035881, 0.0026115 ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "year": 2018,
+            "days": []
+        },
+        {
+            "year": 2019,
+            "days": []
+        },
+        {
+            "year": 2020,
+            "days": []
         }
     ]
 }
