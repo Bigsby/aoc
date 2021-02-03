@@ -3,42 +3,38 @@
 import sys, os, time
 from typing import List
 import re
-from functools import reduce
 
 
 FORBIDEN_PAIRS = [ "ab", "cd", "pq", "xy" ]
 vowelRegex = re.compile("[aeiou]")
 repeatRegex = re.compile("(.)\\1{1,}")
-def isWordNice(word: str):
-    for pair in FORBIDEN_PAIRS:
-        if pair in word:
-            return False
-    return len(vowelRegex.findall(word)) > 2 and len(repeatRegex.findall(word)) != 0
+def isWordNice(word: str) -> bool:
+    return all(map(lambda pair: pair not in word, FORBIDEN_PAIRS)) \
+        and len(vowelRegex.findall(word)) > 2 \
+        and len(repeatRegex.findall(word)) != 0
 
 
-def part1(puzzleInput: List[str]):
-    return reduce(lambda currentCount, word: currentCount + isWordNice(word), puzzleInput, 0)
+def part1(words: List[str]) -> int:
+    return len(list(filter(isWordNice, words)))
 
 
-def hasRepeatingPair(word: str):
-    for pairStart in range(0, len(word) - 2):
+def hasRepeatingPair(word: str) -> bool:
+    for pairStart in range(len(word) - 2):
         pairToTest = word[pairStart : pairStart + 2]
-        startOfWord = word[0 : pairStart] 
-        endOfWord = word[pairStart + 2 : len(word)]
-        if pairToTest in startOfWord or pairToTest in endOfWord:
+        if pairToTest in word[:pairStart] or pairToTest in word[pairStart + 2:]:
             return True
     return False
 
 
-def hasRepeatingLetter(word: str):
-    for index in range(0, len(word) - 2):
+def hasRepeatingLetter(word: str) -> bool:
+    for index in range(len(word) - 2):
         if word[index] == word[index + 2]:
             return True
     return False
 
 
-def part2(puzzleInput: List[str]):
-    return reduce(lambda currentCount, word: currentCount + (hasRepeatingPair(word) and hasRepeatingLetter(word)), puzzleInput, 0)
+def part2(words: List[str]) -> int:
+    return len(list(filter(lambda word: hasRepeatingPair(word) and hasRepeatingLetter(word), words)))
 
 
 def getInput(filePath: str) -> List[str]:
@@ -62,8 +58,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
