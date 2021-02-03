@@ -289,6 +289,31 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 4,
+                    "name": "The Ideal Stocking Stuffer",
+                    "description": "MD5 mining",
+                    "results": {
+                        "p1": [ "173787", "409147" ],
+                        "p2": [ "548", "991" ]
+                    },
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.0066903, 0.0068113 ],
+                            "p2": [ 0.2498716, 1.2040907 ]
+                        },
+                        {
+                            "language": "cs",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.0297786, 0.0324167 ],
+                            "p2": [ 0.0270985, 0.1356603 ]
+                        }
+                    ]
                 }
             ]
         },
@@ -421,6 +446,31 @@
                                 0.0058744,
                                 0.0062572
                             ]
+                        }
+                    ]
+                },
+                {
+                    "day": 4,
+                    "name": "High-Entropy Passphrases",
+                    "description": "Find repeated words and anagrams in phrases",
+                    "results": {
+                        "p1": [ "455", "325" ],
+                        "p2": [ "186", "119" ]
+                    },
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.0008364, 0.0007770 ],
+                            "p2": [ 0.0053760, 0.0043783 ]
+                        },
+                        {
+                            "language": "cs",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.0016724, 0.0017507 ],
+                            "p2": [ 0.0068098, 0.0063536 ]
                         }
                     ]
                 }
@@ -557,6 +607,31 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 4,
+                    "name": "Repose Record",
+                    "description": "Parse log (sleeping guards)",
+                    "results": {
+                        "p1": [ "21956", "14346" ],
+                        "p2": [ "134511", "5705" ]
+                    },
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.0000040, 0.0000040 ],
+                            "p2": [ 0.0000295, 0.0000373 ]
+                        },
+                        {
+                            "language": "cs",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.0017182, 0.0018820 ],
+                            "p2": [ 0.0019167, 0.0027565 ]
+                        }
+                    ]
                 }
             ]
         },
@@ -691,6 +766,31 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 4,
+                    "name": "Secure Container",
+                    "description": "Validate sequence of digits",
+                    "results": {
+                        "p1": [ "1660", "2150" ],
+                        "p2": [ "1135", "1462" ]
+                    },
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.3368756, 0.2937277 ],
+                            "p2": [ 0.3425153, 0.3000024 ]
+                        },
+                        {
+                            "language": "cs",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.3360428, 0.3841687 ],
+                            "p2": [ 0.2927579, 0.3701503 ]
+                        }
+                    ]
                 }
             ]
         },
@@ -823,6 +923,31 @@
                                 0.4615450,
                                 0.4845274
                             ]
+                        }
+                    ]
+                },
+                {
+                    "day": 4,
+                    "name": "Passport Processing",
+                    "description": "Validate form fields",
+                    "results": {
+                        "p1": [ "222", "239" ],
+                        "p2": [ "140", "188" ]
+                    },
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.0004129, 0.0005248 ],
+                            "p2": [ 0.0012391, 0.0013143 ]
+                        },
+                        {
+                            "language": "cs",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.0187175, 0.0193982 ],
+                            "p2": [ 0.0083518, 0.0065726 ]
                         }
                     ]
                 }
