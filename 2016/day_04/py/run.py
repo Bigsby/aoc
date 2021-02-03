@@ -15,7 +15,7 @@ def isRoomValid(name: str, checksum: str) -> bool:
     return processedChecksum == checksum
 
 
-def part1(rooms: List[Room]):
+def part1(rooms: List[Room]) -> int:
     return sum([ id for name, id, checksum in rooms if isRoomValid(name, checksum)])
 
 
@@ -41,10 +41,11 @@ def rotateName(name: str, count: int) -> str:
 
 
 SEARCH_NAME = "northpole object storage"
-def part2(rooms: List[Room]):
+def part2(rooms: List[Room]) -> int:
     for name, id, checksum in rooms:
         if isRoomValid(name, checksum) and rotateName(name, id) == SEARCH_NAME:
             return id
+    raise Exception("Room not found")
 
 
 lineRegex = re.compile(r"^(?P<name>[a-z\-]+)-(?P<id>\d+)\[(?P<checksum>\w+)\]$")
@@ -76,8 +77,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
