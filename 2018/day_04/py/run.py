@@ -9,10 +9,11 @@ Time = Tuple[int,int]
 LogRecord = Tuple[Date,Time,str]
 GuardRecord = Tuple[int,Dict[int,int]]
 
+
 def recordGuardTimes(id: int, guards: Dict[int,GuardRecord], lastAsleep: int, woke: int) -> GuardRecord:
-    guardRecord = guards[id] if id in guards else None
-    if not guardRecord:
-        guardRecord = ( 0, { minute: 0 for minute in range(60) } )
+    if id not in guards:
+        guards[id] = ( 0, { minute: 0 for minute in range(60) } )
+    guardRecord = guards[id]
     total, minutes = guardRecord
     for minute in range(lastAsleep, woke):
         total += 1
@@ -48,7 +49,7 @@ def buildGuardRecords(log: List[LogRecord]) -> Dict[int,GuardRecord]:
 
 def part1(guards: Dict[int,GuardRecord]) -> int:
     maxTotal = 0
-    guardId = 0
+    guardId = -1
     for id, guardRecord in guards.items():
         total, _ = guardRecord
         if total > maxTotal:
@@ -60,7 +61,6 @@ def part1(guards: Dict[int,GuardRecord]) -> int:
         if total > maxTotal:
             maxTotal = total
             maxMinute = minute
-    
     return guardId * maxMinute
 
 
@@ -74,7 +74,6 @@ def part2(guards: Dict[int,GuardRecord]) -> int:
                 maxTotal = total
                 maxMinute = minute
                 guardId = id
-
     return guardId * maxMinute
 
 
@@ -109,8 +108,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
