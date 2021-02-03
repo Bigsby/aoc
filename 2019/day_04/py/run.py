@@ -6,7 +6,7 @@ from collections import Counter
 
 
 def isValidPassword(password: str, check2: bool) -> bool:
-    if "".join(sorted(list(password))) == password:
+    if "".join(list(sorted(list(password)))) == password:
         counts = Counter(password).values()
         return any([ count > 1 for count in counts ]) and (2 in counts or not check2)
     return False
