@@ -8,24 +8,14 @@ def runTests(passphrases: List[List[str]], validationFunc: Callable[[List[str]],
     return sum(map(lambda passphrase: validationFunc(passphrase), passphrases))
 
 
-def hasNoRepeatedWords(passphrase: List[str]) -> bool:
-    for word in passphrase:
-        if passphrase.count(word) > 1:
-            return False
-    return True
-
-
-def part1(passphrases: List[List[str]]):
-    return runTests(passphrases, hasNoRepeatedWords)
+def part1(passphrases: List[List[str]]) -> int:
+    return runTests(passphrases, lambda passphrase: 
+        not any(map(lambda word: passphrase.count(word) > 1, passphrase)))
 
 
 def isAnagram(word1: str, word2: str) -> bool:
-    if len(word1) != len(word2):
-        return False
-    for c in word1:
-        if word1.count(c) != word2.count(c):
-            return False
-    return True
+    return len(word1) == len(word2) and \
+        all(map(lambda c: word1.count(c) == word2.count(c), word1))
 
 
 def hasNoAnagram(passphrase: List[str]) -> bool:
@@ -36,7 +26,7 @@ def hasNoAnagram(passphrase: List[str]) -> bool:
     return True
 
 
-def part2(passphrases: List[List[str]]):
+def part2(passphrases: List[List[str]]) -> int:
     return runTests(passphrases, hasNoAnagram)
 
 
@@ -61,8 +51,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
