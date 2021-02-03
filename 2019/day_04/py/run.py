@@ -6,7 +6,7 @@ from collections import Counter
 
 
 def isValidPassword(password: str, check2: bool) -> bool:
-    if "".join(sorted(password)) == password:
+    if "".join(sorted(list(password))) == password:
         counts = Counter(password).values()
         return any([ count > 1 for count in counts ]) and (2 in counts or not check2)
     return False
@@ -18,7 +18,6 @@ def getValidPasswordCount(limits: Tuple[int,int], check2: bool) -> int:
 
 
 def part1(limits: Tuple[int,int]) -> int:
-    print(limits)
     return getValidPasswordCount(limits, False)
 
 
@@ -48,8 +47,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
