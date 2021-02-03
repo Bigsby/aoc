@@ -1,57 +1,49 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from typing import List, Tuple
+from typing import List
 from functools import reduce
 
 
-Grid = List[List[int]]
-def calculateTrees(grid: Grid, step: Tuple[int,int]):
-    lastRow = len(grid)
-    lastColumn = len(grid[0])
-    currentPosition = (0, 0)
+Trees = List[complex]
+def calculateTrees(trees: Trees, step: complex) -> int:
+    yLimit = max(p.imag for p in trees) + 1
+    xLimit = max(p.real for p in trees) + 1
+    currentPosition = 0j
     treeCount = 0
-    while currentPosition[0] < lastRow:
-        treeCount = treeCount + grid[currentPosition[0]][currentPosition[1] % lastColumn]
-        currentPosition = (currentPosition[0] + step[0], currentPosition[1] + step[1])
+    while currentPosition.imag < yLimit:
+        treeCount += (currentPosition.real % xLimit) + currentPosition.imag * 1j in trees
+        currentPosition += step
     return treeCount
 
 
-def part1(grid: Grid) -> int:
-    treeCount = calculateTrees(grid, (1, 3))
-    return treeCount
+def part1(trees: Trees) -> int:
+    return calculateTrees(trees, 3 + 1j)
 
 
-def part2(grid: Grid) -> int:
-    steps = [
-        (1, 1),
-        (1, 3),
-        (1, 5),
-        (1, 7),
-        (2, 1)
-       ]
-    return reduce(lambda current, step: current * calculateTrees(grid, step), steps, 1)
+STEPS = [
+    1 + 1j,
+    3 + 1j,
+    5 + 1j,
+    7 + 1j,
+    1 + 2j
+]
+def part2(trees: Trees) -> int:
+    return reduce(lambda current, step: current * calculateTrees(trees, step), STEPS, 1)
 
 
-def getInput(filePath: str) -> Grid:
+def getInput(filePath: str) -> Trees:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     
-    grid = []
+    
     with open(filePath, "r") as file:
-        for line in file.readlines():
-            row = []
-            for c in line:
+        trees = []
+        for y, line in enumerate(file.readlines()):
+            for x, c in enumerate(line):
                 if c == '#':
-                    row.append(1)
-                elif c == '.':
-                    row.append(0)
-                elif c == '\n':
-                    break 
-                else:
-                    raise Exception("Unrecognized character in input", str(ord(c)))
-            grid.append(row)
-    return grid 
+                    trees.append(x + y * 1j)
+    return trees 
 
 
 def main():
@@ -67,8 +59,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
