@@ -12,26 +12,22 @@ def countValidPassports(passports: List[Passport], validationFunc: Callable[[Pas
     
 
 MANDATORY_FIELDS = [ 
-    'byr', 
-    'iyr', 
-    'eyr', 
-    'hgt', 
-    'hcl', 
-    'ecl', 
-    'pid'
+    "byr", 
+    "iyr", 
+    "eyr", 
+    "hgt", 
+    "hcl", 
+    "ecl", 
+    "pid"
 ]
-def isPassportValid(passport: Passport) -> bool:
-    for field in MANDATORY_FIELDS:
-        if not (field in passport):
-            return False
-    return True
 
 
-def part1(puzzleInput: List[Passport]) -> int:
-    return countValidPassports(puzzleInput, isPassportValid)
+def part1(passports: List[Passport]) -> int:
+    return countValidPassports(passports, lambda passport: 
+        all(map(lambda field: field in passport, MANDATORY_FIELDS)))
 
 
-def validate_int(value: str, min: int, max: int) -> bool:
+def validateInt(value: str, min: int, max: int) -> bool:
     try:
         parsed = int(value)
         return parsed >= min and parsed <= max
@@ -40,7 +36,7 @@ def validate_int(value: str, min: int, max: int) -> bool:
 
 
 hgtRegEx = re.compile(r"^(\d{2,3})(cm|in)$")
-def validate_hgt(value: str) -> bool:
+def validateHgt(value: str) -> bool:
     match = hgtRegEx.match(value)
     if match:
         height = int(match.group(1))
@@ -51,27 +47,22 @@ def validate_hgt(value: str) -> bool:
     return False
 
 
-hclRegEx = re.compile(r"^#[0-9a-f]{6}$")
-ecls = [ "amb", "blu", "brn", "gry", "grn", "hzl", "oth" ]
-pidRegEx = re.compile(r"^[\d]{9}$")
+hclRegex = re.compile(r"^#[0-9a-f]{6}$")
+ECLS = [ "amb", "blu", "brn", "gry", "grn", "hzl", "oth" ]
+pidRegex = re.compile(r"^[\d]{9}$")
 VALIDATIONS: Dict[str,Callable[[str],bool]] = {
-    'byr': lambda value: validate_int(value, 1920, 2002),
-    'iyr': lambda value: validate_int(value, 2010, 2020),
-    'eyr': lambda value: validate_int(value, 2020, 2030),
-    'hgt': validate_hgt,
-    'hcl': lambda value: hclRegEx.match(value),
-    'ecl': lambda value: value in ecls,
-    'pid': lambda value: pidRegEx.match(value)
+    "byr": lambda value: validateInt(value, 1920, 2002),
+    "iyr": lambda value: validateInt(value, 2010, 2020),
+    "eyr": lambda value: validateInt(value, 2020, 2030),
+    "hgt": validateHgt,
+    "hcl": lambda value: hclRegex.match(value),
+    "ecl": lambda value: value in ECLS,
+    "pid": lambda value: pidRegex.match(value)
 }
-def isPassportValid2(passport: Passport) -> bool:
-    for field in MANDATORY_FIELDS:
-        if not (field in passport) or not VALIDATIONS[field](passport[field]):            
-            return False
-    return True
-
-
-def part2(puzzleInput: List[Dict[str,str]]) -> int:
-    return countValidPassports(puzzleInput, isPassportValid2)
+def part2(passports: List[Passport]) -> int:
+    return countValidPassports(passports, 
+        lambda passport: all(map(lambda field: 
+            field in passport and VALIDATIONS[field](passport[field]), MANDATORY_FIELDS)))
 
 
 entryRegEx = re.compile(r"([a-z]{3})\:([^\s]+)")
@@ -96,8 +87,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
