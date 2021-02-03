@@ -4,9 +4,9 @@ import sys, os, time
 from typing import Iterable, List, Tuple
 import re
 
-
 Wire = List[Tuple[str,int]]
 Position = complex
+
 
 STEPS = {
     "R": 1,
@@ -17,16 +17,17 @@ STEPS = {
 def getWirePositions(wire: Wire) -> Iterable[Position]:
     currentPosition = 0j
     for direction, distance in wire:
-        step = STEPS[direction]
         for _ in range(distance):
-            currentPosition += step
+            currentPosition += STEPS[direction]
             yield currentPosition
 
 
 def part1(wires: Tuple[Wire,Wire]) -> int:
     wireA, wireB = wires
     wireApoints = set(getWirePositions(wireA))
-    return int(min([ abs(position.real) + abs(position.imag) for position in getWirePositions(wireB) if position in wireApoints ]))
+    return int(min([ abs(position.real) + abs(position.imag) 
+        for position in getWirePositions(wireB) 
+        if position in wireApoints ]))
 
 
 def part2(wires: Tuple[Wire,Wire]) -> int:
@@ -37,7 +38,9 @@ def part2(wires: Tuple[Wire,Wire]) -> int:
             continue
         wireApoints[position] = steps + 1
 
-    return min([ wireApoints[position] + steps + 1 for steps, position in enumerate(getWirePositions(wireB)) if position in wireApoints ])
+    return min([ wireApoints[position] + steps + 1 
+        for steps, position in enumerate(getWirePositions(wireB)) 
+        if position in wireApoints ])
 
 
 lineRegex = re.compile(r"(?P<direction>R|U|L|D)(?P<distance>\d+)")
@@ -67,8 +70,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
