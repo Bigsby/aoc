@@ -4,18 +4,17 @@ import sys, os, time
 from typing import List
 
 
-def part1(puzzleInput: List[int]) -> int:
-    return max(puzzleInput)
+def part1(seats: List[int]) -> int:
+    return max(seats)
 
 
-def part2(puzzleInput: List[int]) -> int:
-    ids = sorted(puzzleInput)
-    lastId = ids[0]
-    for currentId in ids:
+def part2(seats: List[int]) -> int:
+    lastId = min(seats)
+    for currentId in sorted(seats):
         if currentId - lastId == 2:
             return lastId + 1
         lastId = currentId
-    raise Exception("Not found")
+    raise Exception("Seat not found")
 
 
 def getInput(filePath: str) -> List[int]:
@@ -39,8 +38,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
