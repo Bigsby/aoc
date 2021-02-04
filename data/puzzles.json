@@ -180,6 +180,31 @@
                             "p2": [ 0.0038699, 0.0038201 ]
                         }
                     ]
+                },
+                {
+                    "day": 6,
+                    "name": "Probably a Fire Hazard",
+                    "description": "Turn on/off/toggle lights on 2D matrix",
+                    "results": {
+                        "p1": [ "543903" ],
+                        "p2": [ "14687245" ]
+                    },
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 3.0907500 ],
+                            "p2": [ 3.2990662 ]
+                        },
+                        {
+                            "language": "cs",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.8609149 ],
+                            "p2": [ 0.8221222 ]
+                        }
+                    ]
                 }
             ]
         },
@@ -362,6 +387,31 @@
                             "os": "WSL",
                             "p1": [ 17.1570962, 27.5683473 ],
                             "p2": [ 46.1004561, 42.7471028 ]
+                        }
+                    ]
+                },
+                {
+                    "day": 6,
+                    "name": "Signals and Noise",
+                    "description": "Count letters repeating in same index in strings",
+                    "results": {
+                        "p1": [ "xdkzukcf", "afwlyyyq" ],
+                        "p2": [ "cevsgyvd", "bhkzekao" ]
+                    },
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.0005808, 0.0007194 ],
+                            "p2": [ 0.0008807, 0.0007125 ]
+                        },
+                        {
+                            "language": "cs",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.0078052, 0.0086747 ],
+                            "p2": [ 0.0006963, 0.0008157 ]
                         }
                     ]
                 }
@@ -548,6 +598,31 @@
                             "p2": [ 0.3991396, 0.3582329 ]
                         }
                     ]
+                },
+                {
+                    "day": 6,
+                    "name": "Memory Reallocation",
+                    "description": "Distribute amounts in list of numbers",
+                    "results": {
+                        "p1": [ "5042", "6681" ],
+                        "p2": [ "1086", "2392" ]
+                    },
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.1385656, 0.2544814 ],
+                            "p2": [ 0.1389417, 0.2548991 ]
+                        },
+                        {
+                            "language": "cs",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.1407358, 0.2670760 ],
+                            "p2": [ 0.1400978, 0.2663513 ]
+                        }
+                    ]
                 }
             ]
         },
@@ -730,6 +805,31 @@
                             "os": "WSL",
                             "p1": [ 0.0345687, 0.0912757 ],
                             "p2": [ 1.1053014, 2.4816297 ]
+                        }
+                    ]
+                },
+                {
+                    "day": 6,
+                    "name": "Chronal Coordinates",
+                    "description": "Find Closest Mahatan Locations on map",
+                    "results": {
+                        "p1": [ "5626", "4284" ],
+                        "p2": [ "46554", "35490" ]
+                    },
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 1.6030215, 1.6524348 ],
+                            "p2": [ 1.5047004, 1.5775364 ]
+                        },
+                        {
+                            "language": "cs",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 1.1240386, 1.2421370 ],
+                            "p2": [ 0.9262963, 1.1533550 ]
                         }
                     ]
                 }
@@ -916,6 +1016,31 @@
                             "p2": [ 0.0000599, 0.0000700 ]
                         }
                     ]
+                },
+                {
+                    "day": 5,
+                    "name": "Universal Orbit Map",
+                    "description": "Graph deepness counting",
+                    "results": {
+                        "p1": [ "162439", "453028" ],
+                        "p2": [ "367", "562" ]
+                    },
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.0104148, 0.0314000 ],
+                            "p2": [ 0.0000407, 0.0000639 ]
+                        },
+                        {
+                            "language": "cs",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.0173001, 0.0422296 ],
+                            "p2": [ 0.0004020, 0.0004151 ]
+                        }
+                    ]
                 }
             ]
         },
@@ -1098,6 +1223,31 @@
                             "os": "WSL",
                             "p1": [ 0.0041240, 0.0037613 ],
                             "p2": [ 0.0034161, 0.0044541 ]
+                        }
+                    ]
+                },
+                {
+                    "day": 6,
+                    "name": "Custom Customs",
+                    "description": "Count letters in groups of lines",
+                    "results": {
+                        "p1": [ "6551", "6612" ],
+                        "p2": [ "3358", "3268" ]
+                    },
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.0000293, 0.0000807 ],
+                            "p2": [ 0.0005603, 0.0010229 ]
+                        },
+                        {
+                            "language": "cs",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.0046524, 0.0044162 ],
+                            "p2": [ 0.0024549, 0.0021338 ]
                         }
                     ]
                 }
