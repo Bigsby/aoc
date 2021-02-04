@@ -155,6 +155,31 @@
                             "p2": [ 1.4192756, 13.3619879 ]
                         }
                     ]
+                },
+                {
+                    "day": 5,
+                    "name": "Doesn't He Have Intern-Elves For This?",
+                    "description": "Check string rules (vowel count, repeats...)",
+                    "results": {
+                        "p1": [ "236", "238" ],
+                        "p2": [ "51", "69" ]
+                    },
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.0012511, 0.0015472 ],
+                            "p2": [ 0.0026675, 0.0028012 ]
+                        },
+                        {
+                            "language": "cs",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.0171413, 0.0173506 ],
+                            "p2": [ 0.0038699, 0.0038201 ]
+                        }
+                    ]
                 }
             ]
         },
@@ -312,6 +337,31 @@
                             "os": "WSL",
                             "p1": [ 0.0297786, 0.0324167 ],
                             "p2": [ 0.0270985, 0.1356603 ]
+                        }
+                    ]
+                },
+                {
+                    "day": 5,
+                    "name": "How About a Nice Game of Chess?",
+                    "description": "MD5 hashing",
+                    "results": {
+                        "p1": [ "4543c154", "1a3099aa" ],
+                        "p2": [ "1050cbbd", "694190cd" ]
+                    },
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 9.8983514, 15.8952513 ],
+                            "p2": [ 26.1726338, 24.7712526 ]
+                        },
+                        {
+                            "language": "cs",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 17.1570962, 27.5683473 ],
+                            "p2": [ 46.1004561, 42.7471028 ]
                         }
                     ]
                 }
@@ -473,6 +523,31 @@
                             "p2": [ 0.0068098, 0.0063536 ]
                         }
                     ]
+                },
+                {
+                    "day": 5,
+                    "name": "A Maze of Twisty Trampolines, All Alike",
+                    "description": "Jump offsets in memory (list)",
+                    "results": {
+                        "p1": [ "355965", "372671" ],
+                        "p2": [ "26948068", "25608480" ]
+                    },
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.0480863, 0.0529928 ],
+                            "p2": [ 4.0792804, 3.7600485 ]
+                        },
+                        {
+                            "language": "cs",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.0065707, 0.0065899 ],
+                            "p2": [ 0.3991396, 0.3582329 ]
+                        }
+                    ]
                 }
             ]
         },
@@ -630,6 +705,31 @@
                             "os": "WSL",
                             "p1": [ 0.0017182, 0.0018820 ],
                             "p2": [ 0.0019167, 0.0027565 ]
+                        }
+                    ]
+                },
+                {
+                    "day": 5,
+                    "name": "Alchemical Reduction",
+                    "description": "Replace pairs of same letters, difference casing, in string",
+                    "results": {
+                        "p1": [ "11946", "11476" ],
+                        "p2": [ "4240", "5446" ]
+                    },
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.3683312, 1.3271120 ],
+                            "p2": [ 14.7734665, 37.0094294 ]
+                        },
+                        {
+                            "language": "cs",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.0345687, 0.0912757 ],
+                            "p2": [ 1.1053014, 2.4816297 ]
                         }
                     ]
                 }
@@ -791,6 +891,31 @@
                             "p2": [ 0.2927579, 0.3701503 ]
                         }
                     ]
+                },
+                {
+                    "day": 5,
+                    "name": "Sunny with a Chance of Asteroids",
+                    "description": "Run machine code",
+                    "results": {
+                        "p1": [ "15314507", "5044655" ],
+                        "p2": [ "652726", "7408802" ]
+                    },
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.0000463, 0.0000499 ],
+                            "p2": [ 0.0000722, 0.0000696 ]
+                        },
+                        {
+                            "language": "cs",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.0010481, 0.0010878 ],
+                            "p2": [ 0.0000599, 0.0000700 ]
+                        }
+                    ]
                 }
             ]
         },
@@ -948,6 +1073,31 @@
                             "os": "WSL",
                             "p1": [ 0.0187175, 0.0193982 ],
                             "p2": [ 0.0083518, 0.0065726 ]
+                        }
+                    ]
+                },
+                {
+                    "day": 5,
+                    "name": "Binary Boarding",
+                    "description": "Binary selection of seat (row, column)",
+                    "results": {
+                        "p1": [ "989", "938" ],
+                        "p2": [ "548", "696" ]
+                    },
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.0000087, 0.0000077 ],
+                            "p2": [ 0.0000783, 0.0000768 ]
+                        },
+                        {
+                            "language": "cs",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.0041240, 0.0037613 ],
+                            "p2": [ 0.0034161, 0.0044541 ]
                         }
                     ]
                 }
