@@ -4,14 +4,17 @@ import sys, os, time
 from typing import Callable, Dict, List, Union
 import re
 
+SCALAR, WIRE = "scalar", "wire"
+INPUT, UNARY, BINARY = "input", "unary", "binary"
+
 
 class Operand():
-    def __init__(self, value):
+    def __init__(self, value: str):
         try:
-            self.type = "scalar"
+            self.type = SCALAR
             self.scalar = int(value)
         except:
-            self.type = "wire"
+            self.type = WIRE
             self.wire:str = value
 
 
@@ -20,7 +23,7 @@ class Connection():
         self.operation = operation
         self.type = type
         self.operand1 = Operand(operand1)
-        self.operand2 = Operand(operand2)
+        self.operand2 = Operand(operand2) if operand2 else None
         self.target = target
 
 BINARY_OPERATIONS: Dict[str,Callable[[int,int],int]] = {
@@ -34,38 +37,33 @@ class Circuit():
         self.connections = connections
         self.solutions: Dict[str,int] = {}
 
-    def getConnectionFromTarget(self, target: Union[str,int]) -> Connection:
+    def getConnectionFromTarget(self, target: str) -> Connection:
         return next(filter(lambda conn: conn.target == target, self.connections))
 
-    def getConnectionFromOperand(self, operand: Operand) -> Union[Connection,None]:
-        if operand and operand.type == "wire":
-            return self.getConnectionFromTarget(operand.wire)
-        return None
-
     def getValueFromOperand(self, operand: Operand) -> int:
-        if operand.type == "scalar":
+        if operand.type == SCALAR:
             return operand.scalar
         return self.getValueFromConnection(self.getConnectionFromTarget(operand.wire))
     
-    def getValueFromBinaryConneciton(self, connection: Connection) -> int:
-        if connection.operation:
+    def getValueFromBinaryConnection(self, connection: Connection) -> int:
+        if connection.operation and connection.operand2:
             operation = BINARY_OPERATIONS[connection.operation]
             return operation(self.getValueFromOperand(connection.operand1), self.getValueFromOperand(connection.operand2))
         raise Exception("Operation no defined in connection")
 
-    def getNewValueForConnection(self, connection: Connection):
-        if connection.type == "input":
+    def calculateValueForConnection(self, connection: Connection) -> int:
+        if connection.type == INPUT:
             return self.getValueFromOperand(connection.operand1)
-        if connection.type == "unary":
+        if connection.type == UNARY:
             return ~self.getValueFromOperand(connection.operand1)
-        if connection.type == "binary":
-            return self.getValueFromBinaryConneciton(connection)
+        if connection.type == BINARY:
+            return self.getValueFromBinaryConnection(connection)
         raise Exception("Unknown operation:", connection)
 
     def getValueFromConnection(self, connection: Connection) -> int:
         if connection.target in self.solutions:
             return self.solutions[connection.target]
-        result = self.getNewValueForConnection(connection)
+        result = self.calculateValueForConnection(connection)
         self.solutions[connection.target] = result
         return result
 
@@ -74,9 +72,9 @@ class Circuit():
         return self.getValueFromConnection(self.getConnectionFromTarget(target))
 
 
+MAX_VALUE = 1 << 17
 def runCode(circuit: Circuit, rerunB: bool = False) -> int:
     startingTarget = "a"
-    maxValue = pow(2, 16)
     result = circuit.solveFor(startingTarget)
 
     if rerunB:
@@ -84,7 +82,7 @@ def runCode(circuit: Circuit, rerunB: bool = False) -> int:
         result = circuit.solveFor(startingTarget, solutions)    
 
     if result < 0:
-        result += maxValue
+        result += MAX_VALUE
     return result
 
 
@@ -105,13 +103,13 @@ def processLine(line: str) -> Connection:
     if sourceTargetMatch:
         source, target = sourceTargetMatch.group(1, 2)
         if inputRegex.match(source):
-            return Connection(None, "input", source, None, target)
+            return Connection(None, INPUT, source, None, target)
         unaryMatch = unaryRegex.match(source)
         if unaryMatch:
-            return Connection("NOT", "unary", unaryMatch.group(1), None, target)
+            return Connection(None, UNARY, unaryMatch.group(1), None, target)
         binaryMatch = binaryRegex.match(source)
         if binaryMatch:
-            return Connection(binaryMatch.group(2), "binary", binaryMatch.group(1), binaryMatch.group(3), target)
+            return Connection(binaryMatch.group(2), BINARY, binaryMatch.group(1), binaryMatch.group(3), target)
         raise Exception("Unrecognized operation:", source)
     else:
         raise Exception("Unrecognized operation line:", line)
@@ -138,8 +136,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
