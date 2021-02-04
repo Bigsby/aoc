@@ -6,13 +6,8 @@ from typing import Dict, List, Tuple
 Group = Tuple[int,Dict[str,int]]
 
 
-def countGroupAnswers(group: Group) -> int:
-    _, record = group
-    return sum(map(lambda letter: record[letter] != 0, record.keys()))
-
-
 def part1(groups: List[Group]) -> int:
-    return sum(map(lambda group: countGroupAnswers(group), groups))
+    return sum(map(lambda group: len(group[1]), groups))
 
 
 def getGroupCommonAnswers(group: Group) -> int:
@@ -59,8 +54,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
