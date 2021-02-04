@@ -4,20 +4,15 @@ import sys, os, time
 from typing import Dict, List, Tuple, Set
 import re
 
-
 CENTER_OF_MASS = "COM"
 
 
 def part1(planetOrbits: Dict[str, str]) -> int:
     planets: Set[str] = set()
-
     for orbited, orbiter in planetOrbits.items():
         planets.add(orbited)
         planets.add(orbiter)
-    
-    orbitCounts: Dict[str, int] = {
-        CENTER_OF_MASS: 0
-    }
+    orbitCounts: Dict[str, int] = { CENTER_OF_MASS: 0 }
     while len(orbitCounts) != len(planets):
         for planet in planets:
             if planet in orbitCounts:
@@ -28,7 +23,6 @@ def part1(planetOrbits: Dict[str, str]) -> int:
                     orbitCounts[planet] = orbitCounts[orbitedPlanet] + 1
             else:
                 orbitCounts[planet] = 1
-    
     return sum(orbitCounts.values())
 
 
@@ -47,11 +41,9 @@ def part2(planetOrbits: Dict[str, str]):
     sanPath: List[str] = getPathToCenterOfMass(SAN, planetOrbits)
     youPath.reverse()
     sanPath.reverse()
-
     while youPath[0] == sanPath[0]:
         del youPath[0]
         del sanPath[0]
-
     return len(youPath) + len(sanPath)
 
 
@@ -86,8 +78,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
