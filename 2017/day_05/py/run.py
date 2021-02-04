@@ -13,17 +13,17 @@ def doJumps(jumps: List[int], newJumpFunc: Callable[[int],int]) -> int:
         count += 1
         offset = jumps[currentIndex]
         nextIndex = currentIndex + offset
-        jumps[currentIndex] = newJumpFunc(offset)
+        jumps[currentIndex] = offset + newJumpFunc(offset)
         currentIndex = nextIndex
     return count
 
 
 def part1(jumps: List[int]) -> int:
-    return doJumps(jumps, lambda offset: offset + 1)
+    return doJumps(jumps, lambda _: 1)
 
 
 def part2(jumps: List[int]) -> int:
-    return doJumps(jumps, lambda offset: offset + (1 if offset < 3 else - 1))
+    return doJumps(jumps, lambda offset: 1 if offset < 3 else -1)
 
 
 def getInput(filePath: str) -> List[int]:
@@ -47,8 +47,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
