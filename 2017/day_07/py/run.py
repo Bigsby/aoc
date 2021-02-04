@@ -6,7 +6,7 @@ import re
 from functools import reduce
 
 
-def part1(records: Dict[str, Tuple[ int, List[str]]]) -> str:
+def part1(records: Dict[str,Tuple[int,List[str]]]) -> str:
     allChildren: List[str] = list(reduce(lambda soFar, children: [ *soFar, *children[1] ], records.values(), []))
     for name in records.keys():
         if name not in allChildren:
@@ -14,7 +14,7 @@ def part1(records: Dict[str, Tuple[ int, List[str]]]) -> str:
     raise Exception("Top not found")
 
 
-def part2(records: Dict[str, Tuple[ int, List[str]]]):
+def part2(records: Dict[str,Tuple[int,List[str]]]) -> int:
     combinedWeights: Dict[str, int] = {}
     while len(combinedWeights) != len(records):
         for name, (weight, children) in records.items():
@@ -39,7 +39,7 @@ def part2(records: Dict[str, Tuple[ int, List[str]]]):
 
 
 lineRegex = re.compile(r"^(?P<name>[a-z]+)\s\((?P<weight>\d+)\)(?P<children>.*)")
-def parseLine(line: str) -> Tuple[str, int, List[str]]:
+def parseLine(line: str) -> Tuple[str,int,List[str]]:
     match = lineRegex.match(line.strip())
     if match:
         chilren = [ child for child in match.group("children").replace("->", "").strip().split(", ")  if child ]
@@ -48,7 +48,7 @@ def parseLine(line: str) -> Tuple[str, int, List[str]]:
         raise Exception("Bad format", line)
     
     
-def getInput(filePath: str) -> Dict[str, Tuple[ int, List[str]]]:
+def getInput(filePath: str) -> Dict[str,Tuple[int,List[str]]]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     
@@ -69,8 +69,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
