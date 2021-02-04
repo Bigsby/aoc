@@ -3,9 +3,9 @@
 import sys, os, time
 from hashlib import md5
 
-
 PREFIX = "0" * 5
 ENCODING = "utf-8"
+
 
 def part1(doorId: str) -> str:
     index = 0
@@ -18,18 +18,17 @@ def part1(doorId: str) -> str:
     return password
 
 
-MISSING_INDEXES = list("01234567")
 def part2(doorId: str) -> str:
     index = 0
     password = [ "_" for _ in range(8) ]
-    
-    while MISSING_INDEXES:
+    missingIndexes = list("01234567")
+    while missingIndexes:
         result = md5((doorId + str(index)).encode(ENCODING)).hexdigest()
         if result.startswith(PREFIX):
-            digitIndex, digit = result[5], result[6]
-            if digitIndex in MISSING_INDEXES:
-                password[int(digitIndex)] = digit
-                MISSING_INDEXES.remove(digitIndex)
+            digitIndex = result[5]
+            if digitIndex in missingIndexes:
+                password[int(digitIndex)] = result[6]
+                missingIndexes.remove(digitIndex)
         index += 1
     return "".join(password)
 
@@ -55,8 +54,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
