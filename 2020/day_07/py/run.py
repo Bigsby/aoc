@@ -26,7 +26,7 @@ def getQuantityFromColor(color: str, rules: Rules) -> int:
     return sum(map(lambda innerRule: innerRule[1] * ( 1 + getQuantityFromColor(innerRule[0], rules)), rules[color]))
 
 
-def part2(rules: Rules):
+def part2(rules: Rules) -> int:
     return getQuantityFromColor(REQUIRED_COLOR, rules)
 
 
@@ -73,8 +73,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
