@@ -205,6 +205,31 @@
                             "p2": [ 0.8221222 ]
                         }
                     ]
+                },
+                {
+                    "day": 7,
+                    "name": "Some Assembly Required",
+                    "description": "Electronic circuit and Assembly",
+                    "results": {
+                        "p1": [ "46065", "956" ],
+                        "p2": [ "14134", "40149" ]
+                    },
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.0065822, 0.0062841 ],
+                            "p2": [ 0.0058072, 0.0063764 ]
+                        },
+                        {
+                            "language": "cs",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 2.3236813, 2.3344515 ],
+                            "p2": [ 4.4702927, 5.3387340 ]
+                        }
+                    ]
                 }
             ]
         },
@@ -412,6 +437,31 @@
                             "os": "WSL",
                             "p1": [ 0.0078052, 0.0086747 ],
                             "p2": [ 0.0006963, 0.0008157 ]
+                        }
+                    ]
+                },
+                {
+                    "day": 7,
+                    "name": "Internet Protocol Version 7",
+                    "description": "Find letter patterns in strings (ABA and ABBA)",
+                    "results": {
+                        "p1": [ "115" ],
+                        "p2": [ "231" ]
+                    },
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.0112113 ],
+                            "p2": [ 0.0109027 ]
+                        },
+                        {
+                            "language": "cs",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.0410277 ],
+                            "p2": [ 0.0218741 ]
                         }
                     ]
                 }
@@ -623,6 +673,31 @@
                             "p2": [ 0.1400978, 0.2663513 ]
                         }
                     ]
+                },
+                {
+                    "day": 7,
+                    "name": "Recursive Circus",
+                    "description": "Weights on piramid graph",
+                    "results": {
+                        "p1": [ "hmvwl", "mkxke" ],
+                        "p2": [ "1853", "268" ]
+                    },
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.0036328, 0.0094907 ],
+                            "p2": [ 0.0039368, 0.0113816 ]
+                        },
+                        {
+                            "language": "cs",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.0050600, 0.0127552 ],
+                            "p2": [ 0.0154934, 0.0236372 ]
+                        }
+                    ]
                 }
             ]
         },
@@ -832,6 +907,31 @@
                             "p2": [ 0.9262963, 1.1533550 ]
                         }
                     ]
+                },
+                {
+                    "day": 7,
+                    "name": "The Sum of Its Parts",
+                    "description": "Task with graph dependencies and multi-tasking",
+                    "results": {
+                        "p1": [ "OUGLTKDJVBRMIXSACWYPEQNHZF", "BCEFLDMQTXHZGKIASVJYORPUWN" ],
+                        "p2": [ "929", "987" ]
+                    },
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.0000635, 0.0001676 ],
+                            "p2": [ 0.0010320, 0.0013267 ]
+                        },
+                        {
+                            "language": "cs",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.0230396, 0.0227063 ],
+                            "p2": [ 0.0111693, 0.0097835 ]
+                        }
+                    ]
                 }
             ]
         },
@@ -1018,7 +1118,7 @@
                     ]
                 },
                 {
-                    "day": 5,
+                    "day": 6,
                     "name": "Universal Orbit Map",
                     "description": "Graph deepness counting",
                     "results": {
@@ -1039,6 +1139,31 @@
                             "os": "WSL",
                             "p1": [ 0.0173001, 0.0422296 ],
                             "p2": [ 0.0004020, 0.0004151 ]
+                        }
+                    ]
+                },
+                {
+                    "day": 7,
+                    "name": "Amplification Circuit",
+                    "description": "Run machine code connecting outputs to inputs",
+                    "results": {
+                        "p1": [ "929800", "77500" ],
+                        "p2": [ "15432220", "22476942" ]
+                    },
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.0038960, 0.0051654 ],
+                            "p2": [ 0.0325110, 0.0296438 ]
+                        },
+                        {
+                            "language": "cs",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.0083449, 0.0078852 ],
+                            "p2": [ 0.0077222, 0.0062070 ]
                         }
                     ]
                 }
@@ -1248,6 +1373,31 @@
                             "os": "WSL",
                             "p1": [ 0.0046524, 0.0044162 ],
                             "p2": [ 0.0024549, 0.0021338 ]
+                        }
+                    ]
+                },
+                {
+                    "day": 7,
+                    "name": "Handy Haversacks",
+                    "description": "Counting bags containing bags",
+                    "results": {
+                        "p1": [ "229", "268" ],
+                        "p2": [ "6683", "7867" ]
+                    },
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.0795067, 0.1215524 ],
+                            "p2": [ 0.0000208, 0.0000440 ]
+                        },
+                        {
+                            "language": "cs",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "p1": [ 0.3623899, 0.4855298 ],
+                            "p2": [ 0.0009373, 0.0008288 ]
                         }
                     ]
                 }
