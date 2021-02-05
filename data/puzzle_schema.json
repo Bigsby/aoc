@@ -4,7 +4,7 @@
     "definitions": {
         "day": {
             "type": "object",
-            "additionalProperties":  false,
+            "additionalProperties": false,
             "required": [
                 "day",
                 "name"
@@ -23,21 +23,17 @@
                     "type": "string"
                 },
                 "results": {
-                    "type": "object",
-                    "additionalProperties":  false,
-                    "required": [
-                        "p1"
-                    ],
-                    "properties": {
-                        "p1": {
-                            "type": "array",
-                            "items": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "p1"
+                        ],
+                        "properties": {
+                            "p1": {
                                 "type": "string"
-                            }
-                        },
-                        "p2": {
-                            "type": "array",
-                            "items": {
+                            },
+                            "p2": {
                                 "type": "string"
                             }
                         }
@@ -50,9 +46,10 @@
                         "required": [
                             "language",
                             "machine",
-                            "os"
+                            "os",
+                            "inputs"
                         ],
-                        "additionalProperties":  false,
+                        "additionalProperties": false,
                         "properties": {
                             "language": {
                                 "type": "string"
@@ -63,16 +60,21 @@
                             "os": {
                                 "type": "string"
                             },
-                            "p1": {
+                            "inputs": {
                                 "type": "array",
                                 "items": {
-                                    "type": "number"
-                                }
-                            },
-                            "p2": {
-                                "type": "array",
-                                "items": {
-                                    "type": "number"
+                                    "type": "object",
+                                    "required": [
+                                        "p1"
+                                    ],
+                                    "properties": {
+                                        "p1": {
+                                            "type": "number"
+                                        },
+                                        "p2": {
+                                            "type": "number"
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -86,7 +88,7 @@
                 "year",
                 "days"
             ],
-            "additionalProperties":  false,
+            "additionalProperties": false,
             "properties": {
                 "year": {
                     "type": "number"
@@ -103,7 +105,7 @@
     "required": [
         "years"
     ],
-    "additionalProperties":  false,
+    "additionalProperties": false,
     "properties": {
         "$schema": {
             "type": "string"
