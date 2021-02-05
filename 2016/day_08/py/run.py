@@ -150,6 +150,7 @@ class InstructionType(Enum):
     RotateRow = 1
     RotateColumn = 2
 
+Instruction = Tuple[InstructionType, int, int]
 
 def printScreen(screen: List[complex], width: int, height: int):
     for y in range(height):
@@ -159,8 +160,10 @@ def printScreen(screen: List[complex], width: int, height: int):
     print()
 
 
-def runInstructions(instructions: List[Tuple[InstructionType, int, int]], width: int, height: int) -> List[complex]:
+def runInstructions(instructions: List[Instruction], width: int, height: int) -> List[complex]:
     screen: List[complex] = []
+    toAdd: List[complex] = []
+    toRemove: List[complex] = []
     for instructionType, a, b in instructions:
         if instructionType == InstructionType.Rect:
             for x, y in product(range(a), range(b)):
@@ -168,29 +171,23 @@ def runInstructions(instructions: List[Tuple[InstructionType, int, int]], width:
                 if position not in screen:
                     screen.append(position)
         elif instructionType == InstructionType.RotateRow:
-            toAdd: List[complex] = []
-            toRemove: List[complex] = []
             for position in filter(lambda p: p.imag == a, screen):
                 toRemove.append(position)
                 toAdd.append(((position.real + b) % width) + position.imag * 1j)
-            for position in toRemove:
-                screen.remove(position)
-            for position in toAdd:
-                screen.append(position)
         else:
-            toAdd: List[complex] = []
-            toRemove: List[complex] = []
             for position in filter(lambda p: p.real == a, screen):
                 toRemove.append(position)
                 toAdd.append(position.real + ((position.imag + b) % height) * 1j)
-            for position in toRemove:
-                screen.remove(position)
-            for position in toAdd:
-                screen.append(position)
+        for position in toRemove:
+            screen.remove(position)
+        for position in toAdd:
+            screen.append(position)
+        toAdd.clear()
+        toRemove.clear()
     return screen
 
 
-def part1(instructions: List[Tuple[InstructionType, int, int]]) -> int:
+def part1(instructions: List[Instruction]) -> int:
     screen = runInstructions(instructions, SCREEN_WIDTH, SCREEN_HEIGTH)
     return len(screen)
 
@@ -202,12 +199,12 @@ def getCharacterInScreen(screen: List[complex], index: int, width: int, height: 
     return LETTERS[screenValue]
 
 
-def part2(instructions: List[Tuple[InstructionType, int, int]]):
+def part2(instructions: List[Instruction]) -> str:
     screen = runInstructions(instructions, SCREEN_WIDTH, SCREEN_HEIGTH)
     return "".join(map(lambda index: getCharacterInScreen(screen, index, CHARACTER_WIDTH, SCREEN_HEIGTH), range(SCREEN_WIDTH // CHARACTER_WIDTH)))
 
 
-def parseLine(line: str) -> Tuple[InstructionType, int, int]:
+def parseLine(line: str) -> Instruction:
     if line.startswith("rect"):
         ab = line[5:].split("x")
         return InstructionType.Rect, int(ab[0]), int(ab[1])
@@ -219,7 +216,7 @@ def parseLine(line: str) -> Tuple[InstructionType, int, int]:
         return InstructionType.RotateColumn, int(xa[0]), int(xa[1])
 
 
-def getInput(filePath: str) -> List[Tuple[InstructionType, int, int]]:
+def getInput(filePath: str) -> List[Instruction]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     
@@ -240,8 +237,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
