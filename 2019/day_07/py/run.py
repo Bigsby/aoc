@@ -79,7 +79,7 @@ def runPhasesPermutation(memory: List[int], phases: Tuple[int, ...]) -> int:
     return output
 
 
-def part1(memory: List[int]):
+def part1(memory: List[int]) -> int:
     return max(runPhasesPermutation(memory, phases) for phases in permutations(range(5)))
 
 
@@ -91,11 +91,10 @@ def runFeedbackPhasesPermutation(memory: List[int], phases: Tuple[int,...]) -> i
     while any(amplifier.running for amplifier in amplifiers):
         for amplifier in amplifiers:
             amplifier.tick()
-
     return amplifiers[-1].outputs[0]
 
 
-def part2(memory: List[int]):
+def part2(memory: List[int]) -> int:
     return max(runFeedbackPhasesPermutation(memory, permutation) for permutation in permutations(range(5, 10)))
 
 
@@ -121,8 +120,8 @@ def main():
     
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
