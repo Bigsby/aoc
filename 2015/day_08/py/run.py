@@ -3,15 +3,13 @@
 import sys, os, time
 from typing import Callable, List
 import re
-from functools import reduce
 
 
 def countDifferences(puzzleInput: List[str], differencesFunc: Callable[[str],int]):
-    return reduce(lambda soFar, s: soFar + differencesFunc(s), puzzleInput, 0)
-
+    return sum(differencesFunc(s) for s in puzzleInput)
 
 hexaRegex = re.compile(r"\\x[0-9a-f]{2}")
-def getStringDifference1(string: str):
+def getStringDifference1(string: str) -> int:
     totalLength = len(string)
     stripped = string.replace(r"\\", "r")
     stripped = stripped.replace(r"\"", "r")
@@ -20,18 +18,18 @@ def getStringDifference1(string: str):
     return totalLength - len(stripped) 
 
 
-def part1(puzzleInput: List[str]):
+def part1(puzzleInput: List[str]) -> int:
     return countDifferences(puzzleInput, getStringDifference1)
 
 
-def getStringDifference2(string: str):
+def getStringDifference2(string: str) -> int:
     initialLength = len(string)
     escaped = re.escape(string)
     escaped = escaped.replace("\"", "\\\"")
     return 2 + len(escaped) - initialLength
 
 
-def part2(puzzleInput: List[str]):
+def part2(puzzleInput: List[str]) -> int:
     return countDifferences(puzzleInput, getStringDifference2)
 
 
@@ -56,8 +54,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
