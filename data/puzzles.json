@@ -296,6 +296,53 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 8,
+                    "name": "Matchsticks",
+                    "description": "Replace escapes in strings",
+                    "results": [
+                        {
+                            "p1": "1371",
+                            "p2": "2117"
+                        },
+                        {
+                            "p1": "1342",
+                            "p2": "2074"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "inputs": [
+                                {
+                                    "p1": 0.0002215,
+                                    "p2": 0.0003747
+                                },
+                                {
+                                    "p1": 0.0002146,
+                                    "p2": 0.0003570
+                                }
+                            ]
+                        },
+                        {
+                            "language": "cs",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "inputs": [
+                                {
+                                    "p1": 0.0131020,
+                                    "p2": 0.0002334
+                                },
+                                {
+                                    "p1": 0.0166313,
+                                    "p2": 0.0002649
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -614,6 +661,41 @@
                                 {
                                     "p1": 0.0410277,
                                     "p2": 0.0218741
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "day": 8,
+                    "name": "Two-Factor Authentication",
+                    "description": "Writing and reading LCD Screen and read charaters from pixels",
+                    "results": [
+                        {
+                            "p1": "121",
+                            "p2": "RURUCEOEIL"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "inputs": [
+                                {
+                                    "p1": 0.0013100,
+                                    "p2": 0.0020973
+                                }
+                            ]
+                        },
+                        {
+                            "language": "cs",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "inputs": [
+                                {
+                                    "p1": 0.0116712,
+                                    "p2": 0.0054732
                                 }
                             ]
                         }
@@ -952,6 +1034,53 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 8,
+                    "name": "I Heard You Like Registers",
+                    "description": "Run assembly code with conditions",
+                    "results": [
+                        {
+                            "p1": "5102",
+                            "p2": "6056"
+                        },
+                        {
+                            "p1": "5075",
+                            "p2": "7310"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "inputs": [
+                                {
+                                    "p1": 0.0007233,
+                                    "p2": 0.0006781
+                                },
+                                {
+                                    "p1": 0.0007414,
+                                    "p2": 0.0009789
+                                }
+                            ]
+                        },
+                        {
+                            "language": "cs",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "inputs": [
+                                {
+                                    "p1": 0.0299907,
+                                    "p2": 0.0021462
+                                },
+                                {
+                                    "p1": 0.0337818,
+                                    "p2": 0.0021268
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -1282,6 +1411,53 @@
                                 {
                                     "p1": 0.0227063,
                                     "p2": 0.0097835
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "day": 8,
+                    "name": "Memory Maneuver",
+                    "description": "Read headered framed data (list integers)",
+                    "results": [
+                        {
+                            "p1": "46578",
+                            "p2": "31251"
+                        },
+                        {
+                            "p1": "42768",
+                            "p2": "34348"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "inputs": [
+                                {
+                                    "p1": 0.0037275,
+                                    "p2": 0.0032510
+                                },
+                                {
+                                    "p1": 0.0037670,
+                                    "p2": 0.0024422
+                                }
+                            ]
+                        },
+                        {
+                            "language": "cs",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "inputs": [
+                                {
+                                    "p1": 0.0061680,
+                                    "p2": 0.0033762
+                                },
+                                {
+                                    "p1": 0.0056939,
+                                    "p2": 0.0033500
                                 }
                             ]
                         }
@@ -1620,6 +1796,53 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 8,
+                    "name": "Space Image Format",
+                    "description": "Reading image and read charaters from pixels",
+                    "results": [
+                        {
+                            "p1": "1548",
+                            "p2": "CEKUA"
+                        },
+                        {
+                            "p1": "1463",
+                            "p2": "GKCKH"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "inputs": [
+                                {
+                                    "p1": 0.0002073,
+                                    "p2": 0.0040958
+                                },
+                                {
+                                    "p1": 0.0001773,
+                                    "p2": 0.0034084
+                                }
+                            ]
+                        },
+                        {
+                            "language": "cs",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "inputs": [
+                                {
+                                    "p1": 0.0064792,
+                                    "p2": 0.0130847
+                                },
+                                {
+                                    "p1": 0.0073637,
+                                    "p2": 0.0191731
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -1950,6 +2173,53 @@
                                 {
                                     "p1": 0.4855298,
                                     "p2": 0.0008288
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "day": 8,
+                    "name": "Handheld Halting",
+                    "description": "Run assembly code",
+                    "results": [
+                        {
+                            "p1": "2034",
+                            "p2": "672"
+                        },
+                        {
+                            "p1": "1684",
+                            "p2": "2188"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "inputs": [
+                                {
+                                    "p1": 0.0002029,
+                                    "p2": 0.0323286
+                                },
+                                {
+                                    "p1": 0.0003070,
+                                    "p2": 0.0337609
+                                }
+                            ]
+                        },
+                        {
+                            "language": "cs",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "inputs": [
+                                {
+                                    "p1": 0.0187247,
+                                    "p2": 0.0496818
+                                },
+                                {
+                                    "p1": 0.0178968,
+                                    "p2": 0.0615771
                                 }
                             ]
                         }
