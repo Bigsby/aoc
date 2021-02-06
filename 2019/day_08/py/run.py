@@ -145,12 +145,15 @@ LETTERS: Dict[int,str] = {
 }
 
 
-def part1(pixels: List[int]) -> int:
+def getImageLayers(pixels: List[int]) -> List[List[int]]:
     layerCount = len(pixels) // PIXELS_PER_LAYER
+    return [ pixels[layerIndex * PIXELS_PER_LAYER:PIXELS_PER_LAYER * (layerIndex + 1)] for layerIndex in range(layerCount) ]
+
+
+def part1(pixels: List[int]) -> int:
     leastZeros = sys.maxsize
     result = 0
-    for layerIndex in range(layerCount):
-        layer = pixels[layerIndex * PIXELS_PER_LAYER:PIXELS_PER_LAYER * (layerIndex + 1)]
+    for layer in getImageLayers(pixels):
         zeroCount = layer.count(0)
         if zeroCount < leastZeros:
             leastZeros = zeroCount
@@ -183,9 +186,7 @@ def getCharacterInImage(image: Dict[complex,int], index: int, width: int, height
 
 def part2(pixels: List[int]) -> str:
     image = { x + y*1j: TRANSPARENT for x, y in product(range(IMAGE_WIDTH), range(IMAGE_HEIGHT)) }
-    layerCount = len(pixels) // PIXELS_PER_LAYER
-    for layerIndex in range(layerCount):
-        layer = pixels[layerIndex * PIXELS_PER_LAYER:PIXELS_PER_LAYER * (layerIndex + 1)]
+    for layer in getImageLayers(pixels):
         for x, y in product(range(IMAGE_WIDTH), range(IMAGE_HEIGHT)):
             if image[x + y * 1j] < 2:
                 continue
@@ -215,8 +216,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
