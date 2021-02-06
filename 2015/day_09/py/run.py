@@ -1,9 +1,8 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from typing import Iterator, List, Tuple
+from typing import List, Tuple
 import re
-from itertools import permutations
 
 
 class Edge():
@@ -13,40 +12,43 @@ class Edge():
         self.distance = int(distance)
 
 
-def getPathDistance(permutation: Tuple[str,...], paths: List[Edge]) -> int:
-    distance = 0
-    for index in range(0, len(permutation) - 1):
-        path = next(filter(lambda p: p.nodeA == permutation[index] and p.nodeB == permutation[index + 1] or p.nodeA == permutation[index + 1] and p.nodeB == permutation[index], paths))
-        distance = distance + path.distance
-    return distance
-
-
 def getSingleNodes(edges: List[Edge]) -> List[str]:
-    nodes: List[str] = []
+    nodes = set()
     for path in edges:
-        nodes.append(path.nodeA)
-        nodes.append(path.nodeB)
-    return list(set(nodes))
+        nodes.add(path.nodeA)
+        nodes.add(path.nodeB)
+    return list(nodes)
+
+
+def getShortestPath(edges: List[Edge], longest: bool) -> int:
+    singleNodes = getSingleNodes(edges)
+    length = len(singleNodes)
+    stack: List[Tuple[List[str],str,int]] = [ ([ node ], node, 0) for node in singleNodes ]
+    bestDistance = 0 if longest else sys.maxsize
+    while stack:
+        path, current, distance = stack.pop()
+        for edge in filter(lambda edge: edge.nodeA == current or edge.nodeB == current, edges):
+            nextNode = edge.nodeB if current == edge.nodeA else edge.nodeA
+            if nextNode in path:
+                continue
+            newPath = list(path)
+            newPath.append(nextNode)
+            newDistance = distance + edge.distance
+            if not longest and newDistance > bestDistance:
+                continue
+            if len(newPath) == length:
+                bestDistance = max(bestDistance, newDistance) if longest else min(bestDistance, newDistance)
+            else:
+                stack.append((newPath, nextNode, newDistance))
+    return bestDistance
  
 
-def getPossiblePaths(nodes: List[str]) -> Iterator[Tuple[str,...]]:
-    return permutations(nodes, len(nodes))
+def part1(edges: List[Edge]) -> int:
+    return getShortestPath(edges, False)
 
 
-def getMinOrMax(edges: List[Edge], getMax: bool = False) -> int:
-    singleNodes = getSingleNodes(edges)
-    possiblePaths = getPossiblePaths(singleNodes)
-    if getMax:
-        return max(map(lambda permutation: getPathDistance(permutation, edges), possiblePaths))
-    return min(map(lambda permutation: getPathDistance(permutation, edges), possiblePaths))
-
-
-def part1(edges: List[Edge]):
-    return getMinOrMax(edges)
-
-
-def part2(edges: List[Edge]):
-    return getMinOrMax(edges, True)
+def part2(edges: List[Edge]) -> int:
+    return getShortestPath(edges, True)
 
 
 lineRegex = re.compile(r"^(.*)\sto\s(.*)\s=\s(\d+)$")
@@ -78,8 +80,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
