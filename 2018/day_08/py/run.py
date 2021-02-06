@@ -3,25 +3,25 @@
 import sys, os, time
 from typing import Any, List, Tuple
 
+Node = Tuple[List['Node'],List[int]]
 
-def readNode(data: List[int]) -> Tuple[List[Any],List[int]]:
+
+def readNode(data: List[int]) -> Node:
     childrenCount = data.pop()
     metadataCount = data.pop()
     node = ([],[])
-    while childrenCount:
+    for _ in range(childrenCount):
         node[0].append(readNode(data))
-        childrenCount -= 1
-    while metadataCount:
+    for _ in range(metadataCount):
         node[1].append(data.pop())
-        metadataCount -= 1
     return node
 
 
-def getMetadataSum(node: Tuple[List[Any],List[int]]) -> int:
+def getMetadataSum(node: Node) -> int:
     return sum(node[1]) + sum(map(lambda child: getMetadataSum(child), node[0]))
 
 
-def getRoot(data: List[int]) -> Tuple[List[Any],List[int]]:
+def getRoot(data: List[int]) -> Node:
     data = list(data)
     data.reverse()
     return readNode(data)
@@ -63,8 +63,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
