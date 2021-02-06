@@ -5,8 +5,6 @@ from typing import List, Tuple
 import re
 
 Instruction = Tuple[str,int]
-
-
 JMP = "jmp"
 NOP = "nop"
 ACC = "acc"
@@ -14,45 +12,42 @@ ACC = "acc"
 
 def runInstruction(op: Instruction, accumulator: int, instructionPointer: int) -> Tuple[int,int]:
     mnemonic, argument = op
-    instructionPointer = instructionPointer + argument if mnemonic == JMP else instructionPointer + 1
+    instructionPointer += argument if mnemonic == JMP else 1
     if mnemonic == ACC:
-        accumulator = accumulator + argument
+        accumulator += argument
     return accumulator, instructionPointer
 
 
-def runBoot(ops: List[Instruction]) -> Tuple[bool,int]:
+def runBoot(boot: List[Instruction]) -> Tuple[bool,int]:
     accumulator = 0
     instructionPointer = 0
     visited = []
-    bootLength = len(ops)
+    bootLength = len(boot)
     while True:
+        visited.append(instructionPointer)
+        accumulator, instructionPointer = runInstruction(boot[instructionPointer], accumulator, instructionPointer)
         if instructionPointer in visited:
             return False, accumulator
         if instructionPointer == bootLength:
             return True, accumulator
-        visited.append(instructionPointer)
-        op = ops[instructionPointer]
-        accumulator, instructionPointer = runInstruction(op, accumulator, instructionPointer)
 
 
 def part1(boot: List[Instruction]) -> int:
     return runBoot(boot)[1]
 
 
-def switchAndTest(index: int, ops: List[Instruction]) -> Tuple[bool,int]:
-    ops = list(ops)
-    mnemonic, argumant = ops[index]
-    ops[index] = (NOP if mnemonic == JMP else NOP, argumant)
-    success, accumulator = runBoot(ops)
-    return success, accumulator
+def switchAndTest(index: int, boot: List[Instruction]) -> Tuple[bool,int]:
+    boot = list(boot)
+    mnemonic, argumant = boot[index]
+    boot[index] = (NOP if mnemonic == JMP else NOP, argumant)
+    return runBoot(boot)
 
 
 def part2(boot: List[Instruction]) -> int:
-    ops = boot
-    for index in range(len(ops)):
-        if ops[index][0] == ACC:
+    for index in range(len(boot)):
+        if boot[index][0] == ACC:
             continue
-        success, accumulator = switchAndTest(index, ops)
+        success, accumulator = switchAndTest(index, boot)
         if success:
             return accumulator
     raise Exception("Valid boot not found")
@@ -87,8 +82,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
