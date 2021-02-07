@@ -5,11 +5,15 @@ from typing import Dict, List, Tuple
 import re
 from functools import reduce
 
+ValueInstruction = Tuple[int,int]
+CompareInstruction = Tuple[str,int,str,int]
+Instructions = Tuple[List[ValueInstruction],Dict[int,CompareInstruction]]
+
 
 LOW_VALUE = 17
 HIGH_VALUE = 61
 TARGET_OUTPUTS = [ 0, 1, 2 ]
-def isComplete(test: int, bot: int, lowChip: int, highChip: int, outputs: Dict[int,int]):
+def isComplete(test: int, bot: int, lowChip: int, highChip: int, outputs: Dict[int,int]) -> Tuple[bool,int]:
     if test == 1:
         if lowChip == LOW_VALUE and highChip == HIGH_VALUE:
             return True, bot
@@ -20,7 +24,7 @@ def isComplete(test: int, bot: int, lowChip: int, highChip: int, outputs: Dict[i
         return False, -1
 
 
-def run(instructions: Tuple[List[Tuple[int,int]],Dict[int,Tuple[str,int,str,int]]], test: int) -> int:
+def run(instructions: Instructions, test: int) -> int:
     valueInstructions, compareInstructions = instructions
     bots: Dict[int, List[int]] = {}
     for bot, value in valueInstructions:
@@ -53,23 +57,23 @@ def run(instructions: Tuple[List[Tuple[int,int]],Dict[int,Tuple[str,int,str,int]
             return result
 
 
-def part1(instructions: Tuple[List[Tuple[int,int]],Dict[int,Tuple[str,int,str,int]]]) -> int:
+def part1(instructions: Instructions) -> int:
     return run(instructions, 1)
 
 
-def part2(instructions: Tuple[List[Tuple[int,int]],Dict[int,Tuple[str,int,str,int]]]) -> int:
+def part2(instructions: Instructions) -> int:
     return run(instructions, 2)
 
 
 valueRegex = re.compile(r"^value\s(?P<value>\d+)\sgoes to bot\s(?P<bot>\d+)$")
 compareRegex = re.compile(r"^bot\s(?P<bot>\d+)\sgives low to\s(?P<lowTarget>bot|output)\s(?P<low>\d+)\sand high to\s(?P<highTarget>bot|output)\s(?P<high>\d+)$")
-def getInput(filePath: str) -> Tuple[List[Tuple[int,int]],Dict[int,Tuple[str,int,str,int]]]:
+def getInput(filePath: str) -> Instructions:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     
     with open(filePath, "r") as file:
-        valueInstructions: List[Tuple[int,int]] = []
-        compareInstructions: Dict[int,Tuple[str,int,str,int]] = {}
+        valueInstructions: List[ValueInstruction] = []
+        compareInstructions: Dict[int,CompareInstruction] = {}
         for line in file.readlines():
             valueMatch = valueRegex.match(line)
             if valueMatch:
@@ -97,8 +101,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
