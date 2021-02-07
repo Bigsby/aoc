@@ -6,12 +6,10 @@ from typing import List
 
 def hasNoValidPair(numberIndex: int, numbers: List[int]) -> bool:
     number = numbers[numberIndex]
-    for testindex in range(numberIndex - 25, numberIndex):
-        testNumber = numbers[testindex]
+    for testIndex in range(numberIndex - 25, numberIndex):
+        testNumber = numbers[testIndex]
         for pairIndex in range(numberIndex - 25, numberIndex):
-            if pairIndex == testindex:
-                continue
-            if testNumber + numbers[pairIndex] == number:
+            if pairIndex != testIndex and testNumber + numbers[pairIndex] == number:
                 return False
     return True
 
@@ -28,8 +26,7 @@ def getWeakness(numbers: List[int], targetNumber: int) -> int:
             newSet = numbers[startIndex:startIndex + length]
             currentSum = sum(newSet)
             if currentSum == targetNumber:
-                weakness = min(newSet) + max(newSet)
-                return weakness
+                return min(newSet) + max(newSet)
             length += 1
     raise Exception("Weakness not found")
 
@@ -60,8 +57,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
