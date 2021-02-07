@@ -343,6 +343,53 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 9,
+                    "name": "All in a Single Night",
+                    "description": "Short and longest distance in graph",
+                    "results": [
+                        {
+                            "p1": "141",
+                            "p2": "736"
+                        },
+                        {
+                            "p1": "207",
+                            "p2": "804"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "inputs": [
+                                {
+                                    "p1": 0.0082660,
+                                    "p2": 0.2784201
+                                },
+                                {
+                                    "p1": 0.0124281,
+                                    "p2": 0.2758709
+                                }
+                            ]
+                        },
+                        {
+                            "language": "cs",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "inputs": [
+                                {
+                                    "p1": 0.0753972,
+                                    "p2": 1.8162196
+                                },
+                                {
+                                    "p1": 0.1293855,
+                                    "p2": 1.8830796
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -696,6 +743,53 @@
                                 {
                                     "p1": 0.0116712,
                                     "p2": 0.0054732
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "day": 9,
+                    "name": "Explosives in Cyberspace",
+                    "description": "Header/frame based decompression of data",
+                    "results": [
+                        {
+                            "p1": "74532",
+                            "p2": "11558231665"
+                        },
+                        {
+                            "p1": "110346",
+                            "p2": "10774309173"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "inputs": [
+                                {
+                                    "p1": 0.0001280,
+                                    "p2": 0.0011894
+                                },
+                                {
+                                    "p1": 0.0001896,
+                                    "p2": 0.0017452
+                                }
+                            ]
+                        },
+                        {
+                            "language": "cs",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "inputs": [
+                                {
+                                    "p1": 0.0164535,
+                                    "p2": 0.0014728
+                                },
+                                {
+                                    "p1": 0.0187225,
+                                    "p2": 0.0025636
                                 }
                             ]
                         }
@@ -1081,6 +1175,53 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 9,
+                    "name": "Stream Processing",
+                    "description": "Parse nested stream of data with comments (garbage) and escapes",
+                    "results": [
+                        {
+                            "p1": "12897",
+                            "p2": "7031"
+                        },
+                        {
+                            "p1": "15922",
+                            "p2": "7314"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "inputs": [
+                                {
+                                    "p1": 0.0011065,
+                                    "p2": 0.0013029
+                                },
+                                {
+                                    "p1": 0.0014865,
+                                    "p2": 0.0014730
+                                }
+                            ]
+                        },
+                        {
+                            "language": "cs",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "inputs": [
+                                {
+                                    "p1": 0.0004551,
+                                    "p2": 0.0002234
+                                },
+                                {
+                                    "p1": 0.0004272,
+                                    "p2": 0.0002251
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -1458,6 +1599,53 @@
                                 {
                                     "p1": 0.0056939,
                                     "p2": 0.0033500
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "day": 9,
+                    "name": "Marble Mania",
+                    "description": "Circular game, inserting and removing items",
+                    "results": [
+                        {
+                            "p1": "422980",
+                            "p2": "3552041936"
+                        },
+                        {
+                            "p1": "384288",
+                            "p2": "3189426841"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "inputs": [
+                                {
+                                    "p1": 0.0390316,
+                                    "p2": 8.5328902
+                                },
+                                {
+                                    "p1": 0.0495528,
+                                    "p2": 9.6763536
+                                }
+                            ]
+                        },
+                        {
+                            "language": "cs",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "inputs": [
+                                {
+                                    "p1": 0.0117109,
+                                    "p2": 1.4213010
+                                },
+                                {
+                                    "p1": 0.0134939,
+                                    "p2": 1.3474350
                                 }
                             ]
                         }
@@ -1843,6 +2031,53 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 9,
+                    "name": "Sensor Boost",
+                    "description": "Run machine code",
+                    "results": [
+                        {
+                            "p1": "3063082071",
+                            "p2": "81348"
+                        },
+                        {
+                            "p1": "2465411646",
+                            "p2": "69781"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "inputs": [
+                                {
+                                    "p1": 0.0002877,
+                                    "p2": 0.3781324
+                                },
+                                {
+                                    "p1": 0.0003501,
+                                    "p2": 0.3741006
+                                }
+                            ]
+                        },
+                        {
+                            "language": "cs",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "inputs": [
+                                {
+                                    "p1": 0.0082451,
+                                    "p2": 0.0737813
+                                },
+                                {
+                                    "p1": 0.0109054,
+                                    "p2": 0.0721021
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -2220,6 +2455,53 @@
                                 {
                                     "p1": 0.0178968,
                                     "p2": 0.0615771
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "day": 9,
+                    "name": "Encoding Error",
+                    "description": "Find previous numbers that sum to number in sequence",
+                    "results": [
+                        {
+                            "p1": "22406676",
+                            "p2": "2942387"
+                        },
+                        {
+                            "p1": "542529149",
+                            "p2": "75678618"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "language": "py",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "inputs": [
+                                {
+                                    "p1": 0.0028052,
+                                    "p2": 0.0577125
+                                },
+                                {
+                                    "p1": 0.0028972,
+                                    "p2": 0.1192086
+                                }
+                            ]
+                        },
+                        {
+                            "language": "cs",
+                            "machine": "i9",
+                            "os": "WSL",
+                            "inputs": [
+                                {
+                                    "p1": 0.0054503,
+                                    "p2": 0.0999987
+                                },
+                                {
+                                    "p1": 0.0073709,
+                                    "p2": 0.1838624
                                 }
                             ]
                         }
