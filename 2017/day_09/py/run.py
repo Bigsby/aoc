@@ -37,13 +37,11 @@ def count(stream: str) -> Tuple[int,int]:
 
 
 def part1(stream: str) -> int:
-    groupScore, _ = count(stream)
-    return groupScore
+    return count(stream)[0]
 
 
-def part2(stream: str):
-    _, garbageCount = count(stream)
-    return garbageCount
+def part2(stream: str) -> int:
+    return count(stream)[1]
 
 
 def getInput(filePath: str) -> str:
@@ -67,8 +65,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
