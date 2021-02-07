@@ -39,11 +39,11 @@ def playerGame(playerCount: int, lastMarble:int) -> int:
     return max(scores.values())
 
 
-def part1(puzzleInput: Tuple[int,int]):
+def part1(puzzleInput: Tuple[int,int]) -> int:
     return playerGame(*puzzleInput)
 
 
-def part2(puzzleInput: Tuple[int,int]):
+def part2(puzzleInput: Tuple[int,int]) -> int:
     playerCount, lastMarble = puzzleInput
     return playerGame(playerCount, lastMarble * 100)
 
@@ -73,8 +73,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
