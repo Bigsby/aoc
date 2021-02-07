@@ -5,28 +5,27 @@ import re
 
 
 testRegex = re.compile(r"(\d)\1+|\d")
-def getNextValue(value: str):
-    matches = testRegex.finditer(value)
+def getNextValue(value: str) -> str:
     sequences = []
-    for match in matches:
+    for match in testRegex.finditer(value):
         group = match.group()
         sequences.append(str(len(group)))
         sequences.append(group[0])
     return "".join(sequences)
 
 
-def runLookAndSay(puzzleInput: str, turns: int):
+def runLookAndSay(puzzleInput: str, turns: int) -> int:
     currentValue = puzzleInput
     for _ in range(0, turns):
         currentValue = getNextValue(currentValue)
     return len(currentValue)
 
 
-def part1(puzzleInput: str):
+def part1(puzzleInput: str) -> int:
     return runLookAndSay(puzzleInput, 40)
 
 
-def part2(puzzleInput: str):
+def part2(puzzleInput: str) -> int:
     return runLookAndSay(puzzleInput, 50)
 
 
@@ -51,8 +50,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
