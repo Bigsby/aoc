@@ -300,14 +300,6 @@ LETTERS = {
     (0b111111 << CHARACTER_WIDTH * 9): "Z"
 }
 
-def getDimensions(points: List[PointPair]) -> Tuple[Tuple[int,int],int,int,int,int]:
-    minX = int(min(map(lambda point: point[0].real, points)))
-    maxX = int(max(map(lambda point: point[0].real, points)))
-    minY = int(min(map(lambda point: point[0].imag, points)))
-    maxY = int(max(map(lambda point: point[0].imag, points)))
-    size = abs(maxX - minX + 1), abs(maxY - minY + 1)
-    return size, minX, maxX, minY, maxY
-
 
 def printPoints(pointPairs: List[PointPair]):
     _, minX, maxX, minY, maxY = getDimensions(pointPairs)
@@ -320,6 +312,15 @@ def printPoints(pointPairs: List[PointPair]):
             else:
                 print(".", end="")
         print()
+
+
+def getDimensions(points: List[PointPair]) -> Tuple[Tuple[int,int],int,int,int,int]:
+    minX = int(min(map(lambda point: point[0].real, points)))
+    maxX = int(max(map(lambda point: point[0].real, points)))
+    minY = int(min(map(lambda point: point[0].imag, points)))
+    maxY = int(max(map(lambda point: point[0].imag, points)))
+    size = abs(maxX - minX + 1), abs(maxY - minY + 1)
+    return size, minX, maxX, minY, maxY
 
 
 def getNextState(points: List[PointPair]) -> List[PointPair]:
@@ -386,8 +387,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
