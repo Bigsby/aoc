@@ -4,6 +4,8 @@ import sys, os, time
 from typing import List, Tuple
 from functools import reduce
 
+MARKS_COUNT = 256
+
 
 def runLengths(marks:List[int], lengths: List[int], currentMark: int, skip: int) -> Tuple[List[int],int,int]:
     for length in lengths:
@@ -22,7 +24,6 @@ def runLengths(marks:List[int], lengths: List[int], currentMark: int, skip: int)
     return marks, currentMark, skip
 
 
-MARKS_COUNT = 256
 def part1(puzzleInput: str):
     lengths = [ int(c) for c in puzzleInput.split(",") ]
     marks = [ i for i in range(MARKS_COUNT) ]
@@ -63,8 +64,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
