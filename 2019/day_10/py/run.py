@@ -11,7 +11,6 @@ def getVisibleCount(asteroid: Asteroid, asteroids: List[Asteroid], maxX: int, ma
     asteroids = list(asteroids)
     asteroids.remove(asteroid)
     visibleCount = 0
-    
     while asteroids:
         asteroidToCheck = asteroids.pop()
         visibleCount += 1
@@ -23,7 +22,6 @@ def getVisibleCount(asteroid: Asteroid, asteroids: List[Asteroid], maxX: int, ma
             if asteroidToCheck in asteroids:
                 asteroids.remove(asteroidToCheck)
             asteroidToCheck += jump
-
     return visibleCount
 
 
@@ -48,7 +46,6 @@ def part2(asteroids: List[Asteroid], monitoringStation: Asteroid) -> int:
         angle = math.atan2(delta.real, delta.imag) + math.pi
         distance = int(abs(delta.real) + abs(delta.imag))
         asteroidAngleDistances[asteroid] = (angle, distance)
-
     targetCount = 1
     angle = 2 * math.pi
     lastRemoved = -1 -1j
@@ -57,9 +54,7 @@ def part2(asteroids: List[Asteroid], monitoringStation: Asteroid) -> int:
             key=lambda kv: (angle == kv[1][0] or targetCount == 1, (angle - kv[1][0]) % (2 * math.pi), kv[1][1]))
         del asteroidAngleDistances[asteroid]
         lastRemoved = asteroid
-        angle = angle
         targetCount += 1
-    
     return int(lastRemoved.real) * 100 + int(lastRemoved.imag)
 
 
@@ -69,13 +64,10 @@ def getInput(filePath: str) -> List[Asteroid]:
     
     with open(filePath, "r") as file:
         asteroids = []
-        position = 0
-        for line in file.readlines():
-            for c in line.strip():
+        for (y, line) in enumerate(file.readlines()):
+            for (x, c) in enumerate(line.strip()):
                 if c == "#":
-                    asteroids.append(position)
-                position += 1
-            position += 1j - position.real
+                    asteroids.append(x + y * 1j)
         return asteroids
 
 
@@ -92,8 +84,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
