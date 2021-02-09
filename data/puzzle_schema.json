@@ -44,20 +44,12 @@
                     "items": {
                         "type": "object",
                         "required": [
-                            "language",
-                            "machine",
-                            "os",
+                            "environment",
                             "inputs"
                         ],
                         "additionalProperties": false,
                         "properties": {
-                            "language": {
-                                "type": "string"
-                            },
-                            "machine": {
-                                "type": "string"
-                            },
-                            "os": {
+                            "environment": {
                                 "type": "string"
                             },
                             "inputs": {
@@ -100,6 +92,33 @@
                     }
                 }
             }
+        },
+        "environment": {
+            "required": [
+                "id",
+                "cpu",
+                "os",
+                "language"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "cpu": {
+                    "type": "string"
+                },
+                "os": {
+                    "type": "string"
+                },
+                "language": {
+                    "type": "string",
+                    "examples": [
+                        "py",
+                        "cs"
+                    ]
+                }
+            }
         }
     },
     "required": [
@@ -114,6 +133,12 @@
             "type": "array",
             "items": {
                 "$ref": "#/definitions/year"
+            }
+        },
+        "environments": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/environment"
             }
         }
     }
