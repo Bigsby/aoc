@@ -34,7 +34,7 @@ def isMoveValid(currentFloor: Floor, nextFloor: Floor, elevator: Elevator) -> bo
     for part in elevator:
         if part != EMPTY_SLOT:
             nextTestFloor.append(part)
-    return isGroupValid(currentTestFloor) and  isGroupValid(nextTestFloor)
+    return isGroupValid(currentTestFloor) and isGroupValid(nextTestFloor)
 
 
 def makeMove(floors: Floors, move: Move) -> State:
@@ -47,23 +47,17 @@ def makeMove(floors: Floors, move: Move) -> State:
     return nextFloor, floors
 
 
-def getValidDirectionalMoves(state: State, direction: int, possibleMovesGroups: List[Elevator]):
+def getValidDirectionalMoves(state: State, direction: int, possibleMovesGroups: List[Elevator]) -> List[Move]:
     currentFloor, floors = state
     nextFloor = currentFloor + direction
     validMoves = []
-
-    if nextFloor < 0 or nextFloor >= len(floors):
+    if (nextFloor < 0 or nextFloor == len(floors)) \
+        or (nextFloor == 0 and not len(floors[nextFloor])) \
+        or (nextFloor == 1 and not (len(floors[1]) or len(floors[0]))):
         return []
-    if nextFloor == 0:
-        if not len(floors[nextFloor]):
-            return []
-    if nextFloor == 1 and not (len(floors[1]) or len(floors[0])):
-        return []
-
     for moveGroup in possibleMovesGroups:
         if isMoveValid(floors[currentFloor], floors[nextFloor], moveGroup):
             validMoves.append((currentFloor, nextFloor, moveGroup))
-
     return validMoves
 
 
@@ -72,19 +66,16 @@ def pruneMoves(moves: List[Move]) -> List[Move]:
     if len(pairMoves) > 1:
         for pairMove in pairMoves[:-1]:
             moves.remove(pairMove)
-
     upstairsMoves = [ move for move in moves if move[0] < move[1] ]
     singleUpMoves = [ move for move in upstairsMoves if move[2][0] == EMPTY_SLOT or move[2][1] == EMPTY_SLOT ]
     if len(singleUpMoves) != len(upstairsMoves):
         for singleUpMove in singleUpMoves:
             moves.remove(singleUpMove)
-    
     downstairsMoves = [ move for move in moves if move[0] > move[1] ]
     pairDownstairsMoves = [ move for move in downstairsMoves if move[2][0] != EMPTY_SLOT and move[2][1] != EMPTY_SLOT ]
     if len(pairDownstairsMoves) != len(downstairsMoves):
         for pairDownstairsMove in pairDownstairsMoves:
             moves.remove(pairDownstairsMove)
-    
     return moves
 
 
@@ -98,12 +89,13 @@ def getValidMoves(state: State) -> List[Move]:
 
 def solve(floors: Floors) -> int:
     queue: List[Tuple[State,int]] = [((0,floors), 0)]
+    radioisotopesCount = max(max(floor) if floor else 0 for floor in floors)
     while queue:
         state, movesCount = queue.pop()
         for move in getValidMoves(state):
             newState = makeMove(state[1], move)
             newCurrent, newFloors = newState
-            if newCurrent == len(floors) - 1 and len(newFloors[-1]) == len(radioisotopes) * 2:
+            if newCurrent == len(floors) - 1 and len(newFloors[-1]) == radioisotopesCount * 2:
                 return movesCount + 1
             else:
                 queue.append((newState, movesCount + 1))
@@ -155,8 +147,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
