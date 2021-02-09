@@ -1,14 +1,12 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from typing import List
+from typing import List, Tuple
 import re
 
 
 def getHexManhatanDistance(position: complex) -> int:
-    xSignal = True if position.real > 0 else False
-    ySignal = True if position.imag > 0 else False
-    if xSignal ^ ySignal:
+    if (position.real > 0) ^ (position.imag > 0):
         return int(max(abs(position.real) , abs(position.imag)))
     return int(abs(position.real) +  abs(position.imag))
 
@@ -21,13 +19,12 @@ DIRECTIONS = {
     "nw": - 1     ,
     "n" :     - 1j
 }
-def part1(instructions: List[str]):
+def part1(instructions: List[str]) -> Tuple[int,int]:
     furthest = 0
     currentHex = 0
     for instrucion in instructions:
         currentHex += DIRECTIONS[instrucion]
-        distance = getHexManhatanDistance(currentHex)
-        furthest = max(furthest, distance)
+        furthest = max(furthest, getHexManhatanDistance(currentHex))
 
     return getHexManhatanDistance(currentHex), furthest
 
@@ -58,8 +55,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
