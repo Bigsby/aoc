@@ -6,52 +6,49 @@ import re
 
 FORBIDDEN_LETTERS = [ ord("i"), ord("o"), ord("l") ]
 pairsRegex = re.compile(r"^.*(.)\1{1}.*(.)\2{1}.*$")
-def isPasswordValid(password: str):
-    ords = list(map(lambda c: ord(c), password))
-
+def isPasswordValid(password: str) -> bool:
     if not pairsRegex.match(password):
         return False
-
-    for index in range(0, len(ords) - 2):
+    ords = list(map(lambda c: ord(c), password))
+    for index in range(len(ords) - 2):
         if ords[index] == ords[index + 1] - 1 and ords[index] == ords[index + 2] - 2:
             return True
-
     return False
     
 
-def getNextChar(c: int):
+def getNextChar(c: int) -> str:
     c += 1
     while c in FORBIDDEN_LETTERS:
         c += 1
     return chr(c)
 
 
-A_ORD = ord("a")
+A_CHR = "a"
 Z_ORD = ord("z")
-def getNextPassword(currentPassword: str):
+def getNextPassword(currentPassword: str) -> str:
     result = list(currentPassword)
     for index in range(len(result) - 1, 0, -1):
         cOrd = ord(result[index])
         if cOrd == Z_ORD:
-            result[index] = chr(A_ORD)
+            result[index] = A_CHR
             continue
         result[index] = getNextChar(cOrd)
         break
     return "".join(result)
 
 
-def getNextValidPassword(currentPassword: str):
+def getNextValidPassword(currentPassword: str) -> str:
     currentPassword = getNextPassword(currentPassword)
     while not isPasswordValid(currentPassword):
         currentPassword = getNextPassword(currentPassword)
     return currentPassword
 
 
-def part1(currentPassword: str):
+def part1(currentPassword: str) -> str:
     return getNextValidPassword(currentPassword)
 
 
-def part2(currentPassword: str):
+def part2(currentPassword: str) -> str:
     return getNextValidPassword(getNextValidPassword(currentPassword))
 
 
@@ -76,8 +73,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
