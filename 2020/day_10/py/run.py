@@ -16,7 +16,6 @@ def part1(numbers: List[int]) -> int:
         elif diff == 3:
             diff3 += 1
         currentJoltage = number
-
     return diff1 * diff3
 
 
@@ -30,7 +29,7 @@ def calculateCombinations(sequence: int) -> int:
 
 def part2(numbers: List[int]) -> int:
     adapters = sorted(numbers)
-    adapters.append(adapters[len(adapters) - 1])
+    adapters.append(adapters[-1])
     sequences = []
     currentSequenceLength = 1
     currentJoltage = 0
@@ -41,7 +40,6 @@ def part2(numbers: List[int]) -> int:
             sequences.append(currentSequenceLength)
             currentSequenceLength = 1
         currentJoltage = joltage
-
     return reduce(lambda soFar, length: soFar * calculateCombinations(length), sequences, 1)
 
 
@@ -66,8 +64,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
