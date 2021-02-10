@@ -435,6 +435,49 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 11,
+                    "name": "Corporate Policy",
+                    "description": "Get next password iterating characters within rules",
+                    "results": [
+                        {
+                            "p1": "cqjxxyzz",
+                            "p2": "cqkaabcc"
+                        },
+                        {
+                            "p1": "vzbxxyzz",
+                            "p2": "vzcaabcc"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.1717240,
+                                    "p2": 0.8614679
+                                },
+                                {
+                                    "p1": 0.1689593,
+                                    "p2": 0.8892240
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.1416272,
+                                    "p2": 0.6068414
+                                },
+                                {
+                                    "p1": 0.1344022,
+                                    "p2": 0.5479220
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -842,6 +885,49 @@
                                 {
                                     "p1": 0.0054858,
                                     "p2": 0.0023660
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "day": 11,
+                    "name": "Radioisotope Thermoelectric Generators",
+                    "description": "Moving parts between stages with rules",
+                    "results": [
+                        {
+                            "p1": "31",
+                            "p2": "55"
+                        },
+                        {
+                            "p1": "47",
+                            "p2": "71"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0029801,
+                                    "p2": 0.0078123
+                                },
+                                {
+                                    "p1": 0.0047259,
+                                    "p2": 0.0120201
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0119171,
+                                    "p2": 0.0047431
+                                },
+                                {
+                                    "p1": 0.0278183,
+                                    "p2": 0.0100742
                                 }
                             ]
                         }
@@ -1281,6 +1367,49 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 11,
+                    "name": "Hex Ed",
+                    "description": "Mahatan distances in hexagonal grid",
+                    "results": [
+                        {
+                            "p1": "715",
+                            "p2": "1512"
+                        },
+                        {
+                            "p1": "747",
+                            "p2": "1544"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0038201,
+                                    "p2": 0.0000004
+                                },
+                                {
+                                    "p1": 0.0035783,
+                                    "p2": 0.0000003
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0068242,
+                                    "p2": 0.0013443
+                                },
+                                {
+                                    "p1": 0.0068478,
+                                    "p2": 0.0011435
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -1712,6 +1841,49 @@
                                 {
                                     "p1": 0.4222811,
                                     "p2": 0.3356403
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "day": 11,
+                    "name": "Chronal Charge",
+                    "description": "Summed Area Table",
+                    "results": [
+                        {
+                            "p1": "20,68",
+                            "p2": "231,273,16"
+                        },
+                        {
+                            "p1": "243,72",
+                            "p2": "229,192,11"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.1720027,
+                                    "p2": 6.7669809
+                                },
+                                {
+                                    "p1": 0.1737088,
+                                    "p2": 6.8898413
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0523827,
+                                    "p2": 1.7527643
+                                },
+                                {
+                                    "p1": 0.0497071,
+                                    "p2": 1.7450980
                                 }
                             ]
                         }
@@ -2151,6 +2323,49 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 11,
+                    "name": "Space Police",
+                    "description": "Run machine code and find letters in screen",
+                    "results": [
+                        {
+                            "p1": "1909",
+                            "p2": "JUFEKHPH"
+                        },
+                        {
+                            "p1": "2319",
+                            "p2": "UERPRFGJ"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0876858,
+                                    "p2": 0.0089183
+                                },
+                                {
+                                    "p1": 0.0818555,
+                                    "p2":  0.0088595
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0354308,
+                                    "p2": 0.0128333
+                                },
+                                {
+                                    "p1": 0.0324838,
+                                    "p2": 0.0132970
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -2582,6 +2797,49 @@
                                 {
                                     "p1": 0.0049889,
                                     "p2": 0.0013233
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "day": 11,
+                    "name": "Seating System",
+                    "description": "Tri-State Line-of-Site Conway's Game of Life",
+                    "results": [
+                        {
+                            "p1": "2386",
+                            "p2": "2091"
+                        },
+                        {
+                            "p1": "2126",
+                            "p2": "1914"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 1.7710218,
+                                    "p2": 3.2772280
+                                },
+                                {
+                                    "p1": 2.4361687,
+                                    "p2": 2.8936286
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.8695542,
+                                    "p2": 1.6446064
+                                },
+                                {
+                                    "p1": 1.0218277,
+                                    "p2": 1.3354030
                                 }
                             ]
                         }
