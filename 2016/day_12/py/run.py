@@ -5,7 +5,7 @@ from typing import Dict, List
 
 Instruction = List[str]
 
-def runInstructions(instructions: List[Instruction], inputs: Dict[str,int] = {}):
+def runInstructions(instructions: List[Instruction], inputs: Dict[str,int] = {}) -> int:
     registers = { register: 0 for register in [ "a", "b", "c", "d" ]}
     registers.update(inputs)
     pointer = 0
@@ -66,8 +66,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
