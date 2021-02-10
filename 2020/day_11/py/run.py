@@ -85,12 +85,9 @@ def getInput(filePath: str) -> Grid:
     
     with open(filePath, "r") as file:
         grid = {}
-        pos = 0j
-        for line in file.readlines():
-            for c in line.strip():
-                grid[pos] = State(c)
-                pos += 1
-            pos += 1j - pos.real
+        for y, line in enumerate(file.readlines()):
+            for x, c in enumerate(line.strip()):
+                grid[x + y * 1j] = State(c)
         return grid
 
 
@@ -107,8 +104,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
