@@ -478,6 +478,37 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 12,
+                    "name": "JSAbacusFramework.io",
+                    "description": "JSON processing",
+                    "results": [
+                        {
+                            "p1": "119433",
+                            "p2": "68466"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0011750,
+                                    "p2": 0.0011742
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0160052,
+                                    "p2": 0.0138344
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -928,6 +959,49 @@
                                 {
                                     "p1": 0.0278183,
                                     "p2": 0.0100742
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "day": 12,
+                    "name": "Leonardo's Monorail",
+                    "description": "Run assembly code",
+                    "results": [
+                        {
+                            "p1": "318009",
+                            "p2": "9227663"
+                        },
+                        {
+                            "p1": "317993",
+                            "p2": "9227647"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.3007205,
+                                    "p2": 9.4267924
+                                },
+                                {
+                                    "p1": 0.3176038,
+                                    "p2": 10.3923064
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0754575,
+                                    "p2": 1.8272809
+                                },
+                                {
+                                    "p1": 0.0721427,
+                                    "p2": 1.8956326
                                 }
                             ]
                         }
@@ -1410,6 +1484,49 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 12,
+                    "name": "Digital Plumber",
+                    "description": "Counting bidirectional connections in seperate graphs",
+                    "results": [
+                        {
+                            "p1": "130",
+                            "p2": "189"
+                        },
+                        {
+                            "p1": "288",
+                            "p2": "211"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0000373,
+                                    "p2": 0.0091348
+                                },
+                                {
+                                    "p1": 0.0000701,
+                                    "p2": 0.0103273
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0033430,
+                                    "p2": 0.0034899
+                                },
+                                {
+                                    "p1": 0.0056526,
+                                    "p2": 0.0027058
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -1888,6 +2005,49 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 12,
+                    "name": "Subterranean Sustainability",
+                    "description": "1D Conways Game of Life",
+                    "results": [
+                        {
+                            "p1": "1816",
+                            "p2": "399999999957"
+                        },
+                        {
+                            "p1": "3276",
+                            "p2": "3750000001113"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0041539,
+                                    "p2": 0.0675193
+                                },
+                                {
+                                    "p1": 0.0047984,
+                                    "p2": 0.1807984
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0115064,
+                                    "p2": 0.0386170
+                                },
+                                {
+                                    "p1": 0.0102524,
+                                    "p2": 0.0795795
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -2348,7 +2508,7 @@
                                 },
                                 {
                                     "p1": 0.0818555,
-                                    "p2":  0.0088595
+                                    "p2": 0.0088595
                                 }
                             ]
                         },
@@ -2362,6 +2522,49 @@
                                 {
                                     "p1": 0.0324838,
                                     "p2": 0.0132970
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "day": 12,
+                    "name": "The N-Body Problem",
+                    "description": "3D objects in space with changing velocities (due to gravity between objects)",
+                    "results": [
+                        {
+                            "p1": "12490",
+                            "p2": "392733896255168"
+                        },
+                        {
+                            "p1": "7928",
+                            "p2": "518311327635164"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0256325,
+                                    "p2": 6.8888760
+                                },
+                                {
+                                    "p1": 0.0230795,
+                                    "p2": 7.0447468
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0176543,
+                                    "p2": 0.6615974
+                                },
+                                {
+                                    "p1": 0.0202776,
+                                    "p2": 0.7574931
                                 }
                             ]
                         }
@@ -2840,6 +3043,37 @@
                                 {
                                     "p1": 1.0218277,
                                     "p2": 1.3354030
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "day": 12,
+                    "name": "Rain Risk",
+                    "description": "Map navigation with rotation",
+                    "results": [
+                        {
+                            "p1": "439",
+                            "p2": "12385"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0000819,
+                                    "p2": 0.0000797
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0223788,
+                                    "p2": 0.0018314
                                 }
                             ]
                         }
