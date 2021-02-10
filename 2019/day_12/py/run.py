@@ -16,7 +16,7 @@ class Moon():
         self.velocity: Coordinates = (0, 0, 0)
 
     @staticmethod    
-    def getDelta(thisValue: int, otherValue: int): 
+    def getDelta(thisValue: int, otherValue: int) -> int: 
         if thisValue < otherValue:
             return 1
         if thisValue > otherValue:
@@ -30,11 +30,11 @@ class Moon():
     def updateVelocity(self, otherMoon: Coordinates):
         self.velocity = Moon.sum(self.velocity, tuple(Moon.getDelta(self.position[coordinate], otherMoon[coordinate]) for coordinate in range(3)))
     
-    def updatePosition(self, cycle: int):
+    def updatePosition(self):
         self.position = Moon.sum(self.position, self.velocity)
 
     def getTotalEnergy(self) -> int:
-        return sum(map(abs,self.position)) * sum(map(abs,self.velocity))
+        return sum(map(abs, self.position)) * sum(map(abs, self.velocity))
 
     def __str__(self):
         return f"{self.position} {self.velocity}"
@@ -42,12 +42,12 @@ class Moon():
         return self.__str__()
 
 
-def runStep(moons: List[Moon], step:int = 0):
+def runStep(moons: List[Moon]):
     for moonA, moonB in combinations(moons, 2):
         moonA.updateVelocity(moonB.position)
         moonB.updateVelocity(moonA.position)
     for moon in moons:
-        moon.updatePosition(step)
+        moon.updatePosition()
 
 
 def part1(moons: List[Moon]) -> int:
@@ -56,11 +56,12 @@ def part1(moons: List[Moon]) -> int:
     while step:
         step -= 1
         runStep(moons)
-    
     return sum(map(lambda moon: moon.getTotalEnergy(), moons))
 
-def buildStateForCoordinate(coordinate: int, moons: List[Moon]):
+
+def buildStateForCoordinate(coordinate: int, moons: List[Moon]) -> Tuple[Tuple[int],Tuple[int]]:
     return (tuple(moon.position[coordinate] for moon in moons), tuple(moon.velocity[coordinate] for moon in moons))
+
 
 def part2(moons: List[Moon]) -> int:
     step = 0
@@ -68,13 +69,12 @@ def part2(moons: List[Moon]) -> int:
     cyles = [ 0 ] * 3
     while not all(cyles):
         step += 1
-        runStep(moons, step)
+        runStep(moons)
         for coordinate in range(3):
             if not cyles[coordinate]:
                 currentState = buildStateForCoordinate(coordinate, moons)
                 if currentState == initialStates[coordinate]:
                     cyles[coordinate] = step
-
     return reduce(lambda soFar, cycle: soFar * cycle // math.gcd(soFar, cycle), cyles)
 
 
@@ -108,8 +108,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
