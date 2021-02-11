@@ -16,15 +16,13 @@ def part1(scanners: Scanners) -> int:
     for currentLayer in range(max(scanners.keys()) + 1):
         if currentLayer in cycles and currentLayer % cycles[currentLayer] == 0:
             severity += currentLayer * scanners[currentLayer]
-        currentLayer += 1
     return severity
 
 
-def runPacketUntilCaught(cycles: Scanners, offset: int) -> int:
+def runPacketUntilCaught(cycles: Scanners, offset: int) -> bool:
     for currentLayer in range(max(cycles.keys()) + 1):
         if currentLayer in cycles and (currentLayer + offset) % cycles[currentLayer] == 0:
             return False
-        currentLayer += 1
     return True
 
 
@@ -62,8 +60,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
