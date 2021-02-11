@@ -2,60 +2,40 @@
 
 import sys, os, time
 from typing import List, Tuple
+from functools import reduce
 
-
-class Bus():
-    def __init__(self, id: int, index: int):
-        self.id = id
-        self.index = index
-
+Bus = Tuple[int,int]
 
 def part1(puzzleInput: Tuple[int,List[Bus]]) -> int:
     timestamp, busses = puzzleInput
     closestAfter = sys.maxsize
     closestBus = None
     for bus in busses:
-        timeAfter = (timestamp // bus.id + 1) * bus.id - timestamp
+        timeAfter = (timestamp // bus[0] + 1) * bus[0] - timestamp
         if timeAfter < closestAfter:
             closestAfter = timeAfter
             closestBus = bus
-
     if closestBus:
-        return closestAfter * closestBus.id
+        return closestAfter * closestBus[0]
     raise Exception("Closest bus not found")
 
 
-
 def modularMultiplicativeInverse(a: int, b:int) -> int:
-    b0 = b
-    x0, x1 = 0, 1
-    if b == 1: 
-        return 1
-    while a > 1:
-        q = a // b
-        a, b = b, a % b
-        x0, x1 = x1 - q * x0, x0
-    if x1 < 0: 
-        x1 += b0
-    return x1
- 
-
-def getNextIndex(first: Bus, second: Bus) -> int:
-    sum = 0
-    prod = first.id * second.id
-    pFirst = prod // first.id
-    pSecond = prod // second.id
-    sum = first.index * modularMultiplicativeInverse(pFirst, first.id) * pFirst \
-        - second.index * modularMultiplicativeInverse(pSecond, second.id) * pSecond
-    return sum % prod
+    q = a % b
+    for i in range(1, b):
+        if ((q * i) % b) == 1:
+            return i
+    return 1
 
 
 def part2(puzzleInput: Tuple[int,List[Bus]]) -> int:
     _, busses = puzzleInput
-    lastBus = busses[0]
-    for bus in busses[1:]:
-        lastBus = Bus(lastBus.id * bus.id, getNextIndex(lastBus, bus))
-    return lastBus.index
+    product = reduce(lambda soFar, bus: soFar * bus[0], busses, 1)
+    sum = 0
+    for bus in busses:
+        currentProduct = product // bus[0]
+        sum += ((bus[0] - bus[1]) % bus[0]) * currentProduct * modularMultiplicativeInverse(currentProduct, bus[0])
+    return sum % product
 
 
 def getInput(filePath: str) -> Tuple[int,List[Bus]]:
@@ -64,7 +44,7 @@ def getInput(filePath: str) -> Tuple[int,List[Bus]]:
     
     with open(filePath, "r") as file:
         lines = file.readlines()
-        return int(lines[0]), [ Bus(int(busId), index) for index, busId in enumerate(lines[1].split(",")) if  busId != "x" ]
+        return int(lines[0]), [ (int(busId), index) for index, busId in enumerate(lines[1].split(",")) if  busId != "x" ]
 
 
 def main():
@@ -80,8 +60,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
