@@ -2,7 +2,6 @@
 
 import sys, os, time
 from typing import List, Tuple
-import copy
 
 
 def isPositionValid(position: complex, number: int) -> bool:
@@ -27,7 +26,7 @@ def part1(number: int) -> int:
             if newPosition == target:
                 return len(visited)
             if newPosition not in visited and isPositionValid(newPosition, number):
-                newVisited = copy.deepcopy(visited)
+                newVisited = list(visited)
                 newVisited.append(newPosition)
                 queue.append((newPosition, newVisited))
 
@@ -45,7 +44,7 @@ def part2(number: int) -> int:
                 newPosition = position + direction
                 if newPosition not in visited and isPositionValid(newPosition, number):
                     allVisited.add(newPosition)
-                    newVisited = copy.deepcopy(visited)
+                    newVisited = list(visited)
                     newVisited.append(newPosition)
                     queue.append((newPosition, newVisited))
     return len(allVisited)
@@ -72,8 +71,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
