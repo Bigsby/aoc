@@ -1,8 +1,10 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from typing import Any, Dict, List
+from typing import List
 import re
+
+TIME = 2503
 
 
 class Entry():
@@ -12,10 +14,6 @@ class Entry():
         self.duration = int(duration)
         self.rest = int(rest)
         self.period = self.duration + self.rest
-    def __str__(self):
-        return f"{self.name} {self.speed} {self.duration} {self.rest}"
-    def __repr__(self) -> str:
-        return self.__str__()
 
 
 def calculateDistance(entry: Entry, totalDuration: int) -> int:
@@ -25,8 +23,7 @@ def calculateDistance(entry: Entry, totalDuration: int) -> int:
 
 
 def part1(entries: List[Entry]) -> int:
-    totalDuration = 2503
-    return max(map(lambda entry: calculateDistance(entry, totalDuration), entries))
+    return max(map(lambda entry: calculateDistance(entry, TIME), entries))
 
 
 def getDistanceForTime(entry: Entry, time: int) -> int:
@@ -34,21 +31,24 @@ def getDistanceForTime(entry: Entry, time: int) -> int:
     return entry.speed if timeInPeriod < entry.duration else 0
 
 
+class Deer:
+    def __init__(self, entry: Entry) -> None:
+        self.entry = entry
+        self.distance = 0
+        self.points = 0
+
+
 def part2(entries: List[Entry]) -> int:
-    totalTime = 2503
-    deers: Dict[str,Dict[str,Any]] = { entry.name: { "distance": 0, "points": 0, "entry": entry } for entry in entries }
-
-    for time in range(totalTime):
+    deers = [ Deer(entry) for entry in entries ]
+    for time in range(TIME):
         maxDistance = 0
-        for name in deers:
-            deer = deers[name]
-            deer["distance"] += getDistanceForTime(deer["entry"], time)
-            maxDistance = max(maxDistance, deer["distance"])
-        for name in deers:
-            if deers[name]["distance"] == maxDistance:
-                deers[name]["points"] += 1
-
-    return max(map(lambda name: deers[name]["points"], deers.keys()))
+        for deer in deers:
+            deer.distance += getDistanceForTime(deer.entry, time)
+            maxDistance = max(maxDistance, deer.distance)
+        for deer in deers:
+            if deer.distance == maxDistance:
+                deer.points += 1
+    return max(map(lambda deer: deer.points, deers))
 
 
 lineRegex = re.compile(r"^(\w+)\scan\sfly\s(\d+)\skm/s\sfor\s(\d+)\sseconds,\sbut\sthen\smust\srest\sfor\s(\d+)\sseconds.$")
@@ -80,8 +80,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
