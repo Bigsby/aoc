@@ -509,6 +509,49 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 13,
+                    "name": "Knights of the Dinner Table",
+                    "description": "Seatings on round table",
+                    "results": [
+                        {
+                            "p1": "733",
+                            "p2": "725"
+                        },
+                        {
+                            "p1": "618",
+                            "p2": "601"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0670720,
+                                    "p2": 0.6913801
+                                },
+                                {
+                                    "p1": 0.0821102,
+                                    "p2": 0.6752933
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.4453864,
+                                    "p2": 4.1822668
+                                },
+                                {
+                                    "p1": 0.4548483,
+                                    "p2": 4.5786011
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -1002,6 +1045,49 @@
                                 {
                                     "p1": 0.0721427,
                                     "p2": 1.8956326
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "day": 13,
+                    "name": "A Maze of Twisty Little Cubicles",
+                    "description": "Solve maze shortest path and all path of specific length",
+                    "results": [
+                        {
+                            "p1": "96",
+                            "p2": "141"
+                        },
+                        {
+                            "p1": "92",
+                            "p2": "124"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.2420623,
+                                    "p2": 0.0114356
+                                },
+                                {
+                                    "p1": 0.1804291,
+                                    "p2": 0.0062749
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.1072068,
+                                    "p2": 0.0092019
+                                },
+                                {
+                                    "p1": 0.0789133,
+                                    "p2": 0.0042308
                                 }
                             ]
                         }
@@ -1527,6 +1613,49 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 13,
+                    "name": "Packet Scanners",
+                    "description": "Avoid back and forth cycles",
+                    "results": [
+                        {
+                            "p1": "1504",
+                            "p2": "3823370"
+                        },
+                        {
+                            "p1": "2264",
+                            "p2": "3875838"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0000114,
+                                    "p2": 4.7624519
+                                },
+                                {
+                                    "p1": 0.0000112,
+                                    "p2": 3.9653190
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0027980,
+                                    "p2": 1.7757635
+                                },
+                                {
+                                    "p1": 0.0027456,
+                                    "p2": 1.6834498
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -2044,6 +2173,49 @@
                                 {
                                     "p1": 0.0102524,
                                     "p2": 0.0795795
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "day": 13,
+                    "name": "Mine Cart Madness",
+                    "description": "Cart colisions on tracks (turns and intersections)",
+                    "results": [
+                        {
+                            "p1": "79,128",
+                            "p2": "3,42"
+                        },
+                        {
+                            "p1": "83,121",
+                            "p2": "102,144"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0031041,
+                                    "p2": 0.0690056
+                                },
+                                {
+                                    "p1": 0.0046084,
+                                    "p2": 0.0506493
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0099777,
+                                    "p2": 0.0402278
+                                },
+                                {
+                                    "p1": 0.0098615,
+                                    "p2": 0.0267478
                                 }
                             ]
                         }
@@ -2569,6 +2741,49 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 13,
+                    "name": "Care Package",
+                    "description": "Run machine code to play Arkanoid in screen",
+                    "results": [
+                        {
+                            "p1": "268",
+                            "p2": "13989"
+                        },
+                        {
+                            "p1": "301",
+                            "p2": "14096"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0178728,
+                                    "p2": 0.6472472
+                                },
+                                {
+                                    "p1": 0.0130282,
+                                    "p2": 0.6731007
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0143070,
+                                    "p2": 0.1201680
+                                },
+                                {
+                                    "p1": 0.0242382,
+                                    "p2": 0.1539354
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -3074,6 +3289,49 @@
                                 {
                                     "p1": 0.0223788,
                                     "p2": 0.0018314
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "day": 13,
+                    "name": "Shuttle Search",
+                    "description": "Buses. Chinese Remainder Theorem",
+                    "results": [
+                        {
+                            "p1": "2947",
+                            "p2": "526090562196173"
+                        },
+                        {
+                            "p1": "119",
+                            "p2": "1106724616194525"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0000027,
+                                    "p2": 0.0000309
+                                },
+                                {
+                                    "p1": 0.0000027,
+                                    "p2": 0.0000655
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0014960,
+                                    "p2": 
+                                },
+                                {
+                                    "p1": 0.0007218,
+                                    "p2": 0.0006593
                                 }
                             ]
                         }
