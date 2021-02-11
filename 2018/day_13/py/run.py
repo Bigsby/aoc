@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from typing import Dict, Iterable, List, Tuple, Union
+from typing import Dict, List, Tuple, Union
 from enum import Enum
 from itertools import cycle
 import copy
@@ -20,7 +20,6 @@ class Orientation(Enum):
 
 Position = complex
 Direction = complex
-DirectionCycle = Iterable[complex]
 Straight = Tuple[MapItemType,Orientation]
 Turn = Tuple[MapItemType,Tuple[Direction,Direction]]
 Intersection = Tuple[MapItemType,int]
@@ -89,7 +88,7 @@ def positionToString(position: Position) -> str:
     return f"{int(position.real)},{abs(int(position.imag))}"
 
 
-def run(mapTrains: Tuple[Map,List[Train]], stopOfFirstColision: bool) -> str :
+def run(mapTrains: Tuple[Map,List[Train]], stopOnFirstCollision: bool) -> str :
     mapItems, trains = mapTrains
     trains = copy.deepcopy(trains)
     trainLocations = { train.position: train for train in trains }
@@ -99,9 +98,9 @@ def run(mapTrains: Tuple[Map,List[Train]], stopOfFirstColision: bool) -> str :
                 continue
             train = trainLocations[position]
             del trainLocations[position]
-            train.position += train.direction
+            train.tick()
             if train.position in trainLocations:
-                if stopOfFirstColision:
+                if stopOnFirstCollision:
                     return positionToString(train.position)
                 del trainLocations[train.position]    
             else:
@@ -150,12 +149,12 @@ def getInput(filePath: str) -> Tuple[Map,List[Train]]:
     with open(filePath, "r") as file:
         trains: List[Train] = []
         map: Map = {}
-        position = 0j
         previousC = " "
         trainPositionToFillIn = []
         trainIndex = 0
-        for line in file.readlines():
-            for c in line:
+        for y, line in enumerate(file.readlines()):
+            for x, c in enumerate(line):
+                position = x - y * 1j
                 if c == INTERSECTION:
                     map[position] = (MapItemType.Intersection,0)
                 elif c in STRAIGHTS:
@@ -168,9 +167,7 @@ def getInput(filePath: str) -> Tuple[Map,List[Train]]:
                     trains.append(Train(position, TRAINS[c]))
                     trainIndex += 1
                     trainPositionToFillIn.append(position)       
-                position += 1
                 previousC = c
-            position = 0 + (position.imag - 1) * 1j
         
         for position in trainPositionToFillIn:
             for direction in TRAINS.values():
@@ -197,8 +194,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
