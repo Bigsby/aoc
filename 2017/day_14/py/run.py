@@ -4,7 +4,6 @@ import sys, os, time
 from typing import List, Set, Tuple
 from functools import reduce
 
-
 MARKS_COUNT = 256
 def runLengths(marks:List[int], lengths: List[int], currentMark: int, skip: int) -> Tuple[List[int],int,int]:
     for length in lengths:
@@ -54,13 +53,11 @@ def findAdjacent(point: complex, grid: Set[complex], visited: Set[complex]):
 
 
 def part2(key: str) -> int:
-    pass
     gridPoints = set()
     for row in range(128):
         for column, c in enumerate(getRowHashBinaryString(key, row)):
             if c == "1":
                 gridPoints.add(column + row * 1j)
-    
     regions = 0
     while gridPoints:
         regions += 1
@@ -68,7 +65,6 @@ def part2(key: str) -> int:
         visited = { point }
         findAdjacent(point, gridPoints, visited)
         gridPoints -= visited
-
     return regions
 
 
@@ -93,8 +89,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
