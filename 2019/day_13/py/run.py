@@ -153,8 +153,7 @@ def runGame(memory: List[int]) -> Tuple[int,int]:
                 value = currentOuput.pop()
                 y = currentOuput.pop()
                 x = currentOuput.pop()
-                position = x + y * 1j
-                if position == -1:
+                if x == -1:
                     score = value
                 else: 
                     tile = Tile(value)
@@ -198,8 +197,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
