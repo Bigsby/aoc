@@ -13,7 +13,6 @@ def part1(target: int):
         recipes += str(elf1Score + elf2Score)
         elf1 = (elf1 + elf1Score + 1) % len(recipes)
         elf2 = (elf2 + elf2Score + 1) % len(recipes)
-
     return recipes[target:target + 10]
 
 
@@ -23,13 +22,12 @@ def part2(target:int):
     recipes = "37"
     elf1 = 0
     elf2 = 1
-    while recipes[-sequenceLength:] != scoreSequence and recipes[-sequenceLength -1:-1] != scoreSequence:
+    while recipes[-sequenceLength:] != scoreSequence and recipes[-sequenceLength - 1:-1] != scoreSequence:
         elf1Score = int(recipes[elf1])
         elf2Score = int(recipes[elf2])
         recipes += str(elf1Score + elf2Score)
         elf1 = (elf1 + elf1Score + 1) % len(recipes)
         elf2 = (elf2 + elf2Score + 1) % len(recipes)
-
     return recipes.index(scoreSequence)
 
 
@@ -38,8 +36,7 @@ def getInput(filePath: str) -> int:
         raise FileNotFoundError(filePath)
     
     with open(filePath, "r") as file:
-        return int(file.read().strip())
-            
+        return int(file.read().strip())    
 
 
 def main():
@@ -55,8 +52,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
