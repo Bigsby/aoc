@@ -40,7 +40,6 @@ def createSolutionFromCombination(combination: Tuple[str,...], ingredients: List
 
 
 def getIngredientCombinations(entries: List[Entry], totalSpoons: int) -> Tuple[List[str],Iterable[Tuple[str,...]]]:
-    totalSpoons = 100
     ingredients = list(map(lambda entry: entry.name, entries))
     return ingredients, getPossibleCombinations(ingredients, totalSpoons)
 
@@ -53,7 +52,6 @@ def getMaxValue(entries: List[Entry], requireCalories: bool = False) -> int:
         solutionResult, calories = findValueForSolution(solution, entries)
         if not requireCalories or calories == 500:
             maxValue = max(maxValue, solutionResult)
-
     return maxValue
 
 
@@ -94,8 +92,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
