@@ -14,7 +14,7 @@ class InstructionType(Enum):
 maskRegex = re.compile(r"^mask\s=\s(?P<mask>[X01]+)$")
 memoryRegex = re.compile(r"^mem\[(?P<location>[\d]+)]\s=\s(?P<value>[\d]+)$")
 class Instruction():
-    def __init__(self, inputLine):
+    def __init__(self, inputLine: str):
         maskMatch = maskRegex.match(inputLine)
         if maskMatch:
             self.type = InstructionType.Mask
@@ -34,14 +34,15 @@ class Computer():
         self.mask = "X" * 36
         self.memory = {}
 
-    def setMask(self, mask: str):
-        self.mask = mask
-        
-    def setMemory(self, location:int, value:int):
-        self.memory[str(location)] = value
-
     def getMemorySum(self) -> int:
-        return sum([ value for _, value in self.memory.items() ])
+        return sum(self.memory.values())
+
+    def runInstruction(self, instruction: Instruction):
+        if instruction.type == InstructionType.Mask:
+            self.mask = instruction.mask
+        else:
+            for location in self.getMemoryLocations(instruction.location):
+                self.memory[location] = self.getValue(instruction.value)
     
     def getMemoryLocations(self, location: int) -> Iterable[int]:
         yield location
@@ -49,13 +50,12 @@ class Computer():
     def getValue(self, value: int) -> int:
         return value
 
-    def runInstruction(self, instruction: Instruction):
-        if instruction.type == InstructionType.Mask:
-            self.setMask(instruction.mask)
-        else:
-            for location in self.getMemoryLocations(instruction.location):
-                self.setMemory(location, self.getValue(instruction.value))
-
+    def getOrMask(self):
+        return int(self.mask.replace("X", "0"), 2)
+    
+    def getAndMask(self):
+        return int(self.mask.replace("X", "1"), 2)
+    
 
 def runComputer(computer: Computer, puzzleInput: List[Instruction]) -> int:
     for instruction in puzzleInput:
@@ -65,10 +65,7 @@ def runComputer(computer: Computer, puzzleInput: List[Instruction]) -> int:
 
 class ValueMaskComputer(Computer):
     def getValue(self, value: int) -> int:
-        orMask = int(self.mask.replace("X", "0"), 2)
-        value = value | orMask
-        andMask = int(self.mask.replace("X", "1"), 2)
-        return value & andMask
+        return value | self.getOrMask() & self.getAndMask()
 
 
 def part1(instructions: List[Instruction]) -> int:
@@ -78,8 +75,7 @@ def part1(instructions: List[Instruction]) -> int:
 xRegex = re.compile("X")
 class MemoryMaskComputer(Computer):
     def getMemoryLocations(self, location: int) -> Iterable[int]:
-        orMask = int(self.mask.replace("X", "0"), 2)
-        location = location | orMask
+        location |= self.getOrMask()
         maskBitOfffset = len(self.mask) - 1
         flipBits = [ *map(lambda match: maskBitOfffset - match.start(), xRegex.finditer(self.mask)) ]
         for case in range(1 << len(flipBits)):
@@ -91,8 +87,8 @@ class MemoryMaskComputer(Computer):
             yield currentLocation
 
 
-def part2(puzzleInput: List[Instruction]) -> int:
-    return runComputer(MemoryMaskComputer(), puzzleInput)
+def part2(instructions: List[Instruction]) -> int:
+    return runComputer(MemoryMaskComputer(), instructions)
 
 
 def getInput(filePath: str) -> List[Instruction]:
@@ -116,8 +112,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
