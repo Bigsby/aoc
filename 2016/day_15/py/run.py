@@ -11,7 +11,7 @@ class Disc():
         self.offset = start + index + 1
 
 
-def findWinningPosiiton(discs: List[Disc]):
+def findWinningPosition(discs: List[Disc]) -> int:
     jump = 1
     offset = 0
     for disc in discs:
@@ -21,13 +21,13 @@ def findWinningPosiiton(discs: List[Disc]):
     return offset
 
 
-def part1(discs: List[Disc]):
-    return findWinningPosiiton(discs)
+def part1(discs: List[Disc]) -> int:
+    return findWinningPosition(discs)
 
 
-def part2(discs: List[Disc]):
+def part2(discs: List[Disc]) -> int:
     discs.append(Disc(11, 0, len(discs)))
-    return findWinningPosiiton(discs)
+    return findWinningPosition(discs)
 
 
 lineRegex = re.compile(r"^Disc #\d has (?P<positions>\d+) positions; at time=0, it is at position (?P<start>\d+).$")
@@ -61,8 +61,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
