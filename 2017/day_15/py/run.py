@@ -5,18 +5,16 @@ from typing import Generator, Tuple
 import re
 
 
-FACTOR_A = 16807
-FACTOR_B = 48271
-
-
 MODULUS = 2147483647
 def buildGenerator(number: int, factor: int, divisor: int) -> Generator[int,int,int]:
     while True:
         number = number * factor % MODULUS
         if number % divisor == 0:
             yield number & 0xffff
-            
 
+
+FACTOR_A = 16807
+FACTOR_B = 48271
 def runSequences(generators: Tuple[int,int], divisorA: int, divisorB: int, millionCycles: int) -> int:
     generatorA, generatorB = generators
     sequenceA, sequenceB = buildGenerator(generatorA, FACTOR_A, divisorA), buildGenerator(generatorB, FACTOR_B, divisorB)
@@ -56,8 +54,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
