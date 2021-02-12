@@ -18,12 +18,10 @@ def getRequiredOre(reactions: Dict[str,Tuple[int,List[ChemicalPortion]]], requir
         if amount <= producedChemicals[item]:
             producedChemicals[item] -= amount
             continue
-
         amountNeeded = amount - producedChemicals[item]
         del producedChemicals[item]
         amountProduced, portions = reactions[item]
         requiredQuantity = math.ceil(amountNeeded / amountProduced)
-
         producedChemicals[item] += (requiredQuantity * amountProduced) - amountNeeded
         for otherAmountRequired, chemical in portions:
             chemicalValue = otherAmountRequired * requiredQuantity
@@ -31,7 +29,6 @@ def getRequiredOre(reactions: Dict[str,Tuple[int,List[ChemicalPortion]]], requir
                 oreCount += chemicalValue
             else:
                 requiredChemicals[chemical] += chemicalValue
-
     return oreCount
 
 
@@ -81,8 +78,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
