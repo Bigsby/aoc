@@ -62,7 +62,6 @@ def getMove(start: Position, targets: List[Position], invalidPositions: Walls) -
     firstMoves = [ start + direction for direction in MOVE_DIRECTIONS ]
     firstMoves = [ x for x in firstMoves if  x not in invalidPositions ]
     bestMoves = []
-
     for move in firstMoves:
         if move in targets:
             bestMoves.append((move, 1, move))
@@ -88,15 +87,11 @@ def getMove(start: Position, targets: List[Position], invalidPositions: Walls) -
             stack = list(newStack)
             if not stack:
                 run = False
-
     if not bestMoves:
         return -1
-
     minLength = min([x[1] for x in bestMoves])
     bestMoves = [x for x in bestMoves if x[1]==minLength]
-    bestMoves.sort(key = lambda x: (-x[2].imag, x[2].real))
-    bestMoves = [x for x in bestMoves if x[2]==bestMoves[0][2]]
-    bestMoves.sort(key = lambda x: (-x[0].imag, x[0].real))
+    bestMoves.sort(key = lambda x: (-x[2].imag, x[2].real, -x[0].imag, x[0].real))
     return bestMoves[0][0]
 
 
@@ -110,17 +105,15 @@ def makeUnitTurn(unitPosition: complex, mates: Team, enemies: Team, walls: Walls
         hitPoints = mates[unitPosition]
         del mates[unitPosition]
         mates[newPosition] = hitPoints
-        if attack(newPosition, enemies, attackPower):
-            return newPosition
-        else:
-            return newPosition
+        attack(newPosition, enemies, attackPower)
+        return newPosition
     return unitPosition
 
 
 DEFAULT_POWER = 3
 
 
-def makeRound(walls: Walls, elves: Team, goblins: Team, elfPower: int = DEFAULT_POWER):
+def makeRound(walls: Walls, elves: Team, goblins: Team, elfPower: int):
     unitsToPlay = sorted([ * elves, *goblins ], key=lambda p: (-p.imag, p.real))
     newPositions = []
     while unitsToPlay:
@@ -141,32 +134,31 @@ def makeRound(walls: Walls, elves: Team, goblins: Team, elfPower: int = DEFAULT_
     return True
 
 
-def runGame(walls: Walls, elves: Team, goblins: Team, elfPower: int = DEFAULT_POWER) -> Tuple[bool,int]:
+def runGame(walls: Walls, elves: Team, goblins: Team, allElves: bool, elfPower: int = DEFAULT_POWER) -> Tuple[bool,int]:
     elves = dict(elves)
     startingElves = len(elves)
     goblins = dict(goblins)
     round = 0
-    while makeRound(walls, elves, goblins, elfPower):
+    while makeRound(walls, elves, goblins, elfPower) and not (allElves and len(elves) != startingElves):
         round += 1
-    return len(elves) == startingElves, round * sum([ *elves.values(), *goblins.values()])
+    return len(elves) == startingElves, round * (sum(elves.values()) + sum(goblins.values()))
 
 
 def part1(game: Tuple[Walls,Team,Team]) -> int:
     walls, elves, goblins = game
-    _, result = runGame(walls, elves, goblins)
+    _, result = runGame(walls, elves, goblins, False)
     return result
 
 
 def part2(game: Tuple[Walls,Team,Team]) -> int:
     walls, elves, goblins = game
-    success = False
-    elfPower = 4
-    result = 0
-    while not success:
-        success, result = runGame(walls, elves, goblins, elfPower)
+    elfPower = 10
+    while True:
         elfPower += 1
-    return result
-    
+        success, result = runGame(walls, elves, goblins, True, elfPower)
+        if success:
+            return result
+
 
 WALL = "#"
 ELF = "E"
@@ -180,17 +172,15 @@ def getInput(filePath: str) -> Tuple[Walls,Team,Team]:
         walls = []
         elves = {}
         goblins = {}
-        position = 0
-        for line in file.readlines():
-            for c in line.strip():
+        for y, line in enumerate(file.readlines()):
+            for x, c in enumerate(line.strip()):
+                position = x - y * 1j
                 if c == WALL:
                     walls.append(position)
                 elif c == ELF:
                     elves[position] = STARTING_HITPOINTS
                 elif c == GOBLIN:
                     goblins[position] = STARTING_HITPOINTS
-                position += 1
-            position = (position.imag - 1) * 1j
         return walls, elves, goblins
 
 
@@ -208,8 +198,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
