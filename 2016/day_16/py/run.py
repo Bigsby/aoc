@@ -5,9 +5,7 @@ import sys, os, time
 
 def getChecksum(data: str, diskLength: int) -> str:
     while len(data) < diskLength:
-        b = data[::-1]
-        b = [ "1" if c == "0" else "0" for c in b ]
-        data = "0".join([ data, "".join(b) ])
+        data = "0".join([ data, "".join([ "1" if c == "0" else "0" for c in data[::-1] ]) ])
     data = data[:diskLength]
     while len(data) % 2 == 0:
         data = "".join([ "1" if data[index] == data[index + 1] else "0" for index in range(0, len(data), 2) ])
@@ -43,8 +41,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
