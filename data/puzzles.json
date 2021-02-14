@@ -595,6 +595,49 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 15,
+                    "name": "Science for Hungry People",
+                    "description": "Optimizing proportions (ingredients)",
+                    "results": [
+                        {
+                            "p1": "21367368",
+                            "p2": "1766400"
+                        },
+                        {
+                            "p1": "222870",
+                            "p2": "117936"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 1.6083334,
+                                    "p2": 1.5935933
+                                },
+                                {
+                                    "p1": 1.6353510,
+                                    "p2": 1.6237469
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 17.7306124,
+                                    "p2": 18.4378409
+                                },
+                                {
+                                    "p1": 18.9535856,
+                                    "p2": 17.4376850
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -1174,6 +1217,49 @@
                                 {
                                     "p1": 0.1447268,
                                     "p2": 37.7649044
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "day": 15,
+                    "name": "Timing is Everything",
+                    "description": "Match offsets of cyclic indexes (Discs)",
+                    "results": [
+                        {
+                            "p1": "376777",
+                            "p2": "3903937"
+                        },
+                        {
+                            "p1": "122318",
+                            "p2": "3208583"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0000065,
+                                    "p2": 0.0000067
+                                },
+                                {
+                                    "p1": 0.0000044,
+                                    "p2": 0.0000041
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0181410,
+                                    "p2": 0.0006717
+                                },
+                                {
+                                    "p1": 0.0168850,
+                                    "p2": 0.0006882
                                 }
                             ]
                         }
@@ -1785,6 +1871,49 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 15,
+                    "name": "Dueling Generators",
+                    "description": "Generator pairs of numbers by multiplication and modulus and match least significant 16bits",
+                    "results": [
+                        {
+                            "p1": "609",
+                            "p2": "253"
+                        },
+                        {
+                            "p1": "594",
+                            "p2": "328"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 24.2860402,
+                                    "p2": 10.5562905
+                                },
+                                {
+                                    "p1": 22.7427442,
+                                    "p2": 10.7427935
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 2.3378838,
+                                    "p2": 1.2992104
+                                },
+                                {
+                                    "p1": 2.1898783,
+                                    "p2": 1.2717407
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -2388,6 +2517,49 @@
                                 {
                                     "p1": 0.1243692,
                                     "p2": 3.5572114
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "day": 15,
+                    "name": "Beverage Bandits",
+                    "description": "Dangeons game (elves and goblins)",
+                    "results": [
+                        {
+                            "p1": "191216",
+                            "p2": "48050"
+                        },
+                        {
+                            "p1": "237996",
+                            "p2": "69700"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 4.9809852,
+                                    "p2": 12.4617404
+                                },
+                                {
+                                    "p1": 10.1789862,
+                                    "p2": 19.4779859
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 8.2335731,
+                                    "p2": 19.1277436
+                                },
+                                {
+                                    "p1": 19.1277436,
+                                    "p2": 36.6430263
                                 }
                             ]
                         }
@@ -2999,6 +3171,49 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 15,
+                    "name": "Oxygen System",
+                    "description": "Run machine code and find complete maze",
+                    "results": [
+                        {
+                            "p1": "404",
+                            "p2": "406"
+                        },
+                        {
+                            "p1": "294",
+                            "p2": "388"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0981691,
+                                    "p2": 1.5459990
+                                },
+                                {
+                                    "p1": 0.0660992,
+                                    "p2": 1.3944174
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0545016,
+                                    "p2": 0.5358820
+                                },
+                                {
+                                    "p1": 0.0454403,
+                                    "p2": 0.5094983
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -3590,6 +3805,49 @@
                                 {
                                     "p1": 0.0187176,
                                     "p2": 0.0608827
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "day": 15,
+                    "name": "Rambunctious Recitation",
+                    "description": "Look-and-say by occurences' turns",
+                    "results": [
+                        {
+                            "p1": "403",
+                            "p2": "6823"
+                        },
+                        {
+                            "p1": "755",
+                            "p2": "11962"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0004873,
+                                    "p2": 15.1251290
+                                },
+                                {
+                                    "p1": 0.0009162,
+                                    "p2": 16.3151779
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0061784,
+                                    "p2": 2.6765361
+                                },
+                                {
+                                    "p1": 0.0055401,
+                                    "p2": 2.6697611
                                 }
                             ]
                         }
