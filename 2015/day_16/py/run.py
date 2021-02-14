@@ -58,11 +58,9 @@ def isValidRecord(record: AuntRecord, checkOperator: bool = False) -> bool:
         reading = MFCSAN_READING[prop]
         readingValue = reading.value
         if checkOperator:
-            if reading.operator == Operator.EQUAL and recordValue != readingValue:
-                return False
-            if reading.operator == Operator.GREATER and recordValue <= readingValue:
-                return False
-            if reading.operator == Operator.LESS and recordValue >= readingValue:
+            if reading.operator == Operator.EQUAL and recordValue != readingValue \
+                or reading.operator == Operator.GREATER and recordValue <= readingValue \
+                or reading.operator == Operator.LESS and recordValue >= readingValue:
                 return False
         elif recordValue != readingValue:
             return False
@@ -106,8 +104,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
