@@ -50,7 +50,6 @@ class IntCodeComputer():
             return self.base + value
         raise Exception("Unrecognized address mode", mode)
 
-
     def getOutput(self) -> int:
         self.outputing = False
         return self.outputs.pop()
@@ -133,14 +132,11 @@ def drawArea(oxygen: List[Position], walls: List[Position], openSpaces: List[Pos
     print()
 
 
-def runUntilOxygenSystem(memory: List[int], completeMap: bool = False) -> Tuple[int,Position,List[Position], List[Position]]:
+def runUntilOxygenSystem(memory: List[int], completeMap: bool = False) -> Tuple[int,Position,List[Position]]:
     startPosition = 0j
-    startDroid = IntCodeComputer(memory)
-    walls = [ ]
+    # walls = [ ]
     openSpaces = [ ]
     oxygenPosition = 0j
-    while not startDroid.polling:
-        startDroid.tick()
     queue = [ (startPosition, [ startPosition ], IntCodeComputer(memory)) ]
     visited = [ startPosition ]
     while queue:
@@ -149,29 +145,23 @@ def runUntilOxygenSystem(memory: List[int], completeMap: bool = False) -> Tuple[
             newPosition = position + direction
             if newPosition not in visited:
                 visited.append(newPosition)
-
                 newDroid = droid.clone()
                 newDroid.inputs.append(command)
                 while not newDroid.outputing:
                     newDroid.tick()
-
                 status = newDroid.getOutput()
                 if status == 2: # Oxygen system
                     if not completeMap:
-                        return len(path), newPosition, walls, openSpaces
+                        return len(path), newPosition, openSpaces
                     oxygenPosition = newPosition
-                if status == 1: # Open space
+                elif status == 1: # Open space
                     openSpaces.append(newPosition)
-
                     while not newDroid.polling:
                         newDroid.tick()
-                    
                     newPath = list(path)
                     newPath.append(newPosition)
                     queue.append((newPosition, newPath, newDroid))
-                elif status == 0: # Wall
-                    walls.append(newPosition)
-    return 0, oxygenPosition, walls, openSpaces
+    return 0, oxygenPosition, openSpaces
 
 
 def part1(memory: List[int]) -> int:
@@ -180,23 +170,19 @@ def part1(memory: List[int]) -> int:
 
 
 def part2(memory: List[int]) -> int:
-    _, oxygenSystemPosition, _, openSpaces = runUntilOxygenSystem(memory, True)
+    _, oxygenSystemPosition, openSpaces = runUntilOxygenSystem(memory, True)
     filled = [ oxygenSystemPosition ]
     minutes = 0
     while openSpaces:
         minutes += 1
-        for oxigen in list(filled):
+        for oxygen in list(filled):
             for direction in DIRECTIONS.values():
-                position = oxigen + direction
+                position = oxygen + direction
                 if position in openSpaces:
                     filled.append(position)
                     openSpaces.remove(position)
     return minutes
             
-        
-
-
-
 
 def getInput(filePath: str) -> List[int]:
     if not os.path.isfile(filePath):
@@ -219,8 +205,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
