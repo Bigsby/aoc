@@ -5,7 +5,7 @@ from typing import List
 
 
 PATTERN = [ 0, 1, 0, -1 ]
-def getValud(offset: int, signal: List[int]) -> int:
+def getValue(offset: int, signal: List[int]) -> int:
     total = 0
     for index, number in enumerate(signal):
         indexInPattern = ((index + 1) // offset) % len(PATTERN)
@@ -17,7 +17,7 @@ def getValud(offset: int, signal: List[int]) -> int:
 def nextPhase(signal: List[int]) -> List[int]:
     result = []
     for index in range(len(signal)):
-        result.append(getValud(index + 1, signal))
+        result.append(getValue(index + 1, signal))
     return result
 
 
@@ -59,8 +59,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
