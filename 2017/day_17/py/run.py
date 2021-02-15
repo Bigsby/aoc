@@ -1,25 +1,25 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from collections import deque
-from typing import Deque
-
-
-def runSpinLock(steps: int, iterations: int) -> Deque[int]:
-    spinLock = deque([0])
-    for number in range(1, iterations + 1):
-        spinLock.rotate(-steps)
-        spinLock.append(number)
-    return spinLock
 
 
 def part1(steps: int) -> int:
-    return runSpinLock(steps, 2017)[0]
+    spinLock = [ 0 ]
+    position = 0
+    for number in range(1, 2017 + 1):
+        position = (position + steps) % len(spinLock) + 1
+        spinLock.insert(position, number)
+    return spinLock[position + 1]
 
 
 def part2(steps: int) -> int:
-    spinLock = runSpinLock(steps, 5 * 10 ** 7 + 1)
-    return spinLock[spinLock.index(0) + 1]
+    position = 0
+    result = 0
+    for number in range(1, 5 * 10 ** 7 + 1):
+        position = ((position + steps) % number) + 1
+        if (position == 1):
+            result = number
+    return result
 
 
 def getInput(filePath: str) -> int:
@@ -43,8 +43,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
