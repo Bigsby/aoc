@@ -8,7 +8,7 @@ import re
 Position = complex
 ClaySquares = List[Position]
 Water = Set[Position]
-Sprint = Position
+Spring = Position
 
 
 def getEdges(positions: Iterable[Position]) -> Tuple[int,int,int,int]:
@@ -18,9 +18,8 @@ def getEdges(positions: Iterable[Position]) -> Tuple[int,int,int,int]:
         int(max(map(lambda s: s.imag, positions)))
 
 
-def printArea(clay: ClaySquares, flowing: Water, settled: Water, spring: Sprint, queue: List[Position], all: bool = False):
-    allObjects = clay + list(settled) + list(flowing) + [ spring ]
-    minX, maxX, minY, maxY = getEdges(allObjects)
+def printArea(clay: ClaySquares, flowing: Water, settled: Water, spring: Spring, queue: List[Position], all: bool = False):
+    minX, maxX, minY, maxY = getEdges(clay + list(settled) + list(flowing) + [ spring ])
     margins = 20
     if not all:
         minX = max(int(spring.real) - margins * 2, minX)
@@ -94,7 +93,6 @@ def part1(clay: ClaySquares) -> Tuple[int,int]:
                 queue.append(x + leftOffset + y)
             if rightOverflown:
                 queue.append(x + rightOffset + y)
-            
     return len(settled) + len(flowing), len(settled)
 
 
@@ -137,8 +135,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
