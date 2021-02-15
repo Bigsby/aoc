@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace AoC
 {
-    class Program
+    static class Program
     {
         static void Part1(object puzzleInput)
         {
