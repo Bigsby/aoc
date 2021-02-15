@@ -50,10 +50,9 @@ def testRecord(before: Registers, operation: Operation, after: Registers, opCode
             if -opCode not in opCodes[mnenomic]:
                 opCodes[mnenomic].add(opCode)
             count += 1
-        else:
-            if opCode in opCodes[mnenomic]:
-                opCodes[mnenomic].remove(opCode)
-                opCodes[mnenomic].add(-opCode)
+        elif opCode in opCodes[mnenomic]:
+            opCodes[mnenomic].remove(opCode)
+            opCodes[mnenomic].add(-opCode)
     return count
 
 
@@ -72,10 +71,8 @@ def part2(puzzleInput: Tuple[List[Record],List[Operation]]) -> int:
     opCodes = { mnemonic: set() for mnemonic in MNEMONICS }
     for before, operation, after in records:
         testRecord(before, operation, after, opCodes)
-    
     for mnemonic, valid in opCodes.items():
         opCodes[mnemonic] = { op for op in valid if op >= 0 }
-
     while any(len(valid) > 1 for valid in opCodes.values()):
         singleValid = [ next(iter(valid)) for valid in opCodes.values() if len(valid) == 1 ]
         for _, valid in opCodes.items():
@@ -84,7 +81,6 @@ def part2(puzzleInput: Tuple[List[Record],List[Operation]]) -> int:
                     if single in valid:
                         valid.remove(single)
     ops = { next(iter(valid)): mnemonic for mnemonic, valid in opCodes.items() }
-
     registers = (0,0,0,0)
     for op in program:
         registers = runOperation(registers, op, ops[op[0]])
@@ -126,8 +122,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
