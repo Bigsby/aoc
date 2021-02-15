@@ -21,15 +21,12 @@ def getValidNumbers(rules: List[Rule]) -> Set[int]:
 
 def part1(puzzleInput: Tuple[List[Rule],Ticket,List[Ticket]]) -> int:
     rules, _, tickets = puzzleInput
-
     validNumbers = getValidNumbers(rules)
-
     invalidNumbers = []
     for ticket in tickets:
         for number in ticket:
             if number not in validNumbers:
                 invalidNumbers.append(number)
-
     return sum(invalidNumbers)
 
 
@@ -40,29 +37,24 @@ def part2(puzzleInput: Tuple[List[Rule],Ticket,List[Ticket]]) -> int:
     for ticket in tickets:
         if all(number in validNumbers for number in ticket):
             validTickets.append(ticket)
-
     ranges: Dict[str,Tuple[int,int,int,int]] = dict()
     positions: Dict[str,Set[int]] = dict()
     names = []
-
     for name, *fieldRanges in rules:
         ranges[name] = tuple(fieldRanges)
         positions[name] = { i for i in range(0, len(rules)) }
         names.append(name)
-
     for ticket in validTickets:
         for index, number in enumerate(ticket):
             for fieldName in names:
                 if index not in positions[fieldName]:
                     continue
-
                 startOne, endOne, startTwo, endTwo = ranges[fieldName]
                 if number < startOne or (number > endOne and number < startTwo) or number > endTwo:
                     toRemove = []
                     positions[fieldName].remove(index)
                     if len(positions[fieldName]) == 1:
                         toRemove.append((fieldName, next(iter((positions[fieldName])))))
-
                     while len(toRemove):
                         ownerName, positionToRemove = toRemove.pop()
                         for otherFieldName in names:
@@ -71,10 +63,8 @@ def part2(puzzleInput: Tuple[List[Rule],Ticket,List[Ticket]]) -> int:
                             positions[otherFieldName].remove(positionToRemove)
                             if len(positions[otherFieldName]) == 1:
                                 toRemove.append((otherFieldName, next(iter(positions[otherFieldName]))))
-                                
     departureFieldIndexes = [ next(iter(positions[fieldName])) for fieldName in names if fieldName.startswith("departure") ]
     result = reduce(lambda soFar, index: soFar * myTicket[index], departureFieldIndexes, 1)
-     
     return result
 
 
@@ -97,17 +87,14 @@ def getInput(filePath: str) -> Tuple[List[Rule],Ticket,List[Ticket]]:
                    rules.append((fieldMatch.group("field"), int(fieldMatch.group("r1s")), int(fieldMatch.group("r1e")), int(fieldMatch.group("r2s")), int(fieldMatch.group("r2e"))))
                 else:
                     doingRules = False
-            
             ticketMatch = ticketRegex.match(line)
             if not ticketMatch:
                 continue
-
             if doingMyTicket:
                 myTicket = list(map(int, line.split(",")))
                 doingMyTicket = False
             else:
                 tickets.append(list(map(int, line.split(","))))
-
         return rules, myTicket, tickets
 
 
@@ -124,8 +111,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
