@@ -77,34 +77,6 @@ namespace AoC
             return departureFieldIndexes.Aggregate(1L, (soFar, index) => soFar * myTicket.ElementAt(index));
         }
 
-// fieldRegex = re.compile(r"^(?P<field>[^:]+):\s(?P<r1s>\d+)-(?P<r1e>\d+)\sor\s(?P<r2s>\d+)-(?P<r2e>\d+)$")
-// ticketRegex = re.compile(r"^(?:\d+\,)+(?:\d+$)")
-// def getInput(filePath: str) -> Tuple[List[Rule],Ticket,List[Ticket]]:
-//     if not os.path.isfile(filePath):
-//         raise FileNotFoundError(filePath)
-    
-//     with open(filePath, "r") as file:
-//         rules = []
-//         myTicket = []
-//         tickets = []
-//         doingRules = True
-//         doingMyTicket = True
-//         for line in file.readlines():
-//             if doingRules:
-//                 fieldMatch = fieldRegex.match(line)
-//                 if fieldMatch:
-//                    rules.append((fieldMatch.group("field"), int(fieldMatch.group("r1s")), int(fieldMatch.group("r1e")), int(fieldMatch.group("r2s")), int(fieldMatch.group("r2e"))))
-//                 else:
-//                     doingRules = False
-//             ticketMatch = ticketRegex.match(line)
-//             if not ticketMatch:
-//                 continue
-//             if doingMyTicket:
-//                 myTicket = list(map(int, line.split(",")))
-//                 doingMyTicket = False
-//             else:
-//                 tickets.append(list(map(int, line.split(","))))
-//         return rules, myTicket, tickets
         static Regex fieldRegex = new Regex(@"^(?<field>[^:]+):\s(?<r1s>\d+)-(?<r1e>\d+)\sor\s(?<r2s>\d+)-(?<r2e>\d+)$", RegexOptions.Compiled);
         static Regex ticketRegex = new Regex(@"^(?:\d+\,)+(?:\d+$)", RegexOptions.Compiled);
         static (IEnumerable<Rule> rules, Ticket myTicket, IEnumerable<Ticket> tickets) GetInput(string filePath)
