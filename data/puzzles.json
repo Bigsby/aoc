@@ -638,6 +638,49 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 16,
+                    "name": "Aunt Sue",
+                    "description": "Einstein House Riddle",
+                    "results": [
+                        {
+                            "p1": "373",
+                            "p2": "260"
+                        },
+                        {
+                            "p1": "213",
+                            "p2": "323"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0001805,
+                                    "p2": 0.0001826
+                                },
+                                {
+                                    "p1": 0.0000842,
+                                    "p2": 0.0001972
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0217998,
+                                    "p2": 0.0008386
+                                },
+                                {
+                                    "p1": 0.0217694,
+                                    "p2": 0.0010527
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -1260,6 +1303,49 @@
                                 {
                                     "p1": 0.0168850,
                                     "p2": 0.0006882
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "day": 16,
+                    "name": "Dragon Checksum",
+                    "description": "Inverting, adding, matching 0s and 1s in strings",
+                    "results": [
+                        {
+                            "p1": "10010100110011100",
+                            "p2": "01100100101101100"
+                        },
+                        {
+                            "p1": "10100101010101101",
+                            "p2": "01100001101101001"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0000336,
+                                    "p2": 4.6354608
+                                },
+                                {
+                                    "p1": 0.0000549,
+                                    "p2": 4.7964947
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0089675,
+                                    "p2": 1.0972526
+                                },
+                                {
+                                    "p1": 0.0088137,
+                                    "p2": 1.2298968
                                 }
                             ]
                         }
@@ -1914,6 +2000,49 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 16,
+                    "name": "Permutation Promenade",
+                    "description": "Rotating and swaping letters in list",
+                    "results": [
+                        {
+                            "p1": "kbednhopmfcjilag",
+                            "p2": "fbmcgdnjakpioelh"
+                        },
+                        {
+                            "p1": "gkmndaholjbfcepi",
+                            "p2": "abihnfkojcmegldp"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0020518,
+                                    "p2": 0.1273666
+                                },
+                                {
+                                    "p1": 0.0022657,
+                                    "p2": 0.1283597
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0083620,
+                                    "p2": 0.1157120
+                                },
+                                {
+                                    "p1": 0.0079967,
+                                    "p2": 0.1138477
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -2560,6 +2689,49 @@
                                 {
                                     "p1": 19.1277436,
                                     "p2": 36.6430263
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "day": 16,
+                    "name": "Chronal Classification",
+                    "description": "Validate and run assembly code",
+                    "results": [
+                        {
+                            "p1": "651",
+                            "p2": "706"
+                        },
+                        {
+                            "p1": "531",
+                            "p2": "649"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0063810,
+                                    "p2": 0.0069296
+                                },
+                                {
+                                    "p1": 0.0056522,
+                                    "p2": 0.0063357
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0074011,
+                                    "p2": 0.0106017
+                                },
+                                {
+                                    "p1": 0.0160867,
+                                    "p2": 0.0117609
                                 }
                             ]
                         }
@@ -3214,6 +3386,49 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 16,
+                    "name": "Flawed Frequency Transmission",
+                    "description": "Indexed checksum. Sum from the from (part 2)",
+                    "results": [
+                        {
+                            "p1": "78009100",
+                            "p2": "37717791"
+                        },
+                        {
+                            "p1": "77038830",
+                            "p2": "28135104"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 5.6330453,
+                                    "p2": 3.4556952
+                                },
+                                {
+                                    "p1": 5.7580365,
+                                    "p2": 3.4896385
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 1.5022730,
+                                    "p2": 0.8564017
+                                },
+                                {
+                                    "p1": 1.4879079,
+                                    "p2": 0.8640180
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -3848,6 +4063,49 @@
                                 {
                                     "p1": 0.0055401,
                                     "p2": 2.6697611
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "day": 16,
+                    "name": "Ticket Translation",
+                    "description": "Validate form fields by ranges of values",
+                    "results": [
+                        {
+                            "p1": "26988",
+                            "p2": "426362917709"
+                        },
+                        {
+                            "p1": "18142",
+                            "p2": "1069784384303"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0008371,
+                                    "p2": 0.0075910
+                                },
+                                {
+                                    "p1": 0.0007584,
+                                    "p2": 0.0072687
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0032489,
+                                    "p2": 0.0139357
+                                },
+                                {
+                                    "p1": 0.0036538,
+                                    "p2": 0.0162992
                                 }
                             ]
                         }
