@@ -5,6 +5,7 @@ from typing import Dict, List, Tuple
 from collections import defaultdict
 from itertools import permutations
 
+
 class IntCodeComputer():
     def __init__(self, memory: List[int], inputs: List[int] = []):
         self.memory = defaultdict(int, [ (index, value) for index, value in enumerate(memory) ])
@@ -116,6 +117,7 @@ def printArea(scafolds: Scafolds, robot: Robot):
     maxX = int(max(map(lambda p: p.real, scafolds)))
     minY = int(min(map(lambda p: p.imag, scafolds)))
     maxY = int(max(map(lambda p: p.imag, scafolds)))
+    print(minX, maxX, minY, maxY)
     for y in range(minY, maxY + 1):
         for x in range(minX, maxX + 1):
             position = x + y * 1j
@@ -151,10 +153,9 @@ def getScafoldsAndRobot(asciiComputer: IntCodeComputer) -> Tuple[Scafolds,Robot]
 
 
 
-def part1(memory: List[int]):
+def part1(memory: List[int]) -> int:
     asciiComputer = IntCodeComputer(memory)
     scafolds, _ = getScafoldsAndRobot(asciiComputer)
-
     alignment = 0
     for scafold in scafolds:
         if all(map(lambda direction: scafold + direction in scafolds, DIRECTIONS.values())):
@@ -162,10 +163,7 @@ def part1(memory: List[int]):
     return alignment
 
 
-TURNS = {
-    -1j: "L",
-    1j: "R"
-}
+TURNS = [ (-1j, "L"), (1j, "R") ]
 def findPath(scafolds: Scafolds, robot: Robot) -> Path:
     path: Path = []
     currentTurn = ""
@@ -174,7 +172,7 @@ def findPath(scafolds: Scafolds, robot: Robot) -> Path:
         position, direction = robot
         if position + direction not in scafolds:
             turnFound = False
-            for turn, code in TURNS.items():
+            for turn, code in TURNS:
                 if position + direction * turn in scafolds:
                     turnFound = True
                     currentTurn = code
@@ -191,26 +189,23 @@ def findPath(scafolds: Scafolds, robot: Robot) -> Path:
 
 
 def getRepeatsInPath(path: Path, segment: Path) -> List[Tuple[int,int]]:
-    return [(start, start + len(segment)) for start in range(len(path)) if path[start:start + len(segment)] == segment]
+    return [(start, start + len(segment)) for start in range(len(path) - len(segment) + 1) if path[start:start + len(segment)] == segment]
 
 
 def isPermutationValid(path: Path, permutation: Tuple[Tuple[int,int],...]) -> bool:
-    try:
-        path = list(path)
-        for length, repeatCount in permutation:
-            segment = path[:length]
-            if len(",".join(segment)) > 20:
-                return False
-            repeatIndexes = getRepeatsInPath(path, segment)
-            if len(repeatIndexes) != repeatCount:
-                return False
-            repeatIndexes.reverse()
-            for start, _ in repeatIndexes:
-                for _ in range(length):
-                    del path[start]
-        return True
-    except:
-        return False
+    path = list(path)
+    for length, repeatCount in permutation:
+        segment = path[:length]
+        if len(segment) * 2 - 1 > 20:
+            return False
+        repeatIndexes = getRepeatsInPath(path, segment)
+        if len(repeatIndexes) != repeatCount:
+            return False
+        repeatIndexes.reverse()
+        for start, _ in repeatIndexes:
+            for _ in range(length):
+                del path[start]
+    return not path
 
 
 def getRoutines(path: Path) -> Dict[int,Tuple[Path,List[Tuple[int,int]]]]:
@@ -235,7 +230,6 @@ def part2(memory: List[int]) -> int:
     scafolds, robot = getScafoldsAndRobot(asciiComputer)
     asciiComputer = IntCodeComputer(memory)
     asciiComputer.memory[0] = 2
-
     path = findPath(scafolds, robot)
     routines = getRoutines(path)
     mainRoutineSegments = {}
@@ -243,21 +237,13 @@ def part2(memory: List[int]) -> int:
     for routine, (segements, indexes) in routines.items():
         inputs.append(",".join(segements) + chr(10))
         for indexGroup in indexes:
-            mainRoutineSegments[indexGroup] = routine
-    
+            mainRoutineSegments[indexGroup[0]] = routine
     inputs.insert(0, ",".join([ chr(routine) for _, routine in sorted(mainRoutineSegments.items()) ]) + chr(10))
     inputs.append("n" + chr(10))
-    
     for inputLine in inputs:
         for c in inputLine:
             asciiComputer.inputs.append(ord(c))
-
-    result = 0
-    while asciiComputer.running:
-        asciiComputer.tick()
-        if asciiComputer.outputing:
-            result = asciiComputer.getOutput()
-    return result
+    return asciiComputer.runUntilHalt().pop()
 
 
 def getInput(filePath: str) -> List[int]:
@@ -281,8 +267,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
