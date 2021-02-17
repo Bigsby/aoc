@@ -681,6 +681,37 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 17,
+                    "name": "No Such Thing as Too Much",
+                    "description": "Fit liquid in containers (5/3 liter jar Riddle)",
+                    "results": [
+                        {
+                            "p1": "1638",
+                            "p2": "17"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.1437901,
+                                    "p2": 0.1478747
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.3260263,
+                                    "p2": 0.2697954
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -1346,6 +1377,49 @@
                                 {
                                     "p1": 0.0088137,
                                     "p2": 1.2298968
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "day": 17,
+                    "name": "Two Steps Forward",
+                    "description": "Open doors with MD5 hasing",
+                    "results": [
+                        {
+                            "p1": "DRLRDDURDR",
+                            "p2": "500"
+                        },
+                        {
+                            "p1": "RLDRUDRDDR",
+                            "p2": "498"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0001226,
+                                    "p2": 0.0707690
+                                },
+                                {
+                                    "p1": 0.0001103,
+                                    "p2": 0.0724209
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0119901,
+                                    "p2": 0.0937899
+                                },
+                                {
+                                    "p1": 0.0100498,
+                                    "p2": 0.0902227
                                 }
                             ]
                         }
@@ -2043,6 +2117,49 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 17,
+                    "name": "Spinlock",
+                    "description": "Inserting and rotating circular list",
+                    "results": [
+                        {
+                            "p1": "136",
+                            "p2": "1080289"
+                        },
+                        {
+                            "p1": "1670",
+                            "p2": "2316253"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0006392,
+                                    "p2": 4.0737974
+                                },
+                                {
+                                    "p1": 0.0008558,
+                                    "p2": 4.1000801
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0008322,
+                                    "p2": 0.4755048
+                                },
+                                {
+                                    "p1": 0.0005812,
+                                    "p2": 0.4709606
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -2732,6 +2849,49 @@
                                 {
                                     "p1": 0.0160867,
                                     "p2": 0.0117609
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "day": 17,
+                    "name": "Reservoir Research",
+                    "description": "Water falling in recepients",
+                    "results": [
+                        {
+                            "p1": "42389",
+                            "p2": "34497"
+                        },
+                        {
+                            "p1": "31412",
+                            "p2": "25857"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 20.9186940,
+                                    "p2": 0.0000005
+                                },
+                                {
+                                    "p1": 12.3229119,
+                                    "p2": 0.0000005
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 335.5938638,
+                                    "p2": 0.0000001
+                                },
+                                {
+                                    "p1": 234.5977073,
+                                    "p2": 0.0000000
                                 }
                             ]
                         }
@@ -3429,6 +3589,49 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 17,
+                    "name": "Set and Forget",
+                    "description": "Run machine code and find path trails",
+                    "results": [
+                        {
+                            "p1": "5056",
+                            "p2": "942367"
+                        },
+                        {
+                            "p1": "4408",
+                            "p2": "862452"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0412381,
+                                    "p2": 0.1329417
+                                },
+                                {
+                                    "p1": 0.0309631,
+                                    "p2": 0.1004372
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0244429,
+                                    "p2": 0.0560626
+                                },
+                                {
+                                    "p1": 0.0227504,
+                                    "p2": 0.0460689
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -4106,6 +4309,49 @@
                                 {
                                     "p1": 0.0036538,
                                     "p2": 0.0162992
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "day": 17,
+                    "name": "Conway Cubes",
+                    "description": "3D and 4D Conway's Game of Life",
+                    "results": [
+                        {
+                            "p1": "301",
+                            "p2": "2424"
+                        },
+                        {
+                            "p1": "223",
+                            "p2": "1884"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.6388009,
+                                    "p2": 24.2465061
+                                },
+                                {
+                                    "p1": 0.6535165,
+                                    "p2": 23.5784537
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.3059030,
+                                    "p2": 8.5413297
+                                },
+                                {
+                                    "p1": 0.3124950,
+                                    "p2": 8.7563030
                                 }
                             ]
                         }
