@@ -62,14 +62,14 @@ class Program:
         return self.running and not self.polling
 
 
-def part1(instructions: List[Instruction]):
+def part1(instructions: List[Instruction]) -> int:
     program = Program(instructions, 0, True)
     while not program.outputting:
         program.tick()
     return program.outputs[-1]
 
 
-def part2(instructions: List[Instruction]):
+def part2(instructions: List[Instruction]) -> int:
     program0 = Program(instructions, 0)
     program1 = Program(instructions, 1)
     program1.inputs = program0.outputs
@@ -106,8 +106,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
