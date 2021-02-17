@@ -9,6 +9,7 @@ using System.Collections;
 namespace AoC
 {
     using Universe = Dictionary<Coordinate, bool>;
+
     class Coordinate : IEnumerable<int>
     {
         public Coordinate(params int[] coordinates) => _coordinates = coordinates;
@@ -69,20 +70,6 @@ namespace AoC
 
     static class Program
     {
-        static Coordinate NextCoordinateValue(Coordinate current, Coordinate lowerLimits, Coordinate upperLimits)
-        {
-            var result = current.ToArray();
-            for (var index = current.Count - 1; index >= 0; index--)
-                if (current[index] < upperLimits[index])
-                {
-                    result[index]++;
-                    for (var overflow = index + 1; overflow < current.Count; overflow++)
-                        result[overflow] = lowerLimits[overflow];
-                    break;
-                }
-            return result;
-        }
-
         static (Coordinate, Coordinate) GetLimits(Universe universe)
             => (
                 Enumerable.Range(0, universe.Keys.First().Count).Select(index => universe.Keys.Min(coordinate => coordinate[index])).ToArray(),
@@ -104,6 +91,20 @@ namespace AoC
             }
             WriteLine();
             ReadLine();
+        }
+
+        static Coordinate NextCoordinateValue(Coordinate current, Coordinate lowerLimits, Coordinate upperLimits)
+        {
+            var result = current.ToArray();
+            for (var index = current.Count - 1; index >= 0; index--)
+                if (current[index] < upperLimits[index])
+                {
+                    result[index]++;
+                    for (var overflow = index + 1; overflow < current.Count; overflow++)
+                        result[overflow] = lowerLimits[overflow];
+                    break;
+                }
+            return result;
         }
 
         static IEnumerable<Coordinate> CycleCoordinates(Coordinate lowerLimit, Coordinate upperLimit)
