@@ -3,7 +3,7 @@
 import sys, os, time
 from typing import Dict, Iterable, List
 
-
+Grid = Dict[complex,bool]
 NEIGHBOR_DIRECTIONS: List[complex] = [
      - 1 - 1j,
          - 1j,
@@ -19,32 +19,32 @@ def getNeighbors(pos: complex) -> Iterable[complex]:
         yield pos + direction
 
 
-def getNextState(grid: Dict[complex,int], alwaysOn: List[complex] = []) -> Dict[complex,int]:
+def getNextState(grid: Grid, alwaysOn: List[complex]) -> Grid:
     for position in alwaysOn:
-            grid[position] = 1
+            grid[position] = True
     newState = dict(grid)
     for position in grid:
         neighbors = sum(map(lambda neighbor: grid[neighbor] if neighbor in grid else 0, getNeighbors(position)))
         if grid[position]:
-            newState[position] = 1 if neighbors == 2 or neighbors == 3 else 0
+            newState[position] = neighbors == 2 or neighbors == 3
         else:
-            newState[position] = 1 if neighbors == 3 else 0
+            newState[position] = neighbors == 3
     for position in alwaysOn:
-            newState[position] = 1
+            newState[position] = True
     return newState
 
 
-def runSteps(grid: Dict[complex,int], alwaysOn: List[complex] = []) -> int:
+def runSteps(grid: Grid, alwaysOn: List[complex] = []) -> int:
     for _ in range(100):
         grid = getNextState(grid, alwaysOn)
     return sum(grid.values())
 
 
-def part1(grid: Dict[complex,int]) -> int:
+def part1(grid: Grid) -> int:
     return runSteps(grid)
 
 
-def part2(grid: Dict[complex,int]) -> int:
+def part2(grid: Grid) -> int:
     side = max(map(lambda key: key.real, grid.keys()))
     alwaysOn: List[complex] = [
         0,
@@ -55,18 +55,15 @@ def part2(grid: Dict[complex,int]) -> int:
     return runSteps(grid, alwaysOn)
 
 
-def getInput(filePath: str) -> Dict[complex,int]:
+def getInput(filePath: str) -> Grid:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     
     with open(filePath, "r") as file:
         grid = {}
-        pos = 0j
-        for line in file.readlines():
-            for c in line.strip():
-                grid[pos] = 1 if c == "#" else 0
-                pos += 1
-            pos += 1j - pos.real
+        for y, line in enumerate(file.readlines()):
+            for x, c in enumerate(line.strip()):
+                grid[x + y * 1j] = c == "#"
         return grid
 
 
@@ -83,8 +80,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
