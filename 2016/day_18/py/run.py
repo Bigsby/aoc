@@ -1,43 +1,34 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from typing import Dict
+from typing import List
+
+Tiles = List[bool]
 
 
-Grid = Dict[complex,bool]
+def getSafeCount(tiles: Tiles, count: int) -> int:
+    safe = sum(tiles)
+    for _ in range(1, count):
+        tiles = [True] + tiles + [True]
+        tiles = [left == right for left, right in zip(tiles, tiles[2:])]
+        safe += sum(tiles)
+    return safe
 
 
-def createRowsAndCount(grid: Grid, count: int):
-    grid = dict(grid)
-    maxX = int(max(map(lambda p: p.real, grid.keys())))
-    for y in range(1, count):
-        for x in range(maxX + 1):
-            position = x + y * 1j
-            leftPosition = position - 1 - 1j
-            rightPosition = position + 1 - 1j
-            left = leftPosition in grid and grid[leftPosition]
-            rigth = rightPosition in grid and grid[rightPosition]
-            grid[position] = left ^ rigth
-    return sum(not value for value in grid.values())
+def part1(tiles: Tiles) -> int:
+    return getSafeCount(tiles, 40)
 
 
-def part1(grid: Grid):
-    return createRowsAndCount(grid, 40)
+def part2(tiles: Tiles) -> int:
+    return getSafeCount(tiles, 400_000)
 
 
-def part2(grid: Grid):
-    return createRowsAndCount(grid, 400000)
-
-
-def getInput(filePath: str) -> Grid:
+def getInput(filePath: str) -> Tiles:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     
     with open(filePath, "r") as file:
-        grid = {}
-        for index, c in enumerate(file.read().strip()):
-            grid[index + 0j] = c == "^"
-        return grid
+        return list(c == "." for c in file.read().strip())
 
 
 def main():
@@ -53,8 +44,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
