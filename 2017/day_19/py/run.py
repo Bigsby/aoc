@@ -9,9 +9,8 @@ Letters = Dict[Position,str]
 
 
 def followPath(data: Tuple[Tubes,Letters,Position]) -> Tuple[str,int]:
-    tubes, letters, start = data
+    tubes, letters, currentPosition = data
     path = []
-    currentPosition = start
     direction = 1j
     steps = 0
     while True:
@@ -28,7 +27,6 @@ def followPath(data: Tuple[Tubes,Letters,Position]) -> Tuple[str,int]:
             currentPosition += direction
         else:
             break
-
     return "".join(path), steps
 
 
@@ -42,6 +40,7 @@ def part2(data: Tuple[Tubes,Letters,Position]) -> int:
     return steps
 
 
+TUBES = [ "|", "+", "-" ]
 def getInput(filePath: str) -> Tuple[Tubes,Letters,Position]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
@@ -53,14 +52,13 @@ def getInput(filePath: str) -> Tuple[Tubes,Letters,Position]:
         for y, line in enumerate(file.readlines()):
             for x, c in enumerate(line):
                 position = x + y * 1j
-                if c in [ "|", "+", "-" ]:
+                if c in TUBES:
                     tubes.append(position)
                     if y == 0:
                         start = position
-                if ord("A") <= ord(c) <= ord("Z"):
+                if "A" <= c <= "Z":
                     letters[position] = c
-                    tubes.append(position)
-        
+                    tubes.append(position)        
         return tubes, letters, start
 
 
@@ -77,8 +75,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
