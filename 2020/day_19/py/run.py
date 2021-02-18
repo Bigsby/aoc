@@ -30,8 +30,6 @@ def generateRegex(rules: Dict[int,Rule], ruleNumber: int) -> str:
     rule = rules[ruleNumber]
     if rule.type == RuleType.Letter:
         return rule.letter
-    elif len(rule.sets) == 1:
-        return "".join(generateRegex(rules, innerNumber) for innerNumber in rule.sets[0])
     else:
         return "(?:" + "|".join("".join(generateRegex(rules, innerNumber) for innerNumber in ruleSet) for ruleSet in rule.sets) + ")"
 
@@ -61,7 +59,6 @@ def isMatch(firstRule: str, secondRule: str, message: str) -> bool:
                 break
             elif position == len(message):  
                 return True
-
         count += 1
         matched, position = isInnerMatch(firstRule, message, position)
     return False
@@ -89,7 +86,6 @@ def getInput(filePath: str) -> Tuple[Dict[int,Rule],List[str]]:
                     rules[int(match.group("number"))] = Rule(match.group("number"), match.group("rule"))
                 else:
                     messages.append(line.strip())
-
         return rules, messages
 
 
@@ -106,8 +102,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
