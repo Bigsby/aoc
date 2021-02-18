@@ -5,14 +5,14 @@ from typing import List, Tuple
 import re
 
 
-def getNextToken(line: str) -> Tuple[str,str]:
+def getNextToken(expression: str) -> Tuple[str,str]:
     currentToken = ""
-    for index, c in enumerate(line):
+    for index, c in enumerate(expression):
         if c == " ":
-            return currentToken, line[index + 1:].strip()
+            return currentToken, expression[index + 1:].strip()
         if currentToken.isdigit() and not c.isdigit():
-            return currentToken, line[index:].strip()
-        currentToken = "".join([currentToken, c])
+            return currentToken, expression[index:].strip()
+        currentToken += c
     return currentToken, ""
         
 
@@ -50,8 +50,8 @@ def evaluateExpression(expression: str, addFirst: bool) -> int:
     return currentValue
 
 
-def evaluateExpressions(addFirst: bool, expression: List[str]) -> int:
-    return sum([ evaluateExpression(line, addFirst) for line in expression ])
+def evaluateExpressions(addFirst: bool, expressions: List[str]) -> int:
+    return sum([ evaluateExpression(line, addFirst) for line in expressions ])
     
 
 def part1(expressions: List[str]) -> int:
@@ -83,8 +83,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
