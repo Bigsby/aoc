@@ -19,9 +19,6 @@
                 "description": {
                     "type": "string"
                 },
-                "comments": {
-                    "type": "string"
-                },
                 "results": {
                     "type": "array",
                     "items": {
@@ -70,6 +67,18 @@
                                 }
                             }
                         }
+                    }
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "comments": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
                     }
                 }
             }
