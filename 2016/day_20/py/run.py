@@ -8,16 +8,15 @@ Range = Tuple[int,int]
 
 def part1(ranges: List[Range]) -> int:
     ranges.sort()
-    rangeIter = iter(ranges)
     previousUpper = 0
-    while True:
-        lower, upper = next(rangeIter)
+    for lower, upper in ranges:
         if upper <= previousUpper:
             continue
         if lower <= previousUpper + 1:
             previousUpper = upper
         else:
             return previousUpper + 1
+    raise Exception("IP not found")
 
 
 def part2(ranges: List[Range]) -> int:
@@ -60,8 +59,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
