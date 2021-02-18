@@ -54,26 +54,26 @@ def findPathsFromPosition(maze: Maze, keysDoors: KeysDoors, start: Position) -> 
 
 
 def findShortestPathFromKeyGragph(pathsFromKeys: Dict[str,Dict[str,Tuple[int,Set[str]]]], keys: Dict[str,Position], entrances: List[str]) -> int:
-    paths: List[Tuple[int,Tuple[str], FrozenSet[str]]] = [(0, tuple(entrances), frozenset())]
-    visited: Dict[Tuple[Tuple[str], FrozenSet[str]], int] = defaultdict(int)
+    paths: List[Tuple[int,Tuple[str,...], FrozenSet[str]]] = [(0, tuple(entrances), frozenset())]
+    visited: Dict[Tuple[Tuple[str,...], FrozenSet[str]],int] = defaultdict(int)
     while paths:
-        distance, startingPoints, keysFound = heappop(paths)
+        distance, currentPoints, keysFound = heappop(paths)
         if len(keysFound) == len(keys.keys()):
             return distance
-        for curr_idx, curr_key in enumerate(startingPoints):
+        for curr_idx, curr_key in enumerate(currentPoints):
             for next_key, next_path in pathsFromKeys[curr_key].items():
                 if next_key not in keysFound:
                     next_keys = frozenset(keysFound | {next_key})
-                    next_pos = startingPoints[:curr_idx] + (next_key,) + startingPoints[curr_idx + 1:]
+                    next_pos = currentPoints[:curr_idx] + (next_key,) + currentPoints[curr_idx + 1:]
                     node_id = (next_pos, next_keys)
                     dist = distance + next_path[0]
-                    if (node_id not in visited.keys() or visited[node_id] > dist) and len(next_path[1] - keysFound) == 0:
+                    if (node_id not in visited or visited[node_id] > dist) and len(next_path[1] - keysFound) == 0:
                         heappush(paths, (dist, next_pos, next_keys))
                         visited[node_id] = dist
     raise Exception("Path not found")
 
 
-def findShortestPath(maze: Maze, keysDoors: KeysDoors, entrances: List[Position]):
+def findShortestPath(maze: Maze, keysDoors: KeysDoors, entrances: List[Position]) -> int:
     keys = { keyDoor: position for position, keyDoor in keysDoors.items() if keyDoor.islower() }
     keysPaths = { key: findPathsFromPosition(maze, keysDoors, position) for key, position in keys.items() }
     for index, position in enumerate(entrances):
@@ -81,12 +81,12 @@ def findShortestPath(maze: Maze, keysDoors: KeysDoors, entrances: List[Position]
     return findShortestPathFromKeyGragph(keysPaths, keys, [str(index) for index, _ in enumerate(entrances)])
 
 
-def part1(data: Tuple[Maze,KeysDoors,Position]):
+def part1(data: Tuple[Maze,KeysDoors,Position]) -> int:
     maze, keysDoors, entrance = data
     return findShortestPath(maze, keysDoors, [ entrance])
 
 
-def part2(data: Tuple[Maze,KeysDoors,Position]):
+def part2(data: Tuple[Maze,KeysDoors,Position]) -> int:
     maze, keysDoors, start = data
     for offset in [ -1, -1j, 0, 1, 1j]:
         maze.append(start + offset)
@@ -94,7 +94,7 @@ def part2(data: Tuple[Maze,KeysDoors,Position]):
     return findShortestPath(maze, keysDoors, entrances)
 
 
-def getInput(filePath: str) -> Tuple[Maze,KeysDoors, Position]:
+def getInput(filePath: str) -> Tuple[Maze,KeysDoors,Position]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     
@@ -126,8 +126,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
