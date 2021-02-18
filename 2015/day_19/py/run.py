@@ -14,7 +14,7 @@ class Replacement():
 
 
 def processReplacement(molecule: str, replacement: Replacement) -> List[str]:
-    return [ "".join([ molecule[0 : match.start()], replacement.target, molecule[match.end() : ] ]) for match in re.finditer(replacement.source, molecule) ]
+    return [ "".join([ molecule[:match.start()], replacement.target, molecule[match.end():] ]) for match in re.finditer(replacement.source, molecule) ]
 
 
 def part1(puzzleInput: Tuple[List[Replacement],str]) -> int:
@@ -69,8 +69,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
