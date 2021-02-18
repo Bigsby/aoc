@@ -10,7 +10,7 @@ def getDivisors(number: int) -> Iterable[int]:
     for i in range(1, int(math.sqrt(number) + 1)):
         if number % i == 0:
             yield i
-            if i*i != number:
+            if i * i != number:
                 large_divisors.append(number / i)
     for divisor in reversed(large_divisors):
         yield divisor
@@ -70,8 +70,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
