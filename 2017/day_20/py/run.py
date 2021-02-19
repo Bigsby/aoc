@@ -38,7 +38,6 @@ def getQuadraticABC(particleA: Particle, particleB: Particle, coordinate: int) -
     pBv = particleB[1][coordinate] + pBa / 2
     return (pAa - pBa) / 2, pAv - pBv, pAp - pBp
 
-
 def getColitionTimes(particleA: Particle, particleB: Particle) -> List[int]:
     a, b, c = getQuadraticABC(particleA, particleB, 0)
     times = []
@@ -56,7 +55,6 @@ def getColitionTimes(particleA: Particle, particleB: Particle) -> List[int]:
             rt = math.sqrt(bb - ac4)
             times.append((-b + rt) / (2 * a))
             times.append((-b - rt) / (2 * a))
-
     times = map(int, filter(lambda t: t >= 0 and round(t) == t, times))
     result = []
     for t in times:
@@ -77,7 +75,6 @@ def part2(particles: List[Particle]) -> int:
         for otherIndex in range(thisIndex + 1, len(particles)):
             for time in getColitionTimes(particles[thisIndex], particles[otherIndex]):
                 collisions[time].append((thisIndex, otherIndex))
-
     particleIndexes: Set[int] = set(range(len(particles)))
     for time in sorted(list(collisions.keys())):
         collidedToRemove = set()
@@ -86,7 +83,6 @@ def part2(particles: List[Particle]) -> int:
                 collidedToRemove.add(indexA)
                 collidedToRemove.add(indexB)
         particleIndexes -= collidedToRemove
-
     return len(particleIndexes)
     
 
@@ -121,8 +117,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
