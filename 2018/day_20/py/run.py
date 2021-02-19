@@ -6,8 +6,8 @@ from typing import Dict, Iterable
 
 
 DIRECTIONS = {
-    "N": -1j,
-    "S": 1j,
+    "N": 1j,
+    "S": -1j,
     "E": 1,
     "W": -1
 }
@@ -15,7 +15,7 @@ def getDistances(routes: str) -> Iterable[int]:
     distances: Dict[complex,int] = defaultdict(lambda:sys.maxsize)
     distances[0j] = 0
     groupEnds = []
-    head = 0
+    head = 0j
     for c in routes[1:-1]:
         if c == "(":
             groupEnds.append(head)
@@ -30,11 +30,11 @@ def getDistances(routes: str) -> Iterable[int]:
     return distances.values()
 
 
-def part1(routes: str):
+def part1(routes: str) -> int:
     return max(getDistances(routes))
 
 
-def part2(routes: str):
+def part2(routes: str) -> int:
     return sum(1 for distance in getDistances(routes) if distance >= 1000)
 
 
@@ -59,8 +59,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
