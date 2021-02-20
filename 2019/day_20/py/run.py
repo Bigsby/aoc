@@ -13,9 +13,9 @@ DIRECTIONS = [ 1j, -1j, 1, -1 ]
 def part1(data: Tuple[Maze,Portals,Position,Position]) -> int:
     maze, portals, start, end = data
     visited = { start }
-    queue: List[Tuple[Position,List[Position]]] = [(start, [ start ])]
+    queue: List[Tuple[Position,int]] = [(start, 1)]
     while queue:
-        position, path = queue.pop(0)
+        position, distance = queue.pop(0)
         newPositions = []
         if position in portals:
             newPositions.append(next(p for p, label in portals.items() if label == portals[position] and p != position))
@@ -23,13 +23,10 @@ def part1(data: Tuple[Maze,Portals,Position,Position]) -> int:
             newPositions.append(position + direction)
         for newPosition in newPositions:
             if newPosition == end:
-                return len(path)
+                return distance
             if newPosition not in visited and newPosition in maze:
-                newPath = path[:]
                 visited.add(newPosition)
-                newPath.append(newPosition)
-                queue.append((newPosition, newPath))
-        
+                queue.append((newPosition, distance + 1))
     raise Exception("Path not found")
 
 
@@ -47,12 +44,12 @@ def part2(data: Tuple[Maze,Portals,Position,Position]) -> int:
     reverseInnerPortals = { label: position for position, label in innerPortals.items() }
     endPosition = (end, 0)
     startPosition = (start, 0)
-
     visited: Set[LevelPosition] = { startPosition }
-    queue: List[Tuple[LevelPosition,List[LevelPosition]]] = [ (startPosition, [ startPosition ])]
+    queue: List[Tuple[int,float,float,int]] = [(1, startPosition[0].real, startPosition[0].imag, startPosition[1])]
     while queue:
-        (position, level), path = queue.pop(0)
-        newPositions = []
+        distance, x, y, level = queue.pop(0)
+        position = x + y * 1j
+        newPositions: List[LevelPosition] = []
         if position in innerPortals:
             newPositions.append((reverseOuterPortals[innerPortals[position]], level + 1))
         elif level != 0 and position in outerPortals:
@@ -61,13 +58,10 @@ def part2(data: Tuple[Maze,Portals,Position,Position]) -> int:
             newPositions.append((position + direction, level))
         for newPosition in newPositions:
             if newPosition == endPosition:
-                return len(path)
+                return distance
             if newPosition not in visited and newPosition[0] in maze:
-                newPath = path[:]
                 visited.add(newPosition)
-                newPath.append(newPosition)
-                queue.append((newPosition, newPath))
-        
+                queue.append((distance + 1, newPosition[0].real, newPosition[0].imag, newPosition[1]))
     raise Exception("Path not found")
 
 
@@ -120,8 +114,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
