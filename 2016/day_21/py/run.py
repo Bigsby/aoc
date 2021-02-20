@@ -14,7 +14,7 @@ REVERSE = 5
 MOVE = 6
 
 
-def process(start: str, instructions: List[Instruction], reverse: bool = False):
+def process(start: str, instructions: List[Instruction], reverse: bool = False) -> str:
     password: Deque[int] = deque(ord(value) for value in start)
     if reverse:
         instructions.reverse()
@@ -38,8 +38,6 @@ def process(start: str, instructions: List[Instruction], reverse: bool = False):
             rotation = indexOfA + 1 + (1 if indexOfA >= 4 else 0)
             if reverse:
                 rotation = -(indexOfA // 2 + (1 if indexOfA % 2 == 1 or indexOfA == 0 else 5))
-            if indexOfA > 3:
-                indexOfA += 1
             password.rotate(rotation)
         elif opCode == REVERSE:
             passwordList = list(password)
@@ -99,8 +97,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
