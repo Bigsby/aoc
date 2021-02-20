@@ -798,6 +798,37 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 20,
+                    "name": "Infinite Elves and Infinite Houses",
+                    "description": "Find and sum dividors of numbers",
+                    "results": [
+                        {
+                            "p1": "776160",
+                            "p2": "786240"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0109273,
+                                    "p2": 0.4560037
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0037083,
+                                    "p2": 0.0571778
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -1592,6 +1623,49 @@
                                 {
                                     "p1": 0.0003718,
                                     "p2": 0.4187741
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "day": 20,
+                    "name": "Firewall Rules",
+                    "description": "Find gaps in intersecting ranges of values",
+                    "results": [
+                        {
+                            "p1": "32259706",
+                            "p2": "113"
+                        },
+                        {
+                            "p1": "22887907",
+                            "p2": "109"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0001827,
+                                    "p2": 0.0000648
+                                },
+                                {
+                                    "p1": 0.0001736,
+                                    "p2": 0.0000630
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0070310,
+                                    "p2": 0.0006621
+                                },
+                                {
+                                    "p1": 0.0082188,
+                                    "p2": 0.0006577
                                 }
                             ]
                         }
@@ -2418,6 +2492,49 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 20,
+                    "name": "Particle Swarm",
+                    "description": "Find collisions between moving particles",
+                    "results": [
+                        {
+                            "p1": "144",
+                            "p2": "477"
+                        },
+                        {
+                            "p1": "243",
+                            "p2": "648"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0001978,
+                                    "p2": 0.6640025
+                                },
+                                {
+                                    "p1": 0.0002523,
+                                    "p2": 0.6696951
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0169369,
+                                    "p2": 0.4285326
+                                },
+                                {
+                                    "p1": 0.0180334,
+                                    "p2": 0.3623103
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -3236,6 +3353,49 @@
                                 {
                                     "p1": 0.9476606,
                                     "p2": 0.0025643
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "day": 20,
+                    "name": "A Regular Map",
+                    "description": "Find shortest path in maze from directions",
+                    "results": [
+                        {
+                            "p1": "3721",
+                            "p2": "8613"
+                        },
+                        {
+                            "p1": "3574",
+                            "p2": "8444"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0060296,
+                                    "p2": 0.0075965
+                                },
+                                {
+                                    "p1": 0.0064181,
+                                    "p2": 0.0065739
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0143153,
+                                    "p2": 0.0045429
+                                },
+                                {
+                                    "p1": 0.0148615,
+                                    "p2": 0.0040036
                                 }
                             ]
                         }
@@ -4062,6 +4222,51 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 20,
+                    "name": "Donut Maze",
+                    "description": "Find shortest path in maze with portals and multiple levels",
+                    "comments": [ "testinput2 doesn't work on part 2"],
+                    "tags": [ "BFS", "Dijkstra", "Maze" ],
+                    "results": [
+                        {
+                            "p1": "476",
+                            "p2": "5350"
+                        },
+                        {
+                            "p1": "498",
+                            "p2": "5564"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.3088765,
+                                    "p2": 38.8291737
+                                },
+                                {
+                                    "p1": 0.2850591,
+                                    "p2": 29.9218359
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 1.1132633,
+                                    "p2": 121.6529363
+                                },
+                                {
+                                    "p1": 1.1363078,
+                                    "p2": 119.3814240
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -4868,6 +5073,50 @@
                                 {
                                     "p1": 0.0097708,
                                     "p2": 0.0061851
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "day": 20,
+                    "name": "Jurassic Jigsaw",
+                    "description": "Solve tile puzzle",
+                    "tags": [ "Complex" ],
+                    "results": [
+                        {
+                            "p1": "8581320593371",
+                            "p2": "2031"
+                        },
+                        {
+                            "p1": "14986175499719",
+                            "p2": "2161"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 1.1688439,
+                                    "p2": 2.1034648
+                                },
+                                {
+                                    "p1": 1.1578958,
+                                    "p2": 2.3632308
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 1.2474042,
+                                    "p2": 2.6230618
+                                },
+                                {
+                                    "p1": 1.1805993,
+                                    "p2": 3.6093049
                                 }
                             ]
                         }
