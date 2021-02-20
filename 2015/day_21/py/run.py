@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from typing import Tuple
+from typing import Iterable, Tuple
 import re
 from itertools import combinations
 
@@ -47,7 +47,7 @@ def playGame(player: Player, boss: Player) -> bool:
             return False
 
 
-def getInventoryCombinations():
+def getInventoryCombinations() -> Iterable[Tuple[int,int,int]]:
     for weapon in WEAPONS:
         for armor in ARMORS:
             for ring1, ring2 in combinations(RINGS, 2):
@@ -98,8 +98,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
