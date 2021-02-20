@@ -72,12 +72,12 @@ def doPermutationsMatch(permutationA: Tile, permutationB:Tile, size:int, sides: 
     return False, 0
     
 
-def doTilesMatch(tileA: Tile, permutations: List[Tile], size: int, sides: List[complex] = list(TESTS.keys())) -> Tuple[bool,complex, Optional[Tile]]:
+def doTilesMatch(tileA: Tile, permutations: List[Tile], size: int, sides: List[complex] = list(TESTS.keys())) -> Tuple[bool,complex, Tile]:
     for permutation in permutations:
         matched, side = doPermutationsMatch(tileA, permutation, size, sides)
         if matched:
             return True, side, permutation
-    return False, 0, None
+    return False, 0, []
 
 
 def getMatchingSides(tile: Tuple[int,Tile], tiles:List[Tuple[int,Tile]], size: int, allPermutations: Dict[int,List[Tile]]) -> List[complex]:
@@ -92,7 +92,7 @@ def getMatchingSides(tile: Tuple[int,Tile], tiles:List[Tuple[int,Tile]], size: i
     return matchedSides
 
 
-def getCorners(tiles: List[Tuple[int,Tile]], size: int, allPermutations: Dict[int,List[Tile]]) -> List[Tuple[int,List[complex]]]:
+def getCorners(tiles: List[Tuple[int,Tile]], size: int, allPermutations: Dict[int,List[Tile]]) -> List[Tuple[int,Tile]]:
     tilesMatchesSides = { number: getMatchingSides((number, tile), tiles, size, allPermutations) for number, tile in tiles }
     return [ ( number, matchedSides ) for number, matchedSides in tilesMatchesSides.items() if len(matchedSides) == 2 ]
 
@@ -113,12 +113,11 @@ def buildPuzzle(tiles: List[Tuple[int,Tile]], tileSize: int) -> Dict[complex,Til
     puzzle = { }
     puzzle[puzzlePosition] = lastTile
     direction = sideOne
-    
     while tilePermutations:
         puzzlePosition += direction
         for tileNumber, permutations in tilePermutations.items():
             matched, _, matchedPermutation = doTilesMatch(lastTile, permutations, tileSize, [ direction ])
-            if matched and matchedPermutation:
+            if matched:
                 puzzle[puzzlePosition] = lastTile = matchedPermutation
                 del tilePermutations[tileNumber]
                 if direction == sideTwo:
@@ -208,7 +207,6 @@ def getInput(filePath: str) -> List[Tuple[int,Tile]]:
                         tile.append(position)
                     position += 1
                 position += 1j - position.real
-            
         return tiles
 
 
@@ -225,8 +223,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
