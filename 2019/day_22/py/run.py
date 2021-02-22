@@ -29,7 +29,7 @@ def part1(shuffles: List[Shuffle]) -> int:
     return cards.index(POSITION1)
 
 
-def inv(a: int, n:int): 
+def inverseModulo(a: int, n:int) -> int: 
     return pow(a, n-2, n)
 
 
@@ -48,10 +48,9 @@ def part2(shuffles: List[Shuffle]) -> int:
             la, lb = 1, -count
         a = (la * a) % CARDS2
         b = (la * b + lb) % CARDS2
-
     Ma = pow(a, RUNS, CARDS2)
-    Mb = (b * (Ma - 1) * inv(a-1, CARDS2)) % CARDS2
-    return ((POSITION2 - Mb) * inv(Ma, CARDS2)) % CARDS2
+    Mb = (b * (Ma - 1) * inverseModulo(a - 1, CARDS2)) % CARDS2
+    return ((POSITION2 - Mb) * inverseModulo(Ma, CARDS2)) % CARDS2
 
 
 def parseLine(line:str) -> Shuffle:
@@ -85,8 +84,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
