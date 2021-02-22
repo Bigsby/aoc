@@ -21,7 +21,6 @@ def getLeastWinningMana(bossHit: int, bossDamage: int, loseHitOnPlayerTurn: bool
             playerHit -= 1
             if playerHit <= 0:
                 continue
-
         playerArmor = 0
         newActiveSpells = []
         for activeSpell in activeSpells:
@@ -33,14 +32,11 @@ def getLeastWinningMana(bossHit: int, bossDamage: int, loseHitOnPlayerTurn: bool
                 playerMana += mana
             if duration > 1:
                 newActiveSpells.append((cost, damage, hitPoints, armor, mana, duration - 1))
-
         if bossHit <= 0:
-            if manaSpent < leastManaSpent:
-                leastManaSpent = manaSpent
+            leastManaSpent = min(leastManaSpent, manaSpent)
             continue
         if manaSpent > leastManaSpent:
             continue
-
         if playerTurn:
             activeCosts = [ spell[0] for spell in newActiveSpells ] # cost is unique per spell
             for spell in SPELLS:
@@ -51,7 +47,6 @@ def getLeastWinningMana(bossHit: int, bossDamage: int, loseHitOnPlayerTurn: bool
             playerHit -= max(1, bossDamage - playerArmor)
             if playerHit > 0:
                 queue.append((bossHit, playerHit, playerMana, newActiveSpells, True, manaSpent))
-
     return leastManaSpent
 
 
@@ -86,8 +81,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
