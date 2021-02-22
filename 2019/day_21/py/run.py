@@ -19,10 +19,10 @@ class IntCodeComputer():
     def setInput(self, value: int):
         self.inputs.insert(0, value)
     
-    def runUntilHalt(self) -> List[int]:
+    def runUntilHalt(self) -> int:
         while self.running:
             self.tick()
-        return self.outputs
+        return self.getOutput()
     
     def getParameter(self, offset: int, mode: int) -> int:
         value = self.memory[self.pointer + offset]
@@ -97,15 +97,13 @@ class IntCodeComputer():
             raise Exception(f"Unknown instruction", self.pointer, instruction, opcode, p1mode, p2mode, p3mode)
 
 
-def runDroid(memory: List[int], instructions: List[str]):
+def runDroid(memory: List[int], instructions: List[str]) -> int:
     droid = IntCodeComputer(memory)
     for instruction in instructions:
         for c in instruction:
             droid.inputs.append(ord(c))
         droid.inputs.append(10)
-    while droid.running:
-        droid.tick()
-    return droid.outputs[-1]
+    return droid.runUntilHalt()
 
 
 def part1(memory: List[int]) -> int:
@@ -154,8 +152,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
