@@ -829,6 +829,49 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 21,
+                    "name": "RPG Simulator 20XX",
+                    "description": "Damage/hit points game with weapons and armor",
+                    "results": [
+                        {
+                            "p1": "91",
+                            "p2": "158"
+                        },
+                        {
+                            "p1": "111",
+                            "p2": "188"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0023399,
+                                    "p2": 0.0033953
+                                },
+                                {
+                                    "p1": 0.0023206,
+                                    "p2": 0.0024471
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0058136,
+                                    "p2": 0.0009038
+                                },
+                                {
+                                    "p1": 0.0049466,
+                                    "p2": 0.0004339
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -1666,6 +1709,49 @@
                                 {
                                     "p1": 0.0082188,
                                     "p2": 0.0006577
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "day": 21,
+                    "name": "Scrambled Letters and Hash",
+                    "description": "Swap, rotate and rotate list",
+                    "results": [
+                        {
+                            "p1": "agcebfdh",
+                            "p2": "afhdbegc"
+                        },
+                        {
+                            "p1": "dgfaehcb",
+                            "p2": "fdhgacbe"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0000548,
+                                    "p2": 0.0000453
+                                },
+                                {
+                                    "p1": 0.0000488,
+                                    "p2": 0.0000424
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0128014,
+                                    "p2": 0.0003581
+                                },
+                                {
+                                    "p1": 0.0116196,
+                                    "p2": 0.0003761
                                 }
                             ]
                         }
@@ -2535,6 +2621,50 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 21,
+                    "name": "Fractal Art",
+                    "description": "Grid rule based kinda Conway's Game of Life",
+                    "tags": [ "cycles", "repeating pattern"],
+                    "results": [
+                        {
+                            "p1": "144",
+                            "p2": "2169301"
+                        },
+                        {
+                            "p1": "203",
+                            "p2": "3342470"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0006568,
+                                    "p2": 0.2400666
+                                },
+                                {
+                                    "p1": 0.0008018,
+                                    "p2": 0.2503639
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0085819,
+                                    "p2": 0.0430509
+                                },
+                                {
+                                    "p1": 0.0095272,
+                                    "p2": 0.0450260
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -3396,6 +3526,50 @@
                                 {
                                     "p1": 0.0148615,
                                     "p2": 0.0040036
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "day": 21,
+                    "name": "Chronal Conversion",
+                    "description": "Disassemble assembly code",
+                    "tags": [ "assembly", "loops", "dissassemble" ],
+                    "results": [
+                        {
+                            "p1": "6132825",
+                            "p2": "8307757"
+                        },
+                        {
+                            "p1": "15615244",
+                            "p2": "12963935"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0000029,
+                                    "p2": 0.0050935
+                                },
+                                {
+                                    "p1": 0.0000027,
+                                    "p2": 0.0061695
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0005836,
+                                    "p2": 0.0025464
+                                },
+                                {
+                                    "p1": 0.0005031,
+                                    "p2": 0.0023582
                                 }
                             ]
                         }
@@ -4267,6 +4441,51 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 21,
+                    "name": "Springdroid Adventure",
+                    "description": "Run machine code to play jumping holes game",
+                    "tags": [ "intcode" ],
+                    "comments": [ "dynamically find instructions"],
+                    "results": [
+                        {
+                            "p1": "19360724",
+                            "p2": "1140450681"
+                        },
+                        {
+                            "p1": "19348840",
+                            "p2": "1141857182"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0211274,
+                                    "p2": 0.6627178
+                                },
+                                {
+                                    "p1": 0.0196439,
+                                    "p2": 0.6539533
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0166140,
+                                    "p2": 0.1309577
+                                },
+                                {
+                                    "p1": 0.0114040,
+                                    "p2": 0.1256605
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -5117,6 +5336,49 @@
                                 {
                                     "p1": 1.1805993,
                                     "p2": 3.6093049
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "day": 21,
+                    "name": "Allergen Assessment",
+                    "description": "Einstein House Riddle",
+                    "results": [
+                        {
+                            "p1": "2176",
+                            "p2": "lvv,xblchx,tr,gzvsg,jlsqx,fnntr,pmz,csqc"
+                        },
+                        {
+                            "p1": "2779",
+                            "p2": "lkv,lfcppl,jhsrjlj,jrhvk,zkls,qjltjd,xslr,rfpbpn"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0003359,
+                                    "p2": 0.0002555
+                                },
+                                {
+                                    "p1": 0.0004441,
+                                    "p2": 0.0002549
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0208954,
+                                    "p2": 0.0112282
+                                },
+                                {
+                                    "p1": 0.0207188,
+                                    "p2": 0.0110941
                                 }
                             ]
                         }
