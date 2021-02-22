@@ -23,7 +23,8 @@ def getAllergens(foods: List[Food]) -> Set[str]:
     return allergens
 
 
-def buildAllergenGraph(foods: List[Food], allergens: Set[str]) -> Dict[str,Set[str]]:
+def buildAllergenGraph(foods: List[Food]) -> Dict[str,Set[str]]:
+    allergens = getAllergens(foods)
     return {
         allergen: reduce(lambda soFar, foodAllergens: soFar & foodAllergens, \
             (set(food.ingredients) for food in foods if allergen in food.allergens)) \
@@ -32,11 +33,9 @@ def buildAllergenGraph(foods: List[Food], allergens: Set[str]) -> Dict[str,Set[s
 
 
 def part1(foods: List[Food]) -> int:
-    allergens = getAllergens(foods)
-    allergenGraph = buildAllergenGraph(foods, allergens)
+    allergenGraph = buildAllergenGraph(foods)
     foundIngredients = reduce(lambda soFar, ingredientsForAllergen: \
         soFar | ingredientsForAllergen, (graph for _, graph in allergenGraph.items()))
-
     count = 0
     for food in foods:
         for ingredient in food.ingredients:
@@ -45,20 +44,16 @@ def part1(foods: List[Food]) -> int:
 
 
 def part2(foods: List[Food]) -> str:
-    allergens = getAllergens(foods)
-    allergenGraph = buildAllergenGraph(foods, allergens)
-
-    while any(len(allergenGraph[allergen]) != 1 for allergen in allergenGraph):
+    allergenGraph = buildAllergenGraph(foods)
+    while any(len(ingredients) != 1 for ingredients in allergenGraph.values()):
         singleIngredientAllergens = [  
             (allergen, next(iter(allergenGraph[allergen]))) \
             for allergen in allergenGraph if len(allergenGraph[allergen]) == 1 
         ]
-        for singleAllergen, ingredients in singleIngredientAllergens:
-            ingredient = ingredients
+        for singleAllergen, ingredient in singleIngredientAllergens:
             for allergen in allergenGraph:
                 if allergen != singleAllergen and ingredient in allergenGraph[allergen]:
                     allergenGraph[allergen].remove(ingredient)
-    
     return ",".join(map(lambda k: next(iter(allergenGraph[k])), sorted(allergenGraph)))
 
 
@@ -91,8 +86,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
