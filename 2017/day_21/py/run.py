@@ -52,7 +52,7 @@ def splitGrid(grid: Grid, count: int, size: int) -> Iterable[Tuple[int,int,Grid]
             innerGrid = { 
                 p - (xIndex * size) - (yIndex * size) * 1j 
                 for p in grid 
-                if xOffset <= p.real < xOffset + size and  yOffset <= p.imag < yOffset + size }
+                if xOffset <= p.real < xOffset + size and yOffset <= p.imag < yOffset + size }
             yield xIndex, yIndex, innerGrid
 
 
@@ -67,11 +67,19 @@ def iterate(grid: Grid, size: int, rules: Rules) -> Tuple[int,Grid]:
     ruleSet = rules[ruleSize]
     divider = size // ruleSize
     for xIndex, yIndex, innerGrid in splitGrid(grid, divider, ruleSize):
-        innerGrid = enhanceGrid(innerGrid, ruleSize, ruleSet)
-        for position in innerGrid:
+        # innerGrid = enhanceGrid(innerGrid, ruleSize, ruleSet)
+        for position in enhanceGrid(innerGrid, ruleSize, ruleSet):
             enhancedGrid.add(position + xIndex * (ruleSize + 1) + yIndex * 1j * (ruleSize + 1))            
     return size + divider, enhancedGrid
 
+def printGrid(grid: Grid):
+    maxX = int(max(p.real for p in grid))
+    maxY = int(max(p.imag for p in grid))
+    for y in range(maxY + 1):
+        for x in range(maxX + 1):
+            print("#" if x + y * 1j in grid else ".", end="")
+        print()
+    print()
 
 def runIterations(grid: Grid, size: int, rules: Rules, iterations: int) -> Tuple[int,Grid]:
     for _ in range(iterations):
@@ -105,15 +113,15 @@ def part2(rules: Rules) -> int:
     calculated: Dict[int,List[Grid]] = {}
     queue: List[Tuple[Grid,int]] = [ (grid, 0) ]
     while queue:
-        grid, level = queue.pop()
-        if level == 18:
+        grid, iterations = queue.pop()
+        if iterations == 18:
             total += len(grid)
         else:
             gridId = getGridId(grid)
             if gridId not in calculated:
                 calculated[gridId] = runNext3Iterations(grid, rules)
             for innerGrid in calculated[gridId]:
-                queue.append((innerGrid, level + 3))
+                queue.append((innerGrid, iterations + 3))
     return total
 
 
@@ -152,8 +160,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
