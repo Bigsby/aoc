@@ -5,17 +5,20 @@ from typing import List, Tuple
 import re
 
 Operation = Tuple[str,int,int,int]
+MASK = 16777215
+MULTIPLIER = 65899
+
 
 def findNumber(magicNumber: int, firstResult: bool = True) -> int:
     seen = set()
     result = 0
     lastResult = -1
     while True:
-        accomulator = result | 65536
+        accumulator = result | 0x10000
         result = magicNumber
         while True:
-            result = (((result + (accomulator & 255)) & 16777215) * 65899) & 16777215
-            if 256 > accomulator:
+            result = (((result + (accumulator & 0xFF)) & MASK) * MULTIPLIER) & MASK
+            if accumulator <= 0xFF:
                 if firstResult:
                     return result
                 else:
@@ -26,7 +29,7 @@ def findNumber(magicNumber: int, firstResult: bool = True) -> int:
                     else:
                         return lastResult
             else:
-                accomulator //= 256
+                accumulator //= 0x100
 
 
 def part1(data: Tuple[int,List[Operation]]) -> int:
@@ -34,7 +37,7 @@ def part1(data: Tuple[int,List[Operation]]) -> int:
     return findNumber(operations[7][1], True)
 
 
-def part2(data: Tuple[int,List[Operation]]):
+def part2(data: Tuple[int,List[Operation]]) -> int:
     _, operations = data
     return findNumber(operations[7][1], False)
 
@@ -68,8 +71,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
