@@ -10,7 +10,7 @@ FileSystem = Dict[complex,Tuple[int,int]]
 def getEmptyAndNonViableNodes(fileSystem: FileSystem) -> Tuple[complex,List[complex]]:
     nodeNames = fileSystem.keys()
     empty = -0j
-    nonVisableNodes = set()
+    nonViableNodes = set()
     for thisNode in nodeNames:
         thisUsed = fileSystem[thisNode][1]
         if thisUsed == 0:
@@ -20,8 +20,8 @@ def getEmptyAndNonViableNodes(fileSystem: FileSystem) -> Tuple[complex,List[comp
             if otherNode == thisNode:
                 continue
             if thisUsed > fileSystem[otherNode][0]:
-                nonVisableNodes.add(thisNode)
-    return empty, list(nonVisableNodes)
+                nonViableNodes.add(thisNode)
+    return empty, list(nonViableNodes)
 
 
 def part1(fileSystem: FileSystem) -> int:
@@ -80,8 +80,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
