@@ -21,7 +21,7 @@ def getGeologicIndex(coordinate: Coordinate, depth: int, target: Coordinate, cal
     elif y == 0:
         return x * GEOLOGIC_X_CONSTANT
     return getErosionLevel(x - 1 + y * 1j, depth, target, calculated) \
-        * getErosionLevel(x + (y -1 )* 1j, depth, target, calculated)
+        * getErosionLevel(x + (y - 1)* 1j, depth, target, calculated)
 
 
 def getErosionLevel(coordinate: Coordinate, depth: int, target: Coordinate, calculated: Dict[Coordinate,int]) -> int:
@@ -35,11 +35,11 @@ def getRisk(coordinate: Coordinate, depth: int, target: Coordinate, calculated: 
 
 
 def part1(data: Tuple[int,int,int]) -> int:
-    depth, x, y = data
-    target = x + y * 1j
+    depth, targetX, targetY = data
+    target = targetX + targetY * 1j
     calculated = {}
     return sum(getRisk(x + y *1j, depth, target, calculated) \
-        for x, y in product(range(int(target.real) + 1), range(int(target.imag) + 1)))
+        for x, y in product(range(targetX + 1), range(targetY + 1)))
 
 
 DIRECTIONS = [ 1, 1j, -1, -1j]
@@ -75,7 +75,7 @@ def getInput(filePath: str) -> Tuple[int,int,int]:
         raise FileNotFoundError(filePath)
     
     with open(filePath, "r") as file:
-        return tuple(map(int, re.findall(r"(\d+)", file.read())))
+        return tuple(map(int, re.findall(r"\d+", file.read())))
 
 
 def main():
@@ -91,8 +91,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
