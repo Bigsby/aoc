@@ -25,18 +25,18 @@ CLEAN = 0
 WEAKENED = 1
 INFECTED = 2
 FLAGGED = 3
-STATE_DIRECTIONS = {
-    CLEAN: 1j,
-    WEAKENED: 1,
-    INFECTED: -1j,
-    FLAGGED: 1j * 1j
-}
-STATE_TRANSITIONS = {
-    CLEAN: WEAKENED,
-    WEAKENED: INFECTED,
-    INFECTED: FLAGGED,
-    FLAGGED: CLEAN
-}        
+STATE_DIRECTIONS = [
+    1j,
+    1,
+    -1j,
+    -1
+]
+STATE_TRANSITIONS = [
+    WEAKENED,
+    INFECTED,
+    FLAGGED,
+    CLEAN
+]
 def part2(state: InfectionStatus) -> int:
     quadState: Dict[complex,int] = defaultdict(lambda: CLEAN,[ (node, INFECTED if value else CLEAN) for node, value in state.items() ])
     currentNode = max(n.real for n in state.keys()) // 2 + (min(n.imag for n in state.keys()) // 2)* 1j
@@ -77,8 +77,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
