@@ -10,7 +10,7 @@ def getMinimumGroupEntanglement(weights: List[int], groupCount: int) -> int:
     groupWeight = sum(weights) // groupCount
     for size in range(1, len(weights)):
         entanglements = [ reduce(lambda soFar, weight: soFar * weight, group) \
-            for group in combinations(weights, size) if sum(group) == groupWeight ] 
+            for group in combinations(weights, size) if sum(group) == groupWeight ]
         if entanglements:
             return min(entanglements)
     raise Exception("Group not found")
@@ -45,8 +45,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
