@@ -39,33 +39,37 @@ def part1(bugs: Bugs) -> int:
     return biodiversity
 
 
+CENTER = 2 + 2j
+MIDDLE_TOP = 2 + 1j
+MIDDLE_LEFT = 1 + 2j
+MIDDLE_RIGHT = 3 + 2j
+MIDDLE_BOTTOM = 2 + 3j
 def nextLayeredMinute(layers: Dict[int,Bugs]) -> Dict[int,Bugs]:
     newState: Dict[int,Bugs] = defaultdict(list)
     for layer in range(min(layers.keys()) - 1, max(layers.keys()) + 2):
         for y in range(5):
             for x in range(5):
                 position = x + y * 1j
-                if position == 2 + 2j:
+                if position == CENTER:
                     continue
-
                 adjacentCount = sum(offset + position in layers[layer] for offset in DIRECTIONS)
                 if y == 0:
-                    adjacentCount += 2 + 1j in layers[layer - 1]
+                    adjacentCount += MIDDLE_TOP in layers[layer - 1]
                 elif y == 4:
-                    adjacentCount += 2 + 3j in layers[layer - 1]
+                    adjacentCount += MIDDLE_BOTTOM in layers[layer - 1]
                 
                 if x == 0:
-                    adjacentCount += 1 + 2j in layers[layer - 1]
+                    adjacentCount += MIDDLE_LEFT in layers[layer - 1]
                 elif x == 4:
-                    adjacentCount += 3 + 2j in layers[layer - 1]
+                    adjacentCount += MIDDLE_RIGHT in layers[layer - 1]
 
-                if position == 2 + 1j:
+                if position == MIDDLE_TOP:
                     adjacentCount += sum(x in layers[layer + 1] for x in range(5))
-                elif position == 1 + 2j:
+                elif position == MIDDLE_LEFT:
                     adjacentCount += sum(y * 1j in layers[layer + 1] for y in range(5))
-                elif position == 3 + 2j:
+                elif position == MIDDLE_RIGHT:
                     adjacentCount += sum(4 + y * 1j in layers[layer + 1] for y in range(5))
-                elif position == 2 + 3j:
+                elif position == MIDDLE_BOTTOM:
                     adjacentCount += sum(x + 4j in layers[layer + 1] for x in range(5))
                 if getsBug(position in layers[layer], adjacentCount):
                     newState[layer].append(position)
@@ -75,9 +79,7 @@ def nextLayeredMinute(layers: Dict[int,Bugs]) -> Dict[int,Bugs]:
 def part2(bugs: Bugs) -> int:
     layers: Dict[int,Bugs] = defaultdict(list)
     layers[0] = bugs
-    minutes = 0
     for _ in range(200):
-        minutes += 1
         layers = nextLayeredMinute(layers)
     return sum(len(bugs) for bugs in layers.values())
 
@@ -109,8 +111,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
