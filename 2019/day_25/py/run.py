@@ -144,7 +144,7 @@ def parseRoomOutput(output:str) -> Tuple[str,List[str],List[str]]:
     return room, doors, items
 
 
-def runCommand(droid: IntCodeComputer, command: str):
+def runCommand(droid: IntCodeComputer, command: str) -> str:
     if command != "":
         for c in command + '\n':
             droid.inputs.append(ord(c))
@@ -182,7 +182,7 @@ FORBIDEN_ITEMS = [
 PRESSURE_ROOM = "Pressure-Sensitive Floor"
 SECURITY_CHECKPOINT = "Security Checkpoint"
 TAKE = "take "
-def navigateRooms(droid: IntCodeComputer, command: str, destination: str, pickupItems: bool):
+def navigateRooms(droid: IntCodeComputer, command: str, destination: str, pickupItems: bool) -> Tuple[str,List[str],str]:
     visited = []
     wayIn = {}
     lastDirection = ""
@@ -200,7 +200,7 @@ def navigateRooms(droid: IntCodeComputer, command: str, destination: str, pickup
         if pickupItems:
             for item in items:
                 if item not in FORBIDEN_ITEMS:
-                    output = runCommand(droid, TAKE + item)
+                    runCommand(droid, TAKE + item)
                     inventory.append(item)
         newDoor = False
         for door in doors:
@@ -221,12 +221,12 @@ def navigateRooms(droid: IntCodeComputer, command: str, destination: str, pickup
 
 
 DROP = "drop "
-def findPassword(memory: List[int]):
+def findPassword(memory: List[int]) -> str:
     droid = IntCodeComputer(memory)
     # navigate all rooms and pickup non-forbiden items
     command, inventory, pressureRoomWayIn = navigateRooms(droid, "", "", True)
     # go to Security Checkpoint
-    _ = navigateRooms(droid, command, SECURITY_CHECKPOINT, False)    
+    navigateRooms(droid, command, SECURITY_CHECKPOINT, False)    
     # test combinations of items
     for newInventory in combinations(inventory, 4):
         for item in newInventory:
@@ -240,6 +240,7 @@ def findPassword(memory: List[int]):
         if passwordMatch:
             return passwordMatch.group("password")
         inventory = newInventory
+    raise Exception("Password not found")
 
 
 def part1(memory: List[int]):
@@ -271,8 +272,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
