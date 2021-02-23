@@ -946,6 +946,37 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 24,
+                    "name": "It Hangs in the Balance",
+                    "description": "Group weights in even sums",
+                    "results": [
+                        {
+                            "p1": "10723906903",
+                            "p2": "74850409"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0728198,
+                                    "p2": 0.0029365
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.1133523,
+                                    "p2": 0.0066518
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -1913,6 +1944,49 @@
                                 {
                                     "p1": 0.0128975,
                                     "p2": 0.0006324
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "day": 24,
+                    "name": "Air Duct Spelunking",
+                    "description": "Shortest path going through all nodes in maze",
+                    "results": [
+                        {
+                            "p1": "474",
+                            "p2": "696"
+                        },
+                        {
+                            "p1": "464",
+                            "p2": "652"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 2.9545921,
+                                    "p2": 3.1290651
+                                },
+                                {
+                                    "p1": 2.7632816,
+                                    "p2": 2.7477375
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.8069287,
+                                    "p2": 0.7553146
+                                },
+                                {
+                                    "p1": 0.7412932,
+                                    "p2": 0.6992665
                                 }
                             ]
                         }
@@ -2913,6 +2987,49 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 24,
+                    "name": "Electromagnetic Moat",
+                    "description": "Connect ports with same number of pins",
+                    "results": [
+                        {
+                            "p1": "1940",
+                            "p2": "1928"
+                        },
+                        {
+                            "p1": "1656",
+                            "p2": "1642"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 16.0818151,
+                                    "p2": 17.1280391
+                                },
+                                {
+                                    "p1": 16.6452976,
+                                    "p2": 17.1495825
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 19.9260614,
+                                    "p2": 18.8442491
+                                },
+                                {
+                                    "p1": 16.9004817,
+                                    "p2": 17.1141191
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -3905,6 +4022,49 @@
                                 {
                                     "p1": 0.0151188,
                                     "p2": 6.1304355
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "day": 24,
+                    "name": "Immune System Simulator 20XX",
+                    "description": "Fighting armies picking targets",
+                    "results": [
+                        {
+                            "p1": "21743",
+                            "p2": "884"
+                        },
+                        {
+                            "p1": "14854",
+                            "p2": "3467"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0238515,
+                                    "p2": 2.1135952
+                                },
+                                {
+                                    "p1": 0.0202940,
+                                    "p2": 2.1666043
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0375161,
+                                    "p2": 0.7119697
+                                },
+                                {
+                                    "p1": 0.0384430,
+                                    "p2": 0.8092720
                                 }
                             ]
                         }
@@ -4909,6 +5069,37 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 24,
+                    "name": "Planet of Discord",
+                    "description": "Conway's Game of Life-like growing in layers",
+                    "results": [
+                        {
+                            "p1": "32523825",
+                            "p2": "2052"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0004056,
+                                    "p2": 0.9691747
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0229577,
+                                    "p2": 0.3451347
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -5888,6 +6079,50 @@
                                 {
                                     "p1": 0.0110815,
                                     "p2": 4.4481668
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "day": 24,
+                    "name": "Lobby Layout",
+                    "description": "Hexagonal grid navigation",
+                    "tags": [ "hexagonal", "grid" ],
+                    "results": [
+                        {
+                            "p1": "346",
+                            "p2": "3802"
+                        },
+                        {
+                            "p1": "400",
+                            "p2": "3768"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0005660,
+                                    "p2": 4.6374711
+                                },
+                                {
+                                    "p1": 0.0006833,
+                                    "p2": 4.7313479
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0261460,
+                                    "p2": 3.2542249
+                                },
+                                {
+                                    "p1": 0.0244163,
+                                    "p2": 3.4322089
                                 }
                             ]
                         }
