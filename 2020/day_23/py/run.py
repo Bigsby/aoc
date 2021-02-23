@@ -27,7 +27,6 @@ def playGame(cups: List[int], moves: int) -> Node:
     start, values = buildLinkedList(cups)
     maxValue = max(cups)
     current = start
-
     while moves:
         moves -= 1
         firstRemoved = current.next
@@ -35,7 +34,6 @@ def playGame(cups: List[int], moves: int) -> Node:
         removedValues = {firstRemoved.value, firstRemoved.next.value, lastRemoved.value}
         current.next = lastRemoved.next
         destinationValue = current.value - 1
-
         while destinationValue in removedValues or destinationValue < 1:
             destinationValue -= 1
             if destinationValue < 0:
@@ -45,7 +43,6 @@ def playGame(cups: List[int], moves: int) -> Node:
         lastRemoved.next = destinationLink.next
         destinationLink.next = firstRemoved
         current = current.next
-
     return values[0]
 
 
@@ -86,8 +83,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
