@@ -1,18 +1,16 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from typing import List, Tuple
+from typing import List
 
-Instruction = Tuple[str,List[str]]
+Instruction = List[str]
 
 
-def part1(instructions: List[Instruction]) -> int:
-    number = int(instructions[0][1][1])
+def part1(number: int) -> int:
     return (number - 2) ** 2
 
 
-def part2(instructions: List[Instruction]) -> int:
-    number = int(instructions[0][1][1])
+def part2(number: int) -> int:
     total =  number * 100 + 100000
     nonPrimes = 0
     for candidate in range(total, total + 17000 + 1, 17):
@@ -23,17 +21,12 @@ def part2(instructions: List[Instruction]) -> int:
     return nonPrimes
 
 
-def parseLine(line: str) -> Instruction:
-    mnemonic, *params = line.split(" ")
-    return mnemonic, params
-
-
-def getInput(filePath: str) -> List[Instruction]:
+def getInput(filePath: str) -> int:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     
     with open(filePath, "r") as file:
-        return [ parseLine(line.strip()) for line in file.readlines() ]
+        return int(file.readlines()[0].split(" ")[2])
 
 
 def main():
@@ -49,8 +42,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
