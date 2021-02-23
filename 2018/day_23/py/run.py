@@ -14,11 +14,9 @@ def part1(nanobots: List[Nanobot]) -> int:
         if nanobot[3] > maxRadius:
             maxRadius = nanobot[3]
             strongestBot = nanobot
-    
     x0, y0, z0, radius = strongestBot
     inRange = 0
-    for nanobot in nanobots:
-        x1, y1, z1, _ = nanobot
+    for x1, y1, z1, _ in nanobots:
         inRange += abs(x0 - x1) + abs(y0 - y1) + abs(z0 - z1) <= radius
     return inRange
 
@@ -30,7 +28,6 @@ def part2(nanobots: List[Nanobot]) -> int:
     locationRadius = 1
     while locationRadius < max(xs) - min(xs):
         locationRadius *= 2
-
     while True:
         hightestCount = 0
         bestLocation: Tuple[int,int,int] = (0,0,0)
@@ -48,7 +45,6 @@ def part2(nanobots: List[Nanobot]) -> int:
                         hightestCount = count
                         shortestDistance = locationDistance
                         bestLocation = (x, y, z)
-
         if locationRadius == 1:
             return shortestDistance
         else:
@@ -83,8 +79,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
