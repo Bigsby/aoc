@@ -12,7 +12,6 @@ def part1(points: List[Point]):
         for thatPoint, (w1, x1, y1, z1) in enumerate(points):
             if abs(w0 - w1) + abs(x0 - x1) + abs(y0 - y1) + abs(z0 - z1) < 4:
                 edges[thisPoint].add(thatPoint)
-
     visited = set()
     constellations = 0
     for thisPoint in range(len(points)):
@@ -58,8 +57,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
