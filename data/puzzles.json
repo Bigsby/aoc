@@ -903,6 +903,49 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 23,
+                    "name": "Opening the Turing Lock",
+                    "description": "Run assembly code",
+                    "results": [
+                        {
+                            "p1": "307",
+                            "p2": "160"
+                        },
+                        {
+                            "p1": "184",
+                            "p2": "231"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0002774,
+                                    "p2": 0.0001442
+                                },
+                                {
+                                    "p1": 0.0001791,
+                                    "p2": 0.0002583
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0030759,
+                                    "p2": 0.0001155
+                                },
+                                {
+                                    "p1": 0.0027573,
+                                    "p2": 0.0001234
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -1826,6 +1869,50 @@
                                 {
                                     "p1": 0.0572983,
                                     "p2": 0.0634736
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "day": 23,
+                    "name": "Safe Cracking",
+                    "description": "Run assembly code and analyze to find loops",
+                    "tags": [ "assembly", "loops" ],
+                    "results": [
+                        {
+                            "p1": "11004",
+                            "p2": "479007564"
+                        },
+                        {
+                            "p1": "11552",
+                            "p2": "479008112"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0513853,
+                                    "p2": 0.0000052
+                                },
+                                {
+                                    "p1": 0.0432005,
+                                    "p2": 0.0000089
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0124375,
+                                    "p2": 0.0010181
+                                },
+                                {
+                                    "p1": 0.0128975,
+                                    "p2": 0.0006324
                                 }
                             ]
                         }
@@ -2782,6 +2869,50 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 23,
+                    "name": "Coprocessor Conflagration",
+                    "description": "Analyse assembly code. Find square of number and count non-primes in range.",
+                    "tags": [ "assembly", "loops" ],
+                    "results": [
+                        {
+                            "p1": "6724",
+                            "p2": "903"
+                        },
+                        {
+                            "p1": "3025",
+                            "p2": "915"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0000012,
+                                    "p2": 0.6252509
+                                },
+                                {
+                                    "p1": 0.0000020,
+                                    "p2": 0.5209349
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0001234,
+                                    "p2": 0.0339720
+                                },
+                                {
+                                    "p1": 0.0003935,
+                                    "p2": 0.0258480
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -3731,6 +3862,49 @@
                                 {
                                     "p1": 0.0053181,
                                     "p2": 14.4844083
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "day": 23,
+                    "name": "Experimental Emergency Teleportation",
+                    "description": "Find 3D locations within radius",
+                    "results": [
+                        {
+                            "p1": "580",
+                            "p2": "97816347"
+                        },
+                        {
+                            "p1": "491",
+                            "p2": "60474080"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0002605,
+                                    "p2": 1.1213998
+                                },
+                                {
+                                    "p1": 0.0003041,
+                                    "p2": 1.0716056
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0163463,
+                                    "p2": 6.2342479
+                                },
+                                {
+                                    "p1": 0.0151188,
+                                    "p2": 6.1304355
                                 }
                             ]
                         }
@@ -4691,6 +4865,50 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 23,
+                    "name": "Category Six",
+                    "description": "Run machine code and send packets between computers",
+                    "tags": [ "intcode" ],
+                    "results": [
+                        {
+                            "p1": "27182",
+                            "p2": "19285"
+                        },
+                        {
+                            "p1": "22650",
+                            "p2": "17298"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0867918,
+                                    "p2": 4.9569032
+                                },
+                                {
+                                    "p1": 0.0860189,
+                                    "p2": 4.7736597
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0388455,
+                                    "p2": 0.9104657
+                                },
+                                {
+                                    "p1": 0.0350259,
+                                    "p2": 0.8673686
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -5627,6 +5845,49 @@
                                 {
                                     "p1": 0.0029458,
                                     "p2": 8.8048509
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "day": 23,
+                    "name": "Crab Cups",
+                    "description": "Switch cups game",
+                    "results": [
+                        {
+                            "p1": "78569234",
+                            "p2": "565615814504"
+                        },
+                        {
+                            "p1": "76952348",
+                            "p2": "72772522064"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0000568,
+                                    "p2": 20.9994350
+                                },
+                                {
+                                    "p1": 0.0000591,
+                                    "p2": 20.3463278
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0123042,
+                                    "p2": 3.4301710
+                                },
+                                {
+                                    "p1": 0.0110815,
+                                    "p2": 4.4481668
                                 }
                             ]
                         }
