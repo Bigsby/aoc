@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from typing import List
+from typing import List, Optional, Tuple
 import re
 
 
@@ -18,7 +18,7 @@ class Group:
         self.type = type
         self.damage = damage
         self.army = army
-        self.target = None
+        self.target: Optional['Group'] = None
 
     def effectivePower(self):
         return self.units * self.damage
@@ -27,15 +27,13 @@ class Group:
         if self.type in target.immunities:
             return 0
         return self.effectivePower() * (2 if self.type in target.weaknesses else 1)
+    
+    def Clone(self, boost: int) -> 'Group':
+        return Group(self.id, self.units, self.hitPoints, self.immunities, self.weaknesses, self.initiative, self.type, self.damage + boost, self.army)
 
 
-def combat(original_units: List[Group], boost: int):
-    groups = []
-    for group in original_units:
-        new_dmg = group.damage + (boost if group.army==0 else 0)
-        groups.append(Group(group.id, group.units, group.hitPoints, group.immunities, 
-                group.weaknesses, group.initiative, group.type, new_dmg, group.army))
-
+def combat(groups: List[Group], boost: int) -> Tuple[int, int]:
+    groups = [ group.Clone(boost if group.army==0 else 0) for group in groups ]
     while True:
         groups = sorted(groups, key=lambda u: (-u.effectivePower(), -u.initiative))
         selectedTargets = set()
@@ -50,25 +48,18 @@ def combat(original_units: List[Group], boost: int):
         unitsKilled = False
         for group in groups:
             if group.target:
-                dmg = group.damageTo(group.target)
-                killed = min(group.target.units, dmg // group.target.hitPoints)
-                if killed > 0:
-                    unitsKilled = True
+                killed = min(group.target.units, group.damageTo(group.target) // group.target.hitPoints)
+                unitsKilled |= killed > 0
                 group.target.units -= killed
-
         groups = [group for group in groups if group.units > 0]
         for group in groups:
             group.target = None
-
         immuneSystemUnits = sum([group.units for group in groups if group.army == 0])
         infectionUnits = sum([group.units for group in groups if group.army == 1])
-        if not unitsKilled:
-            return 1,infectionUnits
-        if immuneSystemUnits == 0:
+        if not unitsKilled or immuneSystemUnits == 0:
             return 1,infectionUnits
         if infectionUnits == 0:
             return 0,immuneSystemUnits
-        
 
 
 def part1(groups: List[Group]) -> int:
@@ -78,14 +69,11 @@ def part1(groups: List[Group]) -> int:
 
 def part2(groups: List[Group]) -> int:
     boost = 0
-    left = 0
     while True:
         boost += 1
         winner, left = combat(groups, boost)
         if winner == 0:
-            break
-    return left
-    
+            return left
 
 
 numbersRegex = re.compile(r"^(?P<units>\d+) units.*with (?P<hit>\d+) hit.*does (?P<damage>\d+) (?P<type>\w+).*initiative (?P<initiative>\d+)$")
@@ -148,8 +136,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
