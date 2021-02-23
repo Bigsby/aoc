@@ -26,7 +26,6 @@ def part2(puzzleInput):
 
 setupRegex = re.compile(r"^Begin in state (?P<state>\w).*\s+^[^\d]*(?P<steps>\d+)", re.MULTILINE)
 stateRegex = re.compile(r"^In state (?P<state>\w):\n.*If.*\n[^\d]*(?P<fValue>\d).\n.*(?P<fSlot>right|left).\n.*state (?P<fState>\w).\n.*If.*\n[^\d]*(?P<tValue>\d).\n.*(?P<tSlot>right|left).\n.*state (?P<tState>\w)", re.MULTILINE)
-
 def getInput(filePath: str) -> Tuple[str,int,States]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
@@ -45,8 +44,6 @@ def getInput(filePath: str) -> Tuple[str,int,States]:
                 states[stateMatch.group("state")] = \
                     ((int(stateMatch.group("fValue")), 1 if stateMatch.group("fSlot") == "right" else -1, stateMatch.group("fState")),
                     (int(stateMatch.group("tValue")), 1 if stateMatch.group("tSlot") == "right" else -1, stateMatch.group("tState")))
-                
-            
     return initialState, steps, states
 
 
@@ -63,8 +60,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
