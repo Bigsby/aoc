@@ -977,6 +977,44 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 25,
+                    "name": "Let It Snow",
+                    "description": "Procces grid diagonally",
+                    "tags": [ "grid", "diagonal" ],
+                    "results": [
+                        {
+                            "p1": "19980801"
+                        },
+                        {
+                            "p1": "8997277"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 2.7747836
+                                },
+                                {
+                                    "p1": 2.7230616
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.2335060
+                                },
+                                {
+                                    "p1": 0.2537500
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -1987,6 +2025,44 @@
                                 {
                                     "p1": 0.7412932,
                                     "p2": 0.6992665
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "day": 25,
+                    "name": "Clock Signal",
+                    "description": "Run assembly code and analyze to find loops",
+                    "tags": [ "assembly", "loops" ],
+                    "results": [
+                        {
+                            "p1": "196"
+                        },
+                        {
+                            "p1": "180"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.0000122
+                                },
+                                {
+                                    "p1": 0.0000135
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.0024228
+                                },
+                                {
+                                    "p1": 0.0021111
                                 }
                             ]
                         }
@@ -3030,6 +3106,43 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 25,
+                    "name": "The Halting Problem",
+                    "description": "Turing Tape Machine",
+                    "results": [
+                        {
+                            "p1": "3145"
+                        },
+                        {
+                            "p1": "3578"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 1.4967770
+                                },
+                                {
+                                    "p1": 1.5525877
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.6855739
+                                },
+                                {
+                                    "p1": 0.7268415
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -4069,6 +4182,43 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 25,
+                    "name": "Four-Dimensional Adventure",
+                    "description": "Finding groups of 4D points under a certain distance",
+                    "results": [
+                        {
+                            "p1": "314"
+                        },
+                        {
+                            "p1": "373"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.4976307
+                                },
+                                {
+                                    "p1": 0.3770634
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.8639009
+                                },
+                                {
+                                    "p1": 0.6836498
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -5100,6 +5250,43 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "day": 25,
+                    "name": "Cryostasis",
+                    "description": "Run machine code and play Rogue-like game",
+                    "results": [
+                        {
+                            "p1": "2147485856"
+                        },
+                        {
+                            "p1": "285213704"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 0.7809669
+                                },
+                                {
+                                    "p1": 1.0928794
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.1776706
+                                },
+                                {
+                                    "p1": 0.2252570
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -6123,6 +6310,43 @@
                                 {
                                     "p1": 0.0244163,
                                     "p2": 3.4322089
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "day": 25,
+                    "name": "Combo Breaker",
+                    "description": "Transform encrytion",
+                    "results": [
+                        {
+                            "p1": "3803729"
+                        },
+                        {
+                            "p1": "18293391"
+                        }
+                    ],
+                    "times": [
+                        {
+                            "environment": "i9_wsl_py",
+                            "inputs": [
+                                {
+                                    "p1": 4.7309586
+                                },
+                                {
+                                    "p1": 5.2393010
+                                }
+                            ]
+                        },
+                        {
+                            "environment": "i9_wsl_cs",
+                            "inputs": [
+                                {
+                                    "p1": 0.5073910
+                                },
+                                {
+                                    "p1": 0.5259352
                                 }
                             ]
                         }
