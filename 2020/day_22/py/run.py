@@ -60,7 +60,6 @@ def part1(players: Tuple[Player,Player]) -> int:
             player1.addCards([player1Card, player2Card])
         else:
             player2.addCards([player2Card, player1Card])
-
     winner = player1 if len(player1.cards) else player2
     return winner.getScore()
 
@@ -123,8 +122,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
