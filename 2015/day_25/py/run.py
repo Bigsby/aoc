@@ -23,7 +23,7 @@ def part1(data: Tuple[int,int]) -> int:
             if column == targetColumn and row == targetRow:
                 return lastCode
             row -= 1
-            
+
 
 def part2(puzzleInput):
     pass
@@ -34,7 +34,7 @@ def getInput(filePath: str) -> Tuple[int,int]:
         raise FileNotFoundError(filePath)
     
     with open(filePath, "r") as file:
-        return tuple(map(int, re.findall("\d+", file.read())))
+        return tuple(map(int, re.findall(r"\d+", file.read())))
 
 
 def main():
@@ -50,8 +50,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
