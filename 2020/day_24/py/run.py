@@ -42,11 +42,11 @@ def getBlackCount(neighbors: List[Tile], floor: Floor) -> int:
     return sum([ 1 for neighbor in neighbors if neighbor in floor and floor[neighbor] ])
 
 
-def getTileState(tile: Tile, floor: Floor):
+def getTileState(tile: Tile, floor: Floor) -> bool:
     return tile in floor and floor[tile]
 
 
-def getNewState(tile: Tile, floor: Floor):
+def getNewState(tile: Tile, floor: Floor) -> bool:
     adjacentBlackCount = getBlackCount(getNeighbors(tile), floor)
     tileState = getTileState(tile, floor)
     if tileState and adjacentBlackCount == 0 or adjacentBlackCount > 2:
@@ -62,7 +62,6 @@ def runDay(floor: Floor) -> Floor:
         newFloor[tile] = getNewState(tile, floor)
     for tile in edgesToTest:
         newFloor[tile] = getNewState(tile, floor)
-
     return newFloor
 
 
@@ -95,8 +94,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
