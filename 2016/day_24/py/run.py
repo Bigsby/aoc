@@ -11,17 +11,17 @@ DIRECTIONS = [ -1, -1j, 1, 1j ]
 
 def findPathsFromLocation(maze: Maze, numbers: Dict[Location, int], start: Location) -> Dict[int,int]:
     visited = { start }
-    queue: List[Tuple[int,int,int]] = [ (int(start.real), int(start.imag), 0) ]
+    queue: List[Tuple[complex,int]] = [ (start, 0) ]
     paths: Dict[int,int] = {}
     while queue:
-        x, y, distance = queue.pop(0)
+        position, distance = queue.pop(0)
         for direction in DIRECTIONS:
-            newPosition = x + y * 1j + direction
+            newPosition = position + direction
             if newPosition in maze and newPosition not in visited:
                 visited.add(newPosition)
                 if newPosition in numbers:
                     paths[numbers[newPosition]] = distance + 1
-                queue.append((int(newPosition.real), int(newPosition.imag), distance + 1))
+                queue.append((newPosition, distance + 1))
     return paths
 
 
@@ -49,11 +49,11 @@ def findLeastSteps(data: Tuple[Maze,Dict[Location,int]], returnHome: bool) -> in
     return minumSteps
 
 
-def part1(data: Tuple[Maze,Dict[Location,int]]):
+def part1(data: Tuple[Maze,Dict[Location,int]]) -> int:
     return findLeastSteps(data, False)
 
 
-def part2(data: Tuple[Maze,Dict[Location,int]]):
+def part2(data: Tuple[Maze,Dict[Location,int]]) -> int:
     return findLeastSteps(data, True)
 
 
@@ -88,8 +88,8 @@ def main():
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"P1 time: {middle - start:.7f}")
+    print(f"P2 time: {end - middle:.7f}")
 
 
 if __name__ == "__main__":
