@@ -104,7 +104,7 @@ namespace AoC
         static Regex immunityWeaknessRegex = new Regex(@"\(.*\)", RegexOptions.Compiled);
         static Group ParseGroup(string text, int army, int number)
         {
-            var nummbersMatch = numbersRegex.Match(text);
+            var nummbersMatch = numbersRegex.Match(text.Trim());
             if (nummbersMatch.Success)
             {
                 var immunities = new List<string>();
@@ -136,7 +136,7 @@ namespace AoC
         static IEnumerable<Group> GetInput(string filePath)
         {
             if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            var armyTexts = File.ReadAllText(filePath).Split("\n\n");
+            var armyTexts = File.ReadAllText(filePath).Split(Environment.NewLine + Environment.NewLine);
             var immuneSystem = ParseArmy(armyTexts[0], 0);
             var infection = ParseArmy(armyTexts[1], 1);
             return immuneSystem.Concat(infection);
