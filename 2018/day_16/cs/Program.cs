@@ -109,14 +109,14 @@ namespace AoC
             return registers.Item1;
         }
 
-        static Regex recordRegex = new Regex(@"Before: \[(?<b0>\d+), (?<b1>\d+), (?<b2>\d+), (?<b3>\d+)]\n(?<opCode>\d+) (?<A>\d) (?<B>\d) (?<C>\d)\nAfter:  \[(?<a0>\d+), (?<a1>\d+), (?<a2>\d+), (?<a3>\d+)]", RegexOptions.Compiled);
+        static Regex recordRegex = new Regex(@"Before: \[(?<b0>\d+), (?<b1>\d+), (?<b2>\d+), (?<b3>\d+)][^\d]*(?<opCode>\d+) (?<A>\d+) (?<B>\d+) (?<C>\d+).*After:  \[(?<a0>\d+), (?<a1>\d+), (?<a2>\d+), (?<a3>\d+)]", RegexOptions.Compiled | RegexOptions.Singleline);
         static Regex operationRegex = new Regex(@"(?<opCode>\d+) (?<A>\d) (?<B>\d) (?<C>\d)", RegexOptions.Compiled);
         static (IEnumerable<(Registers before, Operation operation, Registers after)> records, IEnumerable<Operation> operations) GetInput(string filePath)
         {
             if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            var splits = File.ReadAllText(filePath).Split("\n\n\n\n");
+            var splits = File.ReadAllText(filePath).Split(Environment.NewLine + Environment.NewLine + Environment.NewLine + Environment.NewLine);
             var records = new List<(Registers before, Operation operation, Registers after)>();
-            foreach (Match match in recordRegex.Matches(splits[0]))
+            foreach (Match match in splits[0].Split(Environment.NewLine + Environment.NewLine).Select(record => recordRegex.Match(record)))
                 records.Add((
                     Tuple.Create(int.Parse(match.Groups["b0"].Value), int.Parse(match.Groups["b1"].Value), int.Parse(match.Groups["b2"].Value), int.Parse(match.Groups["b3"].Value)),
                     Tuple.Create(int.Parse(match.Groups["opCode"].Value), int.Parse(match.Groups["A"].Value), int.Parse(match.Groups["B"].Value), int.Parse(match.Groups["C"].Value)),
