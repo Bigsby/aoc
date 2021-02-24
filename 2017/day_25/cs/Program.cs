@@ -66,7 +66,7 @@ namespace AoC
             var states = new States();
             var initialState = string.Empty;
             var steps = 0;
-            foreach (var split in File.ReadAllText(filePath).Split("\n\n"))
+            foreach (var split in File.ReadAllText(filePath).Split(Environment.NewLine + Environment.NewLine))
             {
                 var setupMatch = setupRegex.Match(split);
                 if (setupMatch.Success)
