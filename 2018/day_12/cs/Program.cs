@@ -62,7 +62,7 @@ namespace AoC
         
         static Regex notesRegex = new Regex(@"^(?<pattern>[#\.]{5})\s=>\s(?<result>[#\.])$", RegexOptions.Compiled | RegexOptions.Multiline);
         static Notes ParseNotes(string noteLines)
-            => notesRegex.Matches(noteLines)
+            => noteLines.Split(Environment.NewLine).Select(line => notesRegex.Match(line))
                 .ToDictionary(
                     match => ComputePattern(match.Groups["pattern"].Value), 
                     match => match.Groups["result"].Value == "#");
