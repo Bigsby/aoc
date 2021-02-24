@@ -125,7 +125,7 @@ namespace AoC
         static (Player, Player) GetInput(string filePath)
         {
             if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            var split = File.ReadAllText(filePath).Split("\n\n");
+            var split = File.ReadAllText(filePath).Split(Environment.NewLine + Environment.NewLine);
             return (Player.FromLines(split[0]), Player.FromLines(split[1]));
         }
 
