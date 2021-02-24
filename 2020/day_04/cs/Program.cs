@@ -69,7 +69,7 @@ namespace AoC
         static IEnumerable<Passport> GetInput(string filePath)
         {
             if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            return File.ReadAllText(filePath).Split("\n\n").Select(entry =>
+            return File.ReadAllText(filePath).Split(Environment.NewLine + Environment.NewLine).Select(entry =>
                 entryRegex.Matches(entry).ToDictionary(match => match.Groups[1].Value, match => match.Groups[2].Value));
         }
 
