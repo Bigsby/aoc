@@ -13,18 +13,15 @@ def getProgramGroup(program: int, connections: Dict[int,List[int]], soFar: Set[i
     return soFar
 
 
-def part1(connections: Dict[int,List[int]]) -> int:
-    return len(getProgramGroup(0, connections))
-
-
-def part2(connections: Dict[int,List[int]]) -> int:
+def solve(connections: Dict[int,List[int]]) -> Tuple[int,int]:
+    part1Result = len(getProgramGroup(0, connections))
     groupsCount = 0
     while connections:
         groupsCount += 1
         for connection in getProgramGroup(next(iter(connections.keys())), connections):
             if connection in connections:
                 del connections[connection]    
-    return groupsCount
+    return part1Result, groupsCount
 
 
 lineRegex = re.compile(r"^(?P<one>\d+)\s<->\s(?P<two>.*)$")
@@ -33,6 +30,7 @@ def parseLine(line: str) -> Tuple[int,List[int]]:
     if match:
         return int(match.group("one")), list(map(int, match.group("two").split(",")))
     raise Exception("Bad format", line)
+
 
 def getInput(filePath: str) -> Dict[int,List[int]]:
     if not os.path.isfile(filePath):
@@ -46,17 +44,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

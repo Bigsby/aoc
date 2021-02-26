@@ -42,13 +42,6 @@ namespace AoC
             };
         }
 
-        static int Part1((Rules, List<string>) puzzleInput)
-        {
-            var (rules, messages) = puzzleInput;
-            var zeroRule = "^" +  GenerateRegex(rules, 0) + "$";
-            return messages.Count(message => Regex.IsMatch(message, zeroRule));
-        }
-
         static (bool, int) isInnerMatch(string rule, string message, int position)
         {
             var match = Regex.Match(message[Range.StartAt(position)], rule);
@@ -81,12 +74,16 @@ namespace AoC
             return false;
         }
 
-        static int Part2((Rules, List<string>) puzzleInput)
+        static (int, int) Solve((Rules, List<string>) puzzleInput)
         {
             var (rules, messages) = puzzleInput;
+            var rule0 = "^" +  GenerateRegex(rules, 0) + "$";
             var rule42 = "^" + GenerateRegex(rules, 42);
             var rule31 = "^" + GenerateRegex(rules, 31);
-            return messages.Count(message => IsMatch(rule42, rule31, message));
+            return (
+                messages.Count(message => Regex.IsMatch(message, rule0)),
+                messages.Count(message => IsMatch(rule42, rule31, message))
+            );
         }
 
         static Regex letterRegex = new Regex("^\\\"(?<letter>a|b)\\\"$", RegexOptions.Compiled);
@@ -127,19 +124,13 @@ namespace AoC
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

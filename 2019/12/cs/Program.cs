@@ -153,12 +153,17 @@ namespace AoC
             }
             return cycles.Values.Aggregate((soFar, cycle) => soFar * cycle / GCD(soFar, cycle));
         }
+        
+        static (long, long) Solve(IEnumerable<Moon> moons)
+            => (
+                Part1(moons),
+                Part2(moons)
+            );
 
         static Regex lineRegex = new Regex(@"^<x=(?<x>-?\d+),\sy=(?<y>-?\d+),\sz=(?<z>-?\d+)>$", RegexOptions.Compiled);
         static IEnumerable<Moon> GetInput(string filePath)
-        {
-            if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            return File.ReadAllLines(filePath).Select(line => {
+            => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
+            : File.ReadAllLines(filePath).Select(line => {
                 var match = lineRegex.Match(line);
                 if (match.Success)
                     return new Moon(
@@ -167,25 +172,18 @@ namespace AoC
                         long.Parse(match.Groups["z"].Value));
                 throw new Exception($"Bad format '{line}'");
             });
-        }
 
         static void Main(string[] args)
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

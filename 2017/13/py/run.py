@@ -6,12 +6,7 @@ from typing import Dict, Tuple
 Scanners = Dict[int,int]
 
 
-def getCycles(scanners: Scanners) -> Dict[int,int]:
-    return { layer: 2 * (range - 1) for layer, range in scanners.items() }
-
-
-def part1(scanners: Scanners) -> int:
-    cycles = getCycles(scanners)
+def part1(scanners: Scanners, cycles: Scanners) -> int:
     severity: int = 0
     for currentLayer in range(max(scanners.keys()) + 1):
         if currentLayer in cycles and currentLayer % cycles[currentLayer] == 0:
@@ -26,12 +21,19 @@ def runPacketUntilCaught(cycles: Scanners, offset: int) -> bool:
     return True
 
 
-def part2(scanners: Scanners):
-    cycles = getCycles(scanners)
+def part2(cycles: Scanners):
     offset = 1
     while not runPacketUntilCaught(cycles, offset):
         offset += 1
     return offset
+
+
+def solve(scanners: Scanners) -> Tuple[int,int]:
+    cycles = { layer: 2 * (range - 1) for layer, range in scanners.items() }
+    return (
+        part1(scanners, cycles),
+        part2(cycles)
+    )
 
 
 def parseLine(line: str) -> Tuple[int,int]:
@@ -42,7 +44,7 @@ def parseLine(line: str) -> Tuple[int,int]:
 def getInput(filePath: str) -> Dict[int,int]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
-    
+
     with open(filePath, "r") as file:
         return { scanner: depth  for scanner, depth in map(parseLine, file.readlines()) }
 
@@ -51,17 +53,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

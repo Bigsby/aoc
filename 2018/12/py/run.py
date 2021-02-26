@@ -12,8 +12,7 @@ def getStateValue(index: int, state: State) -> int:
     return sum([ 2 ** i for i in range(5) if i + index - 2 in state ])
 
 
-def runGenerations(puzzleInput: Tuple[State,Notes], generations: int) -> List[int]:
-    state, notes = puzzleInput
+def runGenerations(state: State, notes: Notes, generations: int) -> List[int]:
     generation = 0
     while generation < generations:
         state = [ index for index in range(min(state) - 2, max(state) + 2) if notes[getStateValue(index, state)] ]
@@ -21,18 +20,22 @@ def runGenerations(puzzleInput: Tuple[State,Notes], generations: int) -> List[in
     return state
 
 
-def part1(puzzleInput: Tuple[State,Notes]) -> int:
-    return sum(runGenerations(puzzleInput, 20))
-
-
-def part2(puzzleInput: Tuple[State,Notes]) -> int:
+def part2(state: State, notes: Notes) -> int:
     jump = 200
-    firstState = runGenerations(puzzleInput, jump)
+    firstState = runGenerations(state, notes, jump)
     firstSum = sum(firstState)
-    secondState = runGenerations((firstState, puzzleInput[1]), jump)
+    secondState = runGenerations(firstState, notes, jump)
     diff = sum(secondState) - firstSum
     target = 5 * 10 ** 10
-    return firstSum + diff * ( target // jump - 1)
+    return firstSum + diff * (target // jump - 1)
+
+
+def solve(puzzleInput: Tuple[State,Notes]) -> Tuple[int,int]:
+    state, notes = puzzleInput
+    return (
+        sum(runGenerations(state, notes, 20)),
+        part2(state, notes)
+    )
 
 
 initialStateRegex = re.compile(r"#|\.")
@@ -61,17 +64,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

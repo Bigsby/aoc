@@ -9,7 +9,7 @@ GROUP_END = "}"
 GARBAGE_START = "<"
 GARBAGE_END = ">"
 ESCAPE = "!"
-def count(stream: str) -> Tuple[int,int]:
+def solve(stream: str) -> Tuple[int,int]:
     groupScore = 0
     garbageCount = 0
     depth = 0
@@ -32,16 +32,7 @@ def count(stream: str) -> Tuple[int,int]:
         elif c == GROUP_END:
             groupScore += depth
             depth -= 1
-
     return groupScore, garbageCount
-
-
-def part1(stream: str) -> int:
-    return count(stream)[0]
-
-
-def part2(stream: str) -> int:
-    return count(stream)[1]
 
 
 def getInput(filePath: str) -> str:
@@ -56,17 +47,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

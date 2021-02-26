@@ -27,7 +27,7 @@ namespace AoC
                     foreach (var _ in Enumerable.Range(0, stretch + 1))
                     {
                         var hash = md5.ComputeHash(UTF8Encoding.UTF8.GetBytes(value));
-                        value = BitConverter.ToString(hash).ToLower().Replace("-", "");
+                        value = BitConverter.ToString(hash).Replace("-", "").ToLower();
                     }
                     var match = quintetRegex.Match(value);
                     if (match.Success)
@@ -47,33 +47,27 @@ namespace AoC
             return keys.OrderBy(key => key).ElementAt(63);
         }
 
-        static int Part1(string salt) => FindKey(salt, 0);
-
-        static int Part2(string salt) => FindKey(salt, 2016);
+        static (int, int) Solve(string salt)
+            => (
+                FindKey(salt, 0),
+                FindKey(salt, 2016)
+            );
 
         static string GetInput(string filePath)
-        {
-            if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            return File.ReadAllText(filePath).Trim();
-        }
+            => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
+            : File.ReadAllText(filePath).Trim();
 
         static void Main(string[] args)
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

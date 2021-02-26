@@ -19,18 +19,13 @@ DIRECTIONS = {
     "nw": - 1     ,
     "n" :     - 1j
 }
-def part1(instructions: List[str]) -> Tuple[int,int]:
+def solve(instructions: List[str]) -> Tuple[int,int]:
     furthest = 0
     currentHex = 0
     for instrucion in instructions:
         currentHex += DIRECTIONS[instrucion]
         furthest = max(furthest, getHexManhatanDistance(currentHex))
-
     return getHexManhatanDistance(currentHex), furthest
-
-
-def part2(result: int) -> int:
-    return result
 
 
 instructionRegex = re.compile(r"ne|nw|n|sw|se|s")
@@ -46,17 +41,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result, part2Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(part2Result)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

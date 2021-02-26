@@ -33,12 +33,11 @@ def navigate(instructions: List[Instruction], heading: complex,  headingOnCardin
     return int(abs(position.real) + abs(position.imag))
 
 
-def part1(instructions: List[Instruction]) -> int:
-    return navigate(instructions, 1 + 0j)
-    
-
-def part2(instructions: List[Instruction]) -> int:
-    return navigate(instructions, 10 + 1j, True)
+def solve(instructions: List[Instruction]) -> Tuple[int,int]:
+    return (
+        navigate(instructions, 1 + 0j),
+        navigate(instructions, 10 + 1j, True)
+    )
 
 
 lineRegex = re.compile(r"^(?P<direction>[NSEWLRF])(?P<value>\d+)$")
@@ -55,23 +54,19 @@ def getInput(filePath: str) -> List[Instruction]:
     
     with open(filePath, "r") as file:
         return [ parseLine(line) for line in file.readlines() ]
-            
+
 
 def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

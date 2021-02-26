@@ -21,18 +21,12 @@ namespace AoC
         };
 
         static int GetHexManhatanDistance(Complex position)
+            => (position.Real > 0) ^ (position.Imaginary > 0) ?
+                (int)Math.Max(Math.Abs(position.Real), Math.Abs(position.Imaginary))
+                : (int)(Math.Abs(position.Real) + Math.Abs(position.Imaginary));
+
+        static (int, int) Solve(IEnumerable<string> instructions)
         {
-            if ((position.Real > 0) ^ (position.Imaginary > 0))
-                return (int)(Math.Max(Math.Abs(position.Real), Math.Abs(position.Imaginary)));
-            return (int)(Math.Abs(position.Real) + Math.Abs(position.Imaginary));
-        }
-
-        static int Part1(IEnumerable<string> instructions)
-            => GetHexManhatanDistance(instructions.Aggregate(Complex.Zero, (current, instruction) => current + DIRECTIONS[instruction]));
-
-        static int Part2(IEnumerable<string> instructions)
-        {
-
             var furthest = 0;
             Complex currentHex = 0;
             foreach (var instrucion in instructions)
@@ -40,33 +34,26 @@ namespace AoC
                 currentHex += DIRECTIONS[instrucion];
                 furthest = Math.Max(furthest, GetHexManhatanDistance(currentHex));
             }
-            return furthest;
+            return (GetHexManhatanDistance(currentHex), furthest);
         }
 
         static Regex instructionRegex = new Regex(@"ne|nw|n|sw|se|s", RegexOptions.Compiled);
         static IEnumerable<string> GetInput(string filePath)
-        {
-            if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            return instructionRegex.Matches(File.ReadAllText(filePath)).Select(match => match.Groups[0].Value);
-        }
+            => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
+            : instructionRegex.Matches(File.ReadAllText(filePath)).Select(match => match.Groups[0].Value);
+
 
         static void Main(string[] args)
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

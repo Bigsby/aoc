@@ -85,12 +85,17 @@ namespace AoC
             return GetDivisors(registers[VALUE_REGISTER[ip]]).Sum();
         }
 
+        static (int, int) Solve((int, Operation[]) data)
+            => (
+                Part1(data),
+                Part2(data)
+            );
+
         static Regex operationRegex = new Regex(@"(?<opCode>\w+) (?<A>\d) (?<B>\d+) (?<C>\d+)", RegexOptions.Compiled);
         static (int, Operation[]) GetInput(string filePath)
         {
             if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
             var lines = File.ReadAllLines(filePath);
-            
             return (int.Parse(lines[0].Split(" ")[1]), lines[1..].Select(line => {
                 var match = operationRegex.Match(line);
                 if (match.Success)
@@ -103,19 +108,13 @@ namespace AoC
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

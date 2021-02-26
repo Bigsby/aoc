@@ -26,47 +26,39 @@ namespace AoC
 
         static int GetMetadataSum(Node node) => node.metadata.Sum() + node.children.Sum(GetMetadataSum);
 
-        static Node GetRoot(IEnumerable<int> data)
-        {
-            data = new List<int>(data);
-            return ReadNode(new Queue<int>(data));
-        }
-
-        static int Part1(IEnumerable<int> data) => GetMetadataSum(GetRoot(data));
-
         static int GetValue(Node node)
         {
             if (!node.children.Any())
                 return node.metadata.Sum();
             var childrenCount = node.children.Count();
-            return node.metadata.Where(index => index > 0 && index <= childrenCount).Sum(index => GetValue(node.children.ElementAt(index - 1)));
+            return node.metadata.Where(index => 
+                index > 0 && index <= childrenCount).Sum(index => GetValue(node.children.ElementAt(index - 1)));
         }
 
-        static int Part2(IEnumerable<int> data) => GetValue(GetRoot(data));
+        static (int, int) Solve(IEnumerable<int> data)
+        {
+            var root = ReadNode(new Queue<int>(data));
+            return (
+                GetMetadataSum(root),
+                GetValue(root)
+            );
+        }
 
         static IEnumerable<int> GetInput(string filePath)
-        {
-            if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            return File.ReadAllText(filePath).Trim().Split(" ").Select(int.Parse);
-        }
+            => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
+            : File.ReadAllText(filePath).Trim().Split(" ").Select(int.Parse);
 
         static void Main(string[] args)
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

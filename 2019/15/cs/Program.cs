@@ -182,11 +182,12 @@ namespace AoC
             { 4, 1 }
         };
 
-        static (int result, Complex oxygenSystem, IEnumerable<Complex> openSpaces) RunUntilOxygenSystem(long[] memory, bool completeMap = false)
+        static (int result, Complex oxygenSystem, IEnumerable<Complex> openSpaces) RunUntilOxygenSystem(long[] memory)
         {
             var startPosition = Complex.Zero;
             var openSpaces = new List<Complex>();
             var oxygenPosition = Complex.Zero;
+            var stepsToOxygenSystem = 0;
             var queue = new Queue<(Complex position, IEnumerable<Complex> path, IntCodeComputer droid)>();
             queue.Enqueue((startPosition, new [] { startPosition }, new IntCodeComputer(memory)));
             var visited = new List<Complex>();
@@ -207,8 +208,8 @@ namespace AoC
                         switch (newDroid.GetOutput())
                         {
                             case 2: // Oxygen Ssytem
-                                if (!completeMap)
-                                    return (path.Count(), newPosition, openSpaces);
+                                if (stepsToOxygenSystem == 0)
+                                    stepsToOxygenSystem = path.Count();
                                 oxygenPosition = newPosition;
                                 break;
                             case 1: // Open space
@@ -223,14 +224,12 @@ namespace AoC
                     }
                 }
             }
-            return (0, oxygenPosition, openSpaces);
+            return (stepsToOxygenSystem, oxygenPosition, openSpaces);
         }
 
-        static int Part1(long[] memory) => RunUntilOxygenSystem(memory).result;
-
-        static int Part2(long[] memory)
+        static (int, int) Solve(long[] memory)
         {
-            var (_, oxygenSystemPosition, openSpaces) = RunUntilOxygenSystem(memory, true);
+            var (stepsToOxygenSystem, oxygenSystemPosition, openSpaces) = RunUntilOxygenSystem(memory);
             var openSpacesList = openSpaces.ToList();
             var filled = new List<Complex>();
             filled.Add(oxygenSystemPosition);
@@ -247,32 +246,24 @@ namespace AoC
                             openSpacesList.Remove(position);
                     }
             }
-            return minutes;
+            return (stepsToOxygenSystem, minutes);
         }
 
         static long[] GetInput(string filePath)
-        {
-            if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            return File.ReadAllText(filePath).Trim().Split(",").Select(long.Parse).ToArray();
-        }
+            => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
+            : File.ReadAllText(filePath).Trim().Split(",").Select(long.Parse).ToArray();
 
         static void Main(string[] args)
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

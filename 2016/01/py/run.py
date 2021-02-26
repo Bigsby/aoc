@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from typing import Iterable, List, Tuple
+from typing import List, Tuple
 import re
 
 Instruction = Tuple[str,int]
@@ -15,34 +15,24 @@ def getManhatanDistance(position: complex) -> int:
     return int(abs(position.real) + abs(position.imag))
 
 
-def part1(instructions: List[Instruction]) -> int:
+def solve(instructions: List[Instruction]) -> Tuple[int,int]:
     currentPosition = 0
     currentHeading = 1j
-    for direction, distance in instructions:
-        currentHeading = getNewHeading(currentHeading, direction)
-        currentPosition += currentHeading * distance
-    return getManhatanDistance(currentPosition)
-
-
-def getVisitedPositions(position: complex, heading: complex, distance: int) -> Iterable[complex]:
-    for i in range(1, distance + 1):
-        yield position + (i * heading)
-
-
-def part2(instructions: List[Instruction]) -> int:
-    currentPosition = 0
-    currentHeading = 1j
+    part2 = 0
     visitedPositions: List[complex] = [ currentPosition ]
-
     for direction, distance in instructions:
         currentHeading = getNewHeading(currentHeading, direction)
-        for i in range(1, distance + 1):
+        for _ in range(1, distance + 1):
             currentPosition += currentHeading
-            if currentPosition in visitedPositions:
-                return getManhatanDistance(currentPosition)
-            else:
-                visitedPositions.append(currentPosition)
-    raise Exception("Never returned to previous locations")
+            if part2 == 0:
+                if currentPosition in visitedPositions:
+                    part2 = getManhatanDistance(currentPosition)
+                else:
+                    visitedPositions.append(currentPosition)
+    return (
+        getManhatanDistance(currentPosition), 
+        part2
+    )
 
 
 instructionRegex = re.compile(r"^(?P<direction>[RL])(?P<distance>\d+),?\s?$")
@@ -65,17 +55,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

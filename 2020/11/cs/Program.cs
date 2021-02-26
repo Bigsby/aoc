@@ -27,18 +27,16 @@ namespace AoC
             + 1,
             - 1 + 1 * I,
                 + 1 * I,
-            + 1 + 1 * I            
+            + 1 + 1 * I
         };
 
         static int GetOccupiedCount(Grid grid, Complex position, Func<Grid, Complex, Complex, Complex> getNeighborFunc)
         {
             var total = 0;
-            foreach (var direction in NEIGHBOR_DIRECTIONS)
-            {
-                var neighbor = getNeighborFunc(grid, position, direction);
+            foreach (var neighbor in NEIGHBOR_DIRECTIONS
+                        .Select(direction => getNeighborFunc(grid, position, direction)))
                 if (grid.ContainsKey(neighbor) && grid[neighbor] == State.Occupied)
                     total++;
-            }
             return total;
         }
 
@@ -78,9 +76,6 @@ namespace AoC
             return proccessGrid.Values.Count(state => state == State.Occupied);
         }
 
-        static int Part1(Grid grid)
-            => RunGrid(grid, 3, (_, position, direction) => position + direction);
-
         static Complex GetDirectionalNeighbor(Grid grid, Complex position, Complex direction)
         {
             position += direction;
@@ -88,9 +83,12 @@ namespace AoC
                 position += direction;
             return position;
         }
-
-        static int Part2(Grid grid)
-            => RunGrid(grid, 4, GetDirectionalNeighbor);
+        
+        static (int, int) Solve(Grid grid)
+            => (
+                RunGrid(grid, 3, (_, position, direction) => position + direction),
+                RunGrid(grid, 4, GetDirectionalNeighbor)
+            );
 
         static Dictionary<char, State> CHAR_STATES = new Dictionary<char, State> {
             { '.', State.Floor },
@@ -111,19 +109,13 @@ namespace AoC
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

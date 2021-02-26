@@ -11,6 +11,16 @@ Rules = Dict[int,List[Rule]]
 START = ".#./..#/###"
 
 
+def printGrid(grid: Grid):
+    maxX = int(max(p.real for p in grid))
+    maxY = int(max(p.imag for p in grid))
+    for y in range(maxY + 1):
+        for x in range(maxX + 1):
+            print("#" if x + y * 1j in grid else ".", end="")
+        print()
+    print()
+
+
 def parseGrid(text: str) -> Tuple[int,Grid]: 
     grid = set()
     split = text.split("/")
@@ -67,30 +77,15 @@ def iterate(grid: Grid, size: int, rules: Rules) -> Tuple[int,Grid]:
     ruleSet = rules[ruleSize]
     divider = size // ruleSize
     for xIndex, yIndex, innerGrid in splitGrid(grid, divider, ruleSize):
-        # innerGrid = enhanceGrid(innerGrid, ruleSize, ruleSet)
         for position in enhanceGrid(innerGrid, ruleSize, ruleSet):
             enhancedGrid.add(position + xIndex * (ruleSize + 1) + yIndex * 1j * (ruleSize + 1))            
     return size + divider, enhancedGrid
 
-def printGrid(grid: Grid):
-    maxX = int(max(p.real for p in grid))
-    maxY = int(max(p.imag for p in grid))
-    for y in range(maxY + 1):
-        for x in range(maxX + 1):
-            print("#" if x + y * 1j in grid else ".", end="")
-        print()
-    print()
 
 def runIterations(grid: Grid, size: int, rules: Rules, iterations: int) -> Tuple[int,Grid]:
     for _ in range(iterations):
         size, grid = iterate(grid, size, rules)
     return size, grid
-
-
-def part1(rules: Rules) -> int:
-    size, grid = parseGrid(START)
-    _, grid = runIterations(grid, size, rules, 5)
-    return len(grid)
 
 
 def runNext3Iterations(grid: Grid, rules: Rules) -> List[Grid]:
@@ -107,8 +102,7 @@ def getGridId(grid: Grid) -> int:
     return result
 
 
-def part2(rules: Rules) -> int:
-    _, grid = parseGrid(START)
+def part2(rules: Rules, grid: Grid) -> int:
     total = 0
     calculated: Dict[int,List[Grid]] = {}
     queue: List[Tuple[Grid,int]] = [ (grid, 0) ]
@@ -123,6 +117,14 @@ def part2(rules: Rules) -> int:
             for innerGrid in calculated[gridId]:
                 queue.append((innerGrid, iterations + 3))
     return total
+
+
+def solve(rules: Rules) -> Tuple[int,int]:
+    size, grid = parseGrid(START)
+    return (
+        len(runIterations(grid, size, rules, 5)[1]),
+        part2(rules, grid)
+    )
 
 
 lineRegex = re.compile(r"^(?P<rule>[./#]+) => (?P<result>[./#]+)$")
@@ -151,17 +153,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

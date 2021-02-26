@@ -1,14 +1,14 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from typing import Dict, List, Tuple
+from typing import Dict, Iterable, List, Tuple
 from itertools import permutations
 
 Location = complex
 Maze = List[complex]
+
+
 DIRECTIONS = [ -1, -1j, 1, 1j ]
-
-
 def findPathsFromLocation(maze: Maze, numbers: Dict[Location, int], start: Location) -> Dict[int,int]:
     visited = { start }
     queue: List[Tuple[complex,int]] = [ (start, 0) ]
@@ -25,36 +25,30 @@ def findPathsFromLocation(maze: Maze, numbers: Dict[Location, int], start: Locat
     return paths
 
 
-def getStepsForPath(path: List[int], pathsFromNumbers: Dict[int,Dict[int,int]]) -> int:
+def getStepsForPath(path: Iterable[int], pathsFromNumbers: Dict[int,Dict[int,int]], returnHome: bool) -> int:
     steps = 0
     current = 0
-    while path:
-        next = path.pop(0)
+    pathList = list(path)
+    while pathList:
+        next = pathList.pop(0)
         steps += pathsFromNumbers[current][next]
         current = next
+    if returnHome:
+        steps += pathsFromNumbers[current][0]
     return steps
 
 
-def findLeastSteps(data: Tuple[Maze,Dict[Location,int]], returnHome: bool) -> int:
+def solve(data: Tuple[Maze,Dict[Location,int]]) -> Tuple[int,int]:
     maze, numbers = data
     pathsFromNumbers = { number: findPathsFromLocation(maze, numbers, location) for location, number in numbers.items() }
     numbersBesidesStart = [ number for number in numbers.values() if number != 0 ]
-    minumSteps = sys.maxsize
-    for combination in permutations(numbersBesidesStart, len(numbersBesidesStart)):
-        path = list(combination)
-        if returnHome:
-            path.append(0)
-        steps = getStepsForPath(path, pathsFromNumbers)
-        minumSteps = min(minumSteps, steps)
-    return minumSteps
-
-
-def part1(data: Tuple[Maze,Dict[Location,int]]) -> int:
-    return findLeastSteps(data, False)
-
-
-def part2(data: Tuple[Maze,Dict[Location,int]]) -> int:
-    return findLeastSteps(data, True)
+    pathCombinations = list(permutations(numbersBesidesStart, len(numbersBesidesStart)))
+    minimumSterps = sys.maxsize
+    returnMinimumSteps = sys.maxsize
+    for combination in pathCombinations:
+        minimumSterps = min(minimumSterps, getStepsForPath(combination, pathsFromNumbers, False))
+        returnMinimumSteps = min(returnMinimumSteps, getStepsForPath(combination, pathsFromNumbers, True))
+    return minimumSterps, returnMinimumSteps
 
 
 def getInput(filePath: str) -> Tuple[Maze,Dict[Location,int]]:
@@ -79,17 +73,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

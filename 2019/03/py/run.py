@@ -37,10 +37,16 @@ def part2(wires: Tuple[Wire,Wire]) -> int:
         if position in wireApoints:
             continue
         wireApoints[position] = steps + 1
-
     return min([ wireApoints[position] + steps + 1 
         for steps, position in enumerate(getWirePositions(wireB)) 
         if position in wireApoints ])
+
+
+def solve(wires: Tuple[Wire,Wire]) -> Tuple[int,int]:
+    return (
+        part1(wires),
+        part2(wires)
+    )
 
 
 lineRegex = re.compile(r"(?P<direction>R|U|L|D)(?P<distance>\d+)")
@@ -61,17 +67,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

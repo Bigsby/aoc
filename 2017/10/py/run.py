@@ -39,8 +39,17 @@ def part2(puzzleInput: str):
     currentMark = skip = 0
     for _ in range(64):
         marks, currentMark, skip = runLengths(marks, lengths, currentMark, skip)
-    denseHash = map(lambda index: reduce(lambda soFar, mark: soFar ^ mark, marks[index * 16:(index + 1) * 16 ]), range(16))
+    denseHash = map(lambda index: 
+        reduce(lambda soFar, mark: 
+            soFar ^ mark, marks[index * 16:(index + 1) * 16 ]), range(16))
     return "".join(map(lambda knot: f"{knot:02x}", denseHash))
+
+
+def solve(puzzleInput: str) -> Tuple[int,str]:
+    return (
+        part1(puzzleInput),
+        part2(puzzleInput)
+    )
 
 
 def getInput(filePath: str) -> str:
@@ -55,17 +64,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

@@ -63,6 +63,13 @@ def part2(locations: List[complex]):
     return validLocationsCount
 
 
+def solve(locations: List[complex]) -> Tuple[int,int]:
+    return (
+        part1(locations),
+        part2(locations)
+    )
+
+
 def parseLine(line: str) -> complex:
     splitLine: List[str] = line.split(",")
     return int(splitLine[0].strip()) + int(splitLine[1].strip()) * 1j
@@ -80,17 +87,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

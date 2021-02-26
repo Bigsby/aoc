@@ -7,10 +7,12 @@ import re
 Component = Tuple[int,int]
 
 
-def findStrongest(components: List[Component], lengthMatters: bool) -> int:
+def solve(components: List[Component]) -> Tuple[int,int]:
     starts = [ component for component in components if 0 in component ]
-    queue: List[Tuple[int,int,List[Component]]] = [ (next(port for port in start if port != 0), 0, [start]) for start in starts ]
-    longestStrongest = (0, 0)
+    queue: List[Tuple[int,int,List[Component]]] = [ (next(port for port in start if port != 0), 0, [start]) 
+        for start in starts ]
+    longestStrongest1 = (0, 0)
+    longestStrongest2 = (0, 0)
     while queue:
         lastPort, strength, used = queue.pop(0)
         continued = False
@@ -22,16 +24,9 @@ def findStrongest(components: List[Component], lengthMatters: bool) -> int:
                 newUsed.append(component)
                 queue.append((nextPort, strength + lastPort * 2, newUsed))
         if not continued:
-            longestStrongest = max(longestStrongest, (len(used) if lengthMatters else 0, strength + lastPort))
-    return longestStrongest[1]
-
-
-def part1(components: List[Component]) -> int:
-    return findStrongest(components, False)
-
-
-def part2(components: List[Component]) -> int:
-    return findStrongest(components, True)
+            longestStrongest1 = max(longestStrongest1, (0, strength + lastPort))
+            longestStrongest2 = max(longestStrongest2, (len(used), strength + lastPort))
+    return longestStrongest1[1], longestStrongest2[1]
 
 
 def getInput(filePath: str) -> List[Component]:
@@ -40,25 +35,19 @@ def getInput(filePath: str) -> List[Component]:
     
     with open(filePath, "r") as file:
         return [ tuple(map(int, re.findall(r"\d+", line))) for line in file.readlines() ]
-            
-
 
 
 def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

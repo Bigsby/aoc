@@ -6,7 +6,7 @@ from typing import List, Tuple
 Point = Tuple[int,int,int,int]
 
 
-def part1(points: List[Point]):
+def solve(points: List[Point]) -> Tuple[int,str]:
     edges = [ set() for _ in range(len(points)) ]
     for thisPoint, (w0, x0, y0, z0) in enumerate(points):
         for thatPoint, (w1, x1, y1, z1) in enumerate(points):
@@ -26,11 +26,7 @@ def part1(points: List[Point]):
             visited.add(currentPoint)
             for other in edges[currentPoint]:
                 queue.append(other)
-    return constellations
-
-
-def part2(puzzleInput):
-    pass
+    return constellations, ""
 
 
 def getInput(filePath: str) -> List[Point]:
@@ -48,17 +44,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

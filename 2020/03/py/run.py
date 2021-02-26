@@ -1,11 +1,12 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from typing import List
+from typing import List, Tuple
 from functools import reduce
 
-
 Trees = List[complex]
+
+
 def calculateTrees(trees: Trees, step: complex) -> int:
     yLimit = max(p.imag for p in trees) + 1
     xLimit = max(p.real for p in trees) + 1
@@ -17,10 +18,6 @@ def calculateTrees(trees: Trees, step: complex) -> int:
     return treeCount
 
 
-def part1(trees: Trees) -> int:
-    return calculateTrees(trees, 3 + 1j)
-
-
 STEPS = [
     1 + 1j,
     3 + 1j,
@@ -28,14 +25,16 @@ STEPS = [
     7 + 1j,
     1 + 2j
 ]
-def part2(trees: Trees) -> int:
-    return reduce(lambda current, step: current * calculateTrees(trees, step), STEPS, 1)
+def solve(trees: Trees) -> Tuple[int,int]:
+    return (
+        calculateTrees(trees, 3 + 1j),
+        reduce(lambda current, step: current * calculateTrees(trees, step), STEPS, 1)
+    )
 
 
 def getInput(filePath: str) -> Trees:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
-    
     
     with open(filePath, "r") as file:
         trees = []
@@ -50,17 +49,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

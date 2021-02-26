@@ -12,10 +12,10 @@ namespace AoC
     static class Program
     {
         const int HLF = 0; 
-        const int TPL = 1; 
-        const int INC = 2; 
-        const int JMP =3; 
-        const int JIE = 4; 
+        const int TPL = 1;
+        const int INC = 2;
+        const int JMP = 3;
+        const int JIE = 4;
         const int JIO = 5;
 
         static int RunProgram(Instruction[] instructions, Dictionary<string, int> init = null)
@@ -43,11 +43,11 @@ namespace AoC
             return registers["b"];
         }
 
-        static int Part1(Instruction[] instructions)
-            => RunProgram(instructions);
-
-        static int Part2(Instruction[] instructions)
-            => RunProgram(instructions, new Dictionary<string, int> { { "a", 1 } });
+        static (int, int) Solve(Instruction[] instructions)
+            => (
+                RunProgram(instructions),
+                RunProgram(instructions, new Dictionary<string, int> { { "a", 1 } })
+            );
 
         static Dictionary<string, Func<string, Instruction>> INSTRUCTION_PARSERS = new Dictionary<string, Func<string, Instruction>>{
             { "hlf", line => Tuple.Create(HLF, line.Split(" ")[1], 0) },
@@ -58,33 +58,25 @@ namespace AoC
             { "jio", line => Tuple.Create(JIO, line.Split(" ")[1][..^1], int.Parse(line.Split(" ")[2])) },
         };
         static Instruction[] GetInput(string filePath)
-        {
-            if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            return File.ReadLines(filePath).Select(line => {
+            => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
+            : File.ReadLines(filePath).Select(line => {
                 foreach (var key in INSTRUCTION_PARSERS.Keys)
                     if (line.StartsWith(key))
                         return INSTRUCTION_PARSERS[key](line);
                 throw new Exception($"Bad format '{line}'");
             }).ToArray();
-        }
 
         static void Main(string[] args)
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

@@ -87,7 +87,7 @@ def getValidMoves(state: State) -> List[Move]:
     return pruneMoves(validMoves)
 
 
-def solve(floors: Floors) -> int:
+def solveFloors(floors: Floors) -> int:
     queue: List[Tuple[State,int]] = [((0,floors), 0)]
     radioisotopesCount = max(max(floor) if floor else 0 for floor in floors)
     while queue:
@@ -100,10 +100,6 @@ def solve(floors: Floors) -> int:
             else:
                 queue.append((newState, movesCount + 1))
     raise Exception("Solution not found")
-
-
-def part1(floors: Floors) -> int:
-    return solve(floors)
 
 
 lineRegex = re.compile(r"a (?P<radioisotope>\w+)(?P<part>-compatible microchip| generator)")
@@ -121,9 +117,13 @@ def parseLine(line: str) -> List[int]:
 
 
 PART2_EXTRA = "a elerium generator, a elerium-compatible microchip, a dilithium generator, a dilithium-compatible microchip"
-def part2(floors: Floors):
+def solve(floors: Floors) -> Tuple[int,int]:
+    part1Result = solveFloors(floors)
     floors[0] += parseLine(PART2_EXTRA)
-    return solve(floors)
+    return (
+        part1Result, 
+        solveFloors(floors)
+    )
 
 
 def getInput(filePath: str) -> Floors:
@@ -138,17 +138,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

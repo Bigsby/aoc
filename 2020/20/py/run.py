@@ -1,6 +1,6 @@
 #! /usr/bin/python3
 import sys, os, time
-from typing import Dict, Iterable, List, Optional, Tuple
+from typing import Dict, Iterable, List, Tuple
 import re
 from functools import reduce
 from math import sqrt
@@ -97,15 +97,8 @@ def getCorners(tiles: List[Tuple[int,Tile]], size: int, allPermutations: Dict[in
     return [ ( number, matchedSides ) for number, matchedSides in tilesMatchesSides.items() if len(matchedSides) == 2 ]
 
 
-def part1(tiles: List[Tuple[int,Tile]]) -> int:
-    permutations = generateAllTilesPermutations(tiles)
-    size = getSize(tiles[0][1])
-    return reduce(lambda soFar, corner: soFar * corner[0], getCorners(tiles, size, permutations), 1)
-
-
-def buildPuzzle(tiles: List[Tuple[int,Tile]], tileSize: int) -> Dict[complex,Tile]:
-    tilePermutations = generateAllTilesPermutations(tiles)
-    firstCornerNumber, (sideOne, sideTwo) = getCorners(tiles, tileSize, tilePermutations)[0]
+def buildPuzzle(tiles: List[Tuple[int,Tile]], tileSize: int, tilePermutations: Dict[int,List[Tile]], corners: List[Tuple[int,Tile]]) -> Dict[complex,Tile]:
+    firstCornerNumber, (sideOne, sideTwo) = corners[0]
     puzzleWidth = int(sqrt(len(tiles)))
     puzzlePosition = (puzzleWidth - 1) * ((1 if sideOne == -1 or sideTwo == -1 else 0) + (1j if sideOne == -1j or sideTwo == -1j else 0))
     lastTile = tilePermutations[firstCornerNumber][0]
@@ -174,13 +167,23 @@ def getSeaMonsterCount(puzzle: Tile, seaMonster: Tile) -> int:
     return 0
     
 
-def part2(tiles: List[Tuple[int,Tile]]) -> int:
+def part2(tiles: List[Tuple[int,Tile]], tilePermutations: Dict[int,List[Tile]], corners: List[Tuple[int,Tile]]) -> int:
     tileSize = getSize(tiles[0][1])
-    puzzle = buildPuzzle(tiles, tileSize)
+    puzzle = buildPuzzle(tiles, tileSize, tilePermutations, corners)
     reduced = removeBordersAndJoin(puzzle, tileSize)
     seaMonster = getSeaMonster()
     locationCount = getSeaMonsterCount(reduced, seaMonster)
     return len(reduced) - len(seaMonster) * locationCount
+
+
+def solve(tiles: List[Tuple[int,Tile]]) -> Tuple[int,int]:
+    permutations = generateAllTilesPermutations(tiles)
+    size = getSize(tiles[0][1])
+    corners = getCorners(tiles, size, permutations)
+    return (
+        reduce(lambda soFar, corner: soFar * corner[0], corners, 1),
+        part2(tiles, permutations, corners)
+    )
 
 
 numberLineRegex = re.compile(r"^Tile\s(?P<number>\d+):$")
@@ -214,17 +217,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

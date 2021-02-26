@@ -70,10 +70,15 @@ namespace AoC
             }
         }
 
+        static (int, int) Solve(Nanobots nanobots)
+            => (
+                Part1(nanobots),
+                Part2(nanobots)
+            );
+
         static Nanobots GetInput(string filePath)
-        {
-            if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            return File.ReadLines(filePath).Select(line => {
+            => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
+            : File.ReadLines(filePath).Select(line => {
                 var matches = Regex.Matches(line, @"-?\d+");
                 return (
                     int.Parse(matches[0].Value),
@@ -82,25 +87,18 @@ namespace AoC
                     int.Parse(matches[3].Value)
                 );
             });
-        }
 
         static void Main(string[] args)
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

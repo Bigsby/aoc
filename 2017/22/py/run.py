@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from typing import Dict
+from typing import Dict, Tuple
 from collections import defaultdict
 
 InfectionStatus = Dict[complex,bool]
@@ -12,7 +12,7 @@ def part1(state: InfectionStatus) -> int:
     infectionCount = 0
     currentNode = max(n.real for n in state.keys()) // 2 + (min(n.imag for n in state.keys()) // 2)* 1j
     direction = 1j
-    for _ in range(10000):
+    for _ in range(10_000):
         nodeState = state[currentNode]
         direction *= -1j if nodeState else 1j
         state[currentNode] = not nodeState
@@ -25,12 +25,7 @@ CLEAN = 0
 WEAKENED = 1
 INFECTED = 2
 FLAGGED = 3
-STATE_DIRECTIONS = [
-    1j,
-    1,
-    -1j,
-    -1
-]
+STATE_DIRECTIONS = [ 1j, 1, -1j, -1 ]
 STATE_TRANSITIONS = [
     WEAKENED,
     INFECTED,
@@ -42,7 +37,7 @@ def part2(state: InfectionStatus) -> int:
     currentNode = max(n.real for n in state.keys()) // 2 + (min(n.imag for n in state.keys()) // 2)* 1j
     direction = 1j
     infectionCount = 0
-    for _ in range(10000000):
+    for _ in range(10_000_000):
         nodeState = quadState[currentNode]
         newState = STATE_TRANSITIONS[nodeState]
         direction *= STATE_DIRECTIONS[nodeState]
@@ -50,6 +45,13 @@ def part2(state: InfectionStatus) -> int:
         currentNode += direction
         infectionCount += newState == INFECTED
     return infectionCount
+
+
+def solve(state: InfectionStatus) -> Tuple[int,int]:
+    return (
+        part1(state),
+        part2(state)
+    )
 
 
 def getInput(filePath: str) -> InfectionStatus:
@@ -68,17 +70,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

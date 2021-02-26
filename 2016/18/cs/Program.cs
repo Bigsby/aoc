@@ -13,47 +13,38 @@ namespace AoC
     {
         static void PrintTiles(IEnumerable<bool> list) => WriteLine(string.Join("", list.Select(v => v ? '.' : '^' )));
 
-        static int GetSafeCount(Tiles tiles, int count)
+        static (int, int) Solve(Tiles tiles)
         {
             var tileCount = tiles.Count();
             var safe = tiles.Count(t => t);
-            foreach (var _ in Enumerable.Range(0, count - 1))
+            var part1Result = 0;
+            foreach (var step in Enumerable.Range(1, 400_000 - 1))
             {
+                if (step == 40)
+                    part1Result = safe;
                 tiles = Enumerable.Range(0, tileCount)
                     .Select(index => (index == 0 || tiles.ElementAt(index - 1)) == (index == tileCount - 1 || tiles.ElementAt(index + 1)))
                     .ToArray();
                 safe += tiles.Count(t => t);
             }
-            return safe;
+            return (part1Result, safe);
         }
-
-        static int Part1(Tiles tiles) => GetSafeCount(tiles, 40);
-
-        static int Part2(Tiles tiles) => GetSafeCount(tiles, 400_000);
 
         static Tiles GetInput(string filePath)
-        {
-            if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            return File.ReadAllText(filePath).Trim().Select(c => c == '.');
-        }
+            => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
+            : File.ReadAllText(filePath).Trim().Select(c => c == '.');
 
         static void Main(string[] args)
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

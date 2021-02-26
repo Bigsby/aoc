@@ -24,11 +24,6 @@ def getEmptyAndNonViableNodes(fileSystem: FileSystem) -> Tuple[complex,List[comp
     return empty, list(nonViableNodes)
 
 
-def part1(fileSystem: FileSystem) -> int:
-    _, nonViable = getEmptyAndNonViableNodes(fileSystem)
-    return len(fileSystem) - len(nonViable) - 1
-
-
 DIRECTIONS = [ -1j, -1, 1, 1j ]
 def getStepsToTarget(nodes: List[complex], nonViable: List[complex], start: complex, destination: complex) -> int:
     visited = [ start ]
@@ -45,11 +40,14 @@ def getStepsToTarget(nodes: List[complex], nonViable: List[complex], start: comp
     raise Exception("Path not found")
 
 
-def part2(fileSystem: FileSystem) -> int:
+def solve(fileSystem: FileSystem) -> Tuple[int,int]:
     empty, nonViable = getEmptyAndNonViableNodes(fileSystem)
     nodes = list(fileSystem.keys())
     emptyDestination = int(max(n.real for n in nodes))
-    return getStepsToTarget(nodes, nonViable, empty, emptyDestination) + (emptyDestination - 1) * 5
+    return (
+        len(fileSystem) - len(nonViable) - 1,
+        getStepsToTarget(nodes, nonViable, empty, emptyDestination) + (emptyDestination - 1) * 5
+    )
 
 
 lineRegex = re.compile(r"^/dev/grid/node-x(?P<x>\d+)-y(?P<y>\d+)\s+(?P<size>\d+)T\s+(?P<used>\d+)")
@@ -71,17 +69,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

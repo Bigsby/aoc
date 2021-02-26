@@ -87,16 +87,14 @@ namespace AoC
             }
         }
 
-        static int Part1(IEnumerable<Group> groups) => Combat(groups, 0).unitsLeft;
-
-        static int Part2(IEnumerable<Group> groups)
+        static (int, int) Solve(IEnumerable<Group> groups)
         {
             var boost = 0;
             while (true)
             {
                 var (winner, left) = Combat(groups, ++boost);
                 if (winner == 0)
-                    return left;
+                    return (Combat(groups, 0).unitsLeft, left);
             }
         }
 
@@ -140,26 +138,19 @@ namespace AoC
             var immuneSystem = ParseArmy(armyTexts[0], 0);
             var infection = ParseArmy(armyTexts[1], 1);
             return immuneSystem.Concat(infection);
-
         }
 
         static void Main(string[] args)
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

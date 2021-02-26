@@ -209,8 +209,6 @@ namespace AoC
             return screen;
         }
 
-        static int Part1(Instructions instructions) => RunInstructions(instructions, SCREEN_WIDTH, SCREEN_HEIGTH).Count();
-
         static char GetCharacterInScreen(Screen screen, int index, int width, int height)
         {
             var screenValue = Enumerable.Range(0, height).SelectMany(y => Enumerable.Range(0, width).Select(x => (x, y)))
@@ -219,18 +217,21 @@ namespace AoC
             return LETTERS[screenValue];
         }
 
-        static string Part2(Instructions instructions)
+        static (int, string) Solve(Instructions instructions)
         {
             var screen = RunInstructions(instructions, SCREEN_WIDTH, SCREEN_HEIGTH);
-            return new string(Enumerable.Range(0, SCREEN_WIDTH / CHARACTER_WIDTH).Select(index => 
-                GetCharacterInScreen(screen, index, CHARACTER_WIDTH, SCREEN_HEIGTH)
-            ).ToArray());
+            return (
+                screen.Count(), 
+                new string(Enumerable.Range(0, SCREEN_WIDTH / CHARACTER_WIDTH)
+                    .Select(index => 
+                        GetCharacterInScreen(screen, index, CHARACTER_WIDTH, SCREEN_HEIGTH)
+                    ).ToArray())
+            );
         }
 
         static Instructions GetInput(string filePath)
-        {
-            if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            return File.ReadAllLines(filePath).Select(line => {
+            => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
+            : File.ReadAllLines(filePath).Select(line => {
                 if (line.StartsWith("rect"))
                 {
                     var ab = line[5..].Split('x');
@@ -245,25 +246,18 @@ namespace AoC
                     return (InstructionType.RotateColumn, int.Parse(xa[0]), int.Parse(xa[1]));
                 }
             });
-        }
 
         static void Main(string[] args)
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

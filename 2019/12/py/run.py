@@ -23,12 +23,19 @@ class Moon():
             return -1
         return 0
     
+    def getMoonDelta(self, otherMoon: Coordinates) -> Coordinates:
+        return (
+            Moon.getDelta(self.position[0], otherMoon[0]),
+            Moon.getDelta(self.position[1], otherMoon[1]),
+            Moon.getDelta(self.position[2], otherMoon[2])
+        )
+    
     @staticmethod
     def sum(one: Coordinates, two: Coordinates) -> Coordinates:
-        return tuple(map(sum, zip(one, two)))
+        return (one[0] + two[0], one[1] + two[1], one[2] + two[2])
 
     def updateVelocity(self, otherMoon: Coordinates):
-        self.velocity = Moon.sum(self.velocity, tuple(Moon.getDelta(self.position[coordinate], otherMoon[coordinate]) for coordinate in range(3)))
+        self.velocity = Moon.sum(self.velocity, self.getMoonDelta(otherMoon))
     
     def updatePosition(self):
         self.position = Moon.sum(self.position, self.velocity)
@@ -59,7 +66,7 @@ def part1(moons: List[Moon]) -> int:
     return sum(map(lambda moon: moon.getTotalEnergy(), moons))
 
 
-def buildStateForCoordinate(coordinate: int, moons: List[Moon]) -> Tuple[Tuple[int],Tuple[int]]:
+def buildStateForCoordinate(coordinate: int, moons: List[Moon]) -> Tuple[Tuple[int,...],Tuple[int,...]]:
     return (tuple(moon.position[coordinate] for moon in moons), tuple(moon.velocity[coordinate] for moon in moons))
 
 
@@ -78,6 +85,13 @@ def part2(moons: List[Moon]) -> int:
     return reduce(lambda soFar, cycle: soFar * cycle // math.gcd(soFar, cycle), cyles)
 
 
+def solve(moons: List[Moon]) -> Tuple[int,int]:
+    return (
+        part1(moons),
+        part2(moons)
+    )
+
+
 lineRegex = re.compile(r"^<x=(?P<x>-?\d+),\sy=(?P<y>-?\d+),\sz=(?P<z>-?\d+)>$")
 def parseLine(line: str) -> Moon:
     match = lineRegex.match(line)
@@ -94,22 +108,17 @@ def getInput(filePath: str) -> List[Moon]:
         return [ parseLine(line) for line in file.readlines() ]
 
 
-
 def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

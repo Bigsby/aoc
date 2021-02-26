@@ -62,18 +62,13 @@ def combat(groups: List[Group], boost: int) -> Tuple[int, int]:
             return 0,immuneSystemUnits
 
 
-def part1(groups: List[Group]) -> int:
-    _, left = combat(groups, 0)
-    return left
-
-
-def part2(groups: List[Group]) -> int:
+def solve(groups: List[Group]) -> Tuple[int,int]:
     boost = 0
     while True:
         boost += 1
         winner, left = combat(groups, boost)
         if winner == 0:
-            return left
+            return combat(groups, 0)[1], left
 
 
 numbersRegex = re.compile(r"^(?P<units>\d+) units.*with (?P<hit>\d+) hit.*does (?P<damage>\d+) (?P<type>\w+).*initiative (?P<initiative>\d+)$")
@@ -122,22 +117,17 @@ def getInput(filePath: str) -> List[Group]:
         return [ *immuneSystem, *infection ]
 
 
-
 def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

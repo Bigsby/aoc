@@ -26,21 +26,14 @@ namespace AoC
         {
             int cap = 2;
             while (cap < capacity) cap <<= 1;
-
             heap = new T[cap + 1];
             size = 0;
             this.minHeap = minHeap;
         }
 
-        public bool IsEmpty() { return size < 1; }
-
-        public T Peek()
-        {
-            if (size < 1)
-                throw new ApplicationException("The heap is empty!");
-            return heap[1];
-        }
-
+        public bool IsEmpty() => size < 1;
+        public T Peek() => size < 1 ? throw new ApplicationException("The heap is empty!") : heap[1];
+        
         public virtual T Pop()
         {
             if (size < 1)
@@ -85,37 +78,22 @@ namespace AoC
             if (old.CompareTo(value) != 0 && inverse.TryGetValue(old, out i))
             {
                 inverse.Remove(old);
-
                 heap[i] = value;
                 inverse[value] = i;
-
                 if ((!minHeap && old.CompareTo(value) > 0) || (minHeap && old.CompareTo(value) < 0))
-                {
                     Heapify(i);
-                }
                 else
-                {
                     while (i > 1 && ((!minHeap && heap[i].CompareTo(heap[P(i)]) > 0) || (minHeap && heap[i].CompareTo(heap[P(i)]) < 0)))
                     {
                         Swap(i, P(i));
                         i = P(i);
                     }
-                }
             }
         }
 
-        protected int P(int i)
-        {
-            return i / 2;
-        }
-        protected int L(int i)
-        {
-            return 2 * i;
-        }
-        protected int R(int i)
-        {
-            return 2 * i + 1;
-        }
+        protected int P(int i) => i / 2;
+        protected int L(int i) => 2 * i;
+        protected int R(int i) => 2 * i + 1;
         protected void Heapify(int i)
         {
             int max = i;
@@ -309,18 +287,19 @@ namespace AoC
             return FindShortestPathFromKeyGragph(keysPaths, keys, Enumerable.Range(0, entrances.Count()).Select(index => (char)(index + 48)));
         }
 
-        static int Part1((Maze maze, KeyDoors keyDoors, Coordinate start) data)
-            => FindShortestPath(data.maze, data.keyDoors, new[] { data.start });
-
-        static int Part2((Maze, KeyDoors, Coordinate) data)
+        static (int, int) Solve((Maze, KeyDoors, Coordinate) data)
         {
             var (maze, keyDoors, start) = data;
+            var part1Result = FindShortestPath(maze, keyDoors, new[] { start });
             var mazeList = maze.ToList();
             foreach (var offset in new[] { new Coordinate(-1, 0), new Coordinate(1, 0), new Coordinate(0, -1), new Coordinate(0, 1) })
                 mazeList.Add(start + offset);
             var entrances = new[] { new Coordinate(-1, -1), new Coordinate(-1, 1), new Coordinate(1, -1), new Coordinate(1, 1) }
                 .Select(offset => start + offset);
-            return FindShortestPath(mazeList, keyDoors, entrances);
+            return (
+                part1Result,
+                FindShortestPath(mazeList, keyDoors, entrances)
+            );
         }
 
         static (Maze maze, KeyDoors keyDoors, Coordinate start) GetInput(string filePath)
@@ -344,19 +323,13 @@ namespace AoC
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

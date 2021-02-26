@@ -75,23 +75,14 @@ namespace AoC
             return count;
         }
 
-        static int Part1((IEnumerable<(Registers before, Operation operation, Registers after)> records, IEnumerable<Operation> operations) puzzleInput)
-        {
-            var records = puzzleInput.records;
-            var threeOrMore = 0;
-            var opCodes = MNEMONICS.ToDictionary(mnemonic => mnemonic, _ => new HashSet<int>());
-            foreach (var (before, operation, after) in records)
-                if (TestRecord(before, operation, after, opCodes) > 2)
-                    threeOrMore++;
-            return threeOrMore;
-        }
-
-        static int Part2((IEnumerable<(Registers before, Operation operation, Registers after)> records, IEnumerable<Operation> operations) puzzleInput)
+        static (int, int) Solve((IEnumerable<(Registers before, Operation operation, Registers after)> records, IEnumerable<Operation> operations) puzzleInput)
         {
             var (records, program) = puzzleInput;
             var opCodes = MNEMONICS.ToDictionary(mnemonic => mnemonic, _ => new HashSet<int>());
+            var threeOrMore = 0;
             foreach (var (before, operation, after) in records)
-                TestRecord(before, operation, after, opCodes);
+                if (TestRecord(before, operation, after, opCodes) > 2)
+                    threeOrMore++;
             foreach (var mnemonic in opCodes.Keys.ToArray())
                 opCodes[mnemonic] = opCodes[mnemonic].Where(opCode => opCode >= 0).ToHashSet();
             while (opCodes.Values.Any(valid => valid.Count > 1))
@@ -106,7 +97,7 @@ namespace AoC
             var registers = Tuple.Create(0, 0, 0, 0);
             foreach (var operation in program)
                 registers = RunOperation(registers, operation, ops[operation.Item1]);
-            return registers.Item1;
+            return (threeOrMore, registers.Item1);
         }
 
         static Regex recordRegex = new Regex(@"Before: \[(?<b0>\d+), (?<b1>\d+), (?<b2>\d+), (?<b3>\d+)][^\d]*(?<opCode>\d+) (?<A>\d+) (?<B>\d+) (?<C>\d+).*After:  \[(?<a0>\d+), (?<a1>\d+), (?<a2>\d+), (?<a3>\d+)]", RegexOptions.Compiled | RegexOptions.Singleline);
@@ -133,19 +124,13 @@ namespace AoC
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

@@ -67,7 +67,8 @@ def cycleCoordinates(lowerLimit: Coordinate, upperLimit: Coordinate) -> Iterable
 
 
 def getNeighborActiveCount(universe: Universe, coordinate: Coordinate) -> int:
-    return sum(neighbor != coordinate and neighbor in universe and universe[neighbor] for neighbor in cycleCoordinates(under(coordinate), over(coordinate)))
+    return sum(neighbor != coordinate and neighbor in universe and universe[neighbor] 
+        for neighbor in cycleCoordinates(under(coordinate), over(coordinate)))
 
 
 def nextCycle(universe: Universe) -> Universe:
@@ -90,14 +91,11 @@ def runCycles(universe: Universe) -> int:
     return sum(universe.values())
 
 
-def part1(universe: Universe) -> int:
-    return runCycles(universe)
-
-
-def part2(universe: Universe) -> int:
-    universe = { addDimension(coordinate): value for coordinate, value in universe.items() }
-    return runCycles(universe)
-
+def solve(universe: Universe) -> Tuple[int,int]:
+    return (
+        runCycles(universe),
+        runCycles({ addDimension(coordinate): value for coordinate, value in universe.items() })
+    )
 
 def getInput(filePath: str) -> Universe:
     if not os.path.isfile(filePath):
@@ -115,17 +113,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

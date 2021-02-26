@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from typing import List
+from typing import List, Tuple
 
 
 def hasNoValidPair(numberIndex: int, numbers: List[int]) -> bool:
@@ -12,10 +12,6 @@ def hasNoValidPair(numberIndex: int, numbers: List[int]) -> bool:
             if pairIndex != testIndex and testNumber + numbers[pairIndex] == number:
                 return False
     return True
-
-
-def part1(numbers: List[int]) -> int:
-    return next(numbers[index] for index in range(25, len(numbers)) if hasNoValidPair(index, numbers))
 
 
 def getWeakness(numbers: List[int], targetNumber: int) -> int:
@@ -31,8 +27,12 @@ def getWeakness(numbers: List[int], targetNumber: int) -> int:
     raise Exception("Weakness not found")
 
 
-def part2(numbers: List[int], part1Result: int) -> int:
-    return getWeakness(numbers, part1Result)
+def solve(numbers: List[int]) -> Tuple[int,int]:
+    part1Result = next(numbers[index] for index in range(25, len(numbers)) if hasNoValidPair(index, numbers))
+    return (
+        part1Result,
+        getWeakness(numbers, part1Result)
+    )
 
 
 def getInput(filePath: str) -> List[int]:
@@ -47,18 +47,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    global part1Result
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput, part1Result)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

@@ -108,11 +108,16 @@ namespace AoC
             return guards;
         }
 
+        static (int, int) Solve(Dictionary<int,GuardRecord> guards)
+            => (
+                Part1(guards),
+                Part2(guards)
+            );
+
         static Regex lineRegex = new Regex(@"\[(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})\s(?<hours>\d{2}):(?<minutes>\d{2})\]\s(?<message>.*)$", RegexOptions.Compiled);
         static Dictionary<int,GuardRecord> GetInput(string filePath)
-        {
-            if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            return BuildGuardRecords(File.ReadLines(filePath).Select(line => {
+            => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
+            : BuildGuardRecords(File.ReadLines(filePath).Select(line => {
                 Match match = lineRegex.Match(line);
                 if (match.Success)
                     return new LogRecord(
@@ -127,25 +132,17 @@ namespace AoC
                 throw new Exception($"Bad format '{line}");
             }));
 
-        }
-
         static void Main(string[] args)
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

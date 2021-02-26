@@ -16,8 +16,6 @@ namespace AoC
                 &&
                 ip.Where((part, index) => index % 2 == 0).Any(supernet => abbaRegex.Matches(supernet).Any());
 
-        static int Part1(IEnumerable<IEnumerable<string>> ips) => ips.Count(SupportsTLS);
-
         static IEnumerable<string> FindBABs(string supernet)
             => Enumerable.Range(0, supernet.Length - 2).Where(index => supernet[index] == supernet[index + 2])
                 .Select(index => new string(new [] { supernet[index + 1], supernet[index], supernet[index + 1] }));
@@ -34,32 +32,28 @@ namespace AoC
             return false;
         }
 
-        static int Part2(IEnumerable<IEnumerable<string>> ips) => ips.Count(SupportsSSL);
+        static (int, int) Solve(IEnumerable<IEnumerable<string>> ips)
+            => (
+                ips.Count(SupportsTLS), 
+                ips.Count(SupportsSSL)
+            );
 
         static Regex lineRegex = new Regex(@"(\[?[a-z]+\]?)", RegexOptions.Compiled);
         static IEnumerable<IEnumerable<string>> GetInput(string filePath)
-        {
-            if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            return File.ReadAllLines(filePath).Select(line => lineRegex.Matches(line).Select(match => match.Groups[1].Value));
-        }
+            => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
+            : File.ReadAllLines(filePath).Select(line => lineRegex.Matches(line).Select(match => match.Groups[1].Value));
 
         static void Main(string[] args)
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

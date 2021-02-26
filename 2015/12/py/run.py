@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Tuple, Union
 import re
 import json
 from functools import reduce
@@ -10,8 +10,6 @@ JSONType = Union[str, int, float, bool, None, Dict[str, Any], List[Any]]
 
 
 numberRegex = re.compile(r"(-?[\d]+)")
-def part1(puzzleInput: str):
-    return reduce(lambda soFar, match: soFar + int(match.group(1)), numberRegex.finditer(puzzleInput), 0)
 
 
 def getTotal(obj: JSONType) -> int:
@@ -26,9 +24,11 @@ def getTotal(obj: JSONType) -> int:
     return 0
 
 
-def part2(puzzleInput: str):
-    report = json.loads(puzzleInput)
-    return getTotal(report)
+def solve(puzzleInput: str) -> Tuple[int,int]:
+    return (
+        reduce(lambda soFar, match: soFar + int(match.group(1)), numberRegex.finditer(puzzleInput), 0), 
+        getTotal(json.loads(puzzleInput))
+    )
 
 
 def getInput(filePath: str) -> str:
@@ -43,17 +43,14 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
+
 
 
 if __name__ == "__main__":

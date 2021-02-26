@@ -13,18 +13,7 @@ Instructions = Tuple[List[ValueInstruction],Dict[int,CompareInstruction]]
 LOW_VALUE = 17
 HIGH_VALUE = 61
 TARGET_OUTPUTS = [ 0, 1, 2 ]
-def isComplete(test: int, bot: int, lowChip: int, highChip: int, outputs: Dict[int,int]) -> Tuple[bool,int]:
-    if test == 1:
-        if lowChip == LOW_VALUE and highChip == HIGH_VALUE:
-            return True, bot
-        return False, -1
-    else:
-        if all(output in outputs for output in TARGET_OUTPUTS):
-            return True, reduce(lambda soFar, output: soFar * outputs[output], TARGET_OUTPUTS, 1)
-        return False, -1
-
-
-def run(instructions: Instructions, test: int) -> int:
+def solve(instructions: Instructions) -> Tuple[int,int]:
     valueInstructions, compareInstructions = instructions
     bots: Dict[int, List[int]] = {}
     for bot, value in valueInstructions:
@@ -32,7 +21,9 @@ def run(instructions: Instructions, test: int) -> int:
             bots[bot] = []
         bots[bot].append(value)
     outputs: Dict[int,int] = {}
-    while True:
+    part1Result = 0
+    part2Result = 0
+    while part1Result == 0 or part2Result == 0:
         bot = next(bot for bot, chips in bots.items() if len(chips) == 2)
         lowChip = min(bots[bot])
         highChip = max(bots[bot])
@@ -51,18 +42,14 @@ def run(instructions: Instructions, test: int) -> int:
             outputs[high] = highChip
         bots[bot].remove(lowChip)
         bots[bot].remove(highChip)
-
-        complete, result = isComplete(test, bot, lowChip, highChip, outputs)
-        if complete:
-            return result
-
-
-def part1(instructions: Instructions) -> int:
-    return run(instructions, 1)
-
-
-def part2(instructions: Instructions) -> int:
-    return run(instructions, 2)
+        if part1Result == 0 and lowChip == LOW_VALUE and highChip == HIGH_VALUE:
+            part1Result = bot
+        if part2Result == 0 and all(output in outputs for output in TARGET_OUTPUTS):
+            part2Result = reduce(lambda soFar, output: soFar * outputs[output], TARGET_OUTPUTS, 1)
+    return (
+        part1Result, 
+        part2Result
+    )
 
 
 valueRegex = re.compile(r"^value\s(?P<value>\d+)\sgoes to bot\s(?P<bot>\d+)$")
@@ -92,17 +79,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

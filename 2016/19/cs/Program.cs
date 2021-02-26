@@ -8,16 +8,11 @@ namespace AoC
 {
     class Elf
     {
-        public int Position { get; init; }
+        public int Position { get; }
         public Elf Next { get; set; }
         public Elf Previous { get; set; }
 
-        public Elf(int position)
-        {
-            Position = position + 1;
-            Next = this;
-            Previous = this;
-        }
+        public Elf(int position) => Position = position + 1;
 
         public void Remove()
         {
@@ -28,9 +23,6 @@ namespace AoC
 
     static class Program
     {
-        static int Part1(int elfCount)
-            => Convert.ToInt32(Convert.ToString(elfCount, 2)[1..] + "1", 2);
-
         static int Part2(int elfCount)
         {
             var elves = Enumerable.Range(0, elfCount).Select(position => new Elf(position)).ToArray();
@@ -52,29 +44,27 @@ namespace AoC
             return currentElf.Position;
         }
 
+        static (int, int) Solve(int elfCount)
+            => (
+                Convert.ToInt32(Convert.ToString(elfCount, 2)[1..] + "1", 2),
+                Part2(elfCount)
+            );
+
         static int GetInput(string filePath)
-        {
-            if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            return int.Parse(File.ReadAllText(filePath));
-        }
+            => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
+            : int.Parse(File.ReadAllText(filePath));
 
         static void Main(string[] args)
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

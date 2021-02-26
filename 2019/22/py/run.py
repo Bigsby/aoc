@@ -22,13 +22,6 @@ def doShuffles(cards: List[int], shuffles: List[Shuffle]) -> List[int]:
     return cards
 
 
-CARDS1 = 10007
-POSITION1 = 2019
-def part1(shuffles: List[Shuffle]) -> int:
-    cards = doShuffles([ card for card in range(CARDS1) ], shuffles)
-    return cards.index(POSITION1)
-
-
 def inverseModulo(a: int, n:int) -> int: 
     return pow(a, n-2, n)
 
@@ -53,6 +46,15 @@ def part2(shuffles: List[Shuffle]) -> int:
     return ((POSITION2 - Mb) * inverseModulo(Ma, CARDS2)) % CARDS2
 
 
+CARDS1 = 10007
+POSITION1 = 2019
+def solve(shuffles: List[Shuffle]) -> Tuple[int,int]:
+    return (
+        doShuffles([ card for card in range(CARDS1) ], shuffles).index(POSITION1),
+        part2(shuffles)
+    )
+
+
 def parseLine(line:str) -> Shuffle:
     if line.startswith("deal into"):
         return NEW_STACK, 0
@@ -75,17 +77,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

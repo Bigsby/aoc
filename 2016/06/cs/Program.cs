@@ -23,45 +23,32 @@ namespace AoC
             return columnRecords;
         }
 
-        static string Part1(IEnumerable<string> messages)
+        static (string, string) Solve(IEnumerable<string> messages)
         {
             var columnRecords = GetColumnRecords(messages);
-            return Enumerable.Range(0, messages.First().Length).Aggregate("", (soFar, column) =>
-                soFar + columnRecords[column].Aggregate((max, current) => max.Value > current.Value ? max : current).Key
-            );
-        }
-
-        static string Part2(IEnumerable<string> messages)
-        {
-            var columnRecords = GetColumnRecords(messages);
-            return Enumerable.Range(0, messages.First().Length).Aggregate("", (soFar, column) =>
-                soFar + columnRecords[column].Aggregate((min, current) => min.Value < current.Value ? min : current).Key
+            return (
+                Enumerable.Range(0, messages.First().Length).Aggregate("", (soFar, column) =>
+                    soFar + columnRecords[column].Aggregate((max, current) => max.Value > current.Value ? max : current).Key),
+                Enumerable.Range(0, messages.First().Length).Aggregate("", (soFar, column) =>
+                    soFar + columnRecords[column].Aggregate((min, current) => min.Value < current.Value ? min : current).Key)
             );
         }
 
         static IEnumerable<string> GetInput(string filePath)
-        {
-            if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            return File.ReadAllLines(filePath);
-        }
+            => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
+            : File.ReadAllLines(filePath);
 
         static void Main(string[] args)
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

@@ -4,7 +4,6 @@ using System.IO;
 using System.Diagnostics;
 using System.Linq;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 
 namespace AoC
 {
@@ -55,34 +54,6 @@ namespace AoC
     {
         static Coordinate[] DIRECTIONS = new[] { Coordinate.YOne, -Coordinate.YOne, 1, -1 };
 
-        static int Part1((Maze, Portals, Coordinate, Coordinate) data)
-        {
-            var (maze, portals, start, end) = data;
-            var visited = new List<Coordinate>();
-            visited.Add(start);
-            var queue = new Queue<(Coordinate, int)>();
-            queue.Enqueue((start, 1));
-            while (queue.Any())
-            {
-                var (position, distance) = queue.Dequeue();
-                var newPositions = new List<Coordinate>();
-                if (portals.TryGetValue(position, out var label))
-                    newPositions.Add(portals.First(pair => pair.Key != position && pair.Value == label).Key);
-                newPositions.AddRange(DIRECTIONS.Select(direction => direction + position));
-                foreach (var newPosition in newPositions)
-                {
-                    if (newPosition == end)
-                        return distance;
-                    if (!visited.Contains(newPosition) && maze.Contains(newPosition))
-                    {
-                        visited.Add(newPosition);
-                        queue.Enqueue((newPosition, distance + 1));
-                    }
-                }
-            }
-            throw new Exception("Path not found");
-        }
-
         static void ShowArea(Maze maze, Coordinate current, IEnumerable<Coordinate> visited)
         {
             var offset = 40;
@@ -111,6 +82,34 @@ namespace AoC
                 WriteLine();
             }
             WriteLine();
+        }
+
+        static int Part1((Maze, Portals, Coordinate, Coordinate) data)
+        {
+            var (maze, portals, start, end) = data;
+            var visited = new List<Coordinate>();
+            visited.Add(start);
+            var queue = new Queue<(Coordinate, int)>();
+            queue.Enqueue((start, 1));
+            while (queue.Any())
+            {
+                var (position, distance) = queue.Dequeue();
+                var newPositions = new List<Coordinate>();
+                if (portals.TryGetValue(position, out var label))
+                    newPositions.Add(portals.First(pair => pair.Key != position && pair.Value == label).Key);
+                newPositions.AddRange(DIRECTIONS.Select(direction => direction + position));
+                foreach (var newPosition in newPositions)
+                {
+                    if (newPosition == end)
+                        return distance;
+                    if (!visited.Contains(newPosition) && maze.Contains(newPosition))
+                    {
+                        visited.Add(newPosition);
+                        queue.Enqueue((newPosition, distance + 1));
+                    }
+                }
+            }
+            throw new Exception("Path not found");
         }
 
         static (int, string)[] GetDistancesFromPosition(Maze maze, Portals portals, Coordinate start)
@@ -167,18 +166,20 @@ namespace AoC
             return graph;
         }
 
+        const string START_LABEL = "AA";
+        const string END_LABEL = "ZZ";
         static int Part2((Maze, Portals, Coordinate, Coordinate) data)
         {
             var (maze, portals, start, end) = data;
-            var target = BuildPortalKey("ZZ", end, 0);
-            portals[start] = "AA";
-            portals[end] = "ZZ";
+            var target = BuildPortalKey(END_LABEL, end, 0);
+            portals[start] = START_LABEL;
+            portals[end] = END_LABEL;
             var graph = BuildGraph(data);
             var portalDirections = GetPortalsDirections(maze, portals);
             var portalPairs = BuildPortalPairs(portalDirections.Keys);
             portalDirections[target] = false;
             var distances = new Dictionary<string, int>();
-            distances[BuildPortalKey("AA", start, 0, true)] = 0;
+            distances[BuildPortalKey(START_LABEL, start, 0, true)] = 0;
             var shortestPathTree = new List<string>();
             while (true)
             {
@@ -208,6 +209,12 @@ namespace AoC
                 }
             }
         }
+
+        static (int, int) Solve((Maze, Portals, Coordinate, Coordinate) data)
+            => (
+                Part1(data),
+                Part2(data)
+            );
 
         static (Maze, Portals, Coordinate, Coordinate) GetInput(string filePath)
         {
@@ -251,19 +258,13 @@ namespace AoC
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

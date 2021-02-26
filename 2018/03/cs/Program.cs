@@ -27,13 +27,9 @@ namespace AoC
                     }
             return coveredPoints;
         }
-
-        static int Part1(Claim[] claims)
-            => GetCoveredPoints(claims).Values.Count(value => value > 1);
         
-        static int Part2(Claim[] claims)
+        static int Part2(Claim[] claims, Dictionary<Tuple<int, int>, int> coveredPoints)
         {
-            var coveredPoints = GetCoveredPoints(claims);
             foreach (var (id, left, top, width, height) in claims)
             {
                 var allOne = true;
@@ -46,11 +42,19 @@ namespace AoC
             throw new Exception("Claim not found");
         }
 
+        static (int, int) Solve(Claim[] claims)
+        {
+            var coveredPoints = GetCoveredPoints(claims);
+            return (
+                coveredPoints.Values.Count(value => value > 1),
+                Part2(claims, coveredPoints)
+            );
+        }
+
         static Regex lineRegex = new Regex(@"^#(?<id>\d+)\s@\s(?<left>\d+),(?<top>\d+):\s(?<width>\d+)x(?<height>\d+)$");
         static Claim[] GetInput(string filePath)
-        {
-            if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            return File.ReadAllLines(filePath).Select(line => {
+            => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
+            : File.ReadAllLines(filePath).Select(line => {
                 Match match = lineRegex.Match(line);
                 return Tuple.Create(
                     int.Parse(match.Groups["id"].Value), 
@@ -60,25 +64,18 @@ namespace AoC
                     int.Parse(match.Groups["height"].Value)
                 );
             }).ToArray();
-        }
 
         static void Main(string[] args)
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

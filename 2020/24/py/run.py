@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from typing import Dict, List
+from typing import Dict, List, Tuple
 import re
 
 Directions = List[str]
@@ -28,10 +28,6 @@ def flipInitialTiles(tilePaths: List[Directions]) -> Floor:
         else:
             floor[current] = True
     return floor
-
-
-def part1(tilePaths: List[Directions]) -> int:
-    return sum(flipInitialTiles(tilePaths).values())
 
 
 def getNeighbors(tile: Tile) -> List[Tile]:
@@ -65,11 +61,18 @@ def runDay(floor: Floor) -> Floor:
     return newFloor
 
 
-def part2(tilePaths: List[Directions]) -> int:
-    floor = flipInitialTiles(tilePaths)
+def part2(floor: Floor) -> int:
     for _ in range(100):
         floor = runDay(floor)
     return sum(floor.values())
+
+
+def solve(tilePaths: List[Directions]) -> Tuple[int,int]:
+    floor = flipInitialTiles(tilePaths)
+    return (
+        sum(floor.values()),
+        part2(floor)
+    )
 
 
 lineRegex = re.compile(r"e|se|sw|w|nw|ne")
@@ -85,17 +88,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

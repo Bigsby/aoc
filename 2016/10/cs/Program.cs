@@ -17,26 +17,11 @@ namespace AoC
         const int LOW_VALUE = 17;
         const int HIGH_VALUE = 61;
         static int[] TARGET_OUTPUTS = new [] { 0, 1, 2 };
-        static (bool complete, int bot) IsComplete(int test, int bot, int lowChip, int highChip, Dictionary<int, int> outputs)
-        {
-            if (test == 1)
-            {
-                if (lowChip == LOW_VALUE && highChip == HIGH_VALUE)
-                    return (true, bot);
-                return (false, -1);
-            }
-            else
-            {
-                if (TARGET_OUTPUTS.All(output => outputs.ContainsKey(output)))
-                    return (true, TARGET_OUTPUTS.Aggregate(1, (sofar, output) => sofar * outputs[output]));
-                return (false, -1);
-            }
-        }
-
-        static int Run(Instructions instructions, int test)
+        static (int, int) Solve(Instructions instructions)
         {
             var (valueInstructions, compareInstructions) = instructions;
             var bots = new Dictionary<int, List<int>>();
+            int part1Result = 0, part2Result = 0;
             foreach (var valueInstruction in valueInstructions)
             {
                 if (! bots.ContainsKey(valueInstruction.bot))
@@ -44,7 +29,7 @@ namespace AoC
                 bots[valueInstruction.bot].Add(valueInstruction.value);
             }
             var outputs = new Dictionary<int, int>();
-            while (true)
+            while (part1Result == 0 || part2Result == 0)
             {
                 var bot = bots.First(pair => pair.Value.Count == 2).Key;
                 var lowChip = bots[bot].Min();
@@ -68,15 +53,13 @@ namespace AoC
                     outputs[compareInstruction.high] = highChip;
                 bots[bot].Remove(lowChip);
                 bots[bot].Remove(highChip);
-                var (complete, result) = IsComplete(test, bot, lowChip, highChip, outputs);
-                if (complete)
-                    return result;
+                if (part1Result == 0 && lowChip == LOW_VALUE && highChip == HIGH_VALUE)
+                    part1Result = bot;
+                if (part2Result == 0 && TARGET_OUTPUTS.All(output => outputs.ContainsKey(output)))
+                    part2Result = TARGET_OUTPUTS.Aggregate(1, (sofar, output) => sofar * outputs[output]);
             }
+            return (part1Result, part2Result);
         }
-
-        static int Part1(Instructions instructions) => Run(instructions, 1);
-
-        static int Part2(Instructions instructions) => Run(instructions, 2);
 
         static Regex valueRegex = new Regex(@"^value\s(?<value>\d+)\sgoes to bot\s(?<bot>\d+)$", RegexOptions.Compiled);
         static Regex compareRegex = new Regex(@"^bot\s(?<bot>\d+)\sgives low to\s(?<lowTarget>bot|output)\s(?<low>\d+)\sand high to\s(?<highTarget>bot|output)\s(?<high>\d+)$");
@@ -106,19 +89,13 @@ namespace AoC
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

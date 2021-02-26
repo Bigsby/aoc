@@ -90,22 +90,16 @@ namespace AoC
                     }
         }
 
-        static int Part1(Player boss)
+        static (int, int) Solve(Player boss)
         {
             var minCost = int.MaxValue;
+            var maxCost = 0;
             foreach (var (cost, damage, defense) in GetInventoryCombinations())
                 if (PlayGame(Tuple.Create(100, damage, defense), boss))
                     minCost = Math.Min(minCost, cost);
-            return minCost;
-        }
-
-        static int Part2(Player boss)
-        {
-            var maxCost = 0;
-            foreach (var (cost, damage, defense) in GetInventoryCombinations())
-                if (!PlayGame(Tuple.Create(100, damage, defense), boss))
+                else
                     maxCost = Math.Max(maxCost, cost);
-            return maxCost;
+            return (minCost, maxCost);
         }
 
         static Player GetInput(string filePath)
@@ -123,19 +117,13 @@ namespace AoC
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

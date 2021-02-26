@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace AoC
 {
+    using Particles = IEnumerable<(int[], int[], int[])>;
     class DefaultDictionary<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>>
     {
         public bool Any() => _innerDictionary.Any();
@@ -54,7 +55,7 @@ namespace AoC
         static int GetManhatanValue(int[] values)
             => values.Sum(value => Math.Abs(value));
 
-        static int Part1(IEnumerable<(int[], int[], int[])> particles)
+        static int Part1(Particles particles)
         {
             var closestParticle = 0;
             var lowestAcceleration = int.MaxValue;
@@ -137,7 +138,7 @@ namespace AoC
             }
         }
     
-        static int Part2(IEnumerable<(int[], int[], int[])> particles)
+        static int Part2(Particles particles)
         {
             var particlesArray = particles.ToArray();
             var collisions = new DefaultDictionary<int, List<(int, int)>>(null, () => new List<(int, int)>());
@@ -160,11 +161,16 @@ namespace AoC
             return particleIndexes.Count();
         }
 
+        static (int, int) Solve(Particles particles)
+            => (
+                Part1(particles),
+                Part2(particles)
+            );
+
         static Regex lineRegex = new Regex(@"^p=<(?<p>[^>]+)>, v=<(?<v>[^>]+)>, a=<(?<a>[^>]+)>$", RegexOptions.Compiled);
         static IEnumerable<(int[], int[], int[])> GetInput(string filePath)
-        {
-            if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            return File.ReadLines(filePath).Select(line => {
+            => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
+            : File.ReadLines(filePath).Select(line => {
                 var match = lineRegex.Match(line);
                 if (match.Success)
                     return (
@@ -174,25 +180,18 @@ namespace AoC
                     );
                 throw new Exception($"Bad format '{line}'");
             });
-        }
 
         static void Main(string[] args)
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

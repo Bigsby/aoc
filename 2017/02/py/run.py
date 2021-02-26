@@ -1,27 +1,20 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from typing import List
+from typing import List, Tuple
 import re
 from itertools import permutations
 
 
-def part1(lines: List[List[int]]) -> int:
-    total = 0
+def solve(lines: List[List[int]]) -> Tuple[int,int]:
+    total1 = 0
+    total2 = 0
     for line in lines:
-        maximum = max(line)
-        minimum = min(line)
-        total += maximum - minimum
-    return total
-
-
-def part2(lines: List[List[int]]) -> int:
-    total = 0
-    for line in lines:
+        total1 += max(line) - min(line)
         for numberA, numberB in permutations(line, 2):
             if numberA > numberB and numberA % numberB == 0:
-                total += numberA // numberB
-    return total
+                total2 += numberA // numberB
+    return (total1, total2)
 
 
 lineRegex = re.compile(r"\d+")
@@ -37,17 +30,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

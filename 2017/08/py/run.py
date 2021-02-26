@@ -39,7 +39,7 @@ def isConditionValid(source: int, operator: Operator, value: int) -> bool:
     raise Exception("Unknown operator", operator)
 
 
-def runInstructions(instructions: List[Instruction], returnFinal: bool) -> int:
+def solve(instructions: List[Instruction]) -> Tuple[int,int]:
     memory: Dict[str,int] = {}
     maxValue = 0
     for target, source, direction, amount, operator, value in instructions:
@@ -50,15 +50,10 @@ def runInstructions(instructions: List[Instruction], returnFinal: bool) -> int:
             memory[target] = 0
         memory[target] += amount * (1 if direction == Direction.Increment else -1)
         maxValue = max(maxValue, memory[target])
-    return maxValue if returnFinal else max(memory.values())
-
-
-def part1(instructions: List[Instruction]) -> int:
-    return runInstructions(instructions, False)
-
-
-def part2(instructions: List[Instruction]) -> int:
-    return runInstructions(instructions, True)
+    return (
+        max(memory.values()),
+        maxValue
+    )
 
 
 lineRegex = re.compile(r"^(?P<target>[a-z]+)\s(?P<direction>inc|dec)\s(?P<amount>-?\d+)\sif\s(?P<source>[a-z]+)\s(?P<operator>==|!=|>=|<=|>|<)\s(?P<value>-?\d+)$")
@@ -81,17 +76,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

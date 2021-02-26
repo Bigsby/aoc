@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from typing import Dict
+from typing import Dict, Tuple
 
 Grid = Dict[complex,int]
 Open, Tree, Lumberyard = 0, 1, 2
@@ -33,25 +33,21 @@ def getResourceValue(grid: Grid) -> int:
     return sum([ 1 for v in grid.values() if v == Tree ]) * sum([ 1 for v in grid.values() if v == Lumberyard ])
 
 
-def part1(grid: Grid) -> int:
-    for _ in range(10):
-        grid = getNextMinute(grid)
-    return getResourceValue(grid)
-
-
-def part2(grid: Grid) -> int:
+def solve(grid: Grid) -> Tuple[int,int]:
     previousValues = [ grid ]
     total = 10 ** 9
     minute = 0
+    part1Result = 0
     while minute < total:
+        if minute == 10:
+            part1Result = getResourceValue(grid)
         minute += 1
         grid = getNextMinute(grid)
         if grid in previousValues:
             period = minute - previousValues.index(grid)
             minute += ((total - minute) // period) * period
         previousValues.append(grid)
-    return getResourceValue(grid)
-
+    return part1Result, getResourceValue(grid)
 
 def getInput(filePath: str) -> Grid:
     if not os.path.isfile(filePath):
@@ -69,17 +65,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

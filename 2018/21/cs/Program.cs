@@ -14,9 +14,10 @@ namespace AoC
     {
         const int MASK = 16777215;
         const int MULTIPLIER = 65899;
-
-        static int FindNumber(int magicNumber, bool firstResult = true)
+        static (int, int) Solve((int, Operation[] operations) data)
         {
+            var magicNumber = data.operations[7].Item2;
+            var part1Result = 0;
             var seen = new HashSet<int>();
             var result = 0;
             var lastResult = -1;
@@ -29,8 +30,8 @@ namespace AoC
                     result = (((result + (accumulator & 0xFF)) & MASK) * MULTIPLIER) & MASK;
                     if (accumulator <= 0xFF)
                     {
-                        if (firstResult)
-                            return result;
+                        if (part1Result == 0)
+                            part1Result = result;
                         if (!seen.Contains(result))
                         {
                             seen.Add(result);
@@ -38,19 +39,13 @@ namespace AoC
                             break;
                         }
                         else
-                            return lastResult;
+                            return (part1Result, lastResult);
                     }
                     else
                         accumulator /= 0x100;
                 }
             }
         }
-
-        static int Part1((int, Operation[] operations) data)
-            => FindNumber(data.operations[7].Item2, true);
-
-        static int Part2((int, Operation[] operations) data)
-            => FindNumber(data.operations[7].Item2, false);
 
         static Regex operationRegex = new Regex(@"(?<opCode>\w+) (?<A>\d+) (?<B>\d+) (?<C>\d+)", RegexOptions.Compiled);
         static (int, Operation[] operations) GetInput(string filePath)
@@ -69,19 +64,13 @@ namespace AoC
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

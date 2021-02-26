@@ -1,16 +1,10 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from typing import Callable, Dict, List
+from typing import Callable, Dict, List, Tuple
 import re
 
 Passport = Dict[str,str]
-
-
-def countValidPassports(passports: List[Passport], validationFunc: Callable[[Passport], bool]) -> int:
-    return sum(map(lambda passport: validationFunc(passport), passports))
-    
-
 MANDATORY_FIELDS = [ 
     "byr", 
     "iyr", 
@@ -22,9 +16,8 @@ MANDATORY_FIELDS = [
 ]
 
 
-def part1(passports: List[Passport]) -> int:
-    return countValidPassports(passports, lambda passport: 
-        all(map(lambda field: field in passport, MANDATORY_FIELDS)))
+def countValidPassports(passports: List[Passport], validationFunc: Callable[[Passport], bool]) -> int:
+    return sum(map(lambda passport: validationFunc(passport), passports))
 
 
 def validateInt(value: str, min: int, max: int) -> bool:
@@ -59,10 +52,14 @@ VALIDATIONS: Dict[str,Callable[[str],bool]] = {
     "ecl": lambda value: value in ECLS,
     "pid": lambda value: pidRegex.match(value)
 }
-def part2(passports: List[Passport]) -> int:
-    return countValidPassports(passports, 
-        lambda passport: all(map(lambda field: 
-            field in passport and VALIDATIONS[field](passport[field]), MANDATORY_FIELDS)))
+def solve(passports: List[Passport]) -> Tuple[int,int]:
+    return (
+        countValidPassports(passports, lambda passport: 
+            all(map(lambda field: field in passport, MANDATORY_FIELDS))),
+        countValidPassports(passports, 
+            lambda passport: all(map(lambda field: 
+                field in passport and VALIDATIONS[field](passport[field]), MANDATORY_FIELDS)))
+    )
 
 
 entryRegEx = re.compile(r"([a-z]{3})\:([^\s]+)")
@@ -78,17 +75,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

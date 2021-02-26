@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from typing import Dict, List
+from typing import Dict, List, Tuple
 import re
 from enum import Enum
 
@@ -67,12 +67,11 @@ def isValidRecord(record: AuntRecord, checkOperator: bool = False) -> bool:
     return True
 
 
-def part1(aunts: List[AuntRecord]) -> int:
-    return next(filter(lambda record: isValidRecord(record), aunts)).number
-
-
-def part2(aunts: List[AuntRecord]) -> int:
-    return next(filter(lambda record: isValidRecord(record, True), aunts)).number
+def solve(aunts: List[AuntRecord]) -> Tuple[int,int]:
+    return (
+        next(filter(lambda record: isValidRecord(record), aunts)).number, 
+        next(filter(lambda record: isValidRecord(record, True), aunts)).number
+    )
 
 
 lineRegex = re.compile(r"^Sue\s(\d+):\s(\w+):\s(\d+),\s(\w+):\s(\d+),\s(\w+):\s(\d+)$")
@@ -95,17 +94,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

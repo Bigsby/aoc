@@ -19,18 +19,20 @@ def getCoveredPoints(claims: List[Claim]) -> Dict[Tuple[int,int],int]:
     return coveredPoints
 
 
-def part1(claims: List[Claim]) -> int:
-    coveredPoints = getCoveredPoints(claims)
-    return sum([ 1 for value in coveredPoints.values() if value > 1 ])
-
-
-def part2(claims: List[Claim]) -> int:
-    coveredPoints = getCoveredPoints(claims)
+def part2(claims: List[Claim], coveredPoints: Dict[Tuple[int,int],int]) -> int:
     for id, left, top, width, height in claims:
         if all(coveredPoints[point] == 1 for point in product(range(left, left + width), range(top, top + height))):
             return id
     raise Exception("Claim not found")
-        
+
+
+def solve(claims: List[Claim]) -> Tuple[int,int]:
+    coveredPoints = getCoveredPoints(claims)
+    return (
+        sum([ 1 for value in coveredPoints.values() if value > 1 ]),
+        part2(claims, coveredPoints)
+    )
+
 
 lineRegex = re.compile(r"^#(?P<id>\d+)\s@\s(?P<left>\d+),(?P<top>\d+):\s(?P<width>\d+)x(?P<height>\d+)$")
 def parseLine(line: str) -> Claim:
@@ -58,17 +60,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

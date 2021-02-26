@@ -88,10 +88,11 @@ def positionToString(position: Position) -> str:
     return f"{int(position.real)},{abs(int(position.imag))}"
 
 
-def run(mapTrains: Tuple[Map,List[Train]], stopOnFirstCollision: bool) -> str :
+def solve(mapTrains: Tuple[Map,List[Train]]) -> Tuple[str,str]:
     mapItems, trains = mapTrains
     trains = copy.deepcopy(trains)
     trainLocations = { train.position: train for train in trains }
+    part1Result = ""
     while True:
         for position in sorted(list(trainLocations.keys()), key=lambda position: (-position.imag, position.real)):
             if position not in trainLocations:
@@ -100,8 +101,8 @@ def run(mapTrains: Tuple[Map,List[Train]], stopOnFirstCollision: bool) -> str :
             del trainLocations[position]
             train.tick()
             if train.position in trainLocations:
-                if stopOnFirstCollision:
-                    return positionToString(train.position)
+                if not part1Result:
+                    part1Result = positionToString(train.position)
                 del trainLocations[train.position]    
             else:
                 trainLocations[train.position] = train
@@ -111,15 +112,7 @@ def run(mapTrains: Tuple[Map,List[Train]], stopOnFirstCollision: bool) -> str :
             elif mapItem[0] == MapItemType.Turn:
                 train.direction = mapItem[1][1] if train.direction.real else mapItem[1][0]
         if len(trainLocations) == 1:
-                return positionToString(list(trainLocations.keys())[0])
-
-
-def part1(mapTrains: Tuple[Map,List[Train]]):
-    return run(mapTrains, True)
-
-
-def part2(mapTrains: Tuple[Map,List[Train]]):
-    return run(mapTrains, False)
+                return part1Result, positionToString(list(trainLocations.keys())[0])
 
 
 TRAINS = {
@@ -178,24 +171,19 @@ def getInput(filePath: str) -> Tuple[Map,List[Train]]:
                     elif mapPosition[0] == MapItemType.Intersection:
                         map[position] = (MapItemType.Straight,Orientation.Horizontal if direction.real else Orientation.Vertical)
         return map, trains
-        
 
 
 def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

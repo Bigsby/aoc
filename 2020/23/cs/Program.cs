@@ -9,7 +9,7 @@ namespace AoC
 {
     class Node
     {
-        public long Value { get; init; }
+        public long Value { get; }
         public Node Next { get; set; }
         public Node(long value)
         {
@@ -84,29 +84,27 @@ namespace AoC
             return oneNode.Next.Value * oneNode.Next.Next.Value; 
         }
 
+        static (string, long) Solve(IEnumerable<long> cups)
+            => (
+                Part1(cups),
+                Part2(cups)
+            );
+
         static IEnumerable<long> GetInput(string filePath)
-        {
-            if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            return File.ReadAllText(filePath).Trim().Select(c => long.Parse(c.ToString()));
-        }
+            => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
+            : File.ReadAllText(filePath).Trim().Select(c => long.Parse(c.ToString()));
 
         static void Main(string[] args)
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

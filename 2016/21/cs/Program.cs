@@ -99,11 +99,11 @@ namespace AoC
             return new string(password.Select(c => (char)c).ToArray());
         }
 
-        static string Part1(IEnumerable<Instruction> instructions)
-            => Process("abcdefgh", instructions);
-
-        static string Part2(IEnumerable<Instruction> instructions)
-            => Process("fbgdceah", instructions, true);
+        static (string, string) Solve(IEnumerable<Instruction> instructions)
+            => (
+                Process("abcdefgh", instructions),
+                Process("fbgdceah", instructions, true)
+            );
 
         static Dictionary<string, Func<string, Instruction>> INSTRUCTION_PARSER = new Dictionary<string, Func<string, Instruction>> {
             { "swap position", line => Tuple.Create(SWAP_POSITION, int.Parse(line[14].ToString()), int.Parse(line[^1].ToString())) },
@@ -115,34 +115,26 @@ namespace AoC
             { "move", line => Tuple.Create(MOVE, int.Parse(line[14].ToString()), int.Parse(line[^1].ToString())) }
         };
         static IEnumerable<Instruction> GetInput(string filePath)
-        {
-            if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            return File.ReadLines(filePath).Select(line =>
+            => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
+            : File.ReadLines(filePath).Select(line =>
             {
                 foreach (var start in INSTRUCTION_PARSER.Keys)
                     if (line.StartsWith(start))
                         return INSTRUCTION_PARSER[start](line);
                 throw new Exception($"Unknown instruction '{line}'");
             });
-        }
 
         static void Main(string[] args)
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

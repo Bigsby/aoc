@@ -22,82 +22,52 @@ namespace AoC
         static Complex[] DIRECTIONS = new[] {
             -1, Complex.ImaginaryOne, -Complex.ImaginaryOne, 1
         };
-
-        static int Part1(int number)
+        static (int, int) Solve(int number)
         {
             var startPosition = new Complex(1, 1);
             var queue = new Queue<Tuple<Complex, List<Complex>>>();
             queue.Enqueue(Tuple.Create(startPosition, new List<Complex> { startPosition }));
+            var allVisited = new HashSet<Complex>();
+            allVisited.Add(startPosition);
             var target = new Complex(31, 39);
-            while (queue.Any())
+            var part1Result = 0;
+            while (queue.Any() && part1Result == 0)
             {
                 var (position, visited) = queue.Dequeue();
                 foreach (var direction in DIRECTIONS)
                 {
                     var newPosition = position + direction;
                     if (newPosition == target)
-                        return visited.Count;
+                        part1Result = visited.Count;
                     if (!visited.Contains(newPosition) && IsPositionValid(newPosition, number))
                     {
+                        if (visited.Count <= 50)
+                            allVisited.Add(newPosition);
                         var newVisited = visited.ToList();
                         newVisited.Add(newPosition);
                         queue.Enqueue(Tuple.Create(newPosition, newVisited));
                     }
                 }
             }
-            throw new Exception("Path not found");
-        }
-
-        static int Part2(int number)
-        {
-            var startPosition = new Complex(1, 1);
-            var queue = new Queue<Tuple<Complex, List<Complex>>>();
-            queue.Enqueue(Tuple.Create(startPosition, new List<Complex> { startPosition }));
-            var allVisited = new HashSet<Complex>();
-            while (queue.Any())
-            {
-                var (position, visited) = queue.Dequeue();
-                if (visited.Count <= 50)
-                {
-                    foreach (var direction in DIRECTIONS)
-                    {
-                        var newPosition = position + direction;
-                        if (!visited.Contains(newPosition) && IsPositionValid(newPosition, number))
-                        {
-                            allVisited.Add(newPosition);
-                            var newVisited = visited.ToList();
-                            newVisited.Add(newPosition);
-                            queue.Enqueue(Tuple.Create(newPosition, newVisited));
-                        }
-                    }
-                }
-            }
-            return allVisited.Count;
+            return (part1Result, allVisited.Count);
         }
 
         static int GetInput(string filePath)
-        {
-            if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            return int.Parse(File.ReadAllText(filePath).Trim());
-        }
+            => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
+            : int.Parse(File.ReadAllText(filePath).Trim());
 
         static void Main(string[] args)
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
+
     }
 }

@@ -21,14 +21,13 @@ def runSequences(generators: Tuple[int,int], divisorA: int, divisorB: int, milli
     return sum(next(sequenceA) == next(sequenceB) for _ in range(millionCycles * (10 ** 6)))
 
 
-def part1(generators: Tuple[int,int]):
-    return runSequences(generators, 1, 1, 40)
-
-
 DIVISOR_A = 4
 DIVISOR_B = 8
-def part2(generators: Tuple[int,int]):
-    return runSequences(generators, DIVISOR_A, DIVISOR_B, 5)
+def solve(generators: Tuple[int,int]) -> Tuple[int,int]:
+    return (
+        runSequences(generators, 1, 1, 40),
+        runSequences(generators, DIVISOR_A, DIVISOR_B, 5)
+    )
 
 
 numbersRegex = re.compile(r"\d+")
@@ -45,17 +44,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

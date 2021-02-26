@@ -132,13 +132,13 @@ def drawArea(oxygen: List[Position], walls: List[Position], openSpaces: List[Pos
     print()
 
 
-def runUntilOxygenSystem(memory: List[int], completeMap: bool = False) -> Tuple[int,Position,List[Position]]:
+def runUntilOxygenSystem(memory: List[int]) -> Tuple[int,Position,List[Position]]:
     startPosition = 0j
-    # walls = [ ]
     openSpaces = [ ]
     oxygenPosition = 0j
     queue = [ (startPosition, [ startPosition ], IntCodeComputer(memory)) ]
     visited = [ startPosition ]
+    stepsToOxygenSystem = 0
     while queue:
         position, path, droid = queue.pop(0)
         for command, direction in DIRECTIONS.items():
@@ -151,8 +151,8 @@ def runUntilOxygenSystem(memory: List[int], completeMap: bool = False) -> Tuple[
                     newDroid.tick()
                 status = newDroid.getOutput()
                 if status == 2: # Oxygen system
-                    if not completeMap:
-                        return len(path), newPosition, openSpaces
+                    if stepsToOxygenSystem == 0:
+                        stepsToOxygenSystem = len(path)
                     oxygenPosition = newPosition
                 elif status == 1: # Open space
                     openSpaces.append(newPosition)
@@ -161,16 +161,11 @@ def runUntilOxygenSystem(memory: List[int], completeMap: bool = False) -> Tuple[
                     newPath = list(path)
                     newPath.append(newPosition)
                     queue.append((newPosition, newPath, newDroid))
-    return 0, oxygenPosition, openSpaces
+    return stepsToOxygenSystem, oxygenPosition, openSpaces
 
 
-def part1(memory: List[int]) -> int:
-    result, *_ = runUntilOxygenSystem(memory)
-    return result
-
-
-def part2(memory: List[int]) -> int:
-    _, oxygenSystemPosition, openSpaces = runUntilOxygenSystem(memory, True)
+def solve(memory: List[int]) -> Tuple[int,int]:
+    stepsToOxygenSystem, oxygenSystemPosition, openSpaces = runUntilOxygenSystem(memory)
     filled = [ oxygenSystemPosition ]
     minutes = 0
     while openSpaces:
@@ -181,7 +176,7 @@ def part2(memory: List[int]) -> int:
                 if position in openSpaces:
                     filled.append(position)
                     openSpaces.remove(position)
-    return minutes
+    return stepsToOxygenSystem, minutes
             
 
 def getInput(filePath: str) -> List[int]:
@@ -196,17 +191,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

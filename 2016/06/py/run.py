@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from typing import Dict, List
+from typing import Dict, List, Tuple
 from functools import reduce
 
 
@@ -16,14 +16,12 @@ def getColumnRecords(messages: List[str]) -> Dict[int,Dict[str,int]]:
     return columnRecords
 
 
-def part1(messages: List[str]) -> str:
+def solve(messages: List[str]) -> Tuple[str,str]:
     columnRecords = getColumnRecords(messages)
-    return reduce(lambda soFar, column: soFar + max(columnRecords[column].items(), key=lambda cr: cr[1])[0], range(len(messages[0])), "")
-
-
-def part2(messages: List[str]) -> str:
-    columnRecords = getColumnRecords(messages)
-    return reduce(lambda soFar, column: soFar + min(columnRecords[column].items(), key=lambda cr: cr[1])[0], range(len(messages[0])), "")
+    return (
+        reduce(lambda soFar, column: soFar + max(columnRecords[column].items(), key=lambda cr: cr[1])[0], range(len(messages[0])), ""), 
+        reduce(lambda soFar, column: soFar + min(columnRecords[column].items(), key=lambda cr: cr[1])[0], range(len(messages[0])), "")
+    )
 
 
 def getInput(filePath: str) -> List[str]:
@@ -38,17 +36,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

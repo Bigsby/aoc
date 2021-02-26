@@ -34,12 +34,6 @@ def generateRegex(rules: Dict[int,Rule], ruleNumber: int) -> str:
         return "(?:" + "|".join("".join(generateRegex(rules, innerNumber) for innerNumber in ruleSet) for ruleSet in rule.sets) + ")"
 
 
-def part1(puzzleInput: Tuple[Dict[int,Rule],List[str]]) -> int:
-    rules, messages = puzzleInput
-    zeroRegex = generateRegex(rules, 0)
-    return sum(1 for message in messages if re.fullmatch(zeroRegex, message))
-
-
 def isInnerMatch(rule: str, message: str, position: int) -> Tuple[bool,int]:
     match = re.match(rule, message[position:])
     if match:
@@ -64,11 +58,15 @@ def isMatch(firstRule: str, secondRule: str, message: str) -> bool:
     return False
 
 
-def part2(puzzleInput: Tuple[Dict[int,Rule],List[str]]) -> int:
+def solve(puzzleInput: Tuple[Dict[int,Rule],List[str]]) -> Tuple[int,int]:
     rules, messages = puzzleInput
+    rule0 = generateRegex(rules, 0)
     rule42 = generateRegex(rules, 42)
     rule31 = generateRegex(rules, 31)
-    return sum([ 1 for message in messages if isMatch(rule42, rule31, message) ])
+    return (
+        sum(1 for message in messages if re.fullmatch(rule0, message)),
+        sum(1 for message in messages if isMatch(rule42, rule31, message))
+    )
 
 
 ruleRegex = re.compile(r"(?P<number>^\d+):\s(?P<rule>.+)$")
@@ -93,17 +91,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

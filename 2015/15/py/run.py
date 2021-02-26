@@ -44,23 +44,17 @@ def getIngredientCombinations(entries: List[Entry], totalSpoons: int) -> Tuple[L
     return ingredients, getPossibleCombinations(ingredients, totalSpoons)
 
 
-def getMaxValue(entries: List[Entry], requireCalories: bool = False) -> int:
+def solve(entries: List[Entry]) -> Tuple[int,int]:
     ingredients, possibleCombinations = getIngredientCombinations(entries, 100)
-    maxValue = 0
+    part1 = 0
+    part2 = 0
     for combination in possibleCombinations:
         solution = createSolutionFromCombination(combination, ingredients)
         solutionResult, calories = findValueForSolution(solution, entries)
-        if not requireCalories or calories == 500:
-            maxValue = max(maxValue, solutionResult)
-    return maxValue
-
-
-def part1(entries: List[Entry]) -> int:
-    return getMaxValue(entries)
-
-
-def part2(entries: List[Entry]) -> int:
-    return getMaxValue(entries, True)
+        part1 = max(part1, solutionResult)
+        if calories == 500:
+            part2 = max(part2, solutionResult)
+    return part1, part2
 
 
 lineRegex = re.compile(r"^(\w+):\scapacity\s(-?\d+),\sdurability\s(-?\d+),\sflavor\s(-?\d+),\stexture\s(-?\d+),\scalories\s(-?\d+)$")
@@ -83,17 +77,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

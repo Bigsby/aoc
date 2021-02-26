@@ -119,9 +119,8 @@ namespace AoC
         static int GetGridId(Grid grid)
             => grid.Sum(p => 1 << (int)p.Real << 3 * (int)p.Imaginary);
 
-        static int Part2(Rules rules)
+        static int Part2(Rules rules, Grid grid)
         {
-            var grid = ParseGrid(START).grid;
             var total = 0;
             var calculated = new Dictionary<int, Grid[]>();
             var queue = new Stack<(Grid, int)>();
@@ -142,6 +141,15 @@ namespace AoC
                 }
             }
             return total;
+        }
+
+        static (int, int) Solve(Rules rules)
+        {
+            var (size, grid) = ParseGrid(START);
+            return (
+                RunIterations(grid, size, rules, 5).grid.Count,
+                Part2(rules, grid)
+            );
         }
 
         static Regex lineRegex = new Regex(@"^(?<rule>[./#]+) => (?<result>[./#]+)$", RegexOptions.Compiled);
@@ -165,19 +173,13 @@ namespace AoC
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

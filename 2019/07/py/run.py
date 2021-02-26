@@ -79,10 +79,6 @@ def runPhasesPermutation(memory: List[int], phases: Tuple[int, ...]) -> int:
     return output
 
 
-def part1(memory: List[int]) -> int:
-    return max(runPhasesPermutation(memory, phases) for phases in permutations(range(5)))
-
-
 def runFeedbackPhasesPermutation(memory: List[int], phases: Tuple[int,...]) -> int:
     amplifiers = [ IntCodeComputer(memory, [ phase ]) for phase in phases ]
     amplifiers[0].inputs.append(0)
@@ -94,8 +90,11 @@ def runFeedbackPhasesPermutation(memory: List[int], phases: Tuple[int,...]) -> i
     return amplifiers[-1].outputs[0]
 
 
-def part2(memory: List[int]) -> int:
-    return max(runFeedbackPhasesPermutation(memory, permutation) for permutation in permutations(range(5, 10)))
+def solve(memory: List[int]) -> Tuple[int,int]:
+    return (
+        max(runPhasesPermutation(memory, phases) for phases in permutations(range(5))),
+        max(runFeedbackPhasesPermutation(memory, permutation) for permutation in permutations(range(5, 10)))
+    )
 
 
 def getInput(filePath: str) -> List[int]:
@@ -110,18 +109,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    print("P1:", part1Result)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
-    
+    print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

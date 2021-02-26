@@ -36,7 +36,7 @@ namespace AoC
             return paths;
         }
 
-        static int GetStepsForPath(IEnumerable<int> path, Dictionary<int, Dictionary<int, int>> pathsFromNumbers)
+        static int GetStepsForPath(IEnumerable<int> path, Dictionary<int, Dictionary<int, int>> pathsFromNumbers, bool returnHome)
         {
             var steps = 0;
             var current = 0;
@@ -47,6 +47,8 @@ namespace AoC
                 steps += pathsFromNumbers[current][next];
                 current = next;
             }
+            if (returnHome)
+                steps += pathsFromNumbers[current][0];
             return steps;
         }
 
@@ -58,25 +60,21 @@ namespace AoC
                 Permutations(values.Where(x => x.CompareTo(v) != 0)), (v, p) => p.Prepend(v));
         }
 
-        static int FindLeastSteps((Maze, Numbers) data, bool returnHome)
+        static (int, int) Solve((Maze, Numbers) data)
         {
             var (maze, numbers) = data;
             var pathsFromNumbers = numbers.ToDictionary(pair => pair.Value, pair => FindPathsFromLocation(maze, numbers, pair.Key));
             var numbersBesidesStart = numbers.Values.Where(number => number != 0);
-            var minumSteps = int.MaxValue;
+            var minimumSteps = int.MaxValue;
+            var minimumReturnSteps = int.MaxValue;
             foreach (var combination in Permutations(numbersBesidesStart))
             {
                 var pathList = combination.ToList();
-                if (returnHome)
-                    pathList.Add(0);
-                minumSteps = Math.Min(minumSteps, GetStepsForPath(pathList, pathsFromNumbers));
+                minimumSteps = Math.Min(minimumSteps, GetStepsForPath(pathList, pathsFromNumbers, false));
+                minimumReturnSteps = Math.Min(minimumReturnSteps, GetStepsForPath(pathList, pathsFromNumbers, true));
             }
-            return minumSteps;
+            return (minimumSteps, minimumReturnSteps);
         }
-
-        static int Part1((Maze, Numbers) data) => FindLeastSteps(data, false);
-
-        static int Part2((Maze, Numbers) data) => FindLeastSteps(data, true);
 
         static (Maze, Numbers) GetInput(string filePath)
         {
@@ -98,23 +96,18 @@ namespace AoC
             return (maze, numbers);
         }
 
+
         static void Main(string[] args)
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

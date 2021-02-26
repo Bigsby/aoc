@@ -26,10 +26,8 @@ namespace AoC
             return validNumbers;
         }
     
-        static int Part1((IEnumerable<Rule> rules, Ticket myTicket, IEnumerable<Ticket> tickets) puzzleInput)
+        static int Part1(IEnumerable<Ticket> tickets, IEnumerable<int> validNumbers)
         {
-            var (rules, _, tickets) = puzzleInput;
-            var validNumbers = GetValidNumbers(rules);
             var invalidNumbers = new List<int>();
             foreach (var ticket in tickets)
                 foreach (var number in ticket)
@@ -38,10 +36,8 @@ namespace AoC
             return invalidNumbers.Sum();
         }
 
-        static long Part2((IEnumerable<Rule> rules, Ticket myTicket, IEnumerable<Ticket> tickets) puzzleInput)
+        static long Part2(IEnumerable<Rule> rules, Ticket myTicket, IEnumerable<Ticket> tickets, IEnumerable<int> validNumbers)
         {
-            var (rules, myTicket, tickets) = puzzleInput;
-            var validNumbers = GetValidNumbers(rules);
             var validTickets = tickets.Where(ticket => ticket.All(number => validNumbers.Contains(number)));
             var ranges = rules.ToDictionary(rule => rule.Item1, rule => Tuple.Create(rule.Item2, rule.Item3, rule.Item4, rule.Item5));
             var positions = rules.ToDictionary(rule => rule.Item1, _ => Enumerable.Range(0, rules.Count()).ToList());
@@ -75,6 +71,16 @@ namespace AoC
                     }
             var departureFieldIndexes = names.Where(name => name.StartsWith("departure")).Select(name => positions[name].First());
             return departureFieldIndexes.Aggregate(1L, (soFar, index) => soFar * myTicket.ElementAt(index));
+        }
+
+        static (int, long) Solve((IEnumerable<Rule> rules, Ticket myTicket, IEnumerable<Ticket> tickets) puzzleInput)
+        {
+            var (rules, myTicket, tickets) = puzzleInput;
+            var validNumbers = GetValidNumbers(rules);
+            return (
+                Part1(tickets, validNumbers),
+                Part2(rules, myTicket, tickets, validNumbers)
+            );
         }
 
         static Regex fieldRegex = new Regex(@"^(?<field>[^:]+):\s(?<r1s>\d+)-(?<r1e>\d+)\sor\s(?<r2s>\d+)-(?<r2e>\d+)$", RegexOptions.Compiled);
@@ -121,19 +127,13 @@ namespace AoC
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

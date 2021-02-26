@@ -64,7 +64,9 @@ namespace AoC
             }
             if (targets.Any())
             {
-                var target = targets.OrderBy(t => t.hitPoints).ThenBy(t => -t.position.Imaginary).ThenBy(t => t.position.Real).First();
+                var target = targets.OrderBy(t => t.hitPoints)
+                    .ThenBy(t => -t.position.Imaginary)
+                    .ThenBy(t => t.position.Real).First();
                 enemies[target.position] -= attackPower;
                 if (enemies[target.position] <= 0)
                     enemies.Remove(target.position);
@@ -76,7 +78,8 @@ namespace AoC
         static Complex[] MOVE_DIRECTIONS = new [] { -Complex.ImaginaryOne, Complex.ImaginaryOne, -1, 1 };
         static Complex GetMove(Complex start, IEnumerable<Complex> targets, Walls invalidPositions)
         {
-            var firstMoves = MOVE_DIRECTIONS.Select(direction => start + direction).Where(p => !invalidPositions.Contains(p));
+            var firstMoves = MOVE_DIRECTIONS.Select(direction => start + direction)
+                .Where(p => !invalidPositions.Contains(p));
             var bestMoves = new List<(Complex firstMove, int length, Complex destination)>();
             foreach (var move in firstMoves)
             {
@@ -88,7 +91,9 @@ namespace AoC
                 var seenPositions = new List<Complex>();
                 seenPositions.Add(start);
                 seenPositions.Add(move);
-                var stack = MOVE_DIRECTIONS.Select(direction => move + direction).Where(p => !invalidPositions.Contains(p));
+                var stack = MOVE_DIRECTIONS
+                    .Select(direction => move + direction)
+                    .Where(p => !invalidPositions.Contains(p));
                 var length = 1;
                 var run = true;
                 while (run)
@@ -192,12 +197,17 @@ namespace AoC
             var result = 0;
             while (true)
             {
-                elfPower++;
-                (success, result) = RunGame(walls, elves, goblins, true, elfPower);
+                (success, result) = RunGame(walls, elves, goblins, true, ++elfPower);
                 if (success)
                     return result;
             }
         }
+
+        static (int, int) Solve((Walls walls, Team elves, Team goblins) game)
+            => (
+                RunGame(game.walls, game.elves, game.goblins, false).score,
+                Part2(game)
+            );
 
         const char WALL = '#';
         const char ELF = 'E';
@@ -228,19 +238,13 @@ namespace AoC
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

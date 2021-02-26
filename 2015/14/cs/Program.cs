@@ -10,6 +10,14 @@ namespace AoC
 {
     record Entry(string name, int speed, int duration, int rest);
 
+    class Deer
+    {
+        public Entry Entry { get; }
+        public int Distance { get; set; }
+        public int Points { get; set; }
+        public Deer(Entry entry) => Entry = entry;
+    }
+
     static class Program
     {
         const int TIME = 2503;
@@ -22,42 +30,33 @@ namespace AoC
             return total + entry.speed * Math.Min(remainder, entry.duration);
         }
 
-        static int Part1(IEnumerable<Entry> entries) => entries.Max(entry => CalculateDistance(entry, TIME));
-
-        static int GetDistanceForTime(Entry entry, int time) 
+        static int GetDistanceForTime(Entry entry, int time)
             => time % (entry.duration + entry.rest) < entry.duration ? entry.speed : 0;
-
-        class Deer 
-        {
-            public Entry Entry { get; init; }
-            public int Distance { get; set; }
-            public int Points { get; set; }
-            public Deer(Entry entry) => Entry = entry;
-        }
 
         static int Part2(IEnumerable<Entry> entries)
         {
             var deers = entries.Select(entry => new Deer(entry)).ToArray();
             for (var time = 0; time < TIME; time++)
             {
-                var maxDistance = 0;
-                foreach (var deer in deers)
-                {
-                    deer.Distance += GetDistanceForTime(deer.Entry, time);
-                    maxDistance = Math.Max(maxDistance, deer.Distance);
-                }
-                foreach (var deer in deers)
-                    if (deer.Distance == maxDistance)
-                        deer.Points++;
+                var maxDistance = deers.Aggregate(0, (max, deer) => 
+                    Math.Max(max, deer.Distance += GetDistanceForTime(deer.Entry, time)));
+                foreach (var deer in deers.Where(deer => deer.Distance == maxDistance))
+                    deer.Points++;
             }
             return deers.Max(deer => deer.Points);
         }
 
+        static (int, int) Solve(IEnumerable<Entry> entries)
+            => (
+                entries.Max(entry => CalculateDistance(entry, TIME)),
+                Part2(entries)
+            );
+
         static Regex lineRegex = new Regex(@"^(\w+)\scan\sfly\s(\d+)\skm/s\sfor\s(\d+)\sseconds,\sbut\sthen\smust\srest\sfor\s(\d+)\sseconds.$", RegexOptions.Compiled);
         static IEnumerable<Entry> GetInput(string filePath)
-        {
-            if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            return File.ReadLines(filePath).Select(line => {
+            => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
+            : File.ReadLines(filePath).Select(line =>
+            {
                 var match = lineRegex.Match(line);
                 if (match.Success)
                     return new Entry(
@@ -68,25 +67,19 @@ namespace AoC
                     );
                 throw new Exception($"Bad format '${line}'");
             });
-        }
 
         static void Main(string[] args)
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
+
     }
 }

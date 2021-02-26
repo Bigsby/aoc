@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from typing import List
+from typing import List, Tuple
 
 
 class IntCodeComputer():
@@ -71,12 +71,11 @@ class IntCodeComputer():
         return f"s {self.running} p {self.pointer} i {self.inputs} o {self.outputs}"
 
 
-def part1(memory: List[int]):
-    return IntCodeComputer(memory, [1]).runUntilHalt()[-1]
-
-
-def part2(memory: List[int]):
-    return IntCodeComputer(memory, [5]).runUntilHalt()[-1]
+def solve(memory: List[int]) -> Tuple[int,int]:
+    return (
+        IntCodeComputer(memory, [1]).runUntilHalt()[-1],
+        IntCodeComputer(memory, [5]).runUntilHalt()[-1]
+    )
 
 
 def getInput(filePath: str) -> List[int]:
@@ -91,17 +90,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

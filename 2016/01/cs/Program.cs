@@ -3,22 +3,13 @@ using static System.Console;
 using System.IO;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Numerics;
 
 namespace AoC
 {
-    struct Instruction
-    {
-        public Instruction(char direction, int distance)
-        {
-            Direction = direction;
-            Distance = distance;
-        }
-
-        public char Direction { get; }
-        public int Distance { get; }
-    }
+    record Instruction(char direction, int distance);
 
     class Program
     {
@@ -28,70 +19,46 @@ namespace AoC
         static int GetManhatanDistance(Complex position)
             => (int)(Math.Abs(position.Real) + Math.Abs(position.Imaginary));
 
-        static int Part1(IEnumerable<Instruction> instructions)
+        static (int, int) Solve(IEnumerable<Instruction> instructions)
         {
             Complex currentPosition = 0;
             var currentHeading = Complex.ImaginaryOne;
-            foreach (var instruction in instructions)
-            {
-                currentHeading = GetNewHeading(currentHeading, instruction.Direction);
-                currentPosition += currentHeading * instruction.Distance;
-            }
-            return GetManhatanDistance(currentPosition);
-        }
-
-        static int Part2(IEnumerable<Instruction> instructions)
-        {   
-            Complex currentPosition = 0;
-            var currentHeading = Complex.ImaginaryOne;
             var visitedPositions = new List<Complex>();
+            var part2 = 0;
             foreach (var instruction in instructions)
             {
-                currentHeading = GetNewHeading(currentHeading, instruction.Direction);
-                for (var i = 0; i < instruction.Distance; i++)
+                currentHeading = GetNewHeading(currentHeading, instruction.direction);
+                for (var i = 0; i < instruction.distance; i++)
                 {
                     currentPosition += currentHeading;
-                    if (visitedPositions.Contains(currentPosition))
-                    {
-                        return GetManhatanDistance(currentPosition);
-                    }
-                    else
-                    {
-                        visitedPositions.Add(currentPosition);
-                    }
+                    if (part2 == 0)
+                        if (visitedPositions.Contains(currentPosition))
+                            part2 = GetManhatanDistance(currentPosition);
+                        else
+                            visitedPositions.Add(currentPosition);
                 }
             }
-            throw new Exception("Never returned to previous locations");
+            return (GetManhatanDistance(currentPosition), part2);
         }
 
         static Regex instructionRegex = new Regex(@"(?<direction>L|R)(?<distance>\d+)", RegexOptions.Compiled);
         static IEnumerable<Instruction> GetInput(string filePath)
-        {
-            if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-
-            foreach (Match match in instructionRegex.Matches(File.ReadAllText(filePath)))
-            {
-                yield return new Instruction(match.Groups["direction"].Value[0], int.Parse(match.Groups["distance"].Value));
-            }
-        }
+            => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
+            : instructionRegex.Matches(File.ReadAllText(filePath)).Select(match => 
+                new Instruction(match.Groups["direction"].Value[0], int.Parse(match.Groups["distance"].Value))
+            );
 
         static void Main(string[] args)
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

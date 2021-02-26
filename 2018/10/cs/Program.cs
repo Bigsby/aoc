@@ -366,7 +366,7 @@ namespace AoC
             }
         }
 
-        static (string message, int iterations) FindMessage(PointPairs pointPairs)
+        static (string, int) Solve(PointPairs pointPairs)
         {
             var interations = 0;
             while (true)
@@ -383,15 +383,10 @@ namespace AoC
             }
         }
 
-        static string Part1(PointPairs pointPairs) => FindMessage(pointPairs).message;
-
-        static int Part2(PointPairs pointPairs) => FindMessage(pointPairs).iterations;
-
         static Regex lineRegex = new Regex(@"^position=<\s?(?<positionX>-?\d+),\s+(?<positionY>-?\d+)>\svelocity=<\s?(?<velocityX>-?\d+),\s+?(?<velocityY>-?\d+)>$", RegexOptions.Compiled);
         static PointPairs GetInput(string filePath)
-        {
-            if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            return File.ReadAllLines(filePath).Select(line => {
+            => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
+            : File.ReadAllLines(filePath).Select(line => {
                 var match = lineRegex.Match(line);
                 if (match.Success)
                     return (
@@ -400,25 +395,18 @@ namespace AoC
                     );
                 throw new Exception($"Bad format '{line}'");
             });
-        }
 
         static void Main(string[] args)
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

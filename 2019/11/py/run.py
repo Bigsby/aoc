@@ -262,11 +262,6 @@ def runProgram(memory: List[int], panels: Dict[complex,int]) -> Dict[complex,int
     return panels
 
 
-def part1(memory: List[int]) -> int:
-    panels = runProgram(memory, { 0: 0 })
-    return len(panels)
-
-
 def getDimensions(points: Iterable[complex]) -> Tuple[Tuple[int,int],int,int,int,int]:
     minX = int(min(map(lambda point: point.real, points)))
     maxX = int(max(map(lambda point: point.real, points)))
@@ -304,6 +299,13 @@ def part2(memory: List[int]):
     return "".join(map(lambda index: getCharacterInScreen(panelPoints, index, CHARACTER_WIDTH, height, minX, minY), range((width // CHARACTER_WIDTH) + 1)))
 
 
+def solve(memory: List[int]) -> Tuple[int,str]:
+    return (
+        len(runProgram(memory, { 0: 0 })),
+        part2(memory)
+    )
+
+
 def getInput(filePath: str) -> List[int]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
@@ -316,17 +318,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

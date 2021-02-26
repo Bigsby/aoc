@@ -15,10 +15,6 @@ def isRoomValid(name: str, checksum: str) -> bool:
     return processedChecksum == checksum
 
 
-def part1(rooms: List[Room]) -> int:
-    return sum([ id for name, id, checksum in rooms if isRoomValid(name, checksum)])
-
-
 A_ORD = ord("a")
 Z_ORD = ord("z")
 DASH_ORD = ord("-")
@@ -48,6 +44,13 @@ def part2(rooms: List[Room]) -> int:
     raise Exception("Room not found")
 
 
+def solve(rooms: List[Room]) -> Tuple[int,int]:
+    return (
+        sum([ id for name, id, checksum in rooms if isRoomValid(name, checksum)]), 
+        part2(rooms)
+    )
+
+
 lineRegex = re.compile(r"^(?P<name>[a-z\-]+)-(?P<id>\d+)\[(?P<checksum>\w+)\]$")
 def parseLine(line: str) -> Room:
     match = lineRegex.match(line)
@@ -68,17 +71,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

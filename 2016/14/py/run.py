@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from typing import Dict, List
+from typing import Dict, List, Tuple
 import re
 from hashlib import md5
 
@@ -23,22 +23,19 @@ def findKey(salt: str, stretch: int) -> int:
                 if (index - tripletIndex) <= 1000:
                     keys.append(tripletIndex)
             threes[digit] = []
-
         match = tripletRegex.search(value)
         if match:
             threes[match.group()[0]].append(index)
         index += 1
-
     keys.sort()
     return keys[63]
 
 
-def part1(salt: str) -> int:
-    return findKey(salt, 0)
-
-
-def part2(salt: str) -> int:
-    return findKey(salt, 2016)
+def solve(salt: str) -> Tuple[int,int]:
+    return (
+        findKey(salt, 0),
+        findKey(salt, 2016)
+    )
 
 
 def getInput(filePath: str) -> str:
@@ -53,17 +50,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

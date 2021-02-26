@@ -17,17 +17,16 @@ def isLineValid(line: Line) -> bool:
     return occurenceCount >= minimum and occurenceCount <= maximum
 
 
-def part1(lines: List[Line]) -> int:
-    return countValid(lines, isLineValid)
-
-
 def isLineValid2(line: Line) -> bool:
     first, second, letter, password = line 
     return (password[first - 1] == letter) ^ (password[second - 1] == letter)
 
 
-def part2(lines: List[Line]) -> int:
-    return countValid(lines, isLineValid2)
+def solve(lines: List[Line]) -> Tuple[int,int]:
+    return (
+        countValid(lines, isLineValid),
+        countValid(lines, isLineValid2)
+    )
 
 
 lineRegex = re.compile(r"^(\d+)-(\d+)\s([a-z]):\s(.*)$")
@@ -51,17 +50,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

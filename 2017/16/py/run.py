@@ -32,15 +32,10 @@ def dance(instructions: List[Instruction], programs: List[int]) -> List[int]:
     return programs
 
 
-def part1(instructions: List[Instruction]) -> str:
-    return toStr(dance(instructions, toOrd("abcdefghijklmnop")))
-
-
 CYCLES = 10**9
 def part2(instructions: List[Instruction]) -> str:    
     programs = toOrd("abcdefghijklmnop")
     seen = [ tuple(programs) ]
-    
     for cycle in range(CYCLES):
         programs = dance(instructions, programs)
         p = tuple(programs)
@@ -48,6 +43,13 @@ def part2(instructions: List[Instruction]) -> str:
             return toStr(list(seen[CYCLES % (cycle + 1)]))
         seen.append(p)
     return toStr(programs)
+
+
+def solve(instructions: List[Instruction]) -> Tuple[str,str]:
+    return (
+        toStr(dance(instructions, toOrd("abcdefghijklmnop"))),
+        part2(instructions)
+    )
 
 
 def parseInstruction(text: str) -> Instruction:
@@ -74,17 +76,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

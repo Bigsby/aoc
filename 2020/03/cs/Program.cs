@@ -25,8 +25,6 @@ namespace AoC
             }
             return treeCount;
         }
-        static long Part1(trees trees)
-            => CalculateTrees(trees, new Complex(3, 1));
      
         static Complex[] STEPS = new[] {
             new Complex(1, 1),
@@ -35,8 +33,11 @@ namespace AoC
             new Complex(7, 1),
             new Complex(1, 2)
         };
-        static long Part2(trees grid)
-            => STEPS.Aggregate(1L, (soFar, step) => soFar * CalculateTrees(grid, step));
+        static (long, long) Solve(trees trees)
+            => (
+                CalculateTrees(trees, new Complex(3, 1)),
+                STEPS.Aggregate(1L, (soFar, step) => soFar * CalculateTrees(trees, step))
+            );
 
         static trees GetInput(string filePath)
         {
@@ -51,19 +52,13 @@ namespace AoC
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

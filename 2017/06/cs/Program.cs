@@ -9,7 +9,7 @@ namespace AoC
 {
     class Program
     {
-        static Tuple<int, int> RunCycles(IEnumerable<int> numbers)
+        static (int, int) Solve(IEnumerable<int> numbers)
         {
             var numbersLength = numbers.Count();
             var previousLists = new List<string>();
@@ -19,7 +19,7 @@ namespace AoC
             {
                 var currentListString = string.Join(",", currentList);
                 if (previousLists.Contains(currentListString))
-                    return Tuple.Create(cycles, previousLists.IndexOf(currentListString));
+                    return (cycles, previousLists.IndexOf(currentListString));
                 cycles++;
                 previousLists.Add(currentListString);
                 var updateIndex = -1;
@@ -40,37 +40,21 @@ namespace AoC
             }
         }
 
-        static int Part1(IEnumerable<int> numbers) => RunCycles(numbers).Item1;
-
-        static int Part2(IEnumerable<int> numbers)
-        {
-            var (cycles, first) = RunCycles(numbers);
-            return cycles - first;
-        }
-
         static IEnumerable<int> GetInput(string filePath)
-        {
-            if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            return File.ReadAllText(filePath).Split("\t").Select(int.Parse);
-        }
+            => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
+            : File.ReadAllText(filePath).Split("\t").Select(int.Parse);
 
         static void Main(string[] args)
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

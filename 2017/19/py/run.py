@@ -8,7 +8,7 @@ Tubes = List[Position]
 Letters = Dict[Position,str]
 
 
-def followPath(data: Tuple[Tubes,Letters,Position]) -> Tuple[str,int]:
+def solve(data: Tuple[Tubes,Letters,Position]) -> Tuple[str,int]:
     tubes, letters, currentPosition = data
     path = []
     direction = 1j
@@ -28,16 +28,6 @@ def followPath(data: Tuple[Tubes,Letters,Position]) -> Tuple[str,int]:
         else:
             break
     return "".join(path), steps
-
-
-def part1(data: Tuple[Tubes,Letters,Position]) -> str:
-    letters, _ = followPath(data)
-    return letters
-
-
-def part2(data: Tuple[Tubes,Letters,Position]) -> int:
-    _, steps = followPath(data)
-    return steps
 
 
 TUBES = [ "|", "+", "-" ]
@@ -66,17 +56,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

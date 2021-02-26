@@ -47,10 +47,6 @@ namespace AoC
             { C(-1,  0), '4' }, { C(0,  0), '5' }, { C(1,  0), '6' }, 
             { C(-1,  1), '7' }, { C(0,  1), '8' }, { C(1,  1), '9' }, 
         };
-        static string Part1(string[] paths)
-        {
-            return GetCode(paths, KEYPAD1);
-        }
 
         static Dictionary<Complex, char> KEYPAD2 = new Dictionary<Complex, char> {
                                                  { C(0, -2), '1' },
@@ -59,10 +55,12 @@ namespace AoC
                               { C(-1,  1), 'A'}, { C(0,  1), 'B'}, { C(1,  1), 'C'},
                                                  { C(0,  2), 'D'},
         };
-        static string Part2(string[] paths)
-        {
-            return GetCode(paths, KEYPAD2);
-        }
+
+        static (string, string) Solve(string[] paths)
+            => (
+                GetCode(paths, KEYPAD1), 
+                GetCode(paths, KEYPAD2)
+            );
 
         static string[] GetInput(string filePath)
         {
@@ -74,19 +72,14 @@ namespace AoC
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
+
     }
 }

@@ -57,7 +57,7 @@ def findEdge(spring: Position, direction: int, settled: Water, clay: ClaySquares
         x += direction
 
 
-def part1(clay: ClaySquares) -> Tuple[int,int]:
+def solve(clay: ClaySquares) -> Tuple[int,int]:
     maxY = int(max(map(lambda s: s.imag, clay)))
     minY = int(min(map(lambda s: s.imag, clay)))
     settled = set()
@@ -127,16 +127,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result, part2Result = part1(puzzleInput)
-    middle = time.perf_counter()
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

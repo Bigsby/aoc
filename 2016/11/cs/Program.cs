@@ -15,11 +15,6 @@ namespace AoC
     
     class Program
     {
-        static void PrintList<T>(IEnumerable<T> list)
-        {
-            WriteLine("[" + string.Join(", ", list) + "]");
-        }
-
         const int EMPTY_SLOT = 0;
         static Dictionary<string, int> radioisotopes = new Dictionary<string, int>();
 
@@ -111,12 +106,10 @@ namespace AoC
             {
                 int resultIndex = stack.Count - 1;
                 int dataIndex = stack.Pop();
-
                 while (dataIndex < data.Length)
                 {
                     result[resultIndex++] = data[dataIndex];
                     stack.Push(++dataIndex);
-
                     if (resultIndex == length)
                     {
                         yield return result;
@@ -135,7 +128,7 @@ namespace AoC
             return PruneMoves(validMoves);
         }
 
-        static int Solve(Floor[] floors)
+        static int SolveFloors(Floor[] floors)
         {
             var floorCount = floors.Length;
             var stack = new Stack<(State state, int movesCount)>();
@@ -156,13 +149,15 @@ namespace AoC
             throw new Exception("Solution not found");
         }
 
-        static int Part1(Floor[] floors) => Solve(floors);
-
         const string PART2_EXTRA = "a elerium generator, a elerium-compatible microchip, a dilithium generator, a dilithium-compatible microchip";
-        static int Part2(Floor[] floors)
+        static (int, int) Solve(Floor[] floors)
         {
+            var part1Result = SolveFloors(floors);
             floors[0] = floors[0].Concat(ParseLine(PART2_EXTRA)).ToList();
-            return Solve(floors);
+            return (
+                part1Result, 
+                SolveFloors(floors)
+            );
         }
 
         static Regex lineRegex = new Regex(@"a (?<radioisotope>\w+)(?<part>-compatible microchip| generator)", RegexOptions.Compiled);
@@ -183,28 +178,20 @@ namespace AoC
         }
 
         static Floor[] GetInput(string filePath)
-        {
-            if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            return File.ReadAllLines(filePath).Select(ParseLine).ToArray();
-        }
+            => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
+            : File.ReadAllLines(filePath).Select(ParseLine).ToArray();
 
         static void Main(string[] args)
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

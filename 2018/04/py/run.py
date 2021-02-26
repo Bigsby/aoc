@@ -77,6 +77,13 @@ def part2(guards: Dict[int,GuardRecord]) -> int:
     return guardId * maxMinute
 
 
+def solve(guards: Dict[int,GuardRecord]) -> Tuple[int,int]:
+    return (
+        part1(guards),
+        part2(guards)
+    )
+
+
 lineRegex = re.compile(r"\[(?P<year>\d{4})-(?P<month>\d{2})-(?P<day>\d{2})\s(?P<hours>\d{2}):(?P<minutes>\d{2})\]\s(?P<message>.*)$")
 def parseLine(line: str) -> LogRecord:
     match = lineRegex.match(line)
@@ -99,17 +106,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

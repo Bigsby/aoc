@@ -25,9 +25,11 @@ namespace AoC
             return Enumerable.Range(start, end - start).Count(password => IsValidPassword(password.ToString(), check2));
         }
 
-        static int Part1(Limits limits) => GetValidPasswordCount(limits, false);
-
-        static int Part2(Limits limits) => GetValidPasswordCount(limits, true);
+        static (int, int) Solve(Limits limits)
+            => (
+                GetValidPasswordCount(limits, false),
+                GetValidPasswordCount(limits, true)
+            );
 
         static Limits GetInput(string filePath)
         {
@@ -40,19 +42,13 @@ namespace AoC
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

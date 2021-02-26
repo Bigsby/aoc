@@ -45,16 +45,18 @@ namespace AoC
              - grid[new Point(x - 1       , y - 1 + size)]
              + grid[new Point(x - 1 + size, y - 1 + size)];
 
-        static ((int x, int y), int size) FindLargestPower(int serialNumber, IEnumerable<int> sizes)
+        static (string, string) Solve(int serialNumber)
         {
             var grid = BuildGrid(serialNumber);
             var summedAreaTable = BuildSummedAreaTable(grid);
             var maxFuel = 0;
             var maxSize = 0;
             var maxCell = (-1, -1);
-            foreach (var size in sizes)
+            var max3Cell = (-1, -1);
+            var max3Fuel = 0;
+            foreach (var size in Enumerable.Range(1, GRID_SIZE - 1))
                 foreach (var (x, y) in Enumerable.Range(1, GRID_SIZE - size - 1)
-                                        .SelectMany(y => Enumerable.Range(1, GRID_SIZE - size - 1).Select(x => (x, y))))
+                                    .SelectMany(y => Enumerable.Range(1, GRID_SIZE - size - 1).Select(x => (x, y))))
                 {
                     var fuel = SumFromAreaTable(summedAreaTable, x, y, size);
                     if (fuel > maxFuel)
@@ -63,45 +65,30 @@ namespace AoC
                         maxCell = (x + 1, y + 1);
                         maxSize = size;
                     }
+                    if (size == 3 && fuel > max3Fuel)
+                    {
+                        max3Fuel = fuel;
+                        max3Cell = (x + 1, y + 1);
+                    }
                 }
-            return (maxCell, maxSize);
-        }
-
-        static string Part1(int serialNumber)
-        {
-            var ((x, y), _) = FindLargestPower(serialNumber, new [] { 3 });
-            return $"{x},{y}";
-        }
-
-        static string Part2(int serialNumber)
-        {
-            var ((x, y), size) = FindLargestPower(serialNumber, Enumerable.Range(1, GRID_SIZE - 1));
-            return $"{x},{y},{size}";
+            return ($"{max3Cell.Item1},{max3Cell.Item2}", $"{maxCell.Item1},{maxCell.Item1},{maxSize}");
         }
 
         static int GetInput(string filePath)
-        {
-            if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            return int.Parse(File.ReadAllText(filePath).Trim());
-        }
+            => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
+            : int.Parse(File.ReadAllText(filePath).Trim());
 
         static void Main(string[] args)
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

@@ -56,21 +56,13 @@ def testRecord(before: Registers, operation: Operation, after: Registers, opCode
     return count
 
 
-def part1(puzzleInput: Tuple[List[Record],List[Operation]]) -> int:
-    records, _ = puzzleInput
-    threeOrMore = 0
+def solve(puzzleInput: Tuple[List[Record],List[Operation]]) -> Tuple[int,int]:
+    records, program = puzzleInput
     opCodes = { mnemonic: set() for mnemonic in MNEMONICS }
+    threeOrMore = 0
     for before, operation, after in records:
         if testRecord(before, operation, after, opCodes) >= 3:
             threeOrMore += 1
-    return threeOrMore
-
-
-def part2(puzzleInput: Tuple[List[Record],List[Operation]]) -> int:
-    records, program = puzzleInput
-    opCodes = { mnemonic: set() for mnemonic in MNEMONICS }
-    for before, operation, after in records:
-        testRecord(before, operation, after, opCodes)
     for mnemonic, valid in opCodes.items():
         opCodes[mnemonic] = { op for op in valid if op >= 0 }
     while any(len(valid) > 1 for valid in opCodes.values()):
@@ -84,7 +76,7 @@ def part2(puzzleInput: Tuple[List[Record],List[Operation]]) -> int:
     registers = (0,0,0,0)
     for op in program:
         registers = runOperation(registers, op, ops[op[0]])
-    return registers[0]
+    return threeOrMore, registers[0]
 
 
 recordRegex = re.compile(r"Before: \[(?P<b0>\d+), (?P<b1>\d+), (?P<b2>\d+), (?P<b3>\d+)]\n(?P<opCode>\d+) (?P<A>\d) (?P<B>\d) (?P<C>\d)\nAfter:  \[(?P<a0>\d+), (?P<a1>\d+), (?P<a2>\d+), (?P<a3>\d+)]")
@@ -108,22 +100,17 @@ def getInput(filePath: str) -> Tuple[List[Record],List[Operation]]:
         return records, operations
 
 
-
 def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

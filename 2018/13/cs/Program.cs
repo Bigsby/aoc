@@ -98,7 +98,6 @@ namespace AoC
             { Tuple.Create(-Direction.One,  Direction.ImaginaryOne), '/'  },
             { Tuple.Create(-Direction.One, -Direction.ImaginaryOne), '\\' },
         };
-
         static void ShowMapArea(Map mapItems, Position start, Position end, IEnumerable<Train>  trains)
         {
             for (var y = (int)start.Imaginary; y > (int)end.Imaginary - 1; y--)
@@ -145,10 +144,11 @@ namespace AoC
         static string PositionToString(Position position)
             => $"{(int)position.Real},{(int)Math.Abs(position.Imaginary)}";
 
-        static string Run((Map map,  IEnumerable<Train> trains) data, bool stopOnFirstCollision)
+        static (string, string) Solve((Map map,  IEnumerable<Train> trains) data)
         {
             var (mapItems, trains) = data;
             var trainLocations = trains.ToDictionary(train => train.Position, train => train.Clone());
+            var part1Result = string.Empty;
             while (true)
             {
                 foreach (var position in trainLocations.Keys.ToArray().OrderBy(p => -p.Imaginary).ThenBy(p => p.Real))
@@ -160,8 +160,8 @@ namespace AoC
                     train.Tick();
                     if (trainLocations.ContainsKey(train.Position))
                     {
-                        if (stopOnFirstCollision)
-                            return PositionToString(train.Position);
+                        if (string.IsNullOrEmpty(part1Result))
+                            part1Result = PositionToString(train.Position);
                         trainLocations.Remove(train.Position);
                     }
                     else
@@ -178,13 +178,9 @@ namespace AoC
                     }
                 }
                 if (trainLocations.Count == 1)
-                    return PositionToString(trainLocations.Keys.First());
+                    return (part1Result, PositionToString(trainLocations.Keys.First()));
             }
         }
-
-        static string Part1((Map map,  IEnumerable<Train> trains) data) => Run(data, true);
-
-        static string Part2((Map map,  IEnumerable<Train> trains) data) => Run(data, false);
 
         static Dictionary<char, Direction> TRAINS = new Dictionary<char, Position>
         {
@@ -257,19 +253,13 @@ namespace AoC
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

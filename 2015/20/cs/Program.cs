@@ -45,11 +45,10 @@ namespace AoC
         static int GetPresentCountForHouse2(int number)
             => GetDivisors(number).Where(divisor => number / divisor < 50).Select(divisor => divisor * 11).Sum();
 
-        static int Part2(int puzzleInput)
+        static int Part2(int puzzleInput, int houseNumber)
         {
             var step = 1;
             var presentsReceived = 0;
-            var houseNumber = Part1(puzzleInput);
             while (presentsReceived <= puzzleInput)
             {
                 houseNumber += step;
@@ -58,29 +57,30 @@ namespace AoC
             return houseNumber;
         }
 
-        static int GetInput(string filePath)
+        static (int, int) Solve(int puzzleInput)
         {
-            if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            return int.Parse(File.ReadAllText(filePath));
+            var part1Result = Part1(puzzleInput);
+            return (
+                part1Result,
+                Part2(puzzleInput, part1Result)
+            );
         }
+
+        static int GetInput(string filePath)
+            => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
+            : int.Parse(File.ReadAllText(filePath));
 
         static void Main(string[] args)
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from typing import Callable, Dict, List, Union
+from typing import Callable, Dict, List, Tuple, Union
 import re
 
 SCALAR, WIRE = "scalar", "wire"
@@ -73,25 +73,11 @@ class Circuit():
 
 
 MAX_VALUE = 1 << 17
-def runCode(circuit: Circuit, rerunB: bool = False) -> int:
+def solve(circuit: Circuit) -> Tuple[int,int]:
     startingTarget = "a"
-    result = circuit.solveFor(startingTarget)
-
-    if rerunB:
-        solutions = { "b": result }
-        result = circuit.solveFor(startingTarget, solutions)    
-
-    if result < 0:
-        result += MAX_VALUE
-    return result
-
-
-def part1(circuit: Circuit) -> int:
-    return runCode(circuit)
-
-
-def part2(circuit: Circuit) -> int:
-    return runCode(circuit, True)
+    part1 = circuit.solveFor(startingTarget)
+    part2 = circuit.solveFor(startingTarget, { "b": part1 })
+    return part1 if part1 >= 0 else part1 + MAX_VALUE, part2 if part2 >= 0 else part2 + MAX_VALUE
 
 
 sourceTargetRegex = re.compile(r"^(.*)\s->\s(\w+)$")
@@ -127,17 +113,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

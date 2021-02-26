@@ -24,17 +24,15 @@ matrix1Updates: Dict[str,Callable[[int],int]] = {
     "toggle": lambda value: not value,
     "turn off": lambda _: 0
 }
-def part1(instructions: List[Instruction]) -> int:
-    return runMatrix(matrix1Updates, instructions)
-
-
 matrix2Updates: Dict[str,Callable[[int],int]] = {
     "turn on": lambda value: value + 1,
     "toggle": lambda value: value + 2,
     "turn off": lambda value: value - 1 if value > 0 else 0
 }
-def part2(instructions: List[Instruction]) -> int:
-    return runMatrix(matrix2Updates, instructions)
+
+
+def solve(instructions: List[Instruction]) -> Tuple[int,int]:
+    return (runMatrix(matrix1Updates, instructions), runMatrix(matrix2Updates, instructions))
 
 
 instructionRegex = re.compile(r"^(toggle|turn off|turn on)\s(\d{1,3}),(\d{1,3})\sthrough\s(\d{1,3}),(\d{1,3})$")
@@ -57,17 +55,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

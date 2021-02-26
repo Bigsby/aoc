@@ -153,9 +153,7 @@ def getScafoldsAndRobot(asciiComputer: IntCodeComputer) -> Tuple[Scafolds,Robot]
 
 
 
-def part1(memory: List[int]) -> int:
-    asciiComputer = IntCodeComputer(memory)
-    scafolds, _ = getScafoldsAndRobot(asciiComputer)
+def part1(scafolds: Scafolds) -> int:
     alignment = 0
     for scafold in scafolds:
         if all(map(lambda direction: scafold + direction in scafolds, DIRECTIONS.values())):
@@ -225,9 +223,7 @@ def getRoutines(path: Path) -> Dict[int,Tuple[Path,List[Tuple[int,int]]]]:
     return routines
 
 
-def part2(memory: List[int]) -> int:
-    asciiComputer = IntCodeComputer(memory)
-    scafolds, robot = getScafoldsAndRobot(asciiComputer)
+def part2(memory: List[int], scafolds: Scafolds, robot: Robot) -> int:
     asciiComputer = IntCodeComputer(memory)
     asciiComputer.memory[0] = 2
     path = findPath(scafolds, robot)
@@ -246,6 +242,15 @@ def part2(memory: List[int]) -> int:
     return asciiComputer.runUntilHalt().pop()
 
 
+def solve(memory: List[int]) -> Tuple[int,int]:
+    asciiComputer = IntCodeComputer(memory)
+    scafolds, robot = getScafoldsAndRobot(asciiComputer)
+    return (
+        part1(scafolds),
+        part2(memory, scafolds, robot)
+    )
+
+
 def getInput(filePath: str) -> List[int]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
@@ -258,17 +263,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

@@ -6,8 +6,6 @@ from typing import Dict, Iterable, List, Tuple
 
 Rule = Tuple[str,int]
 Rules = Dict[str,List[Rule]]
-
-
 REQUIRED_COLOR = "shiny gold"
 
 
@@ -18,16 +16,15 @@ def getRulesContaining(color: str, rules: Rules) -> Iterable[str]:
             yield from getRulesContaining(ruleColor, rules)
 
 
-def part1(rules: Rules) -> int:
-    return len(set(getRulesContaining(REQUIRED_COLOR, rules)))
-    
-
 def getQuantityFromColor(color: str, rules: Rules) -> int:
     return sum(map(lambda innerRule: innerRule[1] * ( 1 + getQuantityFromColor(innerRule[0], rules)), rules[color]))
 
 
-def part2(rules: Rules) -> int:
-    return getQuantityFromColor(REQUIRED_COLOR, rules)
+def solve(rules: Rules) -> Tuple[int,int]:
+    return (
+        len(set(getRulesContaining(REQUIRED_COLOR, rules))),
+        getQuantityFromColor(REQUIRED_COLOR, rules)
+    )
 
 
 innerBagsRegex = re.compile(r"^(\d+)\s(.*)\sbags?$")
@@ -64,17 +61,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

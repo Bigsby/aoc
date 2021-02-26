@@ -1,12 +1,13 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from typing import Callable, List
+from typing import Callable, List, Tuple
 import re
 
 
 def countDifferences(puzzleInput: List[str], differencesFunc: Callable[[str],int]):
     return sum(differencesFunc(s) for s in puzzleInput)
+
 
 hexaRegex = re.compile(r"\\x[0-9a-f]{2}")
 def getStringDifference1(string: str) -> int:
@@ -18,10 +19,6 @@ def getStringDifference1(string: str) -> int:
     return totalLength - len(stripped) 
 
 
-def part1(puzzleInput: List[str]) -> int:
-    return countDifferences(puzzleInput, getStringDifference1)
-
-
 def getStringDifference2(string: str) -> int:
     initialLength = len(string)
     escaped = re.escape(string)
@@ -29,8 +26,8 @@ def getStringDifference2(string: str) -> int:
     return 2 + len(escaped) - initialLength
 
 
-def part2(puzzleInput: List[str]) -> int:
-    return countDifferences(puzzleInput, getStringDifference2)
+def solve(puzzleInput: List[str]) -> Tuple[int,int]:
+    return (countDifferences(puzzleInput, getStringDifference1), countDifferences(puzzleInput, getStringDifference2))
 
 
 def getInput(filePath: str) -> List[str]:
@@ -45,17 +42,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

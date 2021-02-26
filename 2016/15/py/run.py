@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from typing import List
+from typing import List, Tuple
 import re
 
 
@@ -21,13 +21,13 @@ def findWinningPosition(discs: List[Disc]) -> int:
     return offset
 
 
-def part1(discs: List[Disc]) -> int:
-    return findWinningPosition(discs)
-
-
-def part2(discs: List[Disc]) -> int:
+def solve(discs: List[Disc]) -> Tuple[int,int]:
+    part1Result = findWinningPosition(discs)
     discs.append(Disc(11, 0, len(discs)))
-    return findWinningPosition(discs)
+    return (
+        part1Result,
+        findWinningPosition(discs)
+    )
 
 
 lineRegex = re.compile(r"^Disc #\d has (?P<positions>\d+) positions; at time=0, it is at position (?P<start>\d+).$")
@@ -52,17 +52,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

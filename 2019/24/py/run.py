@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from typing import Dict, List
+from typing import Dict, List, Tuple
 from collections import defaultdict
 
 Bug = complex
@@ -84,6 +84,12 @@ def part2(bugs: Bugs) -> int:
     return sum(len(bugs) for bugs in layers.values())
 
 
+def solve(bugs: Bugs) -> Tuple[int,int]:
+    return (
+        part1(bugs),
+        part2(bugs)
+    )
+
 
 def getInput(filePath: str) -> Bugs:
     if not os.path.isfile(filePath):
@@ -96,23 +102,19 @@ def getInput(filePath: str) -> Bugs:
                 if c == "#":
                     bugs.append(x + y * 1j)
         return bugs
-                
+
 
 def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

@@ -14,22 +14,18 @@ namespace AoC
         static int CountValid(Line[] lines, Func<Line, bool> validationFunc)
             => lines.Where(validationFunc).Count();
 
-        static int Part1(Line[] lines)
-        {
-            return CountValid(lines, line => {
-                var (minimum, maximum, letter, password) = line;
-                var occurenceCount = password.Count(c => c == letter);
-                return occurenceCount >= minimum && occurenceCount <= maximum;
-            });
-        }
-
-        static int Part2(Line[] lines)
-        {
-            return CountValid(lines, line => {
-                var (first, second, letter, password) = line;
-                return (password[first - 1] == letter) ^ (password[second  - 1] == letter);
-            });
-        }
+        static (int, int) Solve(Line[] lines)
+            => (
+                CountValid(lines, line => {
+                    var (minimum, maximum, letter, password) = line;
+                    var occurenceCount = password.Count(c => c == letter);
+                    return occurenceCount >= minimum && occurenceCount <= maximum;
+                }),
+                CountValid(lines, line => {
+                    var (first, second, letter, password) = line;
+                    return (password[first - 1] == letter) ^ (password[second  - 1] == letter);
+                })
+            );
 
         static Regex lineRegex = new Regex(@"^(\d+)-(\d+)\s([a-z]):\s(.*)$", RegexOptions.Compiled);
         static Line[] GetInput(string filePath)
@@ -52,19 +48,13 @@ namespace AoC
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

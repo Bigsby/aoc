@@ -9,56 +9,39 @@ namespace AoC
 {
     class Program
     {
-        static int Part1(int[][] lines)
+        static (int, int) Solve(int[][] lines)
         {
-            return lines.Select(line => line.Max() - line.Min()).Sum();
-        }
-
-        static int Part2(int[][] lines)
-        {
-            var total = 0;
+            var total1 = 0;
+            var total2 = 0;
             foreach (var line in lines)
             {
+                total1 += line.Max() - line.Min();
                 foreach (var numberA in line)
-                {
                     foreach(var numberB in line)
-                    {
                         if (numberA > numberB && numberA % numberB == 0)
-                        {
-                            total += numberA / numberB;
-                        }
-                    }
-                }
+                            total2 += numberA / numberB;
             }
-            return total;
+            return (total1, total2);
         }
 
         static Regex lineRegex = new Regex(@"\d+", RegexOptions.Compiled);
         static int[][] GetInput(string filePath)
-        {
-            if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            return File.ReadLines(filePath)
+            => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
+            : File.ReadLines(filePath)
                 .Select(line => 
                 lineRegex.Matches(line).Select(match => int.Parse(match.Groups[0].Value)).ToArray()).ToArray();
-        }
 
         static void Main(string[] args)
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

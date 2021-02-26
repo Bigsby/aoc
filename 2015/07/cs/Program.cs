@@ -75,10 +75,15 @@ namespace AoC
                 => _connections.First(connection => connection.Target == target);
             
             int GetValueFromOperand(Operand operand)
-                => operand.Type == SCALAR ? operand.Scalar : GetValueFromConnection(GetConnectionFromTarget(operand.Wire));
+                => operand.Type == SCALAR ? 
+                    operand.Scalar 
+                    : 
+                    GetValueFromConnection(GetConnectionFromTarget(operand.Wire));
 
             int GetValueFromBinaryConnection(Connection connection)
-                => BINARY_OPERATIONS[connection.Operation](GetValueFromOperand(connection.Operand1), GetValueFromOperand(connection.Operand2));
+                => BINARY_OPERATIONS[connection.Operation](
+                    GetValueFromOperand(connection.Operand1), 
+                    GetValueFromOperand(connection.Operand2));
 
             int CalculateValueForConnection(Connection connection)
             {
@@ -102,29 +107,21 @@ namespace AoC
         }
 
         const int MAX_VALUE = 1 << 17;
-        static int RunCode(Circuit circuit, bool reRunB)
+        static (int, int) Solve(Circuit circuit)
         {
             var startingTarget = "a";
-            var result = circuit.SolverFor(startingTarget, new Dictionary<string, int>());
-            if (reRunB)
-                result = circuit.SolverFor(startingTarget, new Dictionary<string, int> { { "b", result } });
-            if (result < 0)
-                result += MAX_VALUE;
-            return result;
+            var part1 = circuit.SolverFor(startingTarget, new Dictionary<string, int>());
+            var part2 = circuit.SolverFor(startingTarget, new Dictionary<string, int> { { "b", part1 } });
+            return (part1 >= 0 ? part1 : part1 + MAX_VALUE, part2 >= 0 ? part2 : part2 + MAX_VALUE);
         }
-
-        static int Part1(Circuit circuit) => RunCode(circuit, false);
-
-        static int Part2(Circuit circuit) => RunCode(circuit, true);
 
         static Regex sourceTargetRegex = new Regex(@"^(.*)\s->\s(\w+)$", RegexOptions.Compiled);
         static Regex inputRegex = new Regex(@"^[^\s]+$", RegexOptions.Compiled);
         static Regex unaryRegex = new Regex(@"NOT\s(\w+)$", RegexOptions.Compiled);
         static Regex binaryRegex = new Regex(@"^(\w+|\d+)\s+(AND|OR|LSHIFT|RSHIFT)\s+(\w+|\d+)", RegexOptions.Compiled);
         static Circuit GetInput(string filePath)
-        {
-            if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            return new Circuit(File.ReadAllLines(filePath).Select(line => {
+            => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
+            : new Circuit(File.ReadAllLines(filePath).Select(line => {
                 Match sourceTargetMatch = sourceTargetRegex.Match(line);
                 if (sourceTargetMatch.Success)
                 {
@@ -140,25 +137,18 @@ namespace AoC
                 }
                 throw new Exception($"Unrecognized connection: '{line}'");
             }));
-        }
 
         static void Main(string[] args)
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

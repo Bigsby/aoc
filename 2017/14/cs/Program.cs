@@ -61,9 +61,6 @@ namespace AoC
                 Convert.ToString(Convert.ToInt32(knotHash[new Range(2 * i, 2 * (i + 1))], 16), 2).PadLeft(8, '0')));
         }
 
-        static int Part1(string key)
-            => Enumerable.Range(0, 128).Sum(index => GetRowHashBinaryString(key, index).Count(c => c == '1'));
-
         static Complex[] DIRECTIONS = new [] { Complex.ImaginaryOne, 1, -Complex.ImaginaryOne, -1 };
         static void FindAdjacent(Complex point, HashSet<Complex> grid, HashSet<Complex> visited)
         {
@@ -99,29 +96,27 @@ namespace AoC
             return region;
         }
 
+        static (int, int) Solve(string key)
+            => (
+                Enumerable.Range(0, 128).Sum(index => GetRowHashBinaryString(key, index).Count(c => c == '1')),
+                Part2(key)
+            );
+
         static string GetInput(string filePath)
-        {
-            if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            return File.ReadAllText(filePath).Trim();
-        }
+            => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
+            : File.ReadAllText(filePath).Trim();
 
         static void Main(string[] args)
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

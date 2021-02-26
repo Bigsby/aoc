@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from typing import List, Set
+from typing import List, Set, Tuple
 import re
 from functools import reduce
 from itertools import product
@@ -12,10 +12,6 @@ def supportsTLS(ip: List[str]) -> bool:
     if any(abbaRegex.search(hypernet) for hypernet in ip[1::2]):
         return False
     return any(abbaRegex.search(supernet) for supernet in ip[::2])
-
-
-def part1(ips: List[List[str]]) -> int:
-    return sum(map(supportsTLS, ips))
 
 
 def findBABs(supernet: str) -> Set[str]:
@@ -29,8 +25,11 @@ def supportsSSL(ip: List[str]) -> bool:
     return any(bab in hypernet for bab, hypernet in product(babs, ip[1::2]))
 
 
-def part2(ips: List[List[str]]) -> int:
-    return sum(map(supportsSSL, ips))
+def solve(ips: List[List[str]]) -> Tuple[int,int]:
+    return (
+        sum(map(supportsTLS, ips)), 
+        sum(map(supportsSSL, ips))
+    )
 
 
 lineRegex = re.compile(r"(\[?[a-z]+\]?)")
@@ -40,24 +39,19 @@ def getInput(filePath: str) -> List[List[str]]:
     
     with open(filePath, "r") as file:
         return [ lineRegex.findall(line) for line in file.readlines() ]
-            
 
 
 def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

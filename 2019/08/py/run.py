@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from typing import Dict, List
+from typing import Dict, List, Tuple
 from itertools import product
 
 
@@ -194,6 +194,12 @@ def part2(pixels: List[int]) -> str:
     return "".join(map(lambda index: getCharacterInImage(image, index, CHARACTER_WIDTH, IMAGE_HEIGHT), range(IMAGE_WIDTH // CHARACTER_WIDTH)))
 
 
+def solve(pixels: List[int]) -> Tuple[int,str]:
+    return (
+        part1(pixels),
+        part2(pixels)
+    )
+
 
 def getInput(filePath: str) -> List[int]:
     if not os.path.isfile(filePath):
@@ -207,17 +213,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

@@ -81,17 +81,16 @@ def findShortestPath(maze: Maze, keysDoors: KeysDoors, entrances: List[Position]
     return findShortestPathFromKeyGragph(keysPaths, keys, [str(index) for index, _ in enumerate(entrances)])
 
 
-def part1(data: Tuple[Maze,KeysDoors,Position]) -> int:
-    maze, keysDoors, entrance = data
-    return findShortestPath(maze, keysDoors, [ entrance])
-
-
-def part2(data: Tuple[Maze,KeysDoors,Position]) -> int:
+def solve(data: Tuple[Maze,KeysDoors,Position]) -> Tuple[int,int]:
     maze, keysDoors, start = data
+    part1Result = findShortestPath(maze, keysDoors, [ start ])
     for offset in [ -1, -1j, 0, 1, 1j]:
         maze.append(start + offset)
     entrances = [ start + offset for offset in [ -1 - 1j, 1 - 1j, -1 + 1j, 1 + 1j ]]
-    return findShortestPath(maze, keysDoors, entrances)
+    return (
+        part1Result,
+        findShortestPath(maze, keysDoors, entrances)
+    )
 
 
 def getInput(filePath: str) -> Tuple[Maze,KeysDoors,Position]:
@@ -117,17 +116,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

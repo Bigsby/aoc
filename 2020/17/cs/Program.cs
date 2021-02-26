@@ -157,16 +157,15 @@ namespace AoC
         }
 
         static int RunCycles(Universe universe)
-        {
-            foreach (var _ in Enumerable.Range(0, 6))
-                universe = NextCycle(universe);
-            return universe.Values.Count(v => v);
-        }
+            => Enumerable.Range(0, 6)
+                .Aggregate(universe, (current, _) => NextCycle(current))
+                .Values.Count(v => v);
 
-        static int Part1(Universe universe) => RunCycles(universe);
-
-        static int Part2(Dictionary<Coordinate, bool> universe)
-            => RunCycles(universe.ToDictionary(pair => pair.Key * 1, pair => pair.Value));
+        static (int, int) Solve(Dictionary<Coordinate, bool> universe)
+            => (
+                RunCycles(universe),
+                RunCycles(universe.ToDictionary(pair => pair.Key * 1, pair => pair.Value))
+            );
 
         static Dictionary<Coordinate, bool> GetInput(string filePath)
         {
@@ -184,19 +183,13 @@ namespace AoC
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

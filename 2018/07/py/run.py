@@ -16,8 +16,7 @@ def buildDependencies(pairs: List[Tuple[str,str]]) -> Dict[str, List[str]]:
     return dependencies
 
 
-def part1(pairs: List[Tuple[str,str]]) -> str:
-    dependencies = buildDependencies(pairs)    
+def part1(dependencies: Dict[str, List[str]]) -> str:
     path: List[str] = []
     while dependencies:
         nextStep = next(iter(sorted(step for step, stepDependencies in dependencies.items() if not stepDependencies)))
@@ -26,14 +25,12 @@ def part1(pairs: List[Tuple[str,str]]) -> str:
         for stepDependencies in dependencies.values():
             if nextStep in stepDependencies:
                 stepDependencies.remove(nextStep)
-
     return "".join(path)
         
 
 WORKER_COUNT = 5
 STEP_DURATION_OFFSET = ord("A") - 60 - 1
-def part2(pairs: List[Tuple[str,str]]):
-    dependencies = buildDependencies(pairs)
+def part2(dependencies: Dict[str, List[str]]) -> int:
     runningWorkers: Dict[str, int] = {}
     seconds = 0
     while dependencies or runningWorkers:
@@ -47,17 +44,22 @@ def part2(pairs: List[Tuple[str,str]]):
             for stepDependencies in dependencies.values():
                 if step in stepDependencies:
                     stepDependencies.remove(step)
-
         nextSteps = iter(sorted(step for step, stepDependencies in dependencies.items() if not stepDependencies))
         nextStep = next(nextSteps, None)
         while len(runningWorkers) <= WORKER_COUNT and nextStep:
             runningWorkers[nextStep] = ord(nextStep) - STEP_DURATION_OFFSET
             del dependencies[nextStep]
             nextStep = next(nextSteps, None)
-
         seconds += 1
-    
     return seconds - 1 # because 1 seconds is counted after emptying runningWorkers the last time
+
+
+def solve(pairs: List[Tuple[str,str]]) -> Tuple[str,int]:
+    dependencies = buildDependencies(pairs)
+    return (
+        part1({ k: list(v) for k, v in dependencies.items() }),
+        part2(dependencies)
+    )
 
 
 lineRegex = re.compile(r"\s([A-Z])\s")
@@ -73,17 +75,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

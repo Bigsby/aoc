@@ -19,9 +19,7 @@ def getValidNumbers(rules: List[Rule]) -> Set[int]:
     return validNumbers
 
 
-def part1(puzzleInput: Tuple[List[Rule],Ticket,List[Ticket]]) -> int:
-    rules, _, tickets = puzzleInput
-    validNumbers = getValidNumbers(rules)
+def part1(tickets: List[Ticket], validNumbers: Set[int]) -> int:
     invalidNumbers = []
     for ticket in tickets:
         for number in ticket:
@@ -30,9 +28,7 @@ def part1(puzzleInput: Tuple[List[Rule],Ticket,List[Ticket]]) -> int:
     return sum(invalidNumbers)
 
 
-def part2(puzzleInput: Tuple[List[Rule],Ticket,List[Ticket]]) -> int:
-    rules, myTicket, tickets = puzzleInput
-    validNumbers = getValidNumbers(rules)
+def part2(rules: List[Rule], myTicket: Ticket, tickets: List[Ticket], validNumbers: Set[int]) -> int:
     validTickets = []
     for ticket in tickets:
         if all(number in validNumbers for number in ticket):
@@ -66,6 +62,15 @@ def part2(puzzleInput: Tuple[List[Rule],Ticket,List[Ticket]]) -> int:
     departureFieldIndexes = [ next(iter(positions[fieldName])) for fieldName in names if fieldName.startswith("departure") ]
     result = reduce(lambda soFar, index: soFar * myTicket[index], departureFieldIndexes, 1)
     return result
+
+
+def solve(puzzleInput: Tuple[List[Rule],Ticket,List[Ticket]]) -> Tuple[int,int]:
+    rules, myTicket, tickets = puzzleInput
+    validNumbers = getValidNumbers(rules)
+    return (
+        part1(tickets, validNumbers),
+        part2(rules, myTicket, tickets, validNumbers)
+    )
 
 
 fieldRegex = re.compile(r"^(?P<field>[^:]+):\s(?P<r1s>\d+)-(?P<r1e>\d+)\sor\s(?P<r2s>\d+)-(?P<r2e>\d+)$")
@@ -102,17 +107,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

@@ -122,10 +122,9 @@ namespace AoC
             return GetCorners(tiles, size, permutations).Aggregate(1L, (soFar, current) => soFar * current.number);
         }
 
-        static Puzzle BuildPuzzle(IEnumerable<(int number, Tile tile)> tiles, int tileSize)
+        static Puzzle BuildPuzzle(IEnumerable<(int number, Tile tile)> tiles, int tileSize, Dictionary<int, Tile[]> tilePermutations, IEnumerable<(int number, Complex[] sides)> corners)
         {
-            var tilePermutations = GenerateAllTilesPermutations(tiles);
-            var (firstCornerNumber, sides) = GetCorners(tiles, tileSize, tilePermutations).First();
+            var (firstCornerNumber, sides) = corners.First();
             var (sideOne, sideTwo) = (sides[0], sides[1]);
             var puzzleWidth = (int)Math.Sqrt(tiles.Count());
             var puzzlePosition = (puzzleWidth - 1) * ((sideOne == -1 || sideTwo == -1 ? 1 : 0) + (sideOne == -I || sideTwo == -I ? I : 0));
@@ -208,15 +207,24 @@ namespace AoC
             return 0;
         }
 
-        static int Part2(IEnumerable<(int, Tile tile)> tiles)
+        static int Part2(IEnumerable<(int, Tile tile)> tiles, int tileSize, Dictionary<int, Tile[]> tilePermutations, IEnumerable<(int number, Complex[] sides)> corners)
         {
-            var tileSize = GetSize(tiles.First().tile);
-            var puzzle = BuildPuzzle(tiles, tileSize);
+            var puzzle = BuildPuzzle(tiles, tileSize, tilePermutations, corners);
             var reduced = RemoveBordersAndJoin(puzzle, tileSize);
             var seaMonster = GetSeaMonster();
             var locationCount = GetSeaMonsterCount(reduced, seaMonster);
             return reduced.Count() - (seaMonster.Count() * locationCount);
+        }
 
+        static (long, int) Solve(IEnumerable<(int, Tile tile)> tiles)
+        {
+            var permutations = GenerateAllTilesPermutations(tiles);
+            var size = GetSize(tiles.First().tile);
+            var corners = GetCorners(tiles, size, permutations);
+            return (
+                corners.Aggregate(1L, (soFar, current) => soFar * current.number),
+                Part2(tiles, size, permutations, corners)
+            );
         }
 
         static Regex numberLineRegex = new Regex(@"^Tile\s(?<number>\d+):$", RegexOptions.Compiled);
@@ -249,8 +257,6 @@ namespace AoC
                     position = new Complex(0, position.Imaginary + 1);
                 }
             }
-
-
             return tiles;
         }
 
@@ -258,19 +264,13 @@ namespace AoC
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

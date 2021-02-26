@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from typing import Dict, Iterable, Tuple
+from typing import Dict, Tuple
 from itertools import product
 
 Grid = Dict[complex,int]
@@ -39,30 +39,25 @@ def sumFromAreaTable(grid: Grid, x: int, y: int, size: int) -> int:
           + grid[x - 1 + size + (y - 1 + size) * 1j]
 
 
-def findLargestPower(serialNumber: int, sizes: Iterable[int]) -> Tuple[Tuple[int,int], int]:
+def solve(serialNumber: int) -> Tuple[str,str]:
     grid = buildGrid(serialNumber)
     summedAreaTable = buildSummedAreaTable(grid)
     maxFuel = maxSize = 0
     maxCell = (-1, -1)
-    for size in sizes:
+    max3Cell = (-1, -1)
+    max3Fuel = 0
+    for size in range(1, GRID_SIZE):
         for y, x in product(range(1, GRID_SIZE - size), range(1, GRID_SIZE - size)):
             fuel = sumFromAreaTable(summedAreaTable, x, y, size)
             if fuel > maxFuel:
                 maxFuel = fuel
                 maxCell = x + 1, y + 1
                 maxSize = size
-    return maxCell, maxSize
-
-
-def part1(serialNumber: int) -> str:
-    (x,y), _ = findLargestPower(serialNumber, [ 3 ])
-    return f"{x},{y}"
-
-
-def part2(serialNumber: int) -> str:
-    (x, y), size = findLargestPower(serialNumber, range(1, GRID_SIZE))
-    return f"{x},{y},{size}"
-
+            if size == 3 and fuel > max3Fuel:
+                max3Fuel = fuel
+                max3Cell = x + 1, y + 1
+    return f"{max3Cell[0]},{max3Cell[1]}", f"{maxCell[0]},{maxCell[1]},{maxSize}"
+    
 
 def getInput(filePath: str) -> int:
     if not os.path.isfile(filePath):
@@ -76,17 +71,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

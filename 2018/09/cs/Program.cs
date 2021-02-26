@@ -40,16 +40,20 @@ namespace AoC
 
     class Program
     {
-        static long PlayGame(int playerCount, int lastMarble)
+        static (long, long) Solve(Tuple<int, int> puzzleInput)
         {
+            var (playerCount, lastMarble) = puzzleInput;
             var scores = Enumerable.Range(0, playerCount).ToDictionary(index => index + 1, _ => 0L);
             var players = new Cycle<int>(scores.Keys);
             var currentPlayer = players.Next();
             var currentMarble = new Marble(0, null, null);
             var nextNumber = 0;
-            while (nextNumber <= lastMarble)
+            var part1Result = 0L;
+            while (nextNumber <= lastMarble * 100)
             {
                 nextNumber++;
+                if (nextNumber == lastMarble)
+                    part1Result = scores.Values.Max();
                 currentPlayer = players.Next();
                 if (nextNumber % 23 != 0)
                     currentMarble = new Marble(nextNumber, currentMarble.Next, currentMarble.Next.Next);
@@ -63,12 +67,8 @@ namespace AoC
                     currentMarble.Previous = marbleToRemove.Previous;
                 }
             }
-            return scores.Values.Max();
+            return (part1Result, scores.Values.Max());
         }
-
-        static long Part1(Tuple<int, int> puzzleInput) => PlayGame(puzzleInput.Item1, puzzleInput.Item2);
-
-        static long Part2(Tuple<int, int> puzzleInput) => PlayGame(puzzleInput.Item1, puzzleInput.Item2 * 100);
 
         static Regex inputRegex = new Regex(@"^(?<players>\d+) players; last marble is worth (?<last>\d+)");
         static Tuple<int, int> GetInput(string filePath)
@@ -84,19 +84,13 @@ namespace AoC
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

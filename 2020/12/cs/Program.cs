@@ -23,7 +23,6 @@ namespace AoC
             { 'L', Complex.ImaginaryOne },
             { 'R', -Complex.ImaginaryOne }
         };
-
         static int Navigate(IEnumerable<Instruction> instructions, Complex heading, bool headingOnCardinal)
         {
             Complex position = 0;
@@ -40,41 +39,33 @@ namespace AoC
             return (int)(Math.Ceiling(Math.Abs(position.Real)) + Math.Ceiling(Math.Abs(position.Imaginary)));
         }
 
-        static int Part1(IEnumerable<Instruction> instructions)
-            => Navigate(instructions, 1, false);
-
-        static int Part2(IEnumerable<Instruction> instructions)
-            => Navigate(instructions, new Complex(10, 1), true);
+        static (int, int) Solve(IEnumerable<Instruction> instructions)
+            => (
+                Navigate(instructions, 1, false),
+                Navigate(instructions, new Complex(10, 1), true)
+            );
 
         static Regex lineRegex = new Regex(@"^(?<direction>[NSEWLRF])(?<value>\d+)$", RegexOptions.Compiled);
         static IEnumerable<Instruction> GetInput(string filePath)
-        {
-            if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            return File.ReadLines(filePath).Select(line => {
+            => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
+            : File.ReadLines(filePath).Select(line => {
                 var match = lineRegex.Match(line);
                 if (match.Success)
                     return new Instruction(match.Groups["direction"].Value[0], int.Parse(match.Groups["value"].Value));
                 throw new Exception($"Bad format '{line}'");
             });
-        }
 
         static void Main(string[] args)
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

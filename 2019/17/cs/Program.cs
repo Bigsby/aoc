@@ -273,10 +273,8 @@ namespace AoC
             return (scafolds, robot);
         }
 
-        static int Part1(long[] memory)
+        static int Part1(IEnumerable<Coordinate> scafolds)
         {
-            var asciiComputer = new IntCodeComputer(memory);
-            var (scafolds, _) = GetScafoldsAndRobot(asciiComputer);
             var alignment = 0;
             foreach (var scafold in scafolds)
                 if (DIRECTIONS.Values.All(direction => scafolds.Contains(scafold + direction)))
@@ -390,10 +388,8 @@ namespace AoC
             return routines;
         }
 
-        static long Part2(long[] memory)
+        static long Part2(long[] memory, IEnumerable<Coordinate> scafolds, (Coordinate, Coordinate) robot)
         {
-            var asciiComputer = new IntCodeComputer(memory);
-            var (scafolds, robot) = GetScafoldsAndRobot(asciiComputer);
             var path = FindPath(scafolds, robot);
             var routines = GetRoutines(path);
             var mainRoutineSegments = new Dictionary<int, int>();
@@ -407,36 +403,38 @@ namespace AoC
             inputs.Insert(0, string.Join(",", mainRoutineSegments.OrderBy(pair => pair.Key).Select(pair => (char)pair.Value)) + (char)10);
             inputs.Add("n" + (char)10);
             memory[0] = 2;
-            asciiComputer = new IntCodeComputer(memory);
+            var asciiComputer = new IntCodeComputer(memory);
             foreach (var inputLine in inputs)
                 foreach (var c in inputLine)
                     asciiComputer.AddInput((int)c);
             return asciiComputer.Run();
         }
 
-        static long[] GetInput(string filePath)
+        static (int, long) Solve(long[] memory)
         {
-            if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            return File.ReadAllText(filePath).Trim().Split(",").Select(long.Parse).ToArray();
+            var asciiComputer = new IntCodeComputer(memory);
+            var (scafolds, robot) = GetScafoldsAndRobot(asciiComputer);
+            return (
+                Part1(scafolds),
+                Part2(memory, scafolds, robot)
+            );
         }
+
+        static long[] GetInput(string filePath)
+            => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
+            : File.ReadAllText(filePath).Trim().Split(",").Select(long.Parse).ToArray();
 
         static void Main(string[] args)
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

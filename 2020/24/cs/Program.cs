@@ -39,9 +39,6 @@ namespace AoC
             return floor;
         }
 
-        static int Part1(IEnumerable<Directions> filePaths)
-            => FlipInitiaTiles(filePaths).Values.Count(tile => tile);
-
         static IEnumerable<Complex> GetNeighbors(Complex tile)
             => DIRECTIONS.Values.Select(direction => tile + direction);
 
@@ -74,38 +71,38 @@ namespace AoC
             return newFloor;
         }
 
-        static int Part2(IEnumerable<Directions> filePaths)
+        static int Part2(Floor floor)
         {
-            var floor = FlipInitiaTiles(filePaths);
             foreach (var _ in Enumerable.Range(0, 100))
                 floor = RunDay(floor);
             return floor.Values.Count(tile => tile);
         }
 
+        static (int, int) Solve(IEnumerable<Directions> filePaths)
+        {
+            var floor = FlipInitiaTiles(filePaths);
+            return (
+                floor.Values.Count(tile => tile),
+                Part2(floor)
+            );
+        }
+
         static Regex lineRegex = new Regex(@"e|se|sw|w|nw|ne", RegexOptions.Compiled);
         static IEnumerable<Directions> GetInput(string filePath)
-        {
-            if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            return File.ReadLines(filePath).Select(line => lineRegex.Matches(line).Select(match => match.Value));
-        }
+            => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
+            : File.ReadLines(filePath).Select(line => lineRegex.Matches(line).Select(match => match.Value));
 
         static void Main(string[] args)
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

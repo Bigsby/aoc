@@ -32,8 +32,6 @@ KEYPAD1: Dict[complex,str] = {
     -1     : "4",   0: "5",  1     : "6",
     -1 + 1j: "7",  1j: "8",  1 + 1j: "9"
 }
-def part1(paths: List[str]) -> str:
-    return getCode(paths, KEYPAD1)
 
 
 KEYPAD2: Dict[complex,str] = {
@@ -43,8 +41,13 @@ KEYPAD2: Dict[complex,str] = {
               -1 + 1j: "A",  1j: "B", 1 + 1j: "C",
                              2j: "D"
 }
-def part2(paths: List[str]) -> str:
-    return getCode(paths, KEYPAD2)
+
+
+def solve(paths: List[str]) -> Tuple[str,str]:
+    return (
+        getCode(paths, KEYPAD1), 
+        getCode(paths, KEYPAD2)
+    )
 
 
 def getInput(filePath: str) -> List[str]:
@@ -59,17 +62,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":

@@ -18,35 +18,13 @@ namespace AoC
             ( 2, 'L', -1 ),
             ( 3, 'R', 1 )
         };
-
         static Complex TARGET_ROOM = new Complex(3, -3);
         static Encoding ENCODING = UTF8Encoding.UTF8;
-
-        static string Part1(string passcode)
+        static (string, int) Solve(string passcode)
         {
             var queue = new Queue<(Complex, string)>();
             queue.Enqueue((0, string.Empty));
-            using (var md5 = MD5.Create())
-                while (queue.Any())
-                {
-                    var (room, path) = queue.Dequeue();
-                    if (room == TARGET_ROOM)
-                        return path;
-                    var pathHash = string.Join("", md5.ComputeHash(ENCODING.GetBytes(passcode + path)).Select(hashByte => hashByte.ToString("x2")));
-                    foreach (var (index, pathLetter, direction) in DIRECTIONS)
-                    {
-                        var newRoom = room + direction;
-                        if (pathHash[index] > 'a' && newRoom.Real is >= 0 and < 4 && newRoom.Imaginary is > -4 and <= 0)
-                            queue.Enqueue((newRoom, path + pathLetter));
-                    }
-                }
-            throw new Exception("Path not found");
-        }
-
-        static int Part2(string passcode)
-        {
-            var queue = new Queue<(Complex, string)>();
-            queue.Enqueue((0, string.Empty));
+            var shortestPath = string.Empty;
             var longestPathFound = 0;
             using (var md5 = MD5.Create())
                 while (queue.Any())
@@ -54,6 +32,8 @@ namespace AoC
                     var (room, path) = queue.Dequeue();
                     if (room == TARGET_ROOM)
                     {
+                        if (string.IsNullOrEmpty(shortestPath))
+                            shortestPath = path;
                         longestPathFound = Math.Max(longestPathFound, path.Length);
                         continue;
                     }
@@ -65,32 +45,24 @@ namespace AoC
                             queue.Enqueue((newRoom, path + pathLetter));
                     }
                 }
-            return longestPathFound;
+            return (shortestPath, longestPathFound);
         }
 
         static string GetInput(string filePath)
-        {
-            if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            return File.ReadAllText(filePath).Trim();
-        }
+            => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
+            : File.ReadAllText(filePath).Trim();
 
         static void Main(string[] args)
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

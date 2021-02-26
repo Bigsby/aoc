@@ -11,8 +11,7 @@ namespace AoC
         const long FIRST_CODE = 20151125;
         const long MULTIPLIER = 252533;
         const long DIVIDER = 33554393;
-
-        static long Part1((int, int) data)
+        static (long, object) Solve((int, int) data)
         {
             var (targetRow, targetColumn) = data;
             var lastCode = FIRST_CODE;
@@ -26,13 +25,11 @@ namespace AoC
                     column++;
                     lastCode = (lastCode * MULTIPLIER) % DIVIDER;
                     if (column == targetColumn && row == targetRow)
-                        return lastCode;
+                        return (lastCode, null);
                     row--;
                 }
             }
         }
-
-        static object Part2(object puzzleInput) => null;
 
         static (int, int) GetInput(string filePath)
         {
@@ -45,19 +42,13 @@ namespace AoC
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

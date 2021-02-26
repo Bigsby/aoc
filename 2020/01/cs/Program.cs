@@ -15,17 +15,14 @@ namespace AoC
             Stack<int> stack = new Stack<int>();
             var data = source.ToArray();
             stack.Push(0);
-
             while (stack.Count > 0)
             {
                 int resultIndex = stack.Count - 1;
                 int dataIndex = stack.Pop();
-
                 while (dataIndex < data.Length) 
                 {
                     result[resultIndex++] = data[dataIndex];
                     stack.Push(++dataIndex);
-
                     if (resultIndex == length) 
                     {
                         yield return result;
@@ -36,49 +33,31 @@ namespace AoC
         }
 
         static int GetCombination(int[] numbers, int length)
-        {
-            foreach (var combination in Combinations(numbers, length)) {
-                if (combination.Sum() == 2020)
-                {
-                    return combination.Aggregate(1, (soFar, number) => soFar * number);
-                }
-            }
-            throw new Exception("Numbers not found");
-        }
+            => Combinations(numbers, length)
+                .First(combination => combination.Sum() == 2020)
+                .Aggregate(1, (soFar, number) => soFar * number);
 
-        static int Part1(int[] numbers)
-        {
-            return GetCombination(numbers, 2);
-        }
-
-        static object Part2(int[] numbers)
-        {
-            return GetCombination(numbers, 3);
-        }
+        static (int, int) Solve(int[] numbers)
+            => (
+                GetCombination(numbers, 2),
+                GetCombination(numbers, 3)
+            );
 
         static int[] GetInput(string filePath)
-        {
-            if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            return File.ReadAllLines(filePath).Select(int.Parse).ToArray();
-        }
+            => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
+            : File.ReadAllLines(filePath).Select(int.Parse).ToArray();
 
         static void Main(string[] args)
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

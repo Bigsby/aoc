@@ -37,9 +37,6 @@ namespace AoC
             return (empty, nonViableNodes);
         }
 
-        static int Part1(FileSystem fileSystem)
-            => fileSystem.Count - GetEmptyAndNonViableNodes(fileSystem).nonViable.Count() - 1;
-
         static Complex[] DIRECTIONS = new [] { -Complex.ImaginaryOne, -1, 1, Complex.ImaginaryOne };
         static int GetStepsToTarget(IEnumerable<Complex> nodes, IEnumerable<Complex> nonViable, Complex start, Complex destination)
         {
@@ -62,12 +59,15 @@ namespace AoC
             throw new Exception("Path not found");
         }
 
-        static int Part2(FileSystem fileSystem)
+        static (int, int) Solve(FileSystem fileSystem)
         {
             var (empty, nonViable) = GetEmptyAndNonViableNodes(fileSystem);
             var nodes = fileSystem.Keys.ToList();
             var emptyDestination = (int)nodes.Max(n => n.Real);
-            return GetStepsToTarget(nodes, nonViable, empty, emptyDestination) + (emptyDestination - 1) * 5;
+            return (
+                fileSystem.Count - nonViable.Count() - 1,
+                 GetStepsToTarget(nodes, nonViable, empty, emptyDestination) + (emptyDestination - 1) * 5
+            );
         }
 
         static Regex lineRegex = new Regex(@"^/dev/grid/node-x(?<x>\d+)-y(?<y>\d+)\s+(?<size>\d+)T\s+(?<used>\d+)", RegexOptions.Compiled);
@@ -89,19 +89,13 @@ namespace AoC
         {
             if (args.Length != 1) throw new Exception("Please, add input file path as parameter");
 
-            var puzzleInput = GetInput(args[0]);
             var watch = Stopwatch.StartNew();
-            var part1Result = Part1(puzzleInput);
-            watch.Stop();
-            var middle = watch.ElapsedTicks;
-            watch = Stopwatch.StartNew();
-            var part2Result = Part2(puzzleInput);
+            var (part1Result, part2Result) = Solve(GetInput(args[0]));
             watch.Stop();
             WriteLine($"P1: {part1Result}");
             WriteLine($"P2: {part2Result}");
             WriteLine();
-            WriteLine($"P1 time: {(double)middle / 100 / TimeSpan.TicksPerSecond:f7}");
-            WriteLine($"P2 time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
+            WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
     }
 }

@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from typing import Dict, List, Set
+from typing import Dict, List, Set, Tuple
 import re
 from functools import reduce
 
@@ -32,8 +32,7 @@ def buildAllergenGraph(foods: List[Food]) -> Dict[str,Set[str]]:
     }
 
 
-def part1(foods: List[Food]) -> int:
-    allergenGraph = buildAllergenGraph(foods)
+def part1(foods: List[Food], allergenGraph: Dict[str,Set[str]]) -> int:
     foundIngredients = reduce(lambda soFar, ingredientsForAllergen: \
         soFar | ingredientsForAllergen, (graph for _, graph in allergenGraph.items()))
     count = 0
@@ -43,8 +42,7 @@ def part1(foods: List[Food]) -> int:
     return count
 
 
-def part2(foods: List[Food]) -> str:
-    allergenGraph = buildAllergenGraph(foods)
+def part2(allergenGraph: Dict[str,Set[str]]) -> str:
     while any(len(ingredients) != 1 for ingredients in allergenGraph.values()):
         singleIngredientAllergens = [  
             (allergen, next(iter(allergenGraph[allergen]))) \
@@ -55,6 +53,14 @@ def part2(foods: List[Food]) -> str:
                 if allergen != singleAllergen and ingredient in allergenGraph[allergen]:
                     allergenGraph[allergen].remove(ingredient)
     return ",".join(map(lambda k: next(iter(allergenGraph[k])), sorted(allergenGraph)))
+
+
+def solve(foods: List[Food]) -> Tuple[int,str]:
+    allergenGraph = buildAllergenGraph(foods)
+    return (
+        part1(foods, allergenGraph),
+        part2(allergenGraph)
+    )
 
 
 lineRegex = re.compile(r"^(?P<ingredients>[^\(]+)\s\(contains\s(?P<allergens>[^\)]+)\)$")
@@ -77,17 +83,13 @@ def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.7f}")
-    print(f"P2 time: {end - middle:.7f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":
