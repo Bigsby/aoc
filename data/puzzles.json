@@ -58,6 +58,7 @@
                     "day": 1,
                     "name": "Not Quite Lisp",
                     "description": "Follow 1D directions '(' and ')'",
+                    "tags": [ "1D", "navigate" ],
                     "results": [
                         {
                             "p1": "280",
@@ -176,6 +177,7 @@
                     "day": 3,
                     "name": "Perfectly Spherical Houses in a Vacuum",
                     "description": "Follow 2D directions '<', '>', '^' and 'v'",
+                    "tags": [ "2D", "navigate" ],
                     "results": [
                         {
                             "p1": "2592",
@@ -225,6 +227,7 @@
                     "day": 4,
                     "name": "The Ideal Stocking Stuffer",
                     "description": "MD5 mining",
+                    "tags": [ "md5" ],
                     "results": [
                         {
                             "p1": "254575",
@@ -294,6 +297,7 @@
                     "day": 5,
                     "name": "Doesn't He Have Intern-Elves For This?",
                     "description": "Check string rules (vowel count, repeats...)",
+                    "tags": [ "RegEx", "strings" ],
                     "results": [
                         {
                             "p1": "236",
@@ -363,6 +367,7 @@
                     "day": 6,
                     "name": "Probably a Fire Hazard",
                     "description": "Turn on/off/toggle lights on 2D matrix",
+                    "tags": [ "2D", "grid", "navigate" ],
                     "results": [
                         {
                             "p1": "543903",
@@ -412,6 +417,7 @@
                     "day": 7,
                     "name": "Some Assembly Required",
                     "description": "Electronic circuit and Assembly",
+                    "tags": [ "bitwise" ],
                     "results": [
                         {
                             "p1": "46065",
@@ -481,6 +487,7 @@
                     "day": 8,
                     "name": "Matchsticks",
                     "description": "Replace escapes in strings",
+                    "tags": [ "RegEx", "strings" ],
                     "results": [
                         {
                             "p1": "1371",
@@ -524,6 +531,7 @@
                     "day": 9,
                     "name": "All in a Single Night",
                     "description": "Short and longest distance in graph",
+                    "tags": [ "DFS", "Graph" ],
                     "results": [
                         {
                             "p1": "141",
@@ -567,6 +575,7 @@
                     "day": 10,
                     "name": "Elves Look, Elves Say",
                     "description": "Look-and-say",
+                    "tags": [ "Look/Say" ],
                     "results": [
                         {
                             "p1": "492982",
@@ -610,6 +619,7 @@
                     "day": 11,
                     "name": "Corporate Policy",
                     "description": "Get next password iterating characters within rules",
+                    "tags": [ "RegEx", "strings" ],
                     "results": [
                         {
                             "p1": "cqjxxyzz",
@@ -653,6 +663,7 @@
                     "day": 12,
                     "name": "JSAbacusFramework.io",
                     "description": "JSON processing",
+                    "tags": [ "JSON" ],
                     "results": [
                         {
                             "p1": "119433",
@@ -684,6 +695,7 @@
                     "day": 13,
                     "name": "Knights of the Dinner Table",
                     "description": "Seatings on round table",
+                    "tags": [ "Combinations" ],
                     "results": [
                         {
                             "p1": "733",
@@ -727,6 +739,7 @@
                     "day": 14,
                     "name": "Reindeer Olympics",
                     "description": "Speed and rests",
+                    "tags": [ "Periods" ],
                     "results": [
                         {
                             "p1": "2640",
@@ -770,6 +783,7 @@
                     "day": 15,
                     "name": "Science for Hungry People",
                     "description": "Optimizing proportions (ingredients)",
+                    "tags": [ "Combinations" ],
                     "results": [
                         {
                             "p1": "21367368",
@@ -856,6 +870,7 @@
                     "day": 17,
                     "name": "No Such Thing as Too Much",
                     "description": "Fit liquid in containers (5/3 liter jar Riddle)",
+                    "tags": [ "Combinations" ],
                     "results": [
                         {
                             "p1": "1638",
@@ -887,6 +902,7 @@
                     "day": 18,
                     "name": "Like a GIF For Your Yard",
                     "description": "Conway's Game of Life",
+                    "tags": [ "Grid" ],
                     "results": [
                         {
                             "p1": "821",
@@ -930,6 +946,7 @@
                     "day": 19,
                     "name": "Medicine for Rudolph",
                     "description": "Molecule evolution",
+                    "tags": [ "strings", "molecule" ],
                     "results": [
                         {
                             "p1": "518",
@@ -973,6 +990,7 @@
                     "day": 20,
                     "name": "Infinite Elves and Infinite Houses",
                     "description": "Find and sum dividors of numbers",
+                    "tags": [ "Maths" ],
                     "results": [
                         {
                             "p1": "776160",
@@ -1004,6 +1022,7 @@
                     "day": 21,
                     "name": "RPG Simulator 20XX",
                     "description": "Damage/hit points game with weapons and armor",
+                    "tags": [ "Hit/Damage", "Game" ],
                     "results": [
                         {
                             "p1": "91",
@@ -1047,6 +1066,7 @@
                     "day": 22,
                     "name": "Wizard Simulator 20XX",
                     "description": "Damage/hit points game with spells and armor",
+                    "tags": [ "Hit/Damage", "Game" ],
                     "results": [
                         {
                             "p1": "900",
@@ -1078,6 +1098,7 @@
                     "day": 23,
                     "name": "Opening the Turing Lock",
                     "description": "Run assembly code",
+                    "tags": [ "Assembly" ],
                     "results": [
                         {
                             "p1": "307",
@@ -1121,6 +1142,7 @@
                     "day": 24,
                     "name": "It Hangs in the Balance",
                     "description": "Group weights in even sums",
+                    "tags": [ "Combinations" ],
                     "results": [
                         {
                             "p1": "10723906903",
@@ -1195,6 +1217,7 @@
                     "day": 1,
                     "name": "No Time for a Taxicab",
                     "description": "Follow 2D directions",
+                    "tags": [ "2D", "Navigate" ],
                     "results": [
                         {
                             "p1": "271",
@@ -1238,6 +1261,7 @@
                     "day": 2,
                     "name": "Bathroom Security",
                     "description": "Keypad navigation",
+                    "tags": [ "2D", "Navigate" ],
                     "results": [
                         {
                             "p1": "35749",
@@ -1281,6 +1305,7 @@
                     "day": 3,
                     "name": "Squares With Three Sides",
                     "description": "Triangle sides",
+                    "tags": [ "Maths", "Triangles" ],
                     "results": [
                         {
                             "p1": "983",
@@ -1322,8 +1347,9 @@
                 },
                 {
                     "day": 4,
-                    "name": "The Ideal Stocking Stuffer",
-                    "description": "MD5 mining",
+                    "name": "Security Through Obscurity",
+                    "description": "Checksum with letter occurence and rotate letters",
+                    "tags": [ "checksum" ],
                     "results": [
                         {
                             "p1": "173787",
@@ -1367,6 +1393,7 @@
                     "day": 5,
                     "name": "How About a Nice Game of Chess?",
                     "description": "MD5 hashing",
+                    "tags": [ "MD5" ],
                     "results": [
                         {
                             "p1": "4543c154",
@@ -1410,6 +1437,7 @@
                     "day": 6,
                     "name": "Signals and Noise",
                     "description": "Count letters repeating in same index in strings",
+                    "tags": [ "strings" ],
                     "results": [
                         {
                             "p1": "xdkzukcf",
@@ -1453,6 +1481,7 @@
                     "day": 7,
                     "name": "Internet Protocol Version 7",
                     "description": "Find letter patterns in strings (ABA and ABBA)",
+                    "tags": [ "strings" ],
                     "results": [
                         {
                             "p1": "115",
@@ -1484,6 +1513,7 @@
                     "day": 8,
                     "name": "Two-Factor Authentication",
                     "description": "Writing and reading LCD Screen and read charaters from pixels",
+                    "tags": [ "characters", "LCD" ],
                     "results": [
                         {
                             "p1": "121",
@@ -1515,6 +1545,7 @@
                     "day": 9,
                     "name": "Explosives in Cyberspace",
                     "description": "Header/frame based decompression of data",
+                    "tags": [ "Framed Data" ],
                     "results": [
                         {
                             "p1": "74532",
@@ -1558,6 +1589,7 @@
                     "day": 10,
                     "name": "Balance Bots",
                     "description": "Distribute numbers (chips) in piles (bots and outputs)",
+                    "tags": [ "Maths" ],
                     "results": [
                         {
                             "p1": "157",
@@ -1601,6 +1633,7 @@
                     "day": 11,
                     "name": "Radioisotope Thermoelectric Generators",
                     "description": "Moving parts between stages with rules",
+                    "tags": [ "Maths", "Logic" ],
                     "results": [
                         {
                             "p1": "31",
@@ -1644,6 +1677,7 @@
                     "day": 12,
                     "name": "Leonardo's Monorail",
                     "description": "Run assembly code",
+                    "tags": [ "Assembly" ],
                     "results": [
                         {
                             "p1": "318009",
@@ -1687,6 +1721,7 @@
                     "day": 13,
                     "name": "A Maze of Twisty Little Cubicles",
                     "description": "Solve maze shortest path and all path of specific length",
+                    "tags": [ "2D", "Navigate", "Maze", "BFS" ],
                     "results": [
                         {
                             "p1": "96",
@@ -1730,6 +1765,7 @@
                     "day": 14,
                     "name": "One-Time Pad",
                     "description": "MD5 hashing",
+                    "tags": [ "MD5" ],
                     "results": [
                         {
                             "p1": "23890",
@@ -1773,6 +1809,7 @@
                     "day": 15,
                     "name": "Timing is Everything",
                     "description": "Match offsets of cyclic indexes (Discs)",
+                    "tags": [ "Maths", "Offsets" ],
                     "results": [
                         {
                             "p1": "376777",
@@ -1816,6 +1853,7 @@
                     "day": 16,
                     "name": "Dragon Checksum",
                     "description": "Inverting, adding, matching 0s and 1s in strings",
+                    "tags": [ "Checksum" , "Binary", "Strings" ],
                     "results": [
                         {
                             "p1": "10010100110011100",
@@ -1859,6 +1897,7 @@
                     "day": 17,
                     "name": "Two Steps Forward",
                     "description": "Open doors with MD5 hasing",
+                    "tags": [ "MD5", "2D", "Navigate" ],
                     "results": [
                         {
                             "p1": "DRLRDDURDR",
@@ -1902,6 +1941,7 @@
                     "day": 18,
                     "name": "Like a Rogue",
                     "description": "Create rows in grid and count traps",
+                    "tags": [ "Regeneration" ],
                     "results": [
                         {
                             "p1": "1989",
@@ -1945,6 +1985,7 @@
                     "day": 19,
                     "name": "An Elephant Named Joseph",
                     "description": "Josephus Problem",
+                    "tags": [ "Maths", "Josephus" ],
                     "results": [
                         {
                             "p1": "1830117",
@@ -1988,6 +2029,7 @@
                     "day": 20,
                     "name": "Firewall Rules",
                     "description": "Find gaps in intersecting ranges of values",
+                    "tags": [ "Maths", "Ranges" ],
                     "results": [
                         {
                             "p1": "32259706",
@@ -2031,6 +2073,7 @@
                     "day": 21,
                     "name": "Scrambled Letters and Hash",
                     "description": "Swap, rotate and rotate list",
+                    "tags": [ "Strings", "Rotate" ],
                     "results": [
                         {
                             "p1": "agcebfdh",
@@ -2074,6 +2117,7 @@
                     "day": 22,
                     "name": "Grid Computing",
                     "description": "Sliding tile puzzle",
+                    "tags": [ "Maths", "Sliding", "Tile", "2D" ],
                     "results": [
                         {
                             "p1": "990",
@@ -2117,7 +2161,7 @@
                     "day": 23,
                     "name": "Safe Cracking",
                     "description": "Run assembly code and analyze to find loops",
-                    "tags": [ "assembly", "loops" ],
+                    "tags": [ "Assembly", "Loops", "Maths" ],
                     "results": [
                         {
                             "p1": "11004",
@@ -2161,6 +2205,7 @@
                     "day": 24,
                     "name": "Air Duct Spelunking",
                     "description": "Shortest path going through all nodes in maze",
+                    "tags": [ "Maze", "2D", "Navigate", "Checkpoints" ],
                     "results": [
                         {
                             "p1": "474",
@@ -2204,7 +2249,7 @@
                     "day": 25,
                     "name": "Clock Signal",
                     "description": "Run assembly code and analyze to find loops",
-                    "tags": [ "assembly", "loops" ],
+                    "tags": [ "Assembly", "Loops", "Maths" ],
                     "results": [
                         {
                             "p1": "196"
@@ -2247,6 +2292,7 @@
                     "day": 1,
                     "name": "Inverse Captcha",
                     "description": "Sum digits that macth next digit",
+                    "tags": [ "Maths" ],
                     "results": [
                         {
                             "p1": "1175",
@@ -2290,6 +2336,7 @@
                     "day": 2,
                     "name": "Corruption Checksum",
                     "description": "Max/Min and evenly dividable numbers",
+                    "tags": [ "Permutations" ],
                     "results": [
                         {
                             "p1": "42378",
@@ -2333,6 +2380,7 @@
                     "day": 3,
                     "name": "Spiral Memory",
                     "description": "Spiral Manhatan Distance and sum of neighbors",
+                    "tags": [ "Maths", "Spiral" ],
                     "results": [
                         {
                             "p1": "438",
@@ -2376,6 +2424,7 @@
                     "day": 4,
                     "name": "High-Entropy Passphrases",
                     "description": "Find repeated words and anagrams in phrases",
+                    "tags": [ "Strings", "Anagrams" ],
                     "results": [
                         {
                             "p1": "455",
@@ -2419,6 +2468,7 @@
                     "day": 5,
                     "name": "A Maze of Twisty Trampolines, All Alike",
                     "description": "Jump offsets in memory (list)",
+                    "tags": [ "Maths" ],
                     "results": [
                         {
                             "p1": "355965",
@@ -2462,6 +2512,7 @@
                     "day": 6,
                     "name": "Memory Reallocation",
                     "description": "Distribute amounts in list of numbers",
+                    "tags": [ "Maths" ],
                     "results": [
                         {
                             "p1": "5042",
@@ -2505,6 +2556,7 @@
                     "day": 7,
                     "name": "Recursive Circus",
                     "description": "Weights on piramid graph",
+                    "tags": [ "Maths" ],
                     "results": [
                         {
                             "p1": "hmvwl",
@@ -2548,6 +2600,7 @@
                     "day": 8,
                     "name": "I Heard You Like Registers",
                     "description": "Run assembly code with conditions",
+                    "tags": [ "Assembly" ],
                     "results": [
                         {
                             "p1": "5102",
@@ -2591,6 +2644,7 @@
                     "day": 9,
                     "name": "Stream Processing",
                     "description": "Parse nested stream of data with comments (garbage) and escapes",
+                    "tags": [ "Strings" ],
                     "results": [
                         {
                             "p1": "12897",
@@ -2634,6 +2688,7 @@
                     "day": 10,
                     "name": "Knot Hash",
                     "description": "Reverse ranges of numbers in list",
+                    "tags": [ "Maths", "Knots" ],
                     "results": [
                         {
                             "p1": "9656",
@@ -2677,6 +2732,7 @@
                     "day": 11,
                     "name": "Hex Ed",
                     "description": "Mahatan distances in hexagonal grid",
+                    "tags": [ "Hexagonal", "Grid", "Manhatan", "Navigate", "2D" ],
                     "results": [
                         {
                             "p1": "715",
@@ -2720,6 +2776,7 @@
                     "day": 12,
                     "name": "Digital Plumber",
                     "description": "Counting bidirectional connections in seperate graphs",
+                    "tags": [ "Graph" ],
                     "results": [
                         {
                             "p1": "130",
@@ -2763,6 +2820,7 @@
                     "day": 13,
                     "name": "Packet Scanners",
                     "description": "Avoid back and forth cycles",
+                    "tags": [ "Maths", "Cycles", "Synchronization" ],
                     "results": [
                         {
                             "p1": "1504",
@@ -2806,6 +2864,7 @@
                     "day": 14,
                     "name": "Disk Defragmentation",
                     "description": "Reverse ranges of numbers in list, create grid and find adjacent regions",
+                    "tags": [ "Maths", "Knots"],
                     "results": [
                         {
                             "p1": "8222",
@@ -2849,6 +2908,7 @@
                     "day": 15,
                     "name": "Dueling Generators",
                     "description": "Generator pairs of numbers by multiplication and modulus and match least significant 16bits",
+                    "tags": [ "Maths", "Modules", "Big Numbers" ],
                     "results": [
                         {
                             "p1": "609",
@@ -2892,6 +2952,7 @@
                     "day": 16,
                     "name": "Permutation Promenade",
                     "description": "Rotating and swaping letters in list",
+                    "tags": [ "Shuffling", "Cycles" ],
                     "results": [
                         {
                             "p1": "kbednhopmfcjilag",
@@ -2935,6 +2996,7 @@
                     "day": 17,
                     "name": "Spinlock",
                     "description": "Inserting and rotating circular list",
+                    "tags": [ "Shuffling", "Maths" ],
                     "results": [
                         {
                             "p1": "136",
@@ -2978,6 +3040,7 @@
                     "day": 18,
                     "name": "Duet",
                     "description": "Run assembly code with conditions between 2 computers",
+                    "tags": [ "Assembly" ],
                     "results": [
                         {
                             "p1": "3423",
@@ -3021,6 +3084,7 @@
                     "day": 19,
                     "name": "A Series of Tubes",
                     "description": "Follow tubes",
+                    "tags": [ "2D", "Navigate", "Tracks" ],
                     "results": [
                         {
                             "p1": "ITSZCJNMUO",
@@ -3064,6 +3128,7 @@
                     "day": 20,
                     "name": "Particle Swarm",
                     "description": "Find collisions between moving particles",
+                    "tags": [ "3D", "Collisions", "Quadatic Equation" ],
                     "results": [
                         {
                             "p1": "144",
@@ -3107,7 +3172,7 @@
                     "day": 21,
                     "name": "Fractal Art",
                     "description": "Grid rule based kinda Conway's Game of Life",
-                    "tags": [ "cycles", "repeating pattern"],
+                    "tags": [ "Cycles", "Repeating Pattern", "2D", "Grid" ],
                     "results": [
                         {
                             "p1": "144",
@@ -3151,6 +3216,7 @@
                     "day": 22,
                     "name": "Sporifica Virus",
                     "description": "Virus infected grid",
+                    "tags": [ "2D", "Navigate", "Toogle" ],
                     "results": [
                         {
                             "p1": "5261",
@@ -3194,7 +3260,8 @@
                     "day": 23,
                     "name": "Coprocessor Conflagration",
                     "description": "Analyse assembly code. Find square of number and count non-primes in range.",
-                    "tags": [ "assembly", "loops" ],
+                    "comments": [ "implement instructions parsing and running" ],
+                    "tags": [ "Assembly", "Loops", "Maths" ],
                     "results": [
                         {
                             "p1": "6724",
@@ -3238,6 +3305,7 @@
                     "day": 24,
                     "name": "Electromagnetic Moat",
                     "description": "Connect ports with same number of pins",
+                    "tags": [ "BFS", "Maths" ],
                     "results": [
                         {
                             "p1": "1940",
@@ -3281,6 +3349,7 @@
                     "day": 25,
                     "name": "The Halting Problem",
                     "description": "Turing Tape Machine",
+                    "tags": [ "Turing", "Logic" ],
                     "results": [
                         {
                             "p1": "3145"
@@ -3323,6 +3392,7 @@
                     "day": 1,
                     "name": "Chronal Calibration",
                     "description": "Summing numbers and changes",
+                    "tags": [ "Maths", "Deltas" ],
                     "results": [
                         {
                             "p1": "435",
@@ -3366,6 +3436,7 @@
                     "day": 2,
                     "name": "Inventory Management System",
                     "description": "Letter occurences",
+                    "tags": [ "Strings" ],
                     "results": [
                         {
                             "p1": "7192",
@@ -3409,6 +3480,7 @@
                     "day": 3,
                     "name": "No Matter How You Slice It",
                     "description": "2D cuts intersection (cloth)",
+                    "tags": [ "2D", "Coverage" ],
                     "results": [
                         {
                             "p1": "115242",
@@ -3452,6 +3524,7 @@
                     "day": 4,
                     "name": "Repose Record",
                     "description": "Parse log (sleeping guards)",
+                    "tags": [ "TimeSpan", "Intersection" ],
                     "results": [
                         {
                             "p1": "21956",
@@ -3495,6 +3568,7 @@
                     "day": 5,
                     "name": "Alchemical Reduction",
                     "description": "Replace pairs of same letters, difference casing, in string",
+                    "tags": [ "Strings" ],
                     "results": [
                         {
                             "p1": "11946",
@@ -3538,6 +3612,7 @@
                     "day": 6,
                     "name": "Chronal Coordinates",
                     "description": "Find Closest Mahatan Locations on map",
+                    "tags": [ "2D", "Map", "Manhatan" ],
                     "results": [
                         {
                             "p1": "5626",
@@ -3581,6 +3656,7 @@
                     "day": 7,
                     "name": "The Sum of Its Parts",
                     "description": "Task with graph dependencies and multi-tasking",
+                    "tags": [ "Multi-Task", "Dependencies" ],
                     "results": [
                         {
                             "p1": "OUGLTKDJVBRMIXSACWYPEQNHZF",
@@ -3624,6 +3700,7 @@
                     "day": 8,
                     "name": "Memory Maneuver",
                     "description": "Read headered framed data (list integers)",
+                    "tags": [ "Framed", "Data" ],
                     "results": [
                         {
                             "p1": "46578",
@@ -3667,6 +3744,7 @@
                     "day": 9,
                     "name": "Marble Mania",
                     "description": "Circular game, inserting and removing items",
+                    "tags": [ "Game", "Cycle List" ],
                     "results": [
                         {
                             "p1": "422980",
@@ -3710,6 +3788,7 @@
                     "day": 10,
                     "name": "The Stars Align",
                     "description": "Reading Screen and read charaters from pixels that move",
+                    "tags": [ "Characters", "LCD", "2D" ],
                     "results": [
                         {
                             "p1": "ZZCBGGCJ",
@@ -3753,6 +3832,7 @@
                     "day": 11,
                     "name": "Chronal Charge",
                     "description": "Summed Area Table",
+                    "tags": [ "Grid", "Summed Area Table" ],
                     "results": [
                         {
                             "p1": "20,68",
@@ -3795,7 +3875,8 @@
                 {
                     "day": 12,
                     "name": "Subterranean Sustainability",
-                    "description": "1D Conways Game of Life",
+                    "description": "1D Conway's Game of Life",
+                    "tags": [ "Conway", "1D" ],
                     "results": [
                         {
                             "p1": "1816",
@@ -3839,6 +3920,7 @@
                     "day": 13,
                     "name": "Mine Cart Madness",
                     "description": "Cart colisions on tracks (turns and intersections)",
+                    "tags": [ "2D", "Navigate", "Tracks", "Collision" ],
                     "results": [
                         {
                             "p1": "79,128",
@@ -3882,6 +3964,7 @@
                     "day": 14,
                     "name": "Chocolate Charts",
                     "description": "Add sum of digits in string to the end",
+                    "tags": [ "Look/Say", "Sum" ],
                     "results": [
                         {
                             "p1": "3718110721",
@@ -3925,6 +4008,7 @@
                     "day": 15,
                     "name": "Beverage Bandits",
                     "description": "Dangeons game (elves and goblins)",
+                    "tags": [ "2D", "Grid", "BFS" ],
                     "results": [
                         {
                             "p1": "191216",
@@ -3968,6 +4052,7 @@
                     "day": 16,
                     "name": "Chronal Classification",
                     "description": "Validate and run assembly code",
+                    "tags": [ "Assembly" ],
                     "results": [
                         {
                             "p1": "651",
@@ -4011,6 +4096,7 @@
                     "day": 17,
                     "name": "Reservoir Research",
                     "description": "Water falling in recepients",
+                    "tags": [ "DFS", "Waterflow" ],
                     "results": [
                         {
                             "p1": "42389",
@@ -4054,6 +4140,8 @@
                     "day": 18,
                     "name": "Settlers of The North Pole",
                     "description": "Tri-state Conway's Game of Life with repeating period",
+                    "tags": [ "2D", "Conway", "Tri-state", "Cycle" ],
+                    "comments": [ "Optimize C#" ],
                     "results": [
                         {
                             "p1": "466125",
@@ -4097,6 +4185,7 @@
                     "day": 19,
                     "name": "Go With The Flow",
                     "description": "Run and disassemble assembly code",
+                    "tags": [ "Assembly", "Loops" ],
                     "results": [
                         {
                             "p1": "912",
@@ -4140,6 +4229,7 @@
                     "day": 20,
                     "name": "A Regular Map",
                     "description": "Find shortest path in maze from directions",
+                    "tags": [ "2D", "Maze", "Follow" ],
                     "results": [
                         {
                             "p1": "3721",
@@ -4183,7 +4273,7 @@
                     "day": 21,
                     "name": "Chronal Conversion",
                     "description": "Disassemble assembly code",
-                    "tags": [ "assembly", "loops", "dissassemble" ],
+                    "tags": [ "Assembly", "Loops", "Dissassemble" ],
                     "results": [
                         {
                             "p1": "6132825",
@@ -4227,7 +4317,7 @@
                     "day": 22,
                     "name": "Mode Maze",
                     "description": "Fastest path we calculated durations",
-                    "tags": [ "Dijkstra" ],
+                    "tags": [ "Dijkstra", "2D", "Map" ],
                     "results": [
                         {
                             "p1": "4479",
@@ -4271,6 +4361,7 @@
                     "day": 23,
                     "name": "Experimental Emergency Teleportation",
                     "description": "Find 3D locations within radius",
+                    "tags": [ "3D", "Manhatan", "Radius"],
                     "results": [
                         {
                             "p1": "580",
@@ -4314,6 +4405,7 @@
                     "day": 24,
                     "name": "Immune System Simulator 20XX",
                     "description": "Fighting armies picking targets",
+                    "tags": [ "Game", "Teams" ],
                     "results": [
                         {
                             "p1": "21743",
@@ -4357,6 +4449,7 @@
                     "day": 25,
                     "name": "Four-Dimensional Adventure",
                     "description": "Finding groups of 4D points under a certain distance",
+                    "tags": [ "4D", "Manhatan" ],
                     "results": [
                         {
                             "p1": "314"
@@ -4399,6 +4492,7 @@
                     "day": 1,
                     "name": "The Tyranny of the Rocket Equation",
                     "description": "Sum portions of values",
+                    "tags": [ "Maths" ],
                     "results": [
                         {
                             "p1": "3335787",
@@ -4442,6 +4536,7 @@
                     "day": 2,
                     "name": "1202 Program Alarm",
                     "description": "Run machine code",
+                    "tags": [ "Machine", "IntCode" ],
                     "results": [
                         {
                             "p1": "7594646",
@@ -4485,6 +4580,7 @@
                     "day": 3,
                     "name": "Crossed Wires",
                     "description": "2D double navigation finding intersections",
+                    "tags": [ "2D", "Navigate", "Intersect" ],
                     "results": [
                         {
                             "p1": "207",
@@ -4528,6 +4624,7 @@
                     "day": 4,
                     "name": "Secure Container",
                     "description": "Validate sequence of digits",
+                    "tags": [ "Strings" ],
                     "results": [
                         {
                             "p1": "1660",
@@ -4571,6 +4668,7 @@
                     "day": 5,
                     "name": "Sunny with a Chance of Asteroids",
                     "description": "Run machine code",
+                    "tags": [ "Machine", "IntCode" ],
                     "results": [
                         {
                             "p1": "15314507",
@@ -4614,6 +4712,7 @@
                     "day": 6,
                     "name": "Universal Orbit Map",
                     "description": "Graph deepness counting",
+                    "tags": [ "Graph" ],
                     "results": [
                         {
                             "p1": "162439",
@@ -4657,6 +4756,7 @@
                     "day": 7,
                     "name": "Amplification Circuit",
                     "description": "Run machine code connecting outputs to inputs",
+                    "tags": [ "Machine", "IntCode" ],
                     "results": [
                         {
                             "p1": "929800",
@@ -4700,6 +4800,7 @@
                     "day": 8,
                     "name": "Space Image Format",
                     "description": "Reading image and read charaters from pixels",
+                    "tags": [ "Characters", "LCD", "2D" ],
                     "results": [
                         {
                             "p1": "1548",
@@ -4743,6 +4844,7 @@
                     "day": 9,
                     "name": "Sensor Boost",
                     "description": "Run machine code",
+                    "tags": [ "Machine", "IntCode" ],
                     "results": [
                         {
                             "p1": "3063082071",
@@ -4786,6 +4888,7 @@
                     "day": 10,
                     "name": "Monitoring Station",
                     "description": "Find points in lines in map (asteroids)",
+                    "tags": [ "2D", "Map", "Line of Sight" ],
                     "results": [
                         {
                             "p1": "256",
@@ -4829,6 +4932,7 @@
                     "day": 11,
                     "name": "Space Police",
                     "description": "Run machine code and find letters in screen",
+                    "tags": [ "Machine", "IntCode", "Characters", "LCD" ],
                     "results": [
                         {
                             "p1": "1909",
@@ -4872,6 +4976,7 @@
                     "day": 12,
                     "name": "The N-Body Problem",
                     "description": "3D objects in space with changing velocities (due to gravity between objects)",
+                    "tags": [ "3D", "Velocity", "Regenerations" ],
                     "results": [
                         {
                             "p1": "12490",
@@ -4915,6 +5020,7 @@
                     "day": 13,
                     "name": "Care Package",
                     "description": "Run machine code to play Arkanoid in screen",
+                    "tags": [ "Machine", "IntCode", "Game" ],
                     "results": [
                         {
                             "p1": "268",
@@ -4958,6 +5064,7 @@
                     "day": 14,
                     "name": "Space Stoichiometry",
                     "description": "Optimize production of chemicals that require other chemicals",
+                    "tags": [ "Maths", "Optimizations" ],
                     "results": [
                         {
                             "p1": "502491",
@@ -5001,6 +5108,7 @@
                     "day": 15,
                     "name": "Oxygen System",
                     "description": "Run machine code and find complete maze",
+                    "tags": [ "Machine", "IntCode", "BFS", "2D", "Map" ],
                     "results": [
                         {
                             "p1": "404",
@@ -5044,6 +5152,7 @@
                     "day": 16,
                     "name": "Flawed Frequency Transmission",
                     "description": "Indexed checksum. Sum from the from (part 2)",
+                    "tags": [ "Maths", "Checksum", "Offset" ],
                     "results": [
                         {
                             "p1": "78009100",
@@ -5087,6 +5196,7 @@
                     "day": 17,
                     "name": "Set and Forget",
                     "description": "Run machine code and find path trails",
+                    "tags": [ "Machine", "IntCode", "2D", "Navigate", "Tracks" ],
                     "results": [
                         {
                             "p1": "5056",
@@ -5130,6 +5240,7 @@
                     "day": 18,
                     "name": "Many-Worlds Interpretation",
                     "description": "Maze with doors and keys",
+                    "tags": [ "2D", "Navigate", "Maze", "BFS", "Dijkstra", "Heap" ],
                     "results": [
                         {
                             "p1": "4770",
@@ -5173,6 +5284,7 @@
                     "day": 19,
                     "name": "Tractor Beam",
                     "description": "Run machine code and find points hit by tractor beam",
+                    "tags": [ "Machine", "IntCode", "2D", "Intersection" ],
                     "results": [
                         {
                             "p1": "189",
@@ -5261,7 +5373,7 @@
                     "day": 21,
                     "name": "Springdroid Adventure",
                     "description": "Run machine code to play jumping holes game",
-                    "tags": [ "intcode" ],
+                    "tags": [ "IntCode", "1D", "Game" ],
                     "comments": [ "dynamically find instructions"],
                     "results": [
                         {
@@ -5306,6 +5418,7 @@
                     "day": 22,
                     "name": "Slam Shuffle",
                     "description": "Shuffling cards. Modular multiplication",
+                    "tags": [ "Maths", "Big Numbers", "Modular Multiplication", "Modulo" ],
                     "comments": [ "comment maths" ],
                     "results": [
                         {
@@ -5350,7 +5463,7 @@
                     "day": 23,
                     "name": "Category Six",
                     "description": "Run machine code and send packets between computers",
-                    "tags": [ "intcode" ],
+                    "tags": [ "IntCode" ],
                     "results": [
                         {
                             "p1": "27182",
@@ -5394,6 +5507,7 @@
                     "day": 24,
                     "name": "Planet of Discord",
                     "description": "Conway's Game of Life-like growing in layers",
+                    "tags": [ "Conway", "2D", "3D", "Regeneration" ],
                     "results": [
                         {
                             "p1": "32523825",
@@ -5425,6 +5539,7 @@
                     "day": 25,
                     "name": "Cryostasis",
                     "description": "Run machine code and play Rogue-like game",
+                    "tags": [ "Machine", "IntCode", "Game", "ASCII" ],
                     "results": [
                         {
                             "p1": "2147485856"
@@ -5467,6 +5582,7 @@
                     "day": 1,
                     "name": "Report Repair",
                     "description": "Find pairs and trios that sum up to 2020",
+                    "tags": [ "Maths" ],
                     "results": [
                         {
                             "p1": "928896",
@@ -5510,6 +5626,7 @@
                     "day": 2,
                     "name": "Password Philosophy",
                     "description": "Count and search letters in strings",
+                    "tags": [ "Strings" ],
                     "results": [
                         {
                             "p1": "550",
@@ -5553,6 +5670,7 @@
                     "day": 3,
                     "name": "Toboggan Trajectory",
                     "description": "Count hits when moving trought grid",
+                    "tags": [ "2D", "Navigate" ],
                     "results": [
                         {
                             "p1": "225",
@@ -5596,6 +5714,7 @@
                     "day": 4,
                     "name": "Passport Processing",
                     "description": "Validate form fields",
+                    "tags": [ "Range", "Validation" ],
                     "results": [
                         {
                             "p1": "222",
@@ -5639,6 +5758,7 @@
                     "day": 5,
                     "name": "Binary Boarding",
                     "description": "Binary selection of seat (row, column)",
+                    "tags": [ "Binary", "Maths" ],
                     "results": [
                         {
                             "p1": "989",
@@ -5682,6 +5802,7 @@
                     "day": 6,
                     "name": "Custom Customs",
                     "description": "Count letters in groups of lines",
+                    "tags": [ "Strings" ],
                     "results": [
                         {
                             "p1": "6551",
@@ -5725,6 +5846,7 @@
                     "day": 7,
                     "name": "Handy Haversacks",
                     "description": "Counting bags containing bags",
+                    "tags": [ "Maths", "RegEx" ],
                     "results": [
                         {
                             "p1": "229",
@@ -5768,6 +5890,7 @@
                     "day": 8,
                     "name": "Handheld Halting",
                     "description": "Run assembly code",
+                    "tags": [ "Assembly" ],
                     "results": [
                         {
                             "p1": "2034",
@@ -5811,6 +5934,7 @@
                     "day": 9,
                     "name": "Encoding Error",
                     "description": "Find previous numbers that sum to number in sequence",
+                    "tags": [ "Maths" ],
                     "results": [
                         {
                             "p1": "22406676",
@@ -5854,6 +5978,7 @@
                     "day": 10,
                     "name": "Adapter Array",
                     "description": "'Triple' Fibonacci",
+                    "tags": [ "Maths" ],
                     "results": [
                         {
                             "p1": "2244",
@@ -5897,6 +6022,7 @@
                     "day": 11,
                     "name": "Seating System",
                     "description": "Tri-State Line-of-Site Conway's Game of Life",
+                    "tags": [ "2D", "Conway", "Tri-state", "Grid" ],
                     "results": [
                         {
                             "p1": "2386",
@@ -5940,6 +6066,7 @@
                     "day": 12,
                     "name": "Rain Risk",
                     "description": "Map navigation with rotation",
+                    "tags": [ "2D", "Navigate", "Map", "Rotation", "Manhatan" ],
                     "results": [
                         {
                             "p1": "439",
@@ -5971,6 +6098,7 @@
                     "day": 13,
                     "name": "Shuttle Search",
                     "description": "Buses. Chinese Remainder Theorem",
+                    "tags": [ "Maths", "Absolution Modulo", "Modulo", "Chinese Remainder Theorem", "CRT" ],
                     "results": [
                         {
                             "p1": "2947",
@@ -6014,6 +6142,7 @@
                     "day": 14,
                     "name": "Docking Data",
                     "description": "Instructions in computer memory with masks",
+                    "tags": [ "Assembly", "Binayer", "Bitwise", "Bitwise Mask" ],
                     "results": [
                         {
                             "p1": "7623288591070",
@@ -6057,6 +6186,7 @@
                     "day": 15,
                     "name": "Rambunctious Recitation",
                     "description": "Look-and-say by occurences' turns",
+                    "tags": [ "Maths", "Look/Say" ],
                     "results": [
                         {
                             "p1": "403",
@@ -6100,6 +6230,7 @@
                     "day": 16,
                     "name": "Ticket Translation",
                     "description": "Validate form fields by ranges of values",
+                    "tags": [ "Form", "Validation", "Ranges" ],
                     "results": [
                         {
                             "p1": "26988",
@@ -6143,6 +6274,7 @@
                     "day": 17,
                     "name": "Conway Cubes",
                     "description": "3D and 4D Conway's Game of Life",
+                    "tags": [ "Conway", "3D", "4D", "Regeneration" ],
                     "results": [
                         {
                             "p1": "301",
@@ -6186,6 +6318,7 @@
                     "day": 18,
                     "name": "Operation Order",
                     "description": "Parse arithmetic expressions",
+                    "tags": [ "Maths", "Parse", "RegEx" ],
                     "results": [
                         {
                             "p1": "6811433855019",
@@ -6229,6 +6362,7 @@
                     "day": 19,
                     "name": "Monster Messages",
                     "description": "Replace rules including rules ('a' or 'b')",
+                    "tags": [ "Strings", "Regex" ],
                     "results": [
                         {
                             "p1": "220",
@@ -6272,7 +6406,7 @@
                     "day": 20,
                     "name": "Jurassic Jigsaw",
                     "description": "Solve tile puzzle",
-                    "tags": [ "Complex" ],
+                    "tags": [ "2D", "Puzzle", "Permutations", "Rotate", "Flip" ],
                     "results": [
                         {
                             "p1": "8581320593371",
@@ -6316,6 +6450,7 @@
                     "day": 21,
                     "name": "Allergen Assessment",
                     "description": "Einstein House Riddle",
+                    "tags": [ "Logic" ],
                     "results": [
                         {
                             "p1": "2176",
@@ -6359,6 +6494,7 @@
                     "day": 22,
                     "name": "Crab Combat",
                     "description": "Highest card game",
+                    "tags": [ "Cards", "Game" ],
                     "results": [
                         {
                             "p1": "33393",
@@ -6402,6 +6538,7 @@
                     "day": 23,
                     "name": "Crab Cups",
                     "description": "Switch cups game",
+                    "tags": [ "Game", "Permutations" ],
                     "results": [
                         {
                             "p1": "78569234",
@@ -6445,7 +6582,7 @@
                     "day": 24,
                     "name": "Lobby Layout",
                     "description": "Hexagonal grid navigation",
-                    "tags": [ "hexagonal", "grid" ],
+                    "tags": [ "Hexagonal", "Grid", "2D", "Navigation" ],
                     "results": [
                         {
                             "p1": "346",
@@ -6489,6 +6626,7 @@
                     "day": 25,
                     "name": "Combo Breaker",
                     "description": "Transform encrytion",
+                    "tags": [ "Maths" ],
                     "results": [
                         {
                             "p1": "3803729"
