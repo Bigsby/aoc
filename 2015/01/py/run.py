@@ -4,26 +4,17 @@ import sys, os, time
 from typing import List, Tuple
 
 
-def part1(diretions: List[int]) -> int:
-    currentFloor = 0
-    for direction in diretions:
-        currentFloor += direction
-    return currentFloor
-
-
 def part2(directions: List[int]) -> int:
     currentFloor = 0
-    currentPosition = 1
-    for direction in directions:
+    for index, direction in enumerate(directions):
         currentFloor += direction
         if currentFloor == -1:
-            break
-        currentPosition += 1
-    return currentPosition
+            return index + 1
+    raise Exception("Did not go below 0!")
 
 
 def solve(directions: List[int]) -> Tuple[int,int]:
-    return (part1(directions), part2(directions))
+    return (sum(directions), part2(directions))
 
 
 def getInput(filePath: str) -> List[int]:

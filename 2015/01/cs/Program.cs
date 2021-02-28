@@ -9,31 +9,20 @@ namespace AoC
 {
     class Program
     {
-        static int Part1(IEnumerable<int> directions)
-        {
-            var currentFloor = 0;
-            foreach (var direction in directions)
-            {
-                currentFloor += direction;
-            }
-            return currentFloor;
-        }
-
         static int Part2(IEnumerable<int> directions)
         {
             var currentFloor = 0;
-            var currentPosition = 1;
-            foreach (var direction in directions)
+            foreach (var (direction, index) in directions.Select((direction, index) => (direction, index)))
             {
                 currentFloor += direction;
-                if (currentFloor == -1) break;
-                currentPosition += 1;
+                if (currentFloor == -1)
+                    return index + 1;
             }
-            return currentPosition;
+            throw new Exception("Did not go below 0!");
         }
 
         static (int, int) Solve(IEnumerable<int> directions)
-            => (Part1(directions), Part2(directions));
+            => (directions.Sum(), Part2(directions));
 
         static IEnumerable<int> GetInput(string filePath)
             => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
