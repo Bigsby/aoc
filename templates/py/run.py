@@ -1,6 +1,7 @@
 #! /usr/bin/python3
 
 import sys, os, time
+from typing import Tuple
 
 
 def part1(puzzleInput):
@@ -11,30 +12,29 @@ def part2(puzzleInput):
     pass
 
 
-def getInput(filePath: str):
+def solve(puzzleInput) -> Tuple[int,int]:
+    return (part1(puzzleInput), part2(puzzleInput))
+
+
+def getInput(filePath: str) -> str:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
     
-    with open(filePath, "r") as file:
-        for line in file.readlines():
-            yield line
+    with open(filePath) as file:
+        return file.read().strip()
 
 
 def main():
     if len(sys.argv) != 2:
         raise Exception("Please, add input file path as parameter")
 
-    puzzleInput = getInput(sys.argv[1])
     start = time.perf_counter()
-    part1Result = part1(puzzleInput)
-    middle = time.perf_counter()
-    part2Result = part2(puzzleInput)
+    part1Result, part2Result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1Result)
     print("P2:", part2Result)
     print()
-    print(f"P1 time: {middle - start:.8f}")
-    print(f"P2 time: {end - middle:.8f}")
+    print(f"Time: {end - start:.7f}")
 
 
 if __name__ == "__main__":
