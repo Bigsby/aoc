@@ -5,14 +5,14 @@ from typing import List, Tuple
 
 
 def part2(changes: List[int]) -> int:
-    changesLength = len(changes)
+    changes_length = len(changes)
     frequency = 0
     previous = set() 
     index = 0
     while frequency not in previous:
         previous.add(frequency)
         frequency += changes[index]
-        index = (index + 1) % changesLength
+        index = (index + 1) % changes_length
     return frequency
 
 
@@ -23,11 +23,11 @@ def solve(changes: List[int]) -> Tuple[int,int]:
     )
 
 
-def getInput(filePath: str) -> List[int]:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
+def get_input(file_path: str) -> List[int]:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
     
-    with open(filePath, "r") as file:
+    with open(file_path, "r") as file:
         return [ int(line) for line in file.readlines() ]
 
 
@@ -36,10 +36,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
