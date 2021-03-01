@@ -8,28 +8,6 @@ namespace AoC
 {
     class Program
     {
-        static int Part1(int[] masses)
-        {
-            return masses.Sum(mass => mass / 3 - 2);
-        }
-
-        static int Part2(int[] masses)
-        {
-            return masses.Sum(mass => {
-                var total = 0;
-                var currentMass = mass;
-                while (true)
-                {
-                    var fuel = currentMass / 3 - 2;
-                    if (fuel <= 0)
-                        break;
-                    total += fuel;
-                    currentMass = fuel;
-                }
-                return total;
-            });
-        }
-
         static (int, int) Solve(int[] masses)
             => (
                 masses.Sum(mass => mass / 3 - 2),
@@ -40,11 +18,10 @@ namespace AoC
                     {
                         var fuel = currentMass / 3 - 2;
                         if (fuel <= 0)
-                            break;
+                            return total;
                         total += fuel;
                         currentMass = fuel;
                     }
-                    return total;
                 })
             );
 
