@@ -15,12 +15,11 @@ def part1(numbers: List[int]) -> int:
 
 
 def part2(numbers: List[int]) -> int:
-    listLength = len(numbers)
-    halfLength = listLength // 2
-    numbers += numbers
+    list_length = len(numbers)
+    half_length = list_length // 2
     count = 0
-    for index in range(listLength):
-        if numbers[index] == numbers[index + halfLength]:
+    for index in range(list_length):
+        if numbers[index] == numbers[(index + half_length) % list_length]:
             count += numbers[index]
     return count
 
@@ -32,11 +31,11 @@ def solve(numbers: List[int]) -> Tuple[int,int]:
     )
 
 
-def getInput(filePath: str) -> List[int]:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
+def getInput(file_path: str) -> List[int]:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
     
-    with open(filePath, "r") as file:
+    with open(file_path, "r") as file:
         return [ int(c) for c in file.read().strip() ]
 
 
@@ -45,10 +44,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(getInput(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
