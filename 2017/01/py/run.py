@@ -4,34 +4,22 @@ import sys, os, time
 from typing import List, Tuple
 
 
-def part1(numbers: List[int]) -> int:
+def get_count(numbers: List[int], index_offset: int) -> int:
     count = 0
-    previous = numbers[-1]
-    for number in numbers:
-        if number == previous:
-            count += number
-        previous = number
-    return count
-
-
-def part2(numbers: List[int]) -> int:
-    list_length = len(numbers)
-    half_length = list_length // 2
-    count = 0
-    for index in range(list_length):
-        if numbers[index] == numbers[(index + half_length) % list_length]:
+    for index in range(len(numbers)):
+        if numbers[index] == numbers[(index + index_offset) % len(numbers)]:
             count += numbers[index]
     return count
 
 
 def solve(numbers: List[int]) -> Tuple[int,int]:
     return (
-        part1(numbers),
-        part2(numbers)
+        get_count(numbers, len(numbers) - 1),
+        get_count(numbers, len(numbers) // 2)
     )
 
 
-def getInput(file_path: str) -> List[int]:
+def get_input(file_path: str) -> List[int]:
     if not os.path.isfile(file_path):
         raise FileNotFoundError(file_path)
     
@@ -44,7 +32,7 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1_result, part2_result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
     print("P1:", part1_result)
     print("P2:", part2_result)
