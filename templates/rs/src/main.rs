@@ -3,14 +3,14 @@ use std::fs;
 use std::time::{Instant};
 
 fn part1(puzzle_input: &str) -> usize {
-
+    puzzle_input.len()
 }
 
 fn part2(puzzle_input: &str) -> usize {
-
+    puzzle_input.len()
 }
 
-fn solve(puzzle_input: &str) -> (i32,usize) {
+fn solve(puzzle_input: &str) -> (usize,usize) {
     (part1(puzzle_input), part2(puzzle_input))
 }
 
