@@ -13,32 +13,32 @@ namespace AoC
 
     class Program
     {
-        static Complex GetNewHeading(Complex currentHeading, char direction)
-            => currentHeading * (direction == 'L' ? Complex.ImaginaryOne : -Complex.ImaginaryOne);
+        static Complex GetNewHeading(Complex heading, char direction)
+            => heading * (direction == 'L' ? Complex.ImaginaryOne : -Complex.ImaginaryOne);
 
         static int GetManhatanDistance(Complex position)
             => (int)(Math.Abs(position.Real) + Math.Abs(position.Imaginary));
 
         static (int, int) Solve(IEnumerable<Instruction> instructions)
         {
-            Complex currentPosition = 0;
-            var currentHeading = Complex.ImaginaryOne;
-            var visitedPositions = new List<Complex>();
+            Complex position = 0;
+            var heading = Complex.ImaginaryOne;
+            var visited = new List<Complex>();
             var part2 = 0;
             foreach (var instruction in instructions)
             {
-                currentHeading = GetNewHeading(currentHeading, instruction.direction);
+                heading = GetNewHeading(heading, instruction.direction);
                 for (var i = 0; i < instruction.distance; i++)
                 {
-                    currentPosition += currentHeading;
+                    position += heading;
                     if (part2 == 0)
-                        if (visitedPositions.Contains(currentPosition))
-                            part2 = GetManhatanDistance(currentPosition);
+                        if (visited.Contains(position))
+                            part2 = GetManhatanDistance(position);
                         else
-                            visitedPositions.Add(currentPosition);
+                            visited.Add(position);
                 }
             }
-            return (GetManhatanDistance(currentPosition), part2);
+            return (GetManhatanDistance(position), part2);
         }
 
         static Regex instructionRegex = new Regex(@"(?<direction>L|R)(?<distance>\d+)", RegexOptions.Compiled);
