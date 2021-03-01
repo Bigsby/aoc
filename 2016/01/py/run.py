@@ -22,7 +22,7 @@ def solve(instructions: List[Instruction]) -> Tuple[int,int]:
     visitedPositions: List[complex] = [ currentPosition ]
     for direction, distance in instructions:
         currentHeading = getNewHeading(currentHeading, direction)
-        for _ in range(1, distance + 1):
+        for _ in range(distance):
             currentPosition += currentHeading
             if part2 == 0:
                 if currentPosition in visitedPositions:
