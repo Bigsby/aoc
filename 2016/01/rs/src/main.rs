@@ -26,16 +26,16 @@ fn solve(instructions: &Vec<Instruction>) -> (i32,i32) {
     let mut position = Complex::new(0, 0);
     let mut heading = Complex::new(0, 1);
     let mut first_repeated = 0;
-    let mut visited_positions = Vec::new();
+    let mut visited = Vec::new();
     for instruction in instructions {
         heading = get_new_heading(heading, instruction.direction);
         for _ in 0..instruction.distance {
             position += heading;
             if first_repeated == 0 {
-                if visited_positions.contains(&position) {
+                if visited.contains(&position) {
                     first_repeated = get_manhatan_distance(&position);
                 } else {
-                    visited_positions.push(position);
+                    visited.push(position);
                 }
             }
         }
