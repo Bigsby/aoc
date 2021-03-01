@@ -7,48 +7,48 @@ import re
 Instruction = Tuple[str,int]
 
 
-def getNewHeading(currentHeading: complex, direction: str) -> complex:
-    return currentHeading * (1 if direction == "L" else -1) * 1j
+def get_new_heading(heading: complex, direction: str) -> complex:
+    return heading * (1 if direction == "L" else -1) * 1j
 
 
-def getManhatanDistance(position: complex) -> int:
+def get_manhatan_distance(position: complex) -> int:
     return int(abs(position.real) + abs(position.imag))
 
 
 def solve(instructions: List[Instruction]) -> Tuple[int,int]:
-    currentPosition = 0
-    currentHeading = 1j
+    position = 0
+    heading = 1j
     part2 = 0
-    visitedPositions: List[complex] = [ currentPosition ]
+    visited: List[complex] = [ position ]
     for direction, distance in instructions:
-        currentHeading = getNewHeading(currentHeading, direction)
+        heading = get_new_heading(heading, direction)
         for _ in range(distance):
-            currentPosition += currentHeading
+            position += heading
             if part2 == 0:
-                if currentPosition in visitedPositions:
-                    part2 = getManhatanDistance(currentPosition)
+                if position in visited:
+                    part2 = get_manhatan_distance(position)
                 else:
-                    visitedPositions.append(currentPosition)
+                    visited.append(position)
     return (
-        getManhatanDistance(currentPosition), 
+        get_manhatan_distance(position), 
         part2
     )
 
 
-instructionRegex = re.compile(r"^(?P<direction>[RL])(?P<distance>\d+),?\s?$")
-def parseInstruction(instructionText: str) -> Instruction:
-    match = instructionRegex.match(instructionText)
+instruction_regex = re.compile(r"^(?P<direction>[RL])(?P<distance>\d+),?\s?$")
+def parse_instruction(text: str) -> Instruction:
+    match = instruction_regex.match(text)
     if match:
         return (match.group("direction"), int(match.group("distance")))
-    raise Exception("Bad format", instructionText)
+    raise Exception("Bad format", text)
 
 
-def getInput(filePath: str) -> List[Instruction]:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
+def get_input(file_path: str) -> List[Instruction]:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
     
-    with open(filePath, "r") as file:
-        return [ parseInstruction(instruction) for instruction in file.read().split(" ") ]
+    with open(file_path, "r") as file:
+        return [ parse_instruction(instruction) for instruction in file.read().split(" ") ]
 
 
 def main():
@@ -56,10 +56,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
