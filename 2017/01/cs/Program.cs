@@ -8,30 +8,18 @@ namespace AoC
 {
     class Program
     {
-        static int Part1(int[] numbers)
-        {
-            return Enumerable.Range(0, numbers.Length).Aggregate(0, 
-                (count, index) => numbers[(index + numbers.Length - 1) % numbers.Length] == numbers[index] ?
+        static int GetCount(int[] numbers, int indexOffset)
+            => Enumerable.Range(0, numbers.Length).Aggregate(0, 
+                (count, index) => numbers[index] == numbers[(index + indexOffset) % numbers.Length] ?
                     count + numbers[index]
                     :
                     count
                 );
-        }
 
-        static int Part2(int[] numbers)
-        {
-            var halfLength = numbers.Length / 2;
-            return Enumerable.Range(0, numbers.Length).Aggregate(0, 
-                (count, index) => numbers[index] == numbers[(index + halfLength) % numbers.Length] ?
-                    count + numbers[index]
-                    :
-                    count);
-        }
-        
         static (int, int) Solve(int[] numbers)
             => (
-                Part1(numbers),
-                Part2(numbers)
+                GetCount(numbers, numbers.Length - 1),
+                GetCount(numbers, numbers.Length / 2)
             );
 
         static int[] GetInput(string filePath)
