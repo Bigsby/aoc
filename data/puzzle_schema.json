@@ -80,6 +80,12 @@
                     "items": {
                         "type": "string"
                     }
+                },
+                "gotchas": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         },
