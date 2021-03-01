@@ -15,9 +15,8 @@ namespace AoC
             var frequency = 0;
             var previous = new HashSet<int>();
             var index = 0;
-            while (!previous.Contains(frequency))
+            while (previous.Add(frequency))
             {
-                previous.Add(frequency);
                 frequency += changes[index];
                 index = (index + 1) % changesLength;
             }
