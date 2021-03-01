@@ -1218,6 +1218,7 @@
                     "name": "No Time for a Taxicab",
                     "description": "Follow 2D directions",
                     "tags": [ "2D", "Navigate" ],
+                    "gotchas": [ "Complex multiplication for heading rotation" ],
                     "results": [
                         {
                             "p1": "271",
@@ -2292,7 +2293,8 @@
                     "day": 1,
                     "name": "Inverse Captcha",
                     "description": "Sum digits that macth next digit",
-                    "tags": [ "Maths" ],
+                    "tags": [ "Maths", "Indexing" ],
+                    "gotchas": [ "Modulo of list length" ],
                     "results": [
                         {
                             "p1": "1175",
@@ -3393,6 +3395,7 @@
                     "name": "Chronal Calibration",
                     "description": "Summing numbers and changes",
                     "tags": [ "Maths", "Deltas" ],
+                    "gotchas": [ "Modulo of list length" ],
                     "results": [
                         {
                             "p1": "435",
@@ -5582,7 +5585,7 @@
                     "day": 1,
                     "name": "Report Repair",
                     "description": "Find pairs and trios that sum up to 2020",
-                    "tags": [ "Maths" ],
+                    "tags": [ "Maths", "Combinations" ],
                     "results": [
                         {
                             "p1": "928896",
