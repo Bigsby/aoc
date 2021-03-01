@@ -4,33 +4,32 @@ import sys, os, time
 from typing import List, Tuple
 
 
-def getFuel(mass: int) -> int:
+def get_fuel(mass: int) -> int:
     total = 0
-    currentMass = mass
+    current_mass = mass
     while True:
-        fuel = currentMass // 3 - 2
+        fuel = current_mass // 3 - 2
         if fuel <= 0:
-            break
+            return total
         total += fuel
-        currentMass = fuel
-    return total
+        current_mass = fuel
 
 
 def part2(masses: List[int]) -> int:
-    return sum(getFuel(mass) for mass in masses)
+    return sum(get_fuel(mass) for mass in masses)
 
 
 def solve(masses: List[int]) -> Tuple[int,int]:
     return (
         sum((mass // 3) - 2 for mass in masses),
-        sum(getFuel(mass) for mass in masses)
+        sum(get_fuel(mass) for mass in masses)
     )
 
-def getInput(filePath: str) -> List[int]:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
+def get_input(file_path: str) -> List[int]:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
     
-    with open(filePath, "r") as file:
+    with open(file_path, "r") as file:
         return [ int(line) for line in file.readlines() ]
 
 
@@ -39,10 +38,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
