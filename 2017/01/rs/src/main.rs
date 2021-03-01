@@ -2,29 +2,17 @@ use std::env;
 use std::fs;
 use std::time::{Instant};
 
-fn part1(numbers: &Vec<u32>) -> u32 {
-    let list_length = numbers.len();
-    (0..list_length).fold(0, |count, index| 
-        if numbers[index] == numbers[(index + list_length - 1) % list_length] { 
+fn get_count(numbers: &Vec<u32>, index_offset: usize) -> u32 {
+    (0..numbers.len()).fold(0, |count, index| 
+        if numbers[index] == numbers[(index + index_offset) % numbers.len()] { 
             count + numbers[index] 
         } else { 
             count 
         })
 }
 
-fn part2(numbers: &Vec<u32>) -> u32 {
-    let list_length = numbers.len();
-    let half_length = list_length / 2;
-    (0..list_length).fold(0, |count, index| 
-        if numbers[index] == numbers[(index + half_length) % list_length] {
-            count + numbers[index]
-        } else {
-            count
-        })
-}
-
 fn solve(numbers: &Vec<u32>) -> (u32, u32) {
-    (part1(numbers), part2(numbers))
+    (get_count(numbers, numbers.len() - 1), get_count(numbers, numbers.len() / 2))
 }
 
 fn get_input(file_path: &String) -> Vec<u32> {
