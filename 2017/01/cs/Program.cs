@@ -10,26 +10,22 @@ namespace AoC
     {
         static int Part1(int[] numbers)
         {
-            var count = 0;
-            var previous = numbers[^1];
-            foreach (var number in numbers)
-                if (number == previous)
-                    count += number;
-                else 
-                    previous = number;
-            return count;
+            return Enumerable.Range(0, numbers.Length).Aggregate(0, 
+                (count, index) => numbers[(index + numbers.Length - 1) % numbers.Length] == numbers[index] ?
+                    count + numbers[index]
+                    :
+                    count
+                );
         }
 
         static int Part2(int[] numbers)
         {
-            var listLength = numbers.Count();
-            var halfLength = (int)Math.Floor((decimal)listLength / 2);
-            numbers = numbers.Concat(numbers).ToArray();
-            var count = 0;
-            for (var index = 0; index < listLength; index++)
-                if (numbers[index] == numbers[index + halfLength])
-                    count += numbers[index];
-            return count;
+            var halfLength = numbers.Length / 2;
+            return Enumerable.Range(0, numbers.Length).Aggregate(0, 
+                (count, index) => numbers[index] == numbers[(index + halfLength) % numbers.Length] ?
+                    count + numbers[index]
+                    :
+                    count);
         }
         
         static (int, int) Solve(int[] numbers)
