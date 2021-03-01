@@ -6,25 +6,25 @@ from itertools import combinations
 from functools import reduce
 
 
-def getCombination(numbers: List[int], length: int) -> int:
+def get_combination(numbers: List[int], length: int) -> int:
     for combination in combinations(numbers, length):
         if sum(combination) == 2020:
-            return reduce(lambda soFar, number: soFar * number, combination)
+            return reduce(lambda acc, number: acc * number, combination)
     raise Exception("Numbers not found")
 
 
 def solve(numbers: List[int]) -> Tuple[int,int]:
     return (
-        getCombination(numbers, 2),
-        getCombination(numbers, 3)
+        get_combination(numbers, 2),
+        get_combination(numbers, 3)
     )
 
 
-def getInput(filePath: str) -> List[int]:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
+def get_input(file_path: str) -> List[int]:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
     
-    with open(filePath, "r") as file:
+    with open(file_path, "r") as file:
         return [ int(line) for line in file.readlines() ]
 
 
@@ -33,10 +33,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
