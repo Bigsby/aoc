@@ -25,7 +25,13 @@ fn get_input(file_path: &String) -> Vec<Vec<u32>> {
     fs::read_to_string(file_path)
         .expect("Error reading input file!")
         .lines()
-        .map(|line| re.captures_iter(line).map(|m| m.get(0).unwrap().as_str().parse::<u32>().unwrap()).collect())
+        .map(|line| re.captures_iter(line)
+            .map(|m| m.get(0)
+                .unwrap()
+                .as_str()
+                .parse::<u32>()
+                .unwrap())
+            .collect())
         .collect()
 }
 
