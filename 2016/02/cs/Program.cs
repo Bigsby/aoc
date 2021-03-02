@@ -18,15 +18,13 @@ namespace AoC
             { 'L', C(-1,  0) },
             { 'R', C( 1,  0) }
         };
-        static Tuple<Complex, char> GetButtonForPath(Complex position, string path, Dictionary<Complex, char> keypad)
+        static (Complex, char) GetButtonForPath(Complex position, string path, Dictionary<Complex, char> keypad)
         {
-            foreach (var move in path)
-            {
-                var newPosition = position + DIRECTIONS[move];
-                if (keypad.ContainsKey(newPosition))
-                    position = newPosition;
-            }
-            return Tuple.Create(position, keypad[position]);
+            position = path.Aggregate(position, (current, move) => {
+                var newPosition = current + DIRECTIONS[move];
+                return keypad.ContainsKey(newPosition) ? newPosition : current;
+            });
+            return (position, keypad[position]);
         }
 
         static string GetCode(string[] paths, Dictionary<Complex, char> keypad)
