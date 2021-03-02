@@ -8,6 +8,8 @@ using System.Collections.Generic;
 
 namespace AoC
 {
+    using Keypad = Dictionary<Complex, char>;
+    
     class Program
     {
         static Complex C(double real, double imaginary) => new Complex(real, imaginary);
@@ -18,7 +20,7 @@ namespace AoC
             { 'L', C(-1,  0) },
             { 'R', C( 1,  0) }
         };
-        static (Complex, char) GetButtonForPath(Complex position, string path, Dictionary<Complex, char> keypad)
+        static (Complex, char) GetButtonForPath(Complex position, string path, Keypad keypad)
         {
             position = path.Aggregate(position, (current, move) => {
                 var newPosition = current + DIRECTIONS[move];
@@ -27,7 +29,7 @@ namespace AoC
             return (position, keypad[position]);
         }
 
-        static string GetCode(string[] paths, Dictionary<Complex, char> keypad)
+        static string GetCode(string[] paths, Keypad keypad)
         {
             List<char> code = new List<char>();
             Complex position = 0;
@@ -40,13 +42,13 @@ namespace AoC
             return new string(code.ToArray());
         }
 
-        static Dictionary<Complex, char> KEYPAD1 = new Dictionary<Complex, char> { 
+        static Keypad KEYPAD1 = new Keypad { 
             { C(-1, -1), '1' }, { C(0, -1), '2' }, { C(1, -1), '3' }, 
             { C(-1,  0), '4' }, { C(0,  0), '5' }, { C(1,  0), '6' }, 
             { C(-1,  1), '7' }, { C(0,  1), '8' }, { C(1,  1), '9' }, 
         };
 
-        static Dictionary<Complex, char> KEYPAD2 = new Dictionary<Complex, char> {
+        static Keypad KEYPAD2 = new Keypad {
                                                  { C(0, -2), '1' },
                               { C(-1, -1), '2'}, { C(0, -1), '3'}, { C(1, -1), '2'},
             { C(-2, 0), '5'}, { C(-1,  0), '6'}, { C(0,  0), '7'}, { C(1,  0), '8'}, { C(2, 0), '9'},
