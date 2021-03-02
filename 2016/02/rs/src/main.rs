@@ -10,11 +10,7 @@ type Directions = HashMap<char, Position>;
 macro_rules! dictionary { ($vec: expr) => { $vec.into_iter().collect() } }
 macro_rules! c { ($x:expr, $y:expr) => { Complex::new($x, $y) } }
 
-fn get_button_for_path(
-        position: &mut Position, 
-        path: &str, 
-        directions: &Directions,
-        keypad: &Keypad) -> char {
+fn get_button_for_path(position: &mut Position, path: &str, directions: &Directions,keypad: &Keypad) -> char {
     *position = path.chars().fold(*position, |current, move_| {
         let new_position = current + directions.get(&move_).unwrap();
         if keypad.contains_key(&new_position) {
@@ -50,7 +46,8 @@ fn solve(paths: &Vec<String>) -> (String,String) {
             (c!(-2,  0), '5'), (c!(-1,  0), '6'), (c!(0,  0), '7'), (c!(1,  0), '8'), (c!(2, 0), '9'),
                                (c!(-1,  1), 'A'), (c!(0,  1), 'B'), (c!(1,  1), 'C'),
                                                   (c!(0,  2), 'D'),
-        ])))
+        ]))
+    )
 }
 
 fn get_input(file_path: &String) -> Vec<String> {
