@@ -11,19 +11,19 @@ def solve(lines: List[List[int]]) -> Tuple[int,int]:
     total2 = 0
     for line in lines:
         total1 += max(line) - min(line)
-        for numberA, numberB in permutations(line, 2):
-            if numberA > numberB and numberA % numberB == 0:
-                total2 += numberA // numberB
+        for number_a, number_b in permutations(line, 2):
+            if number_a > number_b and number_a % number_b == 0:
+                total2 += number_a // number_b
     return (total1, total2)
 
 
-lineRegex = re.compile(r"\d+")
-def getInput(filePath: str) -> List[List[int]]:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
+line_regex = re.compile(r"\d+")
+def get_input(file_path: str) -> List[List[int]]:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
     
-    with open(filePath, "r") as file:
-        return [ [ int(i) for i in lineRegex.findall(line) ] for line in file.readlines() ]
+    with open(file_path, "r") as file:
+        return [ [ int(i) for i in line_regex.findall(line) ] for line in file.readlines() ]
 
 
 def main():
@@ -31,10 +31,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
