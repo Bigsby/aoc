@@ -10,19 +10,19 @@ DIRECTIONS: Dict[str,complex] = {
     "L": -1,
     "R":  1
 }
-def getButtonForPath(position: complex, path: str, keypad: Dict[complex,str]) -> Tuple[complex,str]:
+def get_button_for_path(position: complex, path: str, keypad: Dict[complex,str]) -> Tuple[complex,str]:
     for move in path:
-        newPosition = position + DIRECTIONS[move]
-        if newPosition in keypad:
-            position = newPosition
+        new_position = position + DIRECTIONS[move]
+        if new_position in keypad:
+            position = new_position
     return position, keypad[position]
 
 
-def getCode(paths: List[str], keypad: Dict[complex,str]) -> str:
+def get_code(paths: List[str], keypad: Dict[complex,str]) -> str:
     position = 0
     code = []
     for path in paths:
-        position, digit = getButtonForPath(position, path, keypad)
+        position, digit = get_button_for_path(position, path, keypad)
         code.append(digit)
     return "".join(code)
 
@@ -45,16 +45,16 @@ KEYPAD2: Dict[complex,str] = {
 
 def solve(paths: List[str]) -> Tuple[str,str]:
     return (
-        getCode(paths, KEYPAD1), 
-        getCode(paths, KEYPAD2)
+        get_code(paths, KEYPAD1), 
+        get_code(paths, KEYPAD2)
     )
 
 
-def getInput(filePath: str) -> List[str]:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
+def get_input(file_path: str) -> List[str]:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
     
-    with open(filePath, "r") as file:
+    with open(file_path, "r") as file:
         return [ line.strip() for line in file.readlines() ]
 
 
@@ -63,10 +63,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
