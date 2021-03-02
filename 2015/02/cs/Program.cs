@@ -13,9 +13,8 @@ namespace AoC
         static int Part1(IEnumerable<Tuple<int, int, int>> dimensions)
         {
             var totalPaper = 0;
-            foreach (var dimension in dimensions)
+            foreach (var (w, l, h) in dimensions)
             {
-                var (w, l, h) = dimension;
                 var wl = w * l;
                 var wh = w * h;
                 var hl = h * l;
@@ -28,11 +27,9 @@ namespace AoC
         static int Part2(IEnumerable<Tuple<int, int, int>> dimensions)
         {
             var totalRibbon = 0;
-            foreach (var dimension in dimensions)
+            foreach (var (w, l, h) in dimensions)
             {
-                var (w, l, h) = dimension;
-                var sideList = new int[] { w, l, h }.ToList();
-                sideList.Remove(Enumerable.Max(sideList));
+                var sideList = new int[] { w, l, h }.OrderBy(side => side).ToArray();
                 totalRibbon += 2 * (sideList[0] + sideList[1]) + w * l * h;
             }
             return totalRibbon;
