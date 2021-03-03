@@ -7,35 +7,35 @@ import re
 TriangleSides = List[List[int]]
 
 
-def isPossibleTriangle(sideA: int, sideB: int, sideC: int) -> bool:
-    return sideA < (sideB + sideC) \
-            and sideB < (sideA + sideC) \
-            and sideC < (sideA + sideB)
+def is_possible_triangle(side_a: int, side_b: int, side_c: int) -> bool:
+    return side_a < (side_b + side_c) \
+            and side_b < (side_a + side_c) \
+            and side_c < (side_a + side_b)
 
 
-def solve(triangleSides: TriangleSides) -> Tuple[int,int]:
+def solve(triangle_sides: TriangleSides) -> Tuple[int,int]:
     return (
-        sum([ isPossibleTriangle(sideA, sideB, sideC) for sideA, sideB, sideC in triangleSides ]), 
-        sum(map(lambda index: isPossibleTriangle(\
-                triangleSides[(index // 3) * 3][index % 3], \
-                triangleSides[(index // 3) * 3 + 1][index % 3], \
-                triangleSides[(index // 3) * 3 + 2][index % 3]), \
-                range(len(triangleSides))
+        sum(is_possible_triangle(sideA, sideB, sideC) for sideA, sideB, sideC in triangle_sides), 
+        sum(map(lambda index: is_possible_triangle(\
+                triangle_sides[(index // 3) * 3][index % 3], \
+                triangle_sides[(index // 3) * 3 + 1][index % 3], \
+                triangle_sides[(index // 3) * 3 + 2][index % 3]), \
+                range(len(triangle_sides))
         ))
     )
 
 
-lineRegex = re.compile(r"\d+")
-def parseLine(line: str) -> List[int]:
-    return [ int(i) for i in  lineRegex.findall(line) ]
+line_regex = re.compile(r"\d+")
+def parse_line(line: str) -> List[int]:
+    return [ int(i) for i in  line_regex.findall(line) ]
 
 
-def getInput(filePath: str) -> List[List[int]]:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
+def get_input(file_path: str) -> List[List[int]]:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
     
-    with open(filePath, "r") as file:
-        return [ parseLine(line) for line in file.readlines() ]
+    with open(file_path, "r") as file:
+        return [ parse_line(line) for line in file.readlines() ]
 
 
 def main():
@@ -43,10 +43,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
