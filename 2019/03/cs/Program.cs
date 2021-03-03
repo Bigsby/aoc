@@ -9,8 +9,8 @@ using System.Numerics;
 
 namespace AoC
 {
-    using Wire = IEnumerable<Tuple<char, int>>;
-    
+    using Wire = IEnumerable<(char, int)>;
+
     class Program
     {
         static Dictionary<char, Complex> STEPS = new Dictionary<char, Complex> {
@@ -30,7 +30,7 @@ namespace AoC
                 }
         }
 
-        static int Part1((Wire,Wire) wires)
+        static int Part1((Wire, Wire) wires)
         {
             var (wireA, wireB) = wires;
             var wireAPoints = new HashSet<Complex>(GetWirePositions(wireA));
@@ -39,20 +39,20 @@ namespace AoC
                 .Min(point => Math.Abs(point.Real) + Math.Abs(point.Imaginary));
         }
 
-        static int Part2((Wire,Wire) wires)
+        static int Part2((Wire, Wire) wires)
         {
             var (wireA, wireB) = wires;
             var wireAPoints = new Dictionary<Complex, int>();
             foreach (var (position, steps) in GetWirePositions(wireA).Select((position, index) => (position, index)))
-                if (!wireAPoints.ContainsKey(position)) 
+                if (!wireAPoints.ContainsKey(position))
                     wireAPoints[position] = steps + 1;
             return GetWirePositions(wireB)
                 .Select((position, steps) => (position, steps))
-                .Where(pair => wireAPoints.ContainsKey(pair.Item1))
-                .Min(pair => wireAPoints[pair.Item1] + pair.Item2 + 1);
+                .Where(pair => wireAPoints.ContainsKey(pair.position))
+                .Min(pair => wireAPoints[pair.position] + pair.steps + 1);
         }
 
-        static (int, int) Solve((Wire,Wire) wires)
+        static (int, int) Solve((Wire, Wire) wires)
             => (
                 Part1(wires),
                 Part2(wires)
@@ -60,12 +60,14 @@ namespace AoC
 
         static Regex directionRegex = new Regex(@"(?<direction>R|U|L|D)(?<distance>\d+)", RegexOptions.Compiled);
         static Wire ParseLine(string line)
-        {
-            foreach (Match match in directionRegex.Matches(line))
-                yield return Tuple.Create(match.Groups["direction"].Value[0], int.Parse(match.Groups["distance"].Value));
-        }
+            => directionRegex.Matches(line)
+                .Select(match =>
+                (
+                    match.Groups["direction"].Value[0],
+                    int.Parse(match.Groups["distance"].Value
+                )));
 
-        static (Wire,Wire) GetInput(string filePath)
+        static (Wire, Wire) GetInput(string filePath)
         {
             if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
             var lines = File.ReadAllLines(filePath);
