@@ -10,34 +10,31 @@ namespace AoC
 {
     class Program
     {
-        static Complex ProcessDirection(Dictionary<Complex, int> visitedHouses, Complex currentPosition, Complex direction)
+        static Complex ProcessDirection(HashSet<Complex> visitedHouses, Complex position, Complex direction)
         {
-            currentPosition += direction;
-            if (visitedHouses.ContainsKey(currentPosition))
-                visitedHouses[currentPosition]++;
-            else
-                visitedHouses[currentPosition] = 1;
-            return currentPosition;
+            position += direction;
+            visitedHouses.Add(position);
+            return position;
         }
 
         static int Part1(Complex[] directions)
         {
-            var visitedHouses = new Dictionary<Complex, int> { { 0, 1 } };
-            Complex currentPosition = 0;
+            var visitedHouses = new HashSet<Complex> { 0 };
+            Complex position = 0;
             foreach (var direction in directions)
-                currentPosition = ProcessDirection(visitedHouses, currentPosition, direction);
+                position = ProcessDirection(visitedHouses, position, direction);
             return visitedHouses.Count;
         }
 
         static int Part2(Complex[] directions)
         {
-            var visitedHouses = new Dictionary<Complex, int> { { 0, 1 } };
-            Complex santaCurrentPosition = 0, robotCurrentPosition = 0;
+            var visitedHouses = new HashSet<Complex> { 0 };
+            Complex santaPosition = 0, robotPosition = 0;
             foreach (var (direction, index) in directions.Select((direction, index) => (direction, index)))
                 if (index % 2 == 1)
-                    santaCurrentPosition = ProcessDirection(visitedHouses, santaCurrentPosition, direction);
+                    santaPosition = ProcessDirection(visitedHouses, santaPosition, direction);
                 else
-                    robotCurrentPosition = ProcessDirection(visitedHouses, robotCurrentPosition, direction);
+                    robotPosition = ProcessDirection(visitedHouses, robotPosition, direction);
             return visitedHouses.Count;
         }
 
