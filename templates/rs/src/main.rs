@@ -15,7 +15,7 @@ fn solve(puzzle_input: &str) -> (usize,usize) {
 }
 
 fn get_input(file_path: &String) -> &str {
-    fs::read_to_string(file_path).expect("Error reading input file!").trim()
+    fs::read_to_string(file_path).expect("Error reading input file!")
 }
 
 fn main() {
@@ -28,5 +28,5 @@ fn main() {
     println!("P1: {}", part1_result);
     println!("P1: {}", part2_result);
     println!();
-    println!("Time: {:?}", now.elapsed().as_secs_f32());
+    println!("Time: {:7}", now.elapsed().as_secs_f32());
 }
