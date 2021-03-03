@@ -61,15 +61,9 @@ namespace AoC
         {
             var range = Enumerable.Range(0, 100);
             foreach (var noun in range)
-            {
                 foreach (var verb in range)
-                {
                     if (RunProgram(memory, noun, verb) == TARGET_VALUE)
-                    {
                         return 100 * noun + verb;
-                    }
-                }
-            }
             throw new Exception("Target value not found");
         }
 
