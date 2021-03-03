@@ -19,5 +19,14 @@ foreach ($year in 2015..2020) {
         Write-Output ""
         Write-Output "time: $duration"
         Write-Output "---------------------------------------"
+        Write-Output "$year/$paddedDay cs"
+        $sw = [Diagnostics.Stopwatch]::StartNew()
+        $output = cargo run --quiet --manifest-pathh ../$year/$paddedDay/rs/Cargo.toml ../$year/$paddedDay/input.txt
+        $sw.Stop()
+        $duration = $sw.Elapsed
+        Write-Output $output
+        Write-Output ""
+        Write-Output "time: $duration"
+        Write-Output "---------------------------------------"
     }
 }

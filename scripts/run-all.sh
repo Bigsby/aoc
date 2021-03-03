@@ -8,5 +8,8 @@ do
         echo "$year/`printf %02d $day` cs"
         { time dotnet run -p ../$year/`printf %02d $day`/cs/run.csproj "../$year/`printf %02d $day`/input.txt" ; } 2>&1
         echo "---------------------------------------"
+        echo "$year/`printf %02d $day` cs"
+        { time cargo run --quiet --manifest-path ../$year/`printf %02d $day`/rs/Cargo.toml "../$year/`printf %02d $day`/input.txt" ; } 2>&1
+        echo "---------------------------------------"
     done
 done
