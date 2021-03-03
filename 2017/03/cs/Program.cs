@@ -47,9 +47,10 @@ namespace AoC
                     foreach (var _ in Enumerable.Range(0, movesInDirection))
                     {
                         position += direction;
-                        grid[position] = GetSumForNeighbors(grid, position);
-                        if (grid[position] > targetNumber)
-                            return grid[position];
+                        var newValue = GetSumForNeighbors(grid, position);
+                        if (newValue > targetNumber)
+                            return newValue;
+                        grid[position] = newValue;
                     }
                 }
                 movesInDirection += 1;
