@@ -179,7 +179,8 @@
                     "day": 3,
                     "name": "Perfectly Spherical Houses in a Vacuum",
                     "description": "Follow 2D directions '<', '>', '^' and 'v'",
-                    "tags": [ "2D", "navigate" ],
+                    "tags": [ "2D", "navigate", "Complex" ],
+                    "gotchas": [ "HashSet storing distinct positions"],
                     "results": [
                         {
                             "p1": "2592",
@@ -1309,7 +1310,8 @@
                     "day": 3,
                     "name": "Squares With Three Sides",
                     "description": "Triangle sides",
-                    "tags": [ "Maths", "Triangles" ],
+                    "tags": [ "Maths", "Triangles", "Geometry", "Modulo indexing" ],
+                    "gotchas": [ "A triangle side can't be larger than the sum of the other two sides"],
                     "results": [
                         {
                             "p1": "983",
@@ -2385,7 +2387,8 @@
                     "day": 3,
                     "name": "Spiral Memory",
                     "description": "Spiral Manhatan Distance and sum of neighbors",
-                    "tags": [ "Maths", "Spiral" ],
+                    "tags": [ "Maths", "Spiral", "Complex" ],
+                    "gotchas": [ "Spiral moves twice each length" ],
                     "results": [
                         {
                             "p1": "438",
@@ -3486,7 +3489,8 @@
                     "day": 3,
                     "name": "No Matter How You Slice It",
                     "description": "2D cuts intersection (cloth)",
-                    "tags": [ "2D", "Coverage" ],
+                    "tags": [ "2D", "Area Coverage" ],
+                    "gotchas": [ "Dictionary counting point coverage" ],
                     "results": [
                         {
                             "p1": "115242",
@@ -4587,6 +4591,7 @@
                     "name": "Crossed Wires",
                     "description": "2D double navigation finding intersections",
                     "tags": [ "2D", "Navigate", "Intersect" ],
+                    "gotchas": [ "Iterators" ],
                     "results": [
                         {
                             "p1": "207",
@@ -5633,6 +5638,7 @@
                     "name": "Password Philosophy",
                     "description": "Count and search letters in strings",
                     "tags": [ "Strings", "Indexing" ],
+                    "gotchas": [ "XOR equality on part 2"],
                     "results": [
                         {
                             "p1": "550",
@@ -5676,7 +5682,8 @@
                     "day": 3,
                     "name": "Toboggan Trajectory",
                     "description": "Count hits when moving trought grid",
-                    "tags": [ "2D", "Navigate" ],
+                    "tags": [ "2D", "Navigate", "Complex" ],
+                    "gotchas": [ "Index Modulo" ],
                     "results": [
                         {
                             "p1": "225",
