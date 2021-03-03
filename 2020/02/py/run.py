@@ -7,43 +7,43 @@ import re
 Line = Tuple[int,int,str,str]
 
 
-def countValid(lines: List[Line], validationFunc: Callable[[Line],bool]) -> int:
-    return len(list(filter(validationFunc, lines)))
+def count_valid(lines: List[Line], validation_func: Callable[[Line],bool]) -> int:
+    return len(list(filter(validation_func, lines)))
 
 
-def isLineValid(line: Line) -> bool:
+def is_line_valid1(line: Line) -> bool:
     minimum, maximum, letter, password = line
-    occurenceCount = password.count(letter) 
-    return occurenceCount >= minimum and occurenceCount <= maximum
+    occurence_count = password.count(letter) 
+    return occurence_count >= minimum and occurence_count <= maximum
 
 
-def isLineValid2(line: Line) -> bool:
+def is_line_valid2(line: Line) -> bool:
     first, second, letter, password = line 
     return (password[first - 1] == letter) ^ (password[second - 1] == letter)
 
 
 def solve(lines: List[Line]) -> Tuple[int,int]:
     return (
-        countValid(lines, isLineValid),
-        countValid(lines, isLineValid2)
+        count_valid(lines, is_line_valid1),
+        count_valid(lines, is_line_valid2)
     )
 
 
-lineRegex = re.compile(r"^(\d+)-(\d+)\s([a-z]):\s(.*)$")
-def parseLine(line: str) -> Line:
-    match = lineRegex.match(line)
+line_regex = re.compile(r"^(\d+)-(\d+)\s([a-z]):\s(.*)$")
+def parse_line(line: str) -> Line:
+    match = line_regex.match(line)
     if match:
         min, max, letter, password = match.group(1, 2, 3, 4)
         return (int(min), int(max), letter, password)
     raise Exception("Bad format", line)
 
 
-def getInput(filePath: str) -> List[Line]:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
+def get_input(file_path: str) -> List[Line]:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
     
-    with open(filePath, "r") as file:
-        return [ parseLine(line) for line in file.readlines() ]
+    with open(file_path, "r") as file:
+        return [ parse_line(line) for line in file.readlines() ]
 
 
 def main():
@@ -51,10 +51,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
