@@ -8,10 +8,11 @@ using System.Numerics;
 
 namespace AoC
 {
-    using trees = IEnumerable<Complex>;
+    using Trees = IEnumerable<Complex>;
+
     class Program
     {
-        static long CalculateTrees(trees trees, Complex step)
+        static long CalculateTrees(Trees trees, Complex step)
         {
             var yLimit = (int)trees.Select(position => position.Imaginary).Max() + 1;
             var xLimit = (int)trees.Select(position => position.Real).Max() + 1;
@@ -21,7 +22,6 @@ namespace AoC
             {
                 treeCount += trees.Contains(new Complex(position.Real % xLimit, position.Imaginary)) ? 1 : 0;
                 position += step;
-                
             }
             return treeCount;
         }
@@ -33,13 +33,13 @@ namespace AoC
             new Complex(7, 1),
             new Complex(1, 2)
         };
-        static (long, long) Solve(trees trees)
+        static (long, long) Solve(Trees trees)
             => (
                 CalculateTrees(trees, new Complex(3, 1)),
                 STEPS.Aggregate(1L, (soFar, step) => soFar * CalculateTrees(trees, step))
             );
 
-        static trees GetInput(string filePath)
+        static Trees GetInput(string filePath)
         {
             if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
             foreach(var (line, y) in File.ReadAllLines(filePath).Select((line, index) => (line, index)))
