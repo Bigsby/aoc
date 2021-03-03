@@ -108,6 +108,8 @@
                     "day": 2,
                     "name": "I Was Told There Would Be No Math",
                     "description": "Ribbon around packages",
+                    "tags": [ "Maths", "Geometry", "3D" ],
+                    "gotchas": [ "Perimeters", "Areas" ],
                     "results": [
                         {
                             "p1": "1588178",
@@ -1262,7 +1264,8 @@
                     "day": 2,
                     "name": "Bathroom Security",
                     "description": "Keypad navigation",
-                    "tags": [ "2D", "Navigate" ],
+                    "tags": [ "2D", "Navigate", "Complex" ],
+                    "gotchas": [ "Dictionaries with possitble keypad position", "Complex numbers for navigation" ],
                     "results": [
                         {
                             "p1": "35749",
@@ -3439,7 +3442,7 @@
                     "day": 2,
                     "name": "Inventory Management System",
                     "description": "Letter occurences",
-                    "tags": [ "Strings" ],
+                    "tags": [ "Strings", "Combinations", "Slicing", "Compare List" ],
                     "results": [
                         {
                             "p1": "7192",
@@ -4539,7 +4542,7 @@
                     "day": 2,
                     "name": "1202 Program Alarm",
                     "description": "Run machine code",
-                    "tags": [ "Machine", "IntCode" ],
+                    "tags": [ "Machine", "IntCode", "Product" ],
                     "results": [
                         {
                             "p1": "7594646",
@@ -5629,7 +5632,7 @@
                     "day": 2,
                     "name": "Password Philosophy",
                     "description": "Count and search letters in strings",
-                    "tags": [ "Strings" ],
+                    "tags": [ "Strings", "Indexing" ],
                     "results": [
                         {
                             "p1": "550",
