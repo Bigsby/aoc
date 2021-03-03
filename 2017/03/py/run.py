@@ -5,14 +5,14 @@ from math import floor, sqrt
 from typing import Dict, List, Tuple
 
 
-def part1(targetNumber: int) -> int:
-    side = floor(sqrt(targetNumber)) + 1
-    pastLastSquare = targetNumber - (side - 1) ** 2
-    halfSide = side // 2
-    if pastLastSquare >= side:
-        pastLastSquare -= side
-    offsetToMiddle = abs(halfSide - pastLastSquare)
-    return halfSide + offsetToMiddle
+def part1(target_number: int) -> int:
+    side = floor(sqrt(target_number)) + 1
+    past_last_square = target_number - (side - 1) ** 2
+    half_side = side // 2
+    if past_last_square >= side:
+        past_last_square -= side
+    offset_to_middle = abs(half_side - past_last_square)
+    return half_side + offset_to_middle
 
 
 DIRECTIONS: List[complex] = [
@@ -20,7 +20,7 @@ DIRECTIONS: List[complex] = [
     - 1,            1,
     - 1 + 1j,   1j, 1 + 1j
 ]
-def getSumForNeighbors(grid: Dict[complex,int], position:complex) -> int:
+def get_sum_for_neighbors(grid: Dict[complex,int], position:complex) -> int:
     return sum(map(lambda neighbor: grid[neighbor] if neighbor in grid else 0, \
         map(lambda direction: position + direction, DIRECTIONS)))
 
@@ -29,16 +29,17 @@ def part2(target: int) -> int:
     grid: Dict[complex,int] = { 0j: 1 }
     position = 0j
     direction = 1
-    movesInDirection = 1
+    moves_in_direction = 1
     while True:
         for _ in range(2):
             direction *= 1j
-            for _ in range(movesInDirection):
+            for _ in range(moves_in_direction):
                 position += direction
-                grid[position] = getSumForNeighbors(grid, position)
-                if grid[position] > target:
-                    return grid[position]
-        movesInDirection += 1
+                new_value = get_sum_for_neighbors(grid, position)
+                if new_value > target:
+                    return new_value
+                grid[position] = new_value
+        moves_in_direction += 1
 
 
 def solve(target: int) -> Tuple[int,int]:
@@ -48,11 +49,11 @@ def solve(target: int) -> Tuple[int,int]:
     )
 
 
-def getInput(filePath: str) -> int:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
+def get_input(file_path: str) -> int:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
     
-    with open(filePath, "r") as file:
+    with open(file_path, "r") as file:
         return int(file.read())
 
 
@@ -61,10 +62,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
