@@ -7,15 +7,15 @@ from functools import reduce
 Trees = List[complex]
 
 
-def calculateTrees(trees: Trees, step: complex) -> int:
+def calculate_trees(trees: Trees, step: complex) -> int:
     yLimit = max(p.imag for p in trees) + 1
     xLimit = max(p.real for p in trees) + 1
-    currentPosition = 0j
-    treeCount = 0
-    while currentPosition.imag < yLimit:
-        treeCount += (currentPosition.real % xLimit) + currentPosition.imag * 1j in trees
-        currentPosition += step
-    return treeCount
+    position = 0j
+    tree_count = 0
+    while position.imag < yLimit:
+        tree_count += (position.real % xLimit) + position.imag * 1j in trees
+        position += step
+    return tree_count
 
 
 STEPS = [
@@ -27,16 +27,16 @@ STEPS = [
 ]
 def solve(trees: Trees) -> Tuple[int,int]:
     return (
-        calculateTrees(trees, 3 + 1j),
-        reduce(lambda current, step: current * calculateTrees(trees, step), STEPS, 1)
+        calculate_trees(trees, 3 + 1j),
+        reduce(lambda current, step: current * calculate_trees(trees, step), STEPS, 1)
     )
 
 
-def getInput(filePath: str) -> Trees:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
+def get_input(file_path: str) -> Trees:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
     
-    with open(filePath, "r") as file:
+    with open(file_path, "r") as file:
         trees = []
         for y, line in enumerate(file.readlines()):
             for x, c in enumerate(line):
@@ -50,10 +50,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
