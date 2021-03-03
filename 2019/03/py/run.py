@@ -14,32 +14,31 @@ STEPS = {
     "L": -1,
     "D": 1j
 }
-def getWirePositions(wire: Wire) -> Iterable[Position]:
-    currentPosition = 0j
+def get_wire_oositions(wire: Wire) -> Iterable[Position]:
+    position = 0j
     for direction, distance in wire:
         for _ in range(distance):
-            currentPosition += STEPS[direction]
-            yield currentPosition
+            position += STEPS[direction]
+            yield position
 
 
 def part1(wires: Tuple[Wire,Wire]) -> int:
-    wireA, wireB = wires
-    wireApoints = set(getWirePositions(wireA))
+    wire_a, wire_b = wires
+    wire_a_points = set(get_wire_oositions(wire_a))
     return int(min([ abs(position.real) + abs(position.imag) 
-        for position in getWirePositions(wireB) 
-        if position in wireApoints ]))
+        for position in get_wire_oositions(wire_b) 
+        if position in wire_a_points ]))
 
 
 def part2(wires: Tuple[Wire,Wire]) -> int:
-    wireA, wireB = wires
-    wireApoints = {}
-    for steps, position in enumerate(getWirePositions(wireA)):
-        if position in wireApoints:
-            continue
-        wireApoints[position] = steps + 1
-    return min([ wireApoints[position] + steps + 1 
-        for steps, position in enumerate(getWirePositions(wireB)) 
-        if position in wireApoints ])
+    wire_a, wire_b = wires
+    wire_a_points = {}
+    for steps, position in enumerate(get_wire_oositions(wire_a)):
+        if position not in wire_a_points:
+            wire_a_points[position] = steps + 1
+    return min([ wire_a_points[position] + steps + 1 
+        for steps, position in enumerate(get_wire_oositions(wire_b)) 
+        if position in wire_a_points ])
 
 
 def solve(wires: Tuple[Wire,Wire]) -> Tuple[int,int]:
@@ -49,18 +48,18 @@ def solve(wires: Tuple[Wire,Wire]) -> Tuple[int,int]:
     )
 
 
-lineRegex = re.compile(r"(?P<direction>R|U|L|D)(?P<distance>\d+)")
-def parseLine(line: str) -> Wire:
-    return [ (match.group("direction"), int(match.group("distance"))) for match in lineRegex.finditer(line) ]
+line_regex = re.compile(r"(?P<direction>R|U|L|D)(?P<distance>\d+)")
+def parse_line(line: str) -> Wire:
+    return [ (match.group("direction"), int(match.group("distance"))) for match in line_regex.finditer(line) ]
 
 
-def getInput(filePath: str) -> Tuple[Wire,Wire]:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
+def get_input(file_path: str) -> Tuple[Wire,Wire]:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
     
-    with open(filePath, "r") as file:
+    with open(file_path, "r") as file:
         lines = file.readlines()
-        return parseLine(lines[0]), parseLine(lines[1])
+        return parse_line(lines[0]), parse_line(lines[1])
 
 
 def main():
@@ -68,10 +67,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
