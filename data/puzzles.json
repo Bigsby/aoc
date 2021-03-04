@@ -300,7 +300,7 @@
                     "day": 5,
                     "name": "Doesn't He Have Intern-Elves For This?",
                     "description": "Check string rules (vowel count, repeats...)",
-                    "tags": [ "RegEx", "strings" ],
+                    "tags": [ "Regex", "strings" ],
                     "results": [
                         {
                             "p1": "236",
@@ -1401,6 +1401,7 @@
                     "name": "How About a Nice Game of Chess?",
                     "description": "MD5 hashing",
                     "tags": [ "MD5" ],
+                    "comments": [ "Check Rust MD5 performance" ],
                     "results": [
                         {
                             "p1": "4543c154",
@@ -3583,6 +3584,7 @@
                     "name": "Alchemical Reduction",
                     "description": "Replace pairs of same letters, difference casing, in string",
                     "tags": [ "Strings" ],
+                    "gotchas": [ "Same letters in different casings are 32 apart in ASCII" ],
                     "results": [
                         {
                             "p1": "11946",
