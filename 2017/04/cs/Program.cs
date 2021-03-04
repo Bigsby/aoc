@@ -8,27 +8,21 @@ namespace AoC
 {
     class Program
     {
-        static int RunTests(string[][] passphrases, Func<string[], bool> validationFunc)
-            => passphrases.Count(passphrase => validationFunc(passphrase));
-
         static bool IsAnagram(string word1, string word2)
             => word1.Length == word2.Length &&
                 word1.All(c => word1.Count(t => t == c) == word2.Count(t => t == c));
 
         static bool HasNoAnagram(string[] passphrase)
-        {
-            foreach (var (word, index) in passphrase.Select((word, index) => (word, index)))
-                foreach (var otherWord in passphrase.Take(index).Concat(passphrase.Skip(index + 1)))
-                    if (IsAnagram(word, otherWord))
-                        return false;
-            return true;
-        }
+            => !Enumerable.Range(0, passphrase.Length)
+                .Any(index => 
+                    Enumerable.Range(0, passphrase.Length)
+                        .Any(otherIndex => 
+                            index != otherIndex && IsAnagram(passphrase[index], passphrase[otherIndex])));
 
         static (int, int) Solve(string[][] passphrases)
             => (
-                RunTests(passphrases, 
-                    passphrase => !passphrase.Any(word => passphrase.Count(p => p == word) > 1)),
-                RunTests(passphrases, HasNoAnagram)
+                passphrases.Count(passphrase => !passphrase.Any(word => passphrase.Count(p => p == word) > 1)),
+                passphrases.Count(HasNoAnagram)
             );
 
         static string[][] GetInput(string filePath)
