@@ -4,24 +4,25 @@ import sys, os, time
 from typing import Tuple
 from hashlib import md5
 
-
 PREFIX = "0" * 5
 
 
-def solve(doorId: str) -> Tuple[str,str]:
+def solve(door_id: str) -> Tuple[str,str]:
     index = 0
     password1 = ""
     password2 = [ "_" for _ in range(8) ]
-    missingIndexes = list("01234567")
-    while missingIndexes:
-        result = md5((doorId + str(index)).encode("utf-8")).hexdigest()
+    missing_indexes = list("01234567")
+    while missing_indexes:
+        result = md5((door_id + str(index)).encode("utf-8")).hexdigest()
         if result.startswith(PREFIX):
             if len(password1) < 8:
                 password1 += result[5]
-            digitIndex = result[5]
-            if digitIndex in missingIndexes:
-                password2[int(digitIndex)] = result[6]
-                missingIndexes.remove(digitIndex)
+                print("p1", result[5])
+            digit_index = result[5]
+            if digit_index in missing_indexes:
+                password2[int(digit_index)] = result[6]
+                print("p1", result[6])
+                missing_indexes.remove(digit_index)
         index += 1
     return (
         password1, 
@@ -29,11 +30,11 @@ def solve(doorId: str) -> Tuple[str,str]:
     )
 
 
-def getInput(filePath: str) -> str:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
+def get_input(file_path: str) -> str:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
     
-    with open(filePath, "r") as file:
+    with open(file_path, "r") as file:
         return file.read()
 
 
@@ -42,10 +43,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
