@@ -61,7 +61,7 @@ namespace AoC
                     _memory[GetAddress(3)] = GetParameter(1, p1Mode) < GetParameter(2, p2Mode) ? 1 : 0;
                     _pointer += 4;
                     break;
-                case 8: // LESS_THAN
+                case 8: // EQUALS
                     _memory[GetAddress(3)] = GetParameter(1, p1Mode) == GetParameter(2, p2Mode) ? 1 : 0;
                     _pointer += 4;
                     break;
