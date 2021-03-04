@@ -10,13 +10,18 @@ using System.Text;
 namespace AoC
 {
     using Rooms = IEnumerable<(string name, int id, string checksum)>;
+
     class Program
     {
         static bool IsRoomValid(string name, string checksum)
         {
             name = name.Replace("-", "");
             var counts = name.Distinct().ToDictionary(c => c, c => name.Count(t => t == c));
-            var processedChecksum = string.Join("", counts.OrderBy(kv => -kv.Value * 100 + kv.Key).Take(5).Select(kv=> kv.Key));
+            var processedChecksum = string.Join("", counts
+                .OrderBy(kv => -kv.Value)
+                .ThenBy(kv => kv.Key)
+                .Take(5)
+                .Select(kv => kv.Key));
             return processedChecksum == checksum;
         }
 
@@ -25,11 +30,12 @@ namespace AoC
         const byte DASH_ORD = (byte)'-';
         const byte SPACE_ORD = (byte)' ';
         static byte GetNextChar(byte c)
-        {
-            if (c == DASH_ORD || c == SPACE_ORD) return SPACE_ORD;
-            if (c == Z_ORD) return A_ORD;
-            else return ++c;
-        }
+            => c switch
+            {
+                DASH_ORD or SPACE_ORD => SPACE_ORD,
+                Z_ORD => A_ORD,
+                _ => ++c
+            };
 
         static string RotateName(string name, int count)
         {
@@ -41,24 +47,21 @@ namespace AoC
         }
 
         const string SEARCH_NAME = "northpole object storage";
-        static int Part2(Rooms rooms)
-        {
-            foreach (var (name, id, checksum) in rooms)
-                if (IsRoomValid(name, checksum) && RotateName(name, id) == SEARCH_NAME)
-                    return id;
-            throw new Exception("Room not found");
-        }
-
         static (int, int) Solve(Rooms rooms)
             => (
-                rooms.Where(room => IsRoomValid(room.name, room.checksum)).Sum(room => room.id), 
-                Part2(rooms)
+                rooms.Where(room => IsRoomValid(room.name, room.checksum)).Sum(room => room.id),
+                rooms.First(room =>
+                    IsRoomValid(room.name, room.checksum)
+                    &&
+                    RotateName(room.name, room.id) == SEARCH_NAME
+                ).id
             );
 
         static Regex lineRegex = new Regex(@"^(?<name>[a-z\-]+)-(?<id>\d+)\[(?<checksum>\w+)\]$");
         static Rooms GetInput(string filePath)
             => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
-            : File.ReadAllLines(filePath).Select(line => {
+            : File.ReadAllLines(filePath).Select(line =>
+            {
                 Match match = lineRegex.Match(line);
                 if (match.Success)
                     return (
