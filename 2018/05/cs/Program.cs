@@ -3,7 +3,7 @@ using static System.Console;
 using System.IO;
 using System.Diagnostics;
 using System.Linq;
-using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace AoC
 {
@@ -33,9 +33,9 @@ namespace AoC
         static int Part2(string polymer)
         {
             var minUnits = int.MaxValue;
-            foreach(var cByte in Enumerable.Range((int)'A', (int)'Z' - (int)'A' + 1))
+            foreach (var cByte in Enumerable.Range((int)'A', (int)'Z' - (int)'A' + 1))
             {
-                var strippedPolymer = Regex.Replace(polymer, "[" + (char)cByte + (char)(cByte + 32) + "]", "");
+                var strippedPolymer = polymer.Replace(((char)cByte).ToString(), "", true, CultureInfo.InvariantCulture);
                 minUnits = Math.Min(minUnits, Part1(strippedPolymer));
             }
             return minUnits;
