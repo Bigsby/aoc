@@ -1355,7 +1355,8 @@
                     "day": 4,
                     "name": "Security Through Obscurity",
                     "description": "Checksum with letter occurence and rotate letters",
-                    "tags": [ "checksum" ],
+                    "tags": [ "Checksum", "Counts" ],
+                    "gotchas": [ "Char as byte" ],
                     "results": [
                         {
                             "p1": "173787",
@@ -2433,6 +2434,7 @@
                     "name": "High-Entropy Passphrases",
                     "description": "Find repeated words and anagrams in phrases",
                     "tags": [ "Strings", "Anagrams" ],
+                    "gotchas": [ "In anagram pairs the count of occurences of each letter must match" ],
                     "results": [
                         {
                             "p1": "455",
@@ -3535,6 +3537,8 @@
                     "name": "Repose Record",
                     "description": "Parse log (sleeping guards)",
                     "tags": [ "TimeSpan", "Intersection" ],
+                    "gotchas": [ "Create separate logs for each guard" ],
+                    "comments": [ "Check Rust performance" ],
                     "results": [
                         {
                             "p1": "21956",
