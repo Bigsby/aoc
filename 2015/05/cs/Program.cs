@@ -14,9 +14,9 @@ namespace AoC
         static Regex vowelRegex = new Regex(@"[aeiou]", RegexOptions.Compiled);
         static Regex repeatRegex = new Regex(@"(.)\1{1,}", RegexOptions.Compiled);
         static int Part1(IEnumerable<string> words) => words.Count(word =>
-            FORBIDEN_PAIRS.All(pair => !word.Contains(pair))
+            !FORBIDEN_PAIRS.Any(pair => word.Contains(pair))
             && vowelRegex.Matches(word).Count > 2 
-            && repeatRegex.Matches(word).Count != 0
+            && repeatRegex.IsMatch(word)
         );
 
         static bool HasRepeatingPair(string word)
@@ -29,11 +29,8 @@ namespace AoC
         static bool HasRepeatingLetter(string word)
             => Enumerable.Range(0, word.Length - 2).Any(index => word[index] == word[index + 2]);
 
-        static int Part2(IEnumerable<string> words)
-            => words.Count(word => HasRepeatingPair(word) && HasRepeatingLetter(word));
-
         static (int, int) Solve(IEnumerable<string> words)
-            => (Part1(words), Part2(words));
+            => (Part1(words), words.Count(word => HasRepeatingPair(word) && HasRepeatingLetter(word)));
 
         static IEnumerable<string> GetInput(string filePath)
             => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
