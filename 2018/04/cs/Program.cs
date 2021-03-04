@@ -36,14 +36,14 @@ namespace AoC
 
     class Program
     {
-        static int Part1(Dictionary<int,GuardRecord> guards)
+        static int Part1(Dictionary<int, GuardRecord> guards)
         {
             var guardId = guards.Aggregate((max, current) => max.Value.Total > current.Value.Total ? max : current).Key;
             var maxMinute = guards[guardId].Minutes.Aggregate((max, current) => max.Value > current.Value ? max : current).Key;
             return guardId * maxMinute;
         }
 
-        static int Part2(Dictionary<int,GuardRecord> guards)
+        static int Part2(Dictionary<int, GuardRecord> guards)
         {
             var maxTotal = 0;
             var maxMinute = -1;
@@ -61,8 +61,6 @@ namespace AoC
 
         static GuardRecord RecordGuardTimes(int id, Dictionary<int, GuardRecord> guards, int lastAsleep, int woke)
         {
-            if (!guards.ContainsKey(id))
-                guards[id] = GuardRecord.New();
             var guardRecord = guards[id];
             foreach (var minute in Enumerable.Range(lastAsleep, woke - lastAsleep))
             {
@@ -75,7 +73,7 @@ namespace AoC
         static Regex shiftStartRegex = new Regex(@"^Guard\s#(?<id>\d+)\sbegins\sshift", RegexOptions.Compiled);
         const string FALL_ASLEEP = "falls asleep";
         const string WAKE_UP = "wakes up";
-        static Dictionary<int,GuardRecord> BuildGuardRecords(IEnumerable<LogRecord> log)
+        static Dictionary<int, GuardRecord> BuildGuardRecords(IEnumerable<LogRecord> log)
         {
             var a = Tuple.Create(1, 2);
             log = log.OrderBy(record => record.Date);
@@ -85,16 +83,7 @@ namespace AoC
             var lastAsleep = 0;
             foreach (var record in log)
             {
-                Match match = shiftStartRegex.Match(record.Message);
-                if (match.Success) {
-                    if (guardAsleep)
-                    {
-                        guards[guardId] = RecordGuardTimes(guardId, guards, lastAsleep, 60);
-                        guardAsleep = false;
-                    }
-                    guardId = int.Parse(match.Groups["id"].Value);
-                }
-                else if (record.Message == FALL_ASLEEP)
+                if (record.Message == FALL_ASLEEP)
                 {
                     lastAsleep = record.Date.Minute;
                     guardAsleep = true;
@@ -104,20 +93,37 @@ namespace AoC
                     guardAsleep = false;
                     guards[guardId] = RecordGuardTimes(guardId, guards, lastAsleep, record.Date.Minute);
                 }
+                else
+                {
+                    Match match = shiftStartRegex.Match(record.Message);
+                    if (match.Success)
+                    {
+                        if (guardAsleep)
+                        {
+                            guards[guardId] = RecordGuardTimes(guardId, guards, lastAsleep, 60);
+                            guardAsleep = false;
+                        }
+                        guardId = int.Parse(match.Groups["id"].Value);
+                        if (!guards.ContainsKey(guardId))
+                            guards[guardId] = GuardRecord.New();
+                    }
+
+                }
             }
             return guards;
         }
 
-        static (int, int) Solve(Dictionary<int,GuardRecord> guards)
+        static (int, int) Solve(Dictionary<int, GuardRecord> guards)
             => (
                 Part1(guards),
                 Part2(guards)
             );
 
         static Regex lineRegex = new Regex(@"\[(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})\s(?<hours>\d{2}):(?<minutes>\d{2})\]\s(?<message>.*)$", RegexOptions.Compiled);
-        static Dictionary<int,GuardRecord> GetInput(string filePath)
+        static Dictionary<int, GuardRecord> GetInput(string filePath)
             => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
-            : BuildGuardRecords(File.ReadLines(filePath).Select(line => {
+            : BuildGuardRecords(File.ReadLines(filePath).Select(line =>
+            {
                 Match match = lineRegex.Match(line);
                 if (match.Success)
                     return new LogRecord(
