@@ -11,8 +11,7 @@ fn is_password_valid(password: &str, check2: bool) -> bool {
             .iter()
             .map(|c| password.matches(*c).count())
             .collect::<Vec<usize>>();
-        return counts.iter().any(|count| *count > 1)
-            && (counts.iter().any(|count| *count == 2) || !check2);
+        return (!check2 || counts.contains(&2)) && counts.iter().any(|count| *count > 1);
     }
     false
 }
