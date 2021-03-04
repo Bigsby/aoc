@@ -1,6 +1,3 @@
-use std::env;
-use std::fs;
-use std::time::{Instant};
 
 fn part1(puzzle_input: &str) -> usize {
     puzzle_input.len()
@@ -15,15 +12,15 @@ fn solve(puzzle_input: &str) -> (usize,usize) {
 }
 
 fn get_input(file_path: &String) -> &str {
-    fs::read_to_string(file_path).expect("Error reading input file!")
+    std::fs::read_to_string(file_path).expect("Error reading input file!")
 }
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
+    let args: Vec<String> = std::env::args().collect();
     if args.len() != 2 {
         panic!("Please, add input file path as parameter");
     }
-    let now = Instant::now();
+    let now = std::time::Instant::now();
     let (part1_result, part2_result) = solve(&get_input(&args[1]));
     println!("P1: {}", part1_result);
     println!("P1: {}", part2_result);
