@@ -4,32 +4,32 @@ import sys, os, time
 from typing import Callable, List, Tuple
 
 
-def doJumps(jumps: List[int], newJumpFunc: Callable[[int],int]) -> int:
+def do_jumps(jumps: List[int], new_jump_junc: Callable[[int],int]) -> int:
     jumps = list(jumps)
-    maxIndex = len(jumps)
-    currentIndex = 0
+    max_index = len(jumps)
+    index = 0
     count = 0
-    while currentIndex >= 0 and currentIndex < maxIndex:
+    while index >= 0 and index < max_index:
         count += 1
-        offset = jumps[currentIndex]
-        nextIndex = currentIndex + offset
-        jumps[currentIndex] = offset + newJumpFunc(offset)
-        currentIndex = nextIndex
+        offset = jumps[index]
+        next_index = index + offset
+        jumps[index] = offset + new_jump_junc(offset)
+        index = next_index
     return count
 
 
 def solve(jumps: List[int]) -> Tuple[int,int]:
     return (
-        doJumps(jumps, lambda _: 1),
-        doJumps(jumps, lambda offset: 1 if offset < 3 else -1)
+        do_jumps(jumps, lambda _: 1),
+        do_jumps(jumps, lambda offset: 1 if offset < 3 else -1)
     )
 
 
-def getInput(filePath: str) -> List[int]:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
+def get_input(file_path: str) -> List[int]:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
     
-    with open(filePath, "r") as file:
+    with open(file_path, "r") as file:
         return [ int(line) for line in file.readlines() ]
 
 
@@ -38,10 +38,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
