@@ -8,7 +8,7 @@ from collections import Counter
 def is_password_valid(password: str, check2: bool) -> bool:
     if "".join(list(sorted(list(password)))) == password:
         counts = Counter(password).values()
-        return any(count > 1 for count in counts) and (2 in counts or not check2)
+        return (not check2 or 2 in counts) and any(count > 1 for count in counts)
     return False
 
 
