@@ -14,11 +14,8 @@ namespace AoC
     {
         static string[] MANDATORY_FIELDS = { "byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid" };
 
-        static int CountValidPassports(IEnumerable<Passport> passports, Func<Passport, bool> validationFunc)
-            => passports.Count(passport => validationFunc(passport));
-
         static bool ValidateInt(string value, int min, int max)
-            => int.TryParse(value, out var parsed) &&  parsed >= min && parsed <= max;
+            => int.TryParse(value, out var parsed) && parsed >= min && parsed <= max;
 
         static Regex hgtRegex = new Regex(@"^(\d{2,3})(cm|in)$", RegexOptions.Compiled);
         static bool ValidateHgt(string value)
@@ -36,23 +33,28 @@ namespace AoC
         }
 
         static Regex hclRegex = new Regex(@"^#[0-9a-f]{6}$", RegexOptions.Compiled);
-        static string[] ECLS = new [] { "amb", "blu", "brn", "gry", "grn", "hzl", "oth" };
+        static string[] ECLS = new[] { "amb", "blu", "brn", "gry", "grn", "hzl", "oth" };
         static Regex pidRegex = new Regex(@"^[\d]{9}$", RegexOptions.Compiled);
-        static Dictionary<string, Func<string, bool>> VALIDATIONS = new Dictionary<string, Func<string, bool>> {
-            { "byr", value => ValidateInt(value, 1920, 2002) },
-            { "iyr", value => ValidateInt(value, 2010, 2020) },
-            { "eyr", value => ValidateInt(value, 2020, 2030) },
-            { "hgt", ValidateHgt },
-            { "hcl", value => hclRegex.Match(value).Success },
-            { "ecl", value => ECLS.Contains(value) },
-            { "pid", value => pidRegex.Match(value).Success }
-        };
         static (int, int) Solve(IEnumerable<Passport> passports)
             => (
-                CountValidPassports(passports, passport =>
+                passports.Count(passport =>
                     MANDATORY_FIELDS.All(field => passport.ContainsKey(field))),
-                CountValidPassports(passports, passport =>
-                    MANDATORY_FIELDS.All(field => passport.ContainsKey(field) && VALIDATIONS[field](passport[field])))
+                passports.Count(passport =>
+                    MANDATORY_FIELDS.All(field =>
+                        passport.ContainsKey(field) &&
+                        field switch
+                        {
+                            "byr" => ValidateInt(passport[field], 1920, 2002),
+                            "iyr" => ValidateInt(passport[field], 2010, 2020),
+                            "eyr" => ValidateInt(passport[field], 2020, 2030),
+                            "hgt" => ValidateHgt(passport[field]),
+                            "hcl" => hclRegex.Match(passport[field]).Success,
+                            "ecl" => ECLS.Contains(passport[field]),
+                            "pid" => pidRegex.Match(passport[field]).Success,
+                            _ => throw new Exception($"No validation for field '{field}'")
+                        }
+                    )
+                )
             );
 
         static Regex entryRegex = new Regex(@"([a-z]{3})\:([^\s]+)", RegexOptions.Compiled);
