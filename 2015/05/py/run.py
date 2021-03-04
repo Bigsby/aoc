@@ -6,46 +6,41 @@ import re
 
 
 FORBIDEN_PAIRS = [ "ab", "cd", "pq", "xy" ]
-vowelRegex = re.compile("[aeiou]")
-repeatRegex = re.compile("(.)\\1{1,}")
-def isWordNice(word: str) -> bool:
-    return all(map(lambda pair: pair not in word, FORBIDEN_PAIRS)) \
-        and len(vowelRegex.findall(word)) > 2 \
-        and len(repeatRegex.findall(word)) != 0
+vowel_regex = re.compile("[aeiou]")
+repeat_regex = re.compile("(.)\\1{1,}")
+def is_word_nice(word: str) -> bool:
+    return not any(map(lambda pair: pair in word, FORBIDEN_PAIRS)) \
+        and len(vowel_regex.findall(word)) > 2 \
+        and len(repeat_regex.findall(word)) != 0
 
 
-def part1(words: List[str]) -> int:
-    return len(list(filter(isWordNice, words)))
-
-
-def hasRepeatingPair(word: str) -> bool:
-    for pairStart in range(len(word) - 2):
-        pairToTest = word[pairStart : pairStart + 2]
-        if pairToTest in word[:pairStart] or pairToTest in word[pairStart + 2:]:
+def has_repeating_pair(word: str) -> bool:
+    for pair_start in range(len(word) - 2):
+        pair_to_test = word[pair_start : pair_start + 2]
+        if pair_to_test in word[:pair_start] or pair_to_test in word[pair_start + 2:]:
             return True
     return False
 
 
-def hasRepeatingLetter(word: str) -> bool:
+def has_repeating_letter(word: str) -> bool:
     for index in range(len(word) - 2):
         if word[index] == word[index + 2]:
             return True
     return False
 
 
-def part2(words: List[str]) -> int:
-    return len(list(filter(lambda word: hasRepeatingPair(word) and hasRepeatingLetter(word), words)))
-
-
 def solve(words: List[str]) -> Tuple[int,int]:
-    return (part1(words), part2(words))
+    return (
+        len(list(filter(is_word_nice, words))), 
+        len(list(filter(lambda word: has_repeating_pair(word) and has_repeating_letter(word), words)))
+    )
 
 
-def getInput(filePath: str) -> List[str]:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
+def get_input(file_path: str) -> List[str]:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
     
-    with open(filePath, "r") as file:
+    with open(file_path, "r") as file:
         return [ line.strip() for line in file.readlines() ]
 
 
@@ -54,10 +49,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
