@@ -11,10 +11,10 @@ namespace AoC
     {
         static bool IsValidPassword(string password, bool check2)
         {
-            if (string.Join("", password.OrderBy(c => c)) == password)
+            if (Enumerable.Range(0, password.Length - 1).All(index => password[index] <= password[index + 1]))
             {
                 var counts = password.Distinct().ToDictionary(c => c, c => password.Count(t => t == c)).Values;
-                return counts.Any(count => count > 1) && (!check2 || counts.Contains(2));
+                return (!check2 || counts.Contains(2)) && counts.Any(count => count > 1);
             }
             return false;
         }
