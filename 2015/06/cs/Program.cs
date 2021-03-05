@@ -10,44 +10,57 @@ namespace AoC
 {
     class Program
     {
-        record Instruction(string Action, int Xstart, int Ystart, int Xend, int Yend) { }    
+        record Instruction(int Action, int Xstart, int Ystart, int Xend, int Yend) { }
 
+        const int TURN_ON = 0;
+        const int TOGGLE = 1;
+        const int TURN_OFF = 2;
+        static Dictionary<string, int> ACTIONS = new Dictionary<string, int> {
+            { "turn on", TURN_ON },
+            { "toggle", TOGGLE },
+            { "turn off", TURN_OFF },
+        };
         const int MATRIX_SIDE = 1000;
-        static int RunMatrix(IEnumerable<Instruction> instructions, Dictionary<string, Func<int,int>> updateFuncs)
+        static int RunMatrix(IEnumerable<Instruction> instructions, Func<int, int, int> updateFunc)
         {
-            var matrix = new Dictionary<int, int>();
-            foreach (var index in Enumerable.Range(0, MATRIX_SIDE * MATRIX_SIDE))
-                    matrix[(index / MATRIX_SIDE) % MATRIX_SIDE + (index % MATRIX_SIDE) * MATRIX_SIDE] = 0;
+            var matrix = new int[MATRIX_SIDE * MATRIX_SIDE];
             foreach (var intruction in instructions)
                 foreach (var x in Enumerable.Range(intruction.Xstart, intruction.Xend - intruction.Xstart + 1))
                     foreach (var y in Enumerable.Range(intruction.Ystart, intruction.Yend - intruction.Ystart + 1))
                     {
                         var position = x + y * MATRIX_SIDE;
-                        matrix[position] = updateFuncs[intruction.Action](matrix[position]);
+                        matrix[position] = updateFunc(intruction.Action, matrix[position]);
                     }
-            return matrix.Values.Sum();
+            return matrix.Sum();
         }
 
         static (int, int) Solve(IEnumerable<Instruction> instructions)
             => (
-                RunMatrix(instructions, new Dictionary<string, Func<int, int>> {
-                    { "turn on", _ => 1 },
-                    { "toggle", value => value == 1 ? 0 : 1 },
-                    { "turn off", _ => 0 }}), 
-                RunMatrix(instructions, new Dictionary<string, Func<int, int>> {
-                    { "turn on", value => value + 1 },
-                    { "toggle", value => value + 2 },
-                    { "turn off", value => value > 0 ? value - 1 : 0 }}
-                ));
+                RunMatrix(instructions, (action, value) => action switch
+                {
+                    TURN_ON => 1,
+                    TOGGLE => value == 1 ? 0 : 1,
+                    TURN_OFF => 0,
+                    _ => throw new Exception($"Uknow action '{action}'")
+                }),
+                RunMatrix(instructions, (action, value) => action switch
+                {
+                    TURN_ON => value + 1,
+                    TOGGLE => value + 2,
+                    TURN_OFF => value > 0 ? value - 1 : 0,
+                    _ => throw new Exception($"Uknow action '{action}'")
+                })
+            );
 
         static Regex lineRegex = new Regex(@"^(toggle|turn off|turn on)\s(\d{1,3}),(\d{1,3})\sthrough\s(\d{1,3}),(\d{1,3})$", RegexOptions.Compiled);
         static IEnumerable<Instruction> GetInput(string filePath)
             => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
-            : File.ReadAllLines(filePath).Select(line => {
+            : File.ReadAllLines(filePath).Select(line =>
+            {
                 Match match = lineRegex.Match(line);
                 if (match.Success)
                     return new Instruction(
-                        match.Groups[1].Value,
+                        ACTIONS[match.Groups[1].Value],
                         int.Parse(match.Groups[2].Value),
                         int.Parse(match.Groups[3].Value),
                         int.Parse(match.Groups[4].Value),
