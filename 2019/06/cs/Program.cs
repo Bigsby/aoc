@@ -15,19 +15,18 @@ namespace AoC
         static int Part1(Dictionary<string, string> planetOrbits)
         {
             var planets = new HashSet<string>();
-            foreach(var pair in planetOrbits)
+            foreach (var pair in planetOrbits)
             {
                 planets.Add(pair.Key);
                 planets.Add(pair.Value);
             }
-
             var orbitCounts = new Dictionary<string, int> { { CENTER_OF_MASS, 0 } };
             while (orbitCounts.Count != planets.Count)
                 foreach (var planet in planets)
                 {
                     if (orbitCounts.ContainsKey(planet))
                         continue;
-                    if (planetOrbits.ContainsKey(planet)) 
+                    if (planetOrbits.ContainsKey(planet))
                     {
                         var orbitedPlanet = planetOrbits[planet];
                         if (orbitCounts.ContainsKey(orbitedPlanet))
@@ -71,13 +70,14 @@ namespace AoC
                 Part2(planetOrbits)
             );
 
-        static Regex lineRegex = new Regex(@"^(?<first>[A-Z\d]{3})\)(?<second>[A-Z\d]{3})$", RegexOptions.Compiled);
+        static Regex lineRegex = new Regex(@"^(?<orbited>[A-Z\d]{3})\)(?<orbiter>[A-Z\d]{3})$", RegexOptions.Compiled);
         static Dictionary<string, string> GetInput(string filePath)
             => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
-            : File.ReadAllLines(filePath).Select(line => {
+            : File.ReadAllLines(filePath).Select(line =>
+            {
                 Match match = lineRegex.Match(line);
                 if (match.Success)
-                    return (match.Groups["first"].Value, match.Groups["second"].Value);
+                    return (match.Groups["orbited"].Value, match.Groups["orbiter"].Value);
                 throw new Exception($"Bad format '{line}'");
             }).ToDictionary(pair => pair.Item2, pair => pair.Item1);
 
