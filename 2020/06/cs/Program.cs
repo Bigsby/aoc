@@ -7,20 +7,21 @@ using System.Collections.Generic;
 
 namespace AoC
 {
-    record Group(int PeopleCount, Dictionary<char, int> Record);
+    record Group(int PeopleCount, IEnumerable<int> Record);
 
     class Program
     {
         static (int, int) Solve(IEnumerable<Group> groups)
             => (
-                groups.Sum(group => group.Record.Keys.Count()),
-                groups.Sum(group => 
-                    group.Record.Keys.Count(letter => group.Record[letter] == group.PeopleCount))
+                groups.Sum(group => group.Record.Count()),
+                groups.Sum(group =>
+                    group.Record.Count(count => count == group.PeopleCount))
             );
 
         static IEnumerable<Group> GetInput(string filePath)
             => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
-            : File.ReadAllText(filePath).Split("\n\n").Select(entry => {
+            : File.ReadAllText(filePath).Split("\n\n").Select(entry =>
+            {
                 var record = new Dictionary<char, int>();
                 var peopleCount = 0;
                 foreach (var line in entry.Split('\n'))
@@ -33,7 +34,7 @@ namespace AoC
                         else
                             record[c] = 1;
                 }
-                return new Group(peopleCount, record);
+                return new Group(peopleCount, record.Values);
             });
 
         static void Main(string[] args)
