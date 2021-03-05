@@ -33,8 +33,6 @@ namespace AoC
                     closest = index;
                     closesDistance = distance;
                 }
-                else if (distance == closesDistance)
-                    closest = -1;
             }
             return closest;
         }
@@ -50,8 +48,7 @@ namespace AoC
                 var mapLocation = new Complex(x, y);
                 var closest = FindClosestLocation(mapLocation, locations);
                 mapLocations[mapLocation] = closest;
-                if (closest != -1)
-                    locationCounts[closest]++;
+                locationCounts[closest]++;
             }
             var edgeLocations = new HashSet<int>();
             foreach (var y in Enumerable.Range(startY, endY - startY + 1))
