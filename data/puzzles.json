@@ -370,7 +370,8 @@
                     "day": 6,
                     "name": "Probably a Fire Hazard",
                     "description": "Turn on/off/toggle lights on 2D matrix",
-                    "tags": [ "2D", "grid", "navigate" ],
+                    "tags": [ "2D", "Grid" ],
+                    "gotchas": [ "Flatten grid as 1D array" ],
                     "results": [
                         {
                             "p1": "543903",
@@ -1445,7 +1446,8 @@
                     "day": 6,
                     "name": "Signals and Noise",
                     "description": "Count letters repeating in same index in strings",
-                    "tags": [ "strings" ],
+                    "tags": [ "Strings" ],
+                    "gotchas": [ "Create records per column with totals of each letter" ],
                     "results": [
                         {
                             "p1": "xdkzukcf",
@@ -4730,6 +4732,7 @@
                     "name": "Universal Orbit Map",
                     "description": "Graph deepness counting",
                     "tags": [ "Graph" ],
+                    "gotchas": [ "Part2: invert paths to center of mass" ],
                     "results": [
                         {
                             "p1": "162439",
