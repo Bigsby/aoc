@@ -17,9 +17,8 @@ fn part1(planet_orbits: &HashMap<String, String>) -> u32 {
                 continue;
             }
             let mut orbits = 0;
-            if planet_orbits.contains_key(*planet) {
-                let orbited_planet = String::from(planet_orbits.get(*planet).unwrap());
-                if let Some(orbited_orbits) = orbit_counts.get(&orbited_planet) {
+            if let Some(orbited_planet) = planet_orbits.get(*planet) {
+                if let Some(orbited_orbits) = orbit_counts.get(orbited_planet) {
                     orbits = orbited_orbits + 1;
                 }
             } else {
