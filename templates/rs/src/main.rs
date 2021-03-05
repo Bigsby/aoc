@@ -22,8 +22,9 @@ fn main() {
     }
     let now = std::time::Instant::now();
     let (part1_result, part2_result) = solve(&get_input(&args[1]));
+    let end = now.elapsed().as_secs_f32();
     println!("P1: {}", part1_result);
     println!("P1: {}", part2_result);
     println!();
-    println!("Time: {:7}", now.elapsed().as_secs_f32());
+    println!("Time: {:7}", end);
 }
