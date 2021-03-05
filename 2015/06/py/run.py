@@ -1,54 +1,65 @@
 #! /usr/bin/python3
 
-import sys, os, time
+import sys
+import os
+import time
 from typing import Callable, Dict, List, Tuple
 import re
 
-Instruction = Tuple[str,int,int,int,int]
-
-
+Instruction = Tuple[int, int, int, int, int]
+TURN_ON, TOGGLE, TURN_OFF = 0, 1, 2
+ACTIONS = {
+    "turn on": TURN_ON,
+    "toggle": TOGGLE,
+    "turn off": TURN_OFF
+}
 MATRIX_SIDE = 1000
-def runMatrix(updateFuncs: Dict[str,Callable[[int],int]], instructions: List[Instruction]) -> int:
-    matrix = { (index // MATRIX_SIDE) % MATRIX_SIDE + (index % MATRIX_SIDE) * MATRIX_SIDE: 0 for index in range(MATRIX_SIDE * MATRIX_SIDE) }
-    for action, xstart, ystart, xend, yend in instructions:
-        updateFunc = updateFuncs[action]
-        for x in range(xstart, xend + 1):
-            for y in range(ystart, yend + 1):
+
+
+def run_matrix(instructions: List[Instruction], update_funcs: Dict[int, Callable[[int], int]]) -> int:
+    matrix = [0] * (MATRIX_SIDE * MATRIX_SIDE)
+    for action, x_start, y_start, x_end, y_end in instructions:
+        update_func = update_funcs[action]
+        for x in range(x_start, x_end + 1):
+            for y in range(y_start, y_end + 1):
                 position = x + y * MATRIX_SIDE
-                matrix[position] = updateFunc(matrix[position])
-    return sum(matrix.values())
+                matrix[position] = update_func(matrix[position])
+    return sum(matrix)
 
 
-matrix1Updates: Dict[str,Callable[[int],int]] = {
-    "turn on": lambda _: 1,
-    "toggle": lambda value: not value,
-    "turn off": lambda _: 0
-}
-matrix2Updates: Dict[str,Callable[[int],int]] = {
-    "turn on": lambda value: value + 1,
-    "toggle": lambda value: value + 2,
-    "turn off": lambda value: value - 1 if value > 0 else 0
-}
+def solve(instructions: List[Instruction]) -> Tuple[int, int]:
+    return (run_matrix(instructions, {
+        TURN_ON: lambda _: 1,
+        TOGGLE: lambda value: not value,
+        TURN_OFF: lambda _: 0
+    }), run_matrix(instructions, {
+        TURN_ON: lambda value: value + 1,
+        TOGGLE: lambda value: value + 2,
+        TURN_OFF: lambda value: value - 1 if value > 0 else 0
+    }))
 
 
-def solve(instructions: List[Instruction]) -> Tuple[int,int]:
-    return (runMatrix(matrix1Updates, instructions), runMatrix(matrix2Updates, instructions))
-
-
-instructionRegex = re.compile(r"^(toggle|turn off|turn on)\s(\d{1,3}),(\d{1,3})\sthrough\s(\d{1,3}),(\d{1,3})$")
-def parseLine(line: str) -> Instruction:
-    match = instructionRegex.match(line)
+instruction_regex = re.compile(
+    r"^(toggle|turn off|turn on)\s(\d{1,3}),(\d{1,3})\sthrough\s(\d{1,3}),(\d{1,3})$")
+def parse_line(line: str) -> Instruction:
+    match = instruction_regex.match(line)
     if match:
-        return (match.group(1), int(match.group(2)), int(match.group(3)), int(match.group(4)), int(match.group(5)))
+        return (
+            ACTIONS[match.group(1)], 
+            int(match.group(2)), 
+            int(match.group(3)), 
+            int(match.group(4)), 
+            int(match.group(5))
+        )
     raise Exception("Bad format", line)
 
 
-def getInput(filePath: str) -> List[Instruction]:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
-    
-    with open(filePath, "r") as file:
-        return [ parseLine(line) for line in file.readlines() ]
+def get_input(file_path: str) -> List[Instruction]:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
+
+    with open(file_path, "r") as file:
+        return [parse_line(line) for line in file.readlines()]
 
 
 def main():
@@ -56,10 +67,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
