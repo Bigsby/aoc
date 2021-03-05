@@ -5,62 +5,59 @@ from typing import List, Dict, Set, Tuple
 from itertools import product
 
 
-def getManhatanDistance(locationA: complex, locationB: complex) -> int:
-    return int(abs(locationA.real - locationB.real) + abs(locationA.imag - locationB.imag))
+def get_manhatan_distance(location_a: complex, location_b: complex) -> int:
+    return int(abs(location_a.real - location_b.real) + abs(location_a.imag - location_b.imag))
 
 
-def getMapEdges(locations: List[complex]) -> Tuple[int, int, int, int]:
+def get_map_edges(locations: List[complex]) -> Tuple[int, int, int, int]:
     return  int(min(map(lambda i: i.real, locations))) - 1, \
             int(max(map(lambda i: i.real, locations))) + 1, \
             int(min(map(lambda i: i.imag, locations))) - 1, \
             int(max(map(lambda i: i.imag, locations))) + 1
 
 
-def findClosestLocation(mapLocation: complex, locations: List[complex]) -> int:
+def find_closest_location(map_location: complex, locations: List[complex]) -> int:
     closest = -1
-    closesDistance = sys.maxsize
+    closes_distance = sys.maxsize
     for index, location in enumerate(locations):
-        distance = getManhatanDistance(mapLocation, location)
-        if distance < closesDistance:
+        distance = get_manhatan_distance(map_location, location)
+        if distance < closes_distance:
             closest = index
-            closesDistance = distance
-        elif distance == closesDistance:
-            closest = -1
+            closes_distance = distance
     return closest
 
 
-def part1(locations: List[complex]):
-    startX, endX, startY, endY = getMapEdges(locations)
-    mapLocations: Dict[complex,int] = {}
-    locationCounts: List[int] = [ 0 for _ in range(len(locations))]
+def part1(locations: List[complex]) -> int:
+    start_x, end_x, start_y, end_y = get_map_edges(locations)
+    map_locations: Dict[complex,int] = {}
+    location_counts: List[int] = [ 0 ] * len(locations)
 
-    for mapLocationX, mapLocationY in product(range(startX, endX + 1), range(startY, endY + 1)):
-        mapLocation = mapLocationX + mapLocationY * 1j
-        closest = findClosestLocation(mapLocation, locations)
-        mapLocations[mapLocation] = closest
-        if closest != -1:
-            locationCounts[closest] += 1
+    for map_location_x, map_location_y in product(range(start_x, end_x + 1), range(start_y, end_y + 1)):
+        map_location = map_location_x + map_location_y * 1j
+        closest = find_closest_location(map_location, locations)
+        map_locations[map_location] = closest
+        location_counts[closest] += 1
     
-    edgeLocations: Set[int] = set()
-    for y in range(startY, endY + 1):
-        edgeLocations.add(mapLocations[startX + y * 1j])
-        edgeLocations.add(mapLocations[endX + y * 1j])
-    for x in range(startX, endX + 1):
-        edgeLocations.add(mapLocations[x + startY * 1j])
-        edgeLocations.add(mapLocations[x + endY * 1j])
-    return max([ value for index, value in enumerate(locationCounts) if index not in edgeLocations ])
+    edge_locations: Set[int] = set()
+    for y in range(start_y, end_y + 1):
+        edge_locations.add(map_locations[start_x + y * 1j])
+        edge_locations.add(map_locations[end_x + y * 1j])
+    for x in range(start_x, end_x + 1):
+        edge_locations.add(map_locations[x + start_y * 1j])
+        edge_locations.add(map_locations[x + end_y * 1j])
+    return max([ value for index, value in enumerate(location_counts) if index not in edge_locations ])
 
 
 MAX_DISTANCE = 10000
-def part2(locations: List[complex]):
-    startX, endX, startY, endY = getMapEdges(locations)
-    validLocationsCount = 0
-    for mapLocationX, mapLocationY in product(range(startX, endX + 1), range(startY, endY + 1)):
-        mapLocation = mapLocationX + mapLocationY * 1j
-        totalDistances = sum(map(lambda location: getManhatanDistance(location, mapLocation), locations))
-        if totalDistances < MAX_DISTANCE:
-            validLocationsCount += 1
-    return validLocationsCount
+def part2(locations: List[complex]) -> int:
+    start_x, end_x, start_y, end_y = get_map_edges(locations)
+    valid_locations_count = 0
+    for map_location_x, map_location_y in product(range(start_x, end_x + 1), range(start_y, end_y + 1)):
+        map_location = map_location_x + map_location_y * 1j
+        total_distances = sum(map(lambda location: get_manhatan_distance(location, map_location), locations))
+        if total_distances < MAX_DISTANCE:
+            valid_locations_count += 1
+    return valid_locations_count
 
 
 def solve(locations: List[complex]) -> Tuple[int,int]:
@@ -70,17 +67,17 @@ def solve(locations: List[complex]) -> Tuple[int,int]:
     )
 
 
-def parseLine(line: str) -> complex:
-    splitLine: List[str] = line.split(",")
-    return int(splitLine[0].strip()) + int(splitLine[1].strip()) * 1j
+def parse_line(line: str) -> complex:
+    split_line: List[str] = line.split(",")
+    return int(split_line[0].strip()) + int(split_line[1].strip()) * 1j
 
 
-def getInput(filePath: str):
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
+def get_input(file_path: str) -> List[complex]:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
     
-    with open(filePath, "r") as file:
-        return [ parseLine(line) for line in file.readlines() ]
+    with open(file_path, "r") as file:
+        return [ parse_line(line) for line in file.readlines() ]
 
 
 def main():
@@ -88,10 +85,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
