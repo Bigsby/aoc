@@ -1,35 +1,39 @@
 #! /usr/bin/python3
 
-import sys, os, time
+import sys
+import os
+import time
 from typing import Dict, List, Tuple
 from functools import reduce
 
 
-def getColumnRecords(messages: List[str]) -> Dict[int,Dict[str,int]]:
-    columnRecords = { i: {} for i in range(len(messages[0]))}
+def get_column_records(messages: List[str]) -> Dict[int, Dict[str, int]]:
+    column_records: Dict[int, Dict[str, int]] = {i: {} for i in range(len(messages[0]))}
     for message in messages:
         for column, c in enumerate(message):
-            if c in columnRecords[column]:
-                columnRecords[column][c] += 1
+            if c in column_records[column]:
+                column_records[column][c] += 1
             else:
-                columnRecords[column][c] = 1
-    return columnRecords
+                column_records[column][c] = 1
+    return column_records
 
 
-def solve(messages: List[str]) -> Tuple[str,str]:
-    columnRecords = getColumnRecords(messages)
+def solve(messages: List[str]) -> Tuple[str, str]:
+    column_records = get_column_records(messages)
     return (
-        reduce(lambda soFar, column: soFar + max(columnRecords[column].items(), key=lambda cr: cr[1])[0], range(len(messages[0])), ""), 
-        reduce(lambda soFar, column: soFar + min(columnRecords[column].items(), key=lambda cr: cr[1])[0], range(len(messages[0])), "")
+        reduce(lambda soFar, column: soFar + max(column_records[column].items(
+        ), key=lambda cr: cr[1])[0], range(len(messages[0])), ""),
+        reduce(lambda soFar, column: soFar + min(column_records[column].items(
+        ), key=lambda cr: cr[1])[0], range(len(messages[0])), "")
     )
 
 
-def getInput(filePath: str) -> List[str]:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
-    
-    with open(filePath, "r") as file:
-        return [ line.strip() for line in file.readlines() ]
+def get_input(file_path: str) -> List[str]:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
+
+    with open(file_path, "r") as file:
+        return [line.strip() for line in file.readlines()]
 
 
 def main():
@@ -37,10 +41,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
