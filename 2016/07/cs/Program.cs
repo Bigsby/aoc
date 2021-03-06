@@ -12,9 +12,9 @@ namespace AoC
     {
         static Regex abbaRegex = new Regex(@"([a-z])((?!\1)[a-z])\2\1", RegexOptions.Compiled);
         static bool SupportsTLS(IEnumerable<string> ip)
-            => !ip.Where((part, index) => index % 2 == 1).Any(hypernet => abbaRegex.Matches(hypernet).Any())
+            => !ip.Where((part, index) => index % 2 == 1).Any(hypernet => abbaRegex.IsMatch(hypernet))
                 &&
-                ip.Where((part, index) => index % 2 == 0).Any(supernet => abbaRegex.Matches(supernet).Any());
+                ip.Where((part, index) => index % 2 == 0).Any(supernet => abbaRegex.IsMatch(supernet));
 
         static IEnumerable<string> FindBABs(string supernet)
             => Enumerable.Range(0, supernet.Length - 2).Where(index => supernet[index] == supernet[index + 2])
