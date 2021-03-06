@@ -116,8 +116,6 @@ source_target_regex = re.compile(r"^(.*)\s->\s(\w+)$")
 input_regex = re.compile(r"^[^\s]+$")
 unary_regex = re.compile(r"NOT\s(\w+)$")
 binary_regex = re.compile(r"^(\w+|\d+)\s+(AND|OR|LSHIFT|RSHIFT)\s+(\w+|\d+)")
-
-
 def process_line(line: str) -> Tuple[str, Connection]:
     source_target_match = source_target_regex.match(line)
     if source_target_match:
