@@ -7,7 +7,7 @@ from typing import Callable, Dict, List, Tuple, Union
 import re
 
 SCALAR, WIRE = "scalar", "wire"
-INPUT, UNARY, BINARY = "input", "unary", "binary"
+INPUT, NOT, BINARY = "input", "not", "binary"
 
 
 class Operand():
@@ -57,7 +57,7 @@ class Circuit():
     def calculate_value_for_connection(self, connection: Connection) -> int:
         if connection.type == INPUT:
             return self.get_value_from_operand(connection.operand1)
-        if connection.type == UNARY:
+        if connection.type == NOT:
             return ~self.get_value_from_operand(connection.operand1)
         if connection.type == BINARY:
             return self.get_value_from_binary_connection(connection)
@@ -94,7 +94,7 @@ def process_line(line: str) -> Connection:
             return Connection(None, INPUT, source, None, target)
         unary_match = unary_regex.match(source)
         if unary_match:
-            return Connection(None, UNARY, unary_match.group(1), None, target)
+            return Connection(None, NOT, unary_match.group(1), None, target)
         binary_match = binary_regex.match(source)
         if binary_match:
             return Connection(binary_match.group(2), BINARY, binary_match.group(1), binary_match.group(3), target)
