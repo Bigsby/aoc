@@ -18,7 +18,7 @@ namespace AoC
             return records.Keys.First(name => !allChildren.Contains(name));
         }
 
-        static int Part2(IDictionary<string, Record> records)
+        static int Part2(IDictionary<string, Record> records, string topTower)
         {
             var combinedWeights = new Dictionary<string, int>();
             while (combinedWeights.Count != records.Count)
@@ -28,7 +28,7 @@ namespace AoC
                         combinedWeights[name] = record.Weight;
                     else if (record.Children.All(child => combinedWeights.ContainsKey(child)))
                         combinedWeights[name] = record.Children.Sum(child => combinedWeights[child]) + record.Weight;
-            var currentTower = records[Part1(records)];
+            var currentTower = records[topTower];
             var weightDifference = 0;
             while (true)
             {
@@ -44,15 +44,19 @@ namespace AoC
         }
 
         static (string, int) Solve(IDictionary<string, Record> records)
-            => (
-                Part1(records),
-                Part2(records)
-            );    
+        {
+            var topTower = Part1(records);
+            return (
+                topTower,
+                Part2(records, topTower)
+            );
+        }
 
         static Regex lineRegex = new Regex(@"^(?<name>[a-z]+)\s\((?<weight>\d+)\)(?: -> )?(?<children>.*)", RegexOptions.Compiled);
         static IDictionary<string, Record> GetInput(string filePath)
             => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
-            : File.ReadAllLines(filePath).Select(line => {
+            : File.ReadAllLines(filePath).Select(line =>
+            {
                 Match match = lineRegex.Match(line);
                 if (match.Success)
                     return (
