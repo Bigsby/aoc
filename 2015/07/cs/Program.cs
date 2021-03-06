@@ -8,111 +8,123 @@ using System.Text.RegularExpressions;
 
 namespace AoC
 {
+    using Connections = Dictionary<string, Connection>;
+
+    abstract record Operand
+    {
+        public static Operand Parse(string value)
+        {
+            if (int.TryParse(value, out var scalar))
+                return new Scalar(scalar);
+            return new Wire(value);
+        }
+    }
+
+    record Scalar : Operand
+    {
+        public int Value { get; }
+        public Scalar(int value) => Value = value;
+    }
+
+    record Wire : Operand
+    {
+        public string Source { get; }
+        public Wire(string source) => Source = source;
+    }
+
+    enum Operation
+    {
+        And,
+        Or,
+        LShift,
+        RShift,
+    }
+
+    abstract record Connection { }
+
+    record Input : Connection
+    {
+        public Operand Operand { get; }
+        public Input(Operand operand) => Operand = operand;
+    }
+
+    record Not : Connection
+    {
+        public Operand Operand { get; }
+        public Not(Operand operand) => Operand = operand;
+    }
+
+    record Binary : Connection
+    {
+        public Operand Operand1 { get; }
+        public Operand Operand2 { get; }
+        public Operation Operation { get; }
+        public Binary(Operand operand1, Operand operand2, Operation operation)
+        {
+            Operand1 = operand1;
+            Operand2 = operand2;
+            Operation = operation;
+        }
+    }
+
+    class Circuit
+    {
+        public Circuit(Connections connections) => _connections = connections;
+
+        public int SolverFor(string target, Dictionary<string, int> initialState)
+        {
+            _solutions = initialState;
+            return GetValueFromConnection(target);
+        }
+
+        Connections _connections;
+        Dictionary<string, int> _solutions = new Dictionary<string, int>();
+
+        int GetValueFromOperand(Operand operand)
+            => operand switch
+            {
+                Scalar scalar => scalar.Value,
+                Wire wire => GetValueFromConnection(wire.Source),
+                _ => throw new Exception($"Unknown operand type '{operand}'")
+            };
+
+        int GetValueFromBinaryConnection(Binary connection)
+        {
+            var x = GetValueFromOperand(connection.Operand1);
+            var y = GetValueFromOperand(connection.Operand2);
+            return connection.Operation switch
+            {
+                Operation.And => x & y,
+                Operation.Or => x | y,
+                Operation.LShift => x << y,
+                Operation.RShift => x >> y,
+                _ => throw new Exception($"Unknon binary operation '{connection.Operation}'")
+            };
+        }
+
+        int CalculateValueForConnection(Connection connection)
+            => connection switch
+            {
+                Input input => GetValueFromOperand(input.Operand),
+                Not not => ~GetValueFromOperand(not.Operand),
+                Binary binary => GetValueFromBinaryConnection(binary),
+                _ => throw new Exception($"Unknown operation: '{connection}'")
+            };
+
+        int GetValueFromConnection(string target)
+            => _solutions.ContainsKey(target)
+            ? _solutions[target]
+            : _solutions[target] = CalculateValueForConnection(_connections[target]);
+    }
+
     class Program
     {
-        const string WIRE = "wire", SCALAR = "scalar";
-        const string INPUT = "input", UNARY = "unary", BINARY = "binary";
- 
-        record Operand
-        {
-            public Operand(string value)
-            {
-                try
-                {
-                    Scalar = int.Parse(value);
-                    Type = SCALAR;
-                }
-                catch
-                {
-                    Wire = value;
-                }
-            }
-            public string Type { get; } = WIRE;
-            public int Scalar { get; } = 0;
-            public string Wire { get; } = string.Empty;
-        }
-
-        record Connection
-        {
-            public Connection(string operation, string type, string operand1, string operand2, string target)
-            {
-                Operation = operation;
-                Type = type;
-                Operand1 = new Operand(operand1);
-                if (!string.IsNullOrEmpty(operand2))
-                    Operand2 = new Operand(operand2);
-                Target = target;
-            }
-            public string Operation { get; }
-            public string Type { get; }
-            public Operand Operand1 { get; }
-            public Operand Operand2 { get; }
-            public string Target { get; }
-        }
-
-        static Dictionary<string, Func<int, int, int>> BINARY_OPERATIONS = new Dictionary<string, Func<int, int, int>>
-        {
-            { "AND", (x, y) => x & y },
-            { "OR", (x, y) => x | y },
-            { "LSHIFT", (x, y) => x << y },
-            { "RSHIFT", (x, y) => x >> y },
-        };
-        
-        class Circuit
-        {
-            public Circuit(IEnumerable<Connection> connections) => _connections = connections;
-
-            public int SolverFor(string target, Dictionary<string, int> initialState)
-            {
-                _solutions = initialState;
-                return GetValueFromConnection(GetConnectionFromTarget(target));
-            }
-
-            IEnumerable<Connection> _connections;
-            Dictionary<string, int> _solutions = new Dictionary<string, int>();
-
-            Connection GetConnectionFromTarget(string target)
-                => _connections.First(connection => connection.Target == target);
-            
-            int GetValueFromOperand(Operand operand)
-                => operand.Type == SCALAR ? 
-                    operand.Scalar 
-                    : 
-                    GetValueFromConnection(GetConnectionFromTarget(operand.Wire));
-
-            int GetValueFromBinaryConnection(Connection connection)
-                => BINARY_OPERATIONS[connection.Operation](
-                    GetValueFromOperand(connection.Operand1), 
-                    GetValueFromOperand(connection.Operand2));
-
-            int CalculateValueForConnection(Connection connection)
-            {
-                switch (connection.Type)
-                {
-                    case INPUT:
-                        return GetValueFromOperand(connection.Operand1);
-                    case UNARY:
-                        return ~GetValueFromOperand(connection.Operand1);
-                    case BINARY:
-                        return GetValueFromBinaryConnection(connection);
-                    default:
-                        throw new Exception($"Unknown operation: '{connection.Type}'");
-                }
-            }
-
-            int GetValueFromConnection(Connection connection)
-                => _solutions.ContainsKey(connection.Target) 
-                ? _solutions[connection.Target] 
-                : _solutions[connection.Target] = CalculateValueForConnection(connection);            
-        }
-
-        const int MAX_VALUE = 1 << 17;
         static (int, int) Solve(Circuit circuit)
         {
             var startingTarget = "a";
             var part1 = circuit.SolverFor(startingTarget, new Dictionary<string, int>());
             var part2 = circuit.SolverFor(startingTarget, new Dictionary<string, int> { { "b", part1 } });
-            return (part1 >= 0 ? part1 : part1 + MAX_VALUE, part2 >= 0 ? part2 : part2 + MAX_VALUE);
+            return (part1, part2);
         }
 
         static Regex sourceTargetRegex = new Regex(@"^(.*)\s->\s(\w+)$", RegexOptions.Compiled);
@@ -121,22 +133,26 @@ namespace AoC
         static Regex binaryRegex = new Regex(@"^(\w+|\d+)\s+(AND|OR|LSHIFT|RSHIFT)\s+(\w+|\d+)", RegexOptions.Compiled);
         static Circuit GetInput(string filePath)
             => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
-            : new Circuit(File.ReadAllLines(filePath).Select(line => {
+            : new Circuit(File.ReadAllLines(filePath).Select<string, (string target, Connection connection)>(line =>
+            {
                 Match sourceTargetMatch = sourceTargetRegex.Match(line);
                 if (sourceTargetMatch.Success)
                 {
                     var (source, target) = (sourceTargetMatch.Groups[1].Value, sourceTargetMatch.Groups[2].Value);
                     if (inputRegex.Match(source).Success)
-                        return new Connection(null, INPUT, source, null, target);
+                        return (target, new Input(Operand.Parse(source)));
                     Match unaryMatch = unaryRegex.Match(source);
                     if (unaryMatch.Success)
-                        return new Connection(null, UNARY, unaryMatch.Groups[1].Value, null, target);
+                        return (target, new Not(Operand.Parse(unaryMatch.Groups[1].Value)));
                     Match binaryMatch = binaryRegex.Match(source);
                     if (binaryMatch.Success)
-                        return new Connection(binaryMatch.Groups[2].Value, BINARY, binaryMatch.Groups[1].Value, binaryMatch.Groups[3].Value, target);
+                        return (target, new Binary(
+                            Operand.Parse(binaryMatch.Groups[1].Value), 
+                            Operand.Parse(binaryMatch.Groups[3].Value), 
+                            Enum.Parse<Operation>(binaryMatch.Groups[2].Value, true)));
                 }
                 throw new Exception($"Unrecognized connection: '{line}'");
-            }));
+            }).ToDictionary(pair => pair.target, pair => pair.connection));
 
         static void Main(string[] args)
         {
