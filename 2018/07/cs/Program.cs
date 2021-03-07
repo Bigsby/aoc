@@ -12,7 +12,7 @@ namespace AoC
     
     class Program
     {
-        static Dictionary<char, List<char>> BuildDependencies(IEnumerable<Pair> pairs)
+        static Dictionary<char, List<char>> BuildDependencyGraph(IEnumerable<Pair> pairs)
         {
             var dependencies = new Dictionary<char, List<char>>();
             foreach (var pair in pairs)
@@ -77,7 +77,7 @@ namespace AoC
 
         static (string, int) Solve(IEnumerable<Pair> pairs)
         {
-            var dependencies = BuildDependencies(pairs);
+            var dependencies = BuildDependencyGraph(pairs);
             return (
                 Part1(dependencies.ToDictionary(kv => kv.Key, kv => kv.Value.ToList())),
                 Part2(dependencies)
