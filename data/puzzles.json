@@ -421,7 +421,7 @@
                     "day": 7,
                     "name": "Some Assembly Required",
                     "description": "Electronic circuit and Assembly",
-                    "tags": [ "bitwise" ],
+                    "tags": [ "Bitwise", "Electronins", "Assembly", "Enum/Union Types" ],
                     "results": [
                         {
                             "p1": "46065",
@@ -1492,6 +1492,7 @@
                     "name": "Internet Protocol Version 7",
                     "description": "Find letter patterns in strings (ABA and ABBA)",
                     "tags": [ "strings" ],
+                    "gotchas": [ "Types (hypernet, supernet) are interspersed" ],
                     "results": [
                         {
                             "p1": "115",
@@ -2569,7 +2570,7 @@
                     "day": 7,
                     "name": "Recursive Circus",
                     "description": "Weights on piramid graph",
-                    "tags": [ "Maths" ],
+                    "tags": [ "Maths", "Graph", "Pyramid" ],
                     "results": [
                         {
                             "p1": "hmvwl",
@@ -3674,7 +3675,8 @@
                     "day": 7,
                     "name": "The Sum of Its Parts",
                     "description": "Task with graph dependencies and multi-tasking",
-                    "tags": [ "Multi-Task", "Dependencies" ],
+                    "tags": [ "Multi-Task", "Dependencies", "Graph", "Ordinal characters" ],
+                    "gotchas": [ "Build dependencies graph" ],
                     "results": [
                         {
                             "p1": "OUGLTKDJVBRMIXSACWYPEQNHZF",
@@ -5868,7 +5870,7 @@
                     "day": 7,
                     "name": "Handy Haversacks",
                     "description": "Counting bags containing bags",
-                    "tags": [ "Maths", "RegEx" ],
+                    "tags": [ "Maths", "RegEx", "Graph" ],
                     "results": [
                         {
                             "p1": "229",
