@@ -177,8 +177,8 @@ def run_instructions(instructions: List[Instruction], width: int, height: int) -
         elif instruction_type == InstructionType.RotateRow:
             for position in filter(lambda p: p.imag == a, screen):
                 to_remove.append(position)
-                to_add.append(((position.real + b) %
-                               width) + position.imag * 1j)
+                to_add.append((position.real + b) %
+                               width + position.imag * 1j)
         else:
             for position in filter(lambda p: p.real == a, screen):
                 to_remove.append(position)
