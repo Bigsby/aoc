@@ -157,11 +157,11 @@ namespace AoC
                 .Select(layerIndex => pixelsArray[new Range(layerIndex * PIXELS_PER_LAYER, PIXELS_PER_LAYER * (layerIndex + 1))]);
         }
 
-        static int Part1(IEnumerable<int> pixels)
+        static int Part1(IEnumerable<int[]> layers)
         {
             var leastZeros = int.MaxValue;
             var result = 0;
-            foreach (var layer in GetImageLayers(pixels))
+            foreach (var layer in layers)
             {
                 var zeroCount = layer.Count(i => i == 0);
                 if (zeroCount < leastZeros)
@@ -184,12 +184,12 @@ namespace AoC
             return LETTERS[screenValue];
         }
 
-        static string Part2(IEnumerable<int> pixels)
+        static string Part2(IEnumerable<int[]> layers)
         {
             var xys = Enumerable.Range(0, IMAGE_HEIGHT)
                 .SelectMany(y => Enumerable.Range(0, IMAGE_WIDTH).Select(x => (x, y)));
             var image = xys.ToDictionary(pair => new Complex(pair.x, pair.y), _ => TRANSPARENT);
-            foreach (var layer in GetImageLayers(pixels))
+            foreach (var layer in layers)
                 foreach (var (x, y) in xys)
                 {
                     var position = new Complex(x, y);
@@ -203,10 +203,13 @@ namespace AoC
         }
 
         static (int, string) Solve(IEnumerable<int> pixels)
-            => (
-                Part1(pixels),
-                Part2(pixels)
+        {
+            var layers = GetImageLayers(pixels);
+            return (
+                Part1(layers),
+                Part2(layers)
             );
+        }
 
         static IEnumerable<int> GetInput(string filePath)
             => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
