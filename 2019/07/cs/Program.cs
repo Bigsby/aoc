@@ -20,7 +20,7 @@ namespace AoC
 
         public int Run()
         {
-            while (Running) Tick();
+            while (Tick());
             return _output.Dequeue();
         }
 
@@ -32,9 +32,9 @@ namespace AoC
 
         public void Connect(IntCodeComputer other) => _output = other._input;
 
-        public void Tick()
+        public bool Tick()
         {            
-            if (!Running) return;
+            if (!Running) return false;
             var instruction = _memory[_pointer];
             var (opCode, p1Mode, p2Mode) = (instruction % 100, (instruction / 100) % 10, (instruction / 1000) % 10);
             switch (opCode)
@@ -84,6 +84,7 @@ namespace AoC
                 default:
                     throw new Exception($"Unknown instruction {_pointer} {opCode}");
             }
+            return Running;
         }
         private int[] _memory;
         private Queue<int> _input;
@@ -93,15 +94,11 @@ namespace AoC
         private int GetParameter(int offset, int mode) 
         {
             var value =  _memory[_pointer + offset];
-            switch(mode)
-            {
-                case 0: // POSITION
-                    return _memory[value];
-                case 1: // IMMEDIATE
-                    return value;
-                default:
-                    throw new Exception($"Unrecognized parameter mode '{mode}'");
-            }
+            return mode switch {
+                0 => _memory[value],
+                1 => value,
+                _ => throw new Exception($"Unrecognized parameter mode '{mode}'")
+            };
         } 
     }
 
