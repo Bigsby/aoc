@@ -16,14 +16,11 @@ namespace AoC
         const string NOP = "nop";
         const string ACC = "acc";
 
-        static (int accumulator, int instructionPointer) RunInstruction(Instruction instruction, int accumulator, int instructionPointer)
-        {
-            var (mnemonic, argument) = instruction;
-            instructionPointer += mnemonic == JMP ? argument : 1;
-            if (mnemonic == ACC)
-                accumulator += argument;
-            return (accumulator, instructionPointer);
-        }
+        static (int, int) RunInstruction(Instruction instruction, int accumulator, int instructionPointer)
+            => (
+                instruction.mnemonic == ACC ? accumulator + instruction.argument : accumulator,
+                instructionPointer + (instruction.mnemonic == JMP ? instruction.argument : 1)
+            );
 
         static (bool success, int accumulator) RunBoot(IEnumerable<Instruction> boot)
         {
@@ -35,7 +32,8 @@ namespace AoC
             while (true)
             {
                 visited.Add(instructionPointer);
-                (accumulator, instructionPointer) = RunInstruction(bootArray[instructionPointer], accumulator, instructionPointer);
+                (accumulator, instructionPointer) = RunInstruction(bootArray[instructionPointer],
+                                                        accumulator, instructionPointer);
                 if (visited.Contains(instructionPointer))
                     return (false, accumulator);
                 if (instructionPointer == bootLength)
@@ -73,7 +71,8 @@ namespace AoC
         static Regex lineRegex = new Regex(@"^(nop|acc|jmp)\s\+?(-?\d+)$", RegexOptions.Compiled);
         static IEnumerable<Instruction> GetInput(string filePath)
             => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
-            : File.ReadAllLines(filePath).Select(line => {
+            : File.ReadAllLines(filePath).Select(line =>
+            {
                 var match = lineRegex.Match(line);
                 if (match.Success)
                     return new Instruction(match.Groups[1].Value, int.Parse(match.Groups[2].Value));
