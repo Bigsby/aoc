@@ -1524,7 +1524,8 @@
                     "day": 8,
                     "name": "Two-Factor Authentication",
                     "description": "Writing and reading LCD Screen and read charaters from pixels",
-                    "tags": [ "characters", "LCD" ],
+                    "tags": [ "Characters", "LCD", "Pixel", "Complex", "2D" ],
+                    "gotchas": [ "Represent pixels in charaters as binary" ],
                     "results": [
                         {
                             "p1": "121",
@@ -3720,7 +3721,8 @@
                     "day": 8,
                     "name": "Memory Maneuver",
                     "description": "Read headered framed data (list integers)",
-                    "tags": [ "Framed", "Data" ],
+                    "tags": [ "Framed", "Data", "Recursive" ],
+                    "gotchas": [ "Reverse list to pop last" ],
                     "results": [
                         {
                             "p1": "46578",
@@ -4823,6 +4825,7 @@
                     "name": "Space Image Format",
                     "description": "Reading image and read charaters from pixels",
                     "tags": [ "Characters", "LCD", "2D" ],
+                    "gotchas": [ "Represent pixels in charaters as binary" ],
                     "results": [
                         {
                             "p1": "1548",
