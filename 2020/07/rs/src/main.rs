@@ -44,21 +44,22 @@ fn process_inner_rules(text: String) -> Vec<Rule> {
     let inner_bags_regex = Regex::new(r"^(\d+)\s(.*)\sbags?$").unwrap();
     let text = text.strip_suffix(".").unwrap();
     if text == "no other bags" {
-        return vec![];
+        vec![]
+    } else {
+        text.split(", ")
+            .map(|inner_rule_text| {
+                inner_bags_regex
+                    .captures(inner_rule_text)
+                    .map(|cap| {
+                        (
+                            String::from(cap.get(2).unwrap().as_str()),
+                            cap.get(1).unwrap().as_str().parse().unwrap(),
+                        )
+                    })
+                    .unwrap()
+            })
+            .collect()
     }
-    text.split(", ")
-        .map(|inner_rule_text| {
-            inner_bags_regex
-                .captures(inner_rule_text)
-                .map(|cap| {
-                    (
-                        String::from(cap.get(2).unwrap().as_str()),
-                        cap.get(1).unwrap().as_str().parse().unwrap(),
-                    )
-                })
-                .unwrap()
-        })
-        .collect()
 }
 
 fn get_input(file_path: &String) -> Rules {
