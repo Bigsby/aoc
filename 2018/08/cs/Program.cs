@@ -28,9 +28,9 @@ namespace AoC
 
         static int GetValue(Node node)
         {
-            if (!node.children.Any())
-                return node.metadata.Sum();
             var childrenCount = node.children.Count();
+            if (childrenCount == 0)
+                return node.metadata.Sum();
             return node.metadata.Where(index => 
                 index > 0 && index <= childrenCount).Sum(index => GetValue(node.children.ElementAt(index - 1)));
         }
