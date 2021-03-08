@@ -25,22 +25,20 @@ namespace AoC
         LessOrEqual,
         GreatherOrEqual
     }
-    
+
     class Program
     {
         static bool IsConditionValid(int source, Operator oper, int value)
-        {
-            switch(oper)
+            => oper switch
             {
-                case Operator.Equal: return source == value;
-                case Operator.NotEqual: return source != value;
-                case Operator.LessThan: return source < value;
-                case Operator.GreaterThan: return source > value;
-                case Operator.LessOrEqual: return source <= value;
-                case Operator.GreatherOrEqual: return source >= value;
-                default: throw new Exception($"Unknow operator '{oper}'");
-            }
-        }
+                Operator.Equal => source == value,
+                Operator.NotEqual => source != value,
+                Operator.LessThan => source < value,
+                Operator.GreaterThan => source > value,
+                Operator.LessOrEqual => source <= value,
+                Operator.GreatherOrEqual => source >= value,
+                _ => throw new Exception($"Unknow operator '{oper}'")
+            };
 
         static (int, int) Solve(Instructions instructions)
         {
@@ -76,7 +74,8 @@ namespace AoC
         static Regex lineRegex = new Regex(@"^(?<target>[a-z]+)\s(?<direction>inc|dec)\s(?<amount>-?\d+)\sif\s(?<source>[a-z]+)\s(?<operator>==|!=|>=|<=|>|<)\s(?<value>-?\d+)$", RegexOptions.Compiled);
         static Instructions GetInput(string filePath)
             => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
-            : File.ReadAllLines(filePath).Select(line => {
+            : File.ReadAllLines(filePath).Select(line =>
+            {
                 var match = lineRegex.Match(line);
                 if (match.Success)
                     return (
