@@ -26,5 +26,5 @@ fn main() {
     println!("P1: {}", part1_result);
     println!("P1: {}", part2_result);
     println!();
-    println!("Time: {:7}", end);
+    println!("Time: {:.7}", end);
 }
