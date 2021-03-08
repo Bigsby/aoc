@@ -10,30 +10,24 @@ namespace AoC
 {
     class Program
     {
-        static int CountDifferences(IEnumerable<string> puzzleInput, Func<string, int> differencesFunc)
-            => puzzleInput.Sum(differencesFunc);
-
         static Regex hexaRegex = new Regex(@"\\x[0-9a-f]{2}", RegexOptions.Compiled);
         static int GetStringDifference1(string str)
         {
             var initialLength = str.Length;
-            var stripped = str.Replace(@"\\", "r");
-            stripped = stripped.Replace("\\\"", "r");
+            var stripped = str.Replace(@"\\", "r")
+                .Replace("\\\"", "r");
             stripped = hexaRegex.Replace(stripped, "r");
-            stripped = stripped.Trim('"');
-            return initialLength - stripped.Length;
+            return initialLength - stripped.Trim('"').Length;
         }
 
         static int GetStringDifference2(string str)
-        {
-            var initialLength = str.Length;
-            var escaped = Regex.Escape(str);
-            escaped = escaped.Replace("\"", "\\\"");
-            return 2 + escaped.Length - initialLength;
-        }
+            => 2 + Regex.Escape(str).Replace("\"", "\\\"").Length - str.Length;
 
-        static (int, int) Solve(IEnumerable<string> puzzleInput)
-            => (CountDifferences(puzzleInput, GetStringDifference1), CountDifferences(puzzleInput, GetStringDifference2));
+        static (int, int) Solve(IEnumerable<string> strings)
+            => (
+                strings.Sum(GetStringDifference1),
+                strings.Sum(GetStringDifference2)
+            );
 
         static IEnumerable<string> GetInput(string filePath)
             => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
