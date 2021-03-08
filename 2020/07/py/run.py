@@ -1,60 +1,64 @@
 #! /usr/bin/python3
 
-import sys, os, time
+import sys
+import os
+import time
 import re
 from typing import Dict, Iterable, List, Tuple
 
-Rule = Tuple[str,int]
-Rules = Dict[str,List[Rule]]
+Rule = Tuple[str, int]
+Rules = Dict[str, List[Rule]]
 REQUIRED_COLOR = "shiny gold"
 
 
-def getRulesContaining(color: str, rules: Rules) -> Iterable[str]:
-    for ruleColor, innerRules in rules.items():
-        if any(map(lambda innerRule: innerRule[0] == color, innerRules)):
-            yield ruleColor 
-            yield from getRulesContaining(ruleColor, rules)
+def get_rules_containing(color: str, rules: Rules) -> Iterable[str]:
+    for rule_color, inner_rules in rules.items():
+        if any(map(lambda inner_rule: inner_rule[0] == color, inner_rules)):
+            yield rule_color
+            yield from get_rules_containing(rule_color, rules)
 
 
-def getQuantityFromColor(color: str, rules: Rules) -> int:
-    return sum(map(lambda innerRule: innerRule[1] * ( 1 + getQuantityFromColor(innerRule[0], rules)), rules[color]))
+def get_quantity_from_color(color: str, rules: Rules) -> int:
+    return sum(map(lambda inner_rule: inner_rule[1] * (1 + get_quantity_from_color(inner_rule[0], rules)), rules[color]))
 
 
-def solve(rules: Rules) -> Tuple[int,int]:
+def solve(rules: Rules) -> Tuple[int, int]:
     return (
-        len(set(getRulesContaining(REQUIRED_COLOR, rules))),
-        getQuantityFromColor(REQUIRED_COLOR, rules)
+        len(set(get_rules_containing(REQUIRED_COLOR, rules))),
+        get_quantity_from_color(REQUIRED_COLOR, rules)
     )
 
 
-innerBagsRegex = re.compile(r"^(\d+)\s(.*)\sbags?$")
-def processInnerRule(text: str) -> Rule:
-    match = innerBagsRegex.match(text.strip())
+inner_bags_regex = re.compile(r"^(\d+)\s(.*)\sbags?$")
+bags_regex = re.compile(r"^(.*)\sbags contain\s(.*)$")
+
+
+def process_inner_rule(text: str) -> Rule:
+    match = inner_bags_regex.match(text.strip())
     if match:
         return (match.group(2), int(match.group(1)))
     raise Exception("Bad format", text)
 
 
-def processInnerRules(text: str) -> List[Rule] :
+def process_inner_rules(text: str) -> List[Rule]:
     if text == "no other bags":
         return []
-    return [ processInnerRule(innerText) for innerText in text.split(", ") ]
+    return [process_inner_rule(innerText) for innerText in text.split(", ")]
 
 
-bagsRegex = re.compile(r"^(.*)\sbags contain\s(.*)$")
-def processLine(line: str) -> Tuple[str,List[Rule]]:
-    match = bagsRegex.match(line)
+def process_line(line: str) -> Tuple[str, List[Rule]]:
+    match = bags_regex.match(line)
     if match:
-        return (match.group(1), processInnerRules(match.group(2).rstrip(".")))
+        return (match.group(1), process_inner_rules(match.group(2).rstrip(".")))
     raise Exception("Bad format", line)
 
 
-def getInput(filePath: str) -> Rules:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
-    
-    with open(filePath, "r") as file:
-        return { color: innerRules for color, innerRules in [ processLine(line) for line in file.readlines() ] }
+def get_input(file_path: str) -> Rules:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
+
+    with open(file_path, "r") as file:
+        return {color: innerRules for color, innerRules in [process_line(line) for line in file.readlines()]}
 
 
 def main():
@@ -62,10 +66,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part_result)
     print()
     print(f"Time: {end - start:.7f}")
 
