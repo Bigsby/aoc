@@ -1,79 +1,78 @@
 #! /usr/bin/python3
 
-import sys, os, time
+import sys
+import os
+import time
 from typing import List, Tuple
 import re
 
-Instruction = Tuple[str,int]
+Instruction = Tuple[str, int]
 JMP = "jmp"
 NOP = "nop"
 ACC = "acc"
 
 
-def runInstruction(op: Instruction, accumulator: int, instructionPointer: int) -> Tuple[int,int]:
+def run_instruction(op: Instruction, accumulator: int, instruction_pointer: int) -> Tuple[int, int]:
     mnemonic, argument = op
-    instructionPointer += argument if mnemonic == JMP else 1
-    if mnemonic == ACC:
-        accumulator += argument
-    return accumulator, instructionPointer
+    return accumulator + (argument if mnemonic == ACC else 0), \
+        instruction_pointer + (argument if mnemonic == JMP else 1)
 
 
-def runBoot(boot: List[Instruction]) -> Tuple[bool,int]:
+def run_boot(boot: List[Instruction]) -> Tuple[bool, int]:
     accumulator = 0
-    instructionPointer = 0
-    visited = []
-    bootLength = len(boot)
+    instruction_pointer = 0
+    visited: List[int] = []
+    boot_length = len(boot)
     while True:
-        visited.append(instructionPointer)
-        accumulator, instructionPointer = runInstruction(boot[instructionPointer], accumulator, instructionPointer)
-        if instructionPointer in visited:
+        visited.append(instruction_pointer)
+        accumulator, instruction_pointer = run_instruction(
+            boot[instruction_pointer], accumulator, instruction_pointer)
+        if instruction_pointer in visited:
             return False, accumulator
-        if instructionPointer == bootLength:
+        if instruction_pointer == boot_length:
             return True, accumulator
 
 
-def part1(boot: List[Instruction]) -> int:
-    return runBoot(boot)[1]
-
-
-def switchAndTest(index: int, boot: List[Instruction]) -> Tuple[bool,int]:
+def switch_and_test(index: int, boot: List[Instruction]) -> Tuple[bool, int]:
     boot = list(boot)
     mnemonic, argumant = boot[index]
     boot[index] = (NOP if mnemonic == JMP else NOP, argumant)
-    return runBoot(boot)
+    return run_boot(boot)
 
 
 def part2(boot: List[Instruction]) -> int:
     for index in range(len(boot)):
         if boot[index][0] == ACC:
             continue
-        success, accumulator = switchAndTest(index, boot)
+        success, accumulator = switch_and_test(index, boot)
         if success:
             return accumulator
     raise Exception("Valid boot not found")
 
 
-def solve(boot: List[Instruction]) -> Tuple[int,int]:
+def solve(boot: List[Instruction]) -> Tuple[int, int]:
     return (
-        runBoot(boot)[1],
+        run_boot(boot)[1],
         part2(boot)
     )
 
 
-lineRegex = re.compile(r"^(nop|acc|jmp)\s\+?(-?\d+)$")
-def parseLine(line: str) -> Instruction:
-    match = lineRegex.match(line)
+line_regex = re.compile(r"^(nop|acc|jmp)\s\+?(-?\d+)$")
+
+
+def parse_line(line: str) -> Instruction:
+    match = line_regex.match(line)
     if match:
-        return match.group(1) , int(match.group(2))
+        return match.group(1), int(match.group(2))
     raise Exception("Bad format", line)
 
 
-def getInput(filePath: str) -> List[Instruction]:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
-    
-    with open(filePath, "r") as file:
-        return [ parseLine(line) for line in file.readlines() ]
+def get_input(file_path: str) -> List[Instruction]:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
+
+    with open(file_path, "r") as file:
+        return [parse_line(line) for line in file.readlines()]
 
 
 def main():
@@ -81,10 +80,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
