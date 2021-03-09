@@ -16,9 +16,9 @@ namespace AoC
             NodeB = nodeB;
             Distance = distance;
         }
-        public readonly string NodeA { get; init; }
-        public readonly string NodeB { get; init; }
-        public readonly int Distance { get; init; }
+        public string NodeA { get; }
+        public string NodeB { get; }
+        public int Distance { get; }
     }
 
     class Program
@@ -34,9 +34,8 @@ namespace AoC
             return nodes;
         }
 
-        static int GetShortestPath(IEnumerable<Edge> edges, bool longest)
+        static int GetBestPath(IEnumerable<Edge> edges, IEnumerable<string> singleNodes, bool longest)
         {
-            var singleNodes = GetSingleNodes(edges);
             var length = singleNodes.Count();
             var stack = new Stack<(List<string> path, string current, int distance)>(singleNodes.Select(node => (new List<string>(new[] { node }), node, 0)));
             var bestDistance = longest ? 0 : int.MaxValue;
@@ -48,11 +47,11 @@ namespace AoC
                     var nextNode = current == edge.NodeA ? edge.NodeB : edge.NodeA;
                     if (path.Contains(nextNode))
                         continue;
-                    var newPath = path.ToList();
-                    newPath.Add(nextNode);
                     var newDistance = distance + edge.Distance;
                     if (!longest && newDistance > bestDistance)
                         continue;
+                    var newPath = path.ToList();
+                    newPath.Add(nextNode);
                     if (newPath.Count == length)
                         bestDistance = longest ? Math.Max(bestDistance, newDistance) : Math.Min(bestDistance, newDistance);
                     else
@@ -63,7 +62,11 @@ namespace AoC
         }
 
         static (int, int) Solve(IEnumerable<Edge> edges)
-            => (GetShortestPath(edges, false), GetShortestPath(edges, true));
+        {
+            var singleNodes = GetSingleNodes(edges);
+            return (GetBestPath(edges, singleNodes, false), GetBestPath(edges, singleNodes, true));
+        }
+
 
         static Regex lineRegex = new Regex(@"^(.*)\sto\s(.*)\s=\s(\d+)$", RegexOptions.Compiled);
         static IEnumerable<Edge> GetInput(string filePath)
