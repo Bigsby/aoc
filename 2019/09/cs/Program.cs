@@ -13,26 +13,26 @@ namespace AoC
             => _memory = memory.Select((value, index) => (value, index))
                 .ToDictionary(pair => (long)pair.index, pair => (long)pair.value);
 
-        public long this[long key] 
-        { 
+        public long this[long key]
+        {
             get
             {
                 if (!_memory.ContainsKey(key))
                     _memory[key] = 0;
                 return _memory[key];
             }
-            set => _memory[key] = value; 
+            set => _memory[key] = value;
         }
 
         private IDictionary<long, long> _memory;
     }
 
     class IntCodeComputer
-    {   
+    {
         public bool Running { get; private set; } = true;
 
         public IntCodeComputer(int[] memory, IEnumerable<int> input)
-        { 
+        {
             _memory = new Memory(memory);
             _input = new Queue<long>(input.Select(Convert.ToInt64));
             _output = new Queue<long>();
@@ -53,10 +53,14 @@ namespace AoC
         public void Connect(IntCodeComputer other) => _output = other._input;
 
         public void Tick()
-        {            
+        {
             if (!Running) return;
             var instruction = _memory[_pointer];
-            var (opCode, p1Mode, p2Mode, p3mode) = ((int)instruction % 100, (int)(instruction / 100) % 10, (int)(instruction / 1000) % 10, (int)(instruction / 10000) % 10);
+            var (opCode, p1Mode, p2Mode, p3mode) = (
+                (int)instruction % 100,
+                (int)(instruction / 100) % 10,
+                (int)(instruction / 1000) % 10,
+                (int)(instruction / 10000) % 10);
             switch (opCode)
             {
                 case 1: // ADD
@@ -115,7 +119,8 @@ namespace AoC
         private long _pointer;
         private long _base;
 
-        private long GetAddress(int offset, int mode) {
+        private long GetAddress(int offset, int mode)
+        {
             var value = _memory[_pointer + offset];
             switch (mode)
             {
@@ -128,10 +133,10 @@ namespace AoC
             }
         }
 
-        private long GetParameter(int offset, int mode) 
+        private long GetParameter(int offset, int mode)
         {
-            var value =  _memory[_pointer + offset];
-            switch(mode)
+            var value = _memory[_pointer + offset];
+            switch (mode)
             {
                 case 0: // POSITION
                     return _memory[value];
@@ -149,8 +154,8 @@ namespace AoC
     {
         static (long, long) Solve(int[] memory)
             => (
-                new IntCodeComputer(memory, new [] { 1 }).Run(),
-                new IntCodeComputer(memory, new [] { 2 }).Run()
+                new IntCodeComputer(memory, new[] { 1 }).Run(),
+                new IntCodeComputer(memory, new[] { 2 }).Run()
             );
 
         static int[] GetInput(string filePath)
