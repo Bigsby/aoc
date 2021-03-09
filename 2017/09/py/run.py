@@ -1,6 +1,8 @@
 #! /usr/bin/python3
 
-import sys, os, time
+import sys
+import os
+import time
 from typing import Tuple
 
 
@@ -9,37 +11,39 @@ GROUP_END = "}"
 GARBAGE_START = "<"
 GARBAGE_END = ">"
 ESCAPE = "!"
-def solve(stream: str) -> Tuple[int,int]:
-    groupScore = 0
-    garbageCount = 0
+
+
+def solve(stream: str) -> Tuple[int, int]:
+    group_score = 0
+    garbage_count = 0
     depth = 0
-    inGarbage = False
+    in_garbage = False
     escape = False
     for c in stream:
         if escape:
             escape = False
-        elif inGarbage:
+        elif in_garbage:
             if c == ESCAPE:
                 escape = True
             elif c == GARBAGE_END:
-                inGarbage = False
+                in_garbage = False
             else:
-                garbageCount += 1
+                garbage_count += 1
         elif c == GARBAGE_START:
-            inGarbage = True
+            in_garbage = True
         elif c == GROUP_START:
             depth += 1
         elif c == GROUP_END:
-            groupScore += depth
+            group_score += depth
             depth -= 1
-    return groupScore, garbageCount
+    return group_score, garbage_count
 
 
-def getInput(filePath: str) -> str:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
-    
-    with open(filePath, "r") as file:
+def get_input(file_path: str) -> str:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
+
+    with open(file_path, "r") as file:
         return file.read()
 
 
@@ -48,10 +52,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
