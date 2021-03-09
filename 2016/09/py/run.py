@@ -5,31 +5,31 @@ from typing import Tuple
 import re
 
 
-markerRegex = re.compile(r"(?P<prior>[A-Z]*)\((?P<length>\d+)x(?P<repeats>\d+)\)(?P<data>.*)")
-def getLength(data: str, recursive: bool) -> int:
-    match = markerRegex.match(data)
+marker_regex = re.compile(r"(?P<prior>[A-Z]*)\((?P<length>\d+)x(?P<repeats>\d+)\)(?P<data>.*)")
+def get_length(data: str, recursive: bool) -> int:
+    match = marker_regex.match(data)
     if match:
-        dataLength = int(match.group("length"))
+        data_length = int(match.group("length"))
         data = match.group("data")
         return len(match.group("prior")) + \
-            int(match.group("repeats")) * (getLength(data[:dataLength], True) if recursive else dataLength) + \
-            getLength(data[dataLength:], recursive)
+            int(match.group("repeats")) * (get_length(data[:data_length], True) if recursive else data_length) + \
+            get_length(data[data_length:], recursive)
     else:
         return len(data)
 
 
 def solve(data: str) -> Tuple[int,int]:
     return (
-        getLength(data, False), 
-        getLength(data, True)
+        get_length(data, False), 
+        get_length(data, True)
     )
 
 
-def getInput(filePath: str) -> str:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
+def get_input(file_path: str) -> str:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
     
-    with open(filePath, "r") as file:
+    with open(file_path, "r") as file:
         return file.read().strip()
 
 
@@ -38,10 +38,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
