@@ -8,66 +8,35 @@ using System.Text.RegularExpressions;
 
 namespace AoC
 {
-    class Marble
-    {
-        public Marble(int number, Marble previous, Marble next)
-        {
-            Number = number;
-            Previous = previous ?? this;
-            Previous.Next = this;
-            Next = next ?? this;
-            Next.Previous = this;
-        }
-        public int Number { get; init; }
-        public Marble Previous { get; set; }
-        public Marble Next { get; set; }
-    }
-
-    class Cycle<T>
-    {
-        private IEnumerator<T> _enumerator;
-        public Cycle(IEnumerable<T> source) => _enumerator = source.GetEnumerator();
-        public T Next()
-        {
-            if (!_enumerator.MoveNext())
-            {
-                _enumerator.Reset();
-                _enumerator.MoveNext();
-            }
-            return _enumerator.Current;
-        }
-    }
-
     class Program
     {
         static (long, long) Solve(Tuple<int, int> puzzleInput)
         {
-            var (playerCount, lastMarble) = puzzleInput;
-            var scores = Enumerable.Range(0, playerCount).ToDictionary(index => index + 1, _ => 0L);
-            var players = new Cycle<int>(scores.Keys);
-            var currentPlayer = players.Next();
-            var currentMarble = new Marble(0, null, null);
-            var nextNumber = 0;
-            var part1Result = 0L;
-            while (nextNumber <= lastMarble * 100)
+            var (elvesCount, lastMarble) = puzzleInput;
+            var scores = new long[elvesCount];
+            var circle = new LinkedList<int>();
+            var current_marble = circle.AddFirst(0);
+            var part1Score = 0L;
+            for (var nextMarble = 1; nextMarble <= lastMarble * 100; nextMarble++)
             {
-                nextNumber++;
-                if (nextNumber == lastMarble)
-                    part1Result = scores.Values.Max();
-                currentPlayer = players.Next();
-                if (nextNumber % 23 != 0)
-                    currentMarble = new Marble(nextNumber, currentMarble.Next, currentMarble.Next.Next);
+                if (nextMarble == lastMarble)
+                    part1Score = scores.Max();
+                if (nextMarble % 23 == 0)
+                {
+                    for (var rotate = 0; rotate < 7; rotate++)
+                        current_marble = current_marble.Previous ?? circle.Last;
+                    scores[nextMarble % elvesCount] += nextMarble + current_marble.Value;
+                    var toRemove = current_marble;
+                    current_marble = current_marble.Next ?? circle.First;
+                    circle.Remove(toRemove);
+                }
                 else
                 {
-                    foreach (var _ in Enumerable.Range(0, 6))
-                        currentMarble = currentMarble.Previous;
-                    var marbleToRemove = currentMarble.Previous;
-                    scores[currentPlayer] += nextNumber + marbleToRemove.Number;
-                    marbleToRemove.Previous.Next = currentMarble;
-                    currentMarble.Previous = marbleToRemove.Previous;
+                    current_marble = current_marble.Next ?? circle.First;
+                    current_marble = circle.AddAfter(current_marble, nextMarble);
                 }
             }
-            return (part1Result, scores.Values.Max());
+            return (part1Score, scores.Max());
         }
 
         static Regex inputRegex = new Regex(@"^(?<players>\d+) players; last marble is worth (?<last>\d+)");
