@@ -1,54 +1,41 @@
 #! /usr/bin/python3
 
-import sys, os, time
-from typing import Tuple, Union
+import sys
+import os
+import time
+from typing import Tuple
 import re
-from itertools import cycle
+from collections import deque
 
 
-class Marble():
-    def __init__(self, number: int, previous: Union['Marble',None], next: Union['Marble',None]):
-        self.number = number
-        self.previous = previous if previous else self
-        self.previous.next = self
-        self.next = next if next else self
-        self.next.previous = self
-
-
-def solve(puzzleInput: Tuple[int,int]) -> Tuple[int,int]:
-    playerCount, lastMarble = puzzleInput
-    scores = { player + 1: 0 for player in range(playerCount) }
-    players = cycle(scores.keys())
-    currentPlayer = next(players)
-    currentMarble = Marble(0, None, None)
-    nextNumber = 0
-    part1Result = 0
-    while nextNumber <= lastMarble * 100:
-        nextNumber += 1
-        if nextNumber == lastMarble:
-            part1Result = max(scores.values())
-        currentPlayer = next(players)
-        if nextNumber % 23:
-            currentMarble = Marble(nextNumber, currentMarble.next, currentMarble.next.next)
+def solve(puzzle_input: Tuple[int, int]) -> Tuple[int, int]:
+    elves_count, last_marble = puzzle_input
+    scores = [0] * elves_count
+    circle = deque([0])
+    part1_score = 0
+    for next_marble in range(1, 1 + last_marble * 100):
+        if next_marble == last_marble:
+            part1_score = max(scores)
+        if next_marble % 23:
+            circle.rotate(-1)
+            circle.append(next_marble)
         else:
-            backCount = 6
-            while backCount:
-                currentMarble = currentMarble.previous
-                backCount -= 1
-            marbleToRemove = currentMarble.previous
-            scores[currentPlayer] += nextNumber + marbleToRemove.number
-            marbleToRemove.previous.next = currentMarble
-            currentMarble.previous = marbleToRemove.previous
-    return part1Result, max(scores.values())
+            circle.rotate(7)
+            scores[next_marble % elves_count] += next_marble + circle.pop()
+            circle.rotate(-1)
+    return part1_score, max(scores)
 
 
-inputRegex = re.compile(r"^(?P<players>\d+) players; last marble is worth (?P<last>\d+)")
-def getInput(filePath: str) -> Tuple[int,int]:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
-    
-    with open(filePath, "r") as file:
-        match = inputRegex.match(file.read())
+input_regex = re.compile(
+    r"^(?P<players>\d+) players; last marble is worth (?P<last>\d+)")
+
+
+def get_input(file_path: str) -> Tuple[int, int]:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
+
+    with open(file_path, "r") as file:
+        match = input_regex.match(file.read())
         if match:
             return int(match.group("players")), int(match.group("last"))
         raise Exception("Bad input")
@@ -59,10 +46,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
