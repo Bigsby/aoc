@@ -12,12 +12,12 @@ namespace AoC
         {
             foreach (var testIndex in Enumerable.Range(numberIndex - 25, 25))
                 foreach (var pairIndex in Enumerable.Range(numberIndex - 25, 25))
-                    if (pairIndex != testIndex 
+                    if (pairIndex != testIndex
                         && numbers[testIndex] + numbers.ElementAt(pairIndex) == numbers[numberIndex])
                         return false;
             return true;
         }
-        
+
         static long GetWeakness(long[] numbers, long targetNumber)
         {
             for (var startIndex = 0; startIndex < numbers.Count(); startIndex++)
@@ -37,7 +37,7 @@ namespace AoC
         }
 
         static (long, long) Solve(long[] numbers)
-        {    
+        {
             var part1Result = numbers.ElementAt(
                 Enumerable.Range(25, numbers.Count() - 25).First(index => HasNoValidPair(index, numbers)));
             return (
