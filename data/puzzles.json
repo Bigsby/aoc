@@ -1557,7 +1557,7 @@
                     "day": 9,
                     "name": "Explosives in Cyberspace",
                     "description": "Header/frame based decompression of data",
-                    "tags": [ "Framed Data" ],
+                    "tags": [ "Framed Data", "Regex" ],
                     "results": [
                         {
                             "p1": "74532",
@@ -3767,6 +3767,7 @@
                     "name": "Marble Mania",
                     "description": "Circular game, inserting and removing items",
                     "tags": [ "Game", "Cycle List" ],
+                    "gotchas": [ "Queue with rotation" ],
                     "results": [
                         {
                             "p1": "422980",
