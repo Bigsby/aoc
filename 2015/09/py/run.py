@@ -1,66 +1,72 @@
 #! /usr/bin/python3
 
-import sys, os, time
+import sys
+import os
+import time
 from typing import List, Tuple
 import re
 
 
 class Edge():
-    def __init__(self, nodeA: str, nodeB: str, distance: str):
-        self.nodeA = nodeA
-        self.nodeB = nodeB
+    def __init__(self, node_a: str, node_b: str, distance: str):
+        self.node_a = node_a
+        self.node_b = node_b
         self.distance = int(distance)
 
 
-def getSingleNodes(edges: List[Edge]) -> List[str]:
+def get_single_nodes(edges: List[Edge]) -> List[str]:
     nodes = set()
     for path in edges:
-        nodes.add(path.nodeA)
-        nodes.add(path.nodeB)
+        nodes.add(path.node_a)
+        nodes.add(path.node_b)
     return list(nodes)
 
 
-def getShortestPath(edges: List[Edge], longest: bool) -> int:
-    singleNodes = getSingleNodes(edges)
-    length = len(singleNodes)
-    stack: List[Tuple[List[str],str,int]] = [ ([ node ], node, 0) for node in singleNodes ]
-    bestDistance = 0 if longest else sys.maxsize
+def get_best_path(edges: List[Edge], longest: bool) -> int:
+    single_nodes = get_single_nodes(edges)
+    length = len(single_nodes)
+    stack: List[Tuple[List[str], str, int]] = [
+        ([node], node, 0) for node in single_nodes]
+    best_distance = 0 if longest else sys.maxsize
     while stack:
         path, current, distance = stack.pop()
-        for edge in filter(lambda edge: edge.nodeA == current or edge.nodeB == current, edges):
-            nextNode = edge.nodeB if current == edge.nodeA else edge.nodeA
-            if nextNode in path:
+        for edge in filter(lambda edge: edge.node_a == current or edge.node_b == current, edges):
+            next_node = edge.node_b if current == edge.node_a else edge.node_a
+            if next_node in path:
                 continue
-            newPath = list(path)
-            newPath.append(nextNode)
-            newDistance = distance + edge.distance
-            if not longest and newDistance > bestDistance:
+            new_distance = distance + edge.distance
+            if not longest and new_distance > best_distance:
                 continue
-            if len(newPath) == length:
-                bestDistance = max(bestDistance, newDistance) if longest else min(bestDistance, newDistance)
+            new_path = list(path)
+            new_path.append(next_node)
+            if len(new_path) == length:
+                best_distance = max(best_distance, new_distance) if longest else min(
+                    best_distance, new_distance)
             else:
-                stack.append((newPath, nextNode, newDistance))
-    return bestDistance
- 
-
-def solve(edges: List[Edge]) -> Tuple[int,int]:
-    return (getShortestPath(edges, False), getShortestPath(edges, True))
+                stack.append((new_path, next_node, new_distance))
+    return best_distance
 
 
-lineRegex = re.compile(r"^(.*)\sto\s(.*)\s=\s(\d+)$")
-def parseLine(line: str) -> Edge:
-    match = lineRegex.match(line)
+def solve(edges: List[Edge]) -> Tuple[int, int]:
+    return (get_best_path(edges, False), get_best_path(edges, True))
+
+
+line_regex = re.compile(r"^(.*)\sto\s(.*)\s=\s(\d+)$")
+
+
+def parse_line(line: str) -> Edge:
+    match = line_regex.match(line)
     if match:
         return Edge(match.group(1), match.group(2), match.group(3))
     raise Exception("Bad format", line)
 
 
-def getInput(filePath: str) -> List[Edge]:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
-    
-    with open(filePath, "r") as file:
-        return [ parseLine(line) for line in file.readlines() ]
+def get_input(file_path: str) -> List[Edge]:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
+
+    with open(file_path, "r") as file:
+        return [parse_line(line) for line in file.readlines()]
 
 
 def main():
@@ -68,10 +74,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
