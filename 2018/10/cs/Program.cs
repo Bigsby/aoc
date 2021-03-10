@@ -304,7 +304,7 @@ namespace AoC
                 (0b100000L << CHARACTER_WIDTH * 8) +
                 (0b111111L << CHARACTER_WIDTH * 9), 'Z' }
         };
-    
+
         static void PrintPoints(PointPairs pointPairs)
         {
             var (_, minX, maxX, minY, maxY) = GetDimensions(pointPairs);
@@ -356,9 +356,12 @@ namespace AoC
             var points = pointPairs.Select(point => point.position);
             var ((width, _), minX, _, minY, _) = GetDimensions(pointPairs);
             var characterWidth = CHARACTER_WIDTH + CHARACTER_PADDING;
-            try 
+            try
             {
-                return (true, string.Join("", Enumerable.Range(0, (width / characterWidth) + 1).Select(index => GetCharacter(minX, minY, index, characterWidth, points))));
+                return (true,
+                    string.Join("",
+                        Enumerable.Range(0, (width / characterWidth) + 1)
+                            .Select(index => GetCharacter(minX, minY, index, characterWidth, points))));
             }
             catch
             {
@@ -386,7 +389,8 @@ namespace AoC
         static Regex lineRegex = new Regex(@"^position=<\s?(?<positionX>-?\d+),\s+(?<positionY>-?\d+)>\svelocity=<\s?(?<velocityX>-?\d+),\s+?(?<velocityY>-?\d+)>$", RegexOptions.Compiled);
         static PointPairs GetInput(string filePath)
             => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
-            : File.ReadAllLines(filePath).Select(line => {
+            : File.ReadAllLines(filePath).Select(line =>
+            {
                 var match = lineRegex.Match(line);
                 if (match.Success)
                     return (
