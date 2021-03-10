@@ -16,7 +16,7 @@ namespace AoC
     {
         const int LOW_VALUE = 17;
         const int HIGH_VALUE = 61;
-        static int[] TARGET_OUTPUTS = new [] { 0, 1, 2 };
+        static int[] TARGET_OUTPUTS = new[] { 0, 1, 2 };
         static (int, int) Solve(Instructions instructions)
         {
             var (valueInstructions, compareInstructions) = instructions;
@@ -24,7 +24,7 @@ namespace AoC
             int part1Result = 0, part2Result = 0;
             foreach (var valueInstruction in valueInstructions)
             {
-                if (! bots.ContainsKey(valueInstruction.bot))
+                if (!bots.ContainsKey(valueInstruction.bot))
                     bots[valueInstruction.bot] = new List<int>();
                 bots[valueInstruction.bot].Add(valueInstruction.value);
             }
@@ -51,8 +51,7 @@ namespace AoC
                 }
                 else
                     outputs[compareInstruction.high] = highChip;
-                bots[bot].Remove(lowChip);
-                bots[bot].Remove(highChip);
+                bots.Remove(bot);
                 if (part1Result == 0 && lowChip == LOW_VALUE && highChip == HIGH_VALUE)
                     part1Result = bot;
                 if (part2Result == 0 && TARGET_OUTPUTS.All(output => outputs.ContainsKey(output)))
