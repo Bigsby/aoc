@@ -2,24 +2,32 @@
 using static System.Console;
 using System.IO;
 using System.Diagnostics;
-using System.Text.RegularExpressions;
 using System.Text;
 
 namespace AoC
 {
     class Program
     {
-        static Regex testRegex = new Regex(@"(\d)\1+|\d", RegexOptions.Compiled);
         static string GetNextValue(string value)
         {
-            var sequeces = new StringBuilder();
-            foreach (Match match in testRegex.Matches(value))
+            var sequences = new StringBuilder();
+            var last_digit = '\0';
+            var length = 0;
+            foreach (var c in value)
             {
-                var group = match.Groups[0].Value;
-                sequeces.Append(group.Length);
-                sequeces.Append(group[0]);
+                if (c == last_digit)
+                    length++;
+                else
+                {
+                    sequences.Append(length);
+                    sequences.Append(last_digit);
+                    last_digit = c;
+                    length = 1;
+                }
             }
-            return sequeces.ToString();
+            sequences.Append(length);
+            sequences.Append(last_digit);
+            return sequences.ToString()[2..];
         }
 
         static (int, int) Solve(string puzzleInput)
@@ -34,10 +42,10 @@ namespace AoC
             }
             return (part1, currentValue.Length);
         }
-            
+
         static string GetInput(string filePath)
-            => !File.Exists(filePath) ? throw new FileNotFoundException(filePath) 
-            : File.ReadAllText(filePath);
+            => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
+            : File.ReadAllText(filePath).Trim();
 
         static void Main(string[] args)
         {
@@ -51,6 +59,5 @@ namespace AoC
             WriteLine();
             WriteLine($"Time: {(double)watch.ElapsedTicks / 100 / TimeSpan.TicksPerSecond:f7}");
         }
-
     }
 }
