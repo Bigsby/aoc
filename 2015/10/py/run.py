@@ -1,35 +1,43 @@
 #! /usr/bin/python3
 
-import sys, os, time
-from typing import Tuple
-import re
+import sys
+import os
+import time
+from typing import List, Tuple
 
 
-testRegex = re.compile(r"(\d)\1+|\d")
-def getNextValue(value: str) -> str:
-    sequences = []
-    for match in testRegex.finditer(value):
-        group = match.group()
-        sequences.append(str(len(group)))
-        sequences.append(group[0])
-    return "".join(sequences)
+def get_next_value(value: str) -> str:
+    sequences: List[str] = []
+    last_digit = "\0"
+    length = 0
+    for c in value:
+        if c == last_digit:
+            length += 1
+        else:
+            sequences.append(str(length))
+            sequences.append(last_digit)
+            last_digit = c
+            length = 1
+    sequences.append(str(length))
+    sequences.append(last_digit)
+    return "".join(sequences[2:])
 
 
-def solve(puzzleInput: str) -> Tuple[int,int]:
-    currentValue = puzzleInput
+def solve(puzzle_input: str) -> Tuple[int, int]:
+    current_value = puzzle_input
     part1 = 0
     for turn in range(50):
         if turn == 40:
-            part1 = len(currentValue)
-        currentValue = getNextValue(currentValue)
-    return (part1, len(currentValue))
+            part1 = len(current_value)
+        current_value = get_next_value(current_value)
+    return (part1, len(current_value))
 
 
-def getInput(filePath: str) -> str:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
-    
-    with open(filePath, "r") as file:
+def get_input(file_path: str) -> str:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
+
+    with open(file_path, "r") as file:
         return file.read().strip()
 
 
@@ -38,10 +46,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
