@@ -20,16 +20,15 @@ namespace AoC
                 foreach (var _ in Enumerable.Range(0, length))
                 {
                     toReverse.Push(marks.ElementAt(reverseMark));
-                    reverseMark = reverseMark < MARKS_COUNT - 1 ? reverseMark + 1 : 0;
+                    reverseMark = (reverseMark + 1) % MARKS_COUNT;
                 }
                 reverseMark = currentMark;
                 foreach (var _ in Enumerable.Range(0, length))
                 {
                     marks[reverseMark] = toReverse.Pop();
-                    reverseMark = reverseMark < MARKS_COUNT - 1 ? reverseMark + 1 : 0;
+                    reverseMark = (reverseMark + 1) % MARKS_COUNT;
                 }
-                foreach (var _ in Enumerable.Range(0, length + skip))
-                    currentMark = currentMark < MARKS_COUNT - 1 ? currentMark + 1 : 0;
+                currentMark = (currentMark + length + skip) % MARKS_COUNT;
                 skip++;
             }
             return (marks, currentMark, skip);
@@ -43,7 +42,7 @@ namespace AoC
             return marks[0] * marks[1];
         }
 
-        static int[] SUFFIX = new [] { 17, 31, 73, 47, 23 };
+        static int[] SUFFIX = new[] { 17, 31, 73, 47, 23 };
         static string Part2(string puzzleInput)
         {
             var lengths = puzzleInput.Select(c => (int)c);
