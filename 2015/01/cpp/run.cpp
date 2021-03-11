@@ -65,7 +65,6 @@ vector<int> getInput(char *filePath)
     return directions;
 }
 
-
 int main(int argc, char *argv[]) {
     if (argc != 2)
         throw runtime_error("Please, add input file path as parameter");
