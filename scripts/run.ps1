@@ -16,6 +16,10 @@ $languages = @{
     "cpp" = @{
         "prefix" = "make -f ";
         "sufix" = "cpp/MAKEFILE INPUT="
+    };
+    "js" = @{
+        "prefix" = "node";
+        "sufix" = "js/run.js "
     }
 }
 
