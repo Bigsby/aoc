@@ -66,14 +66,15 @@ fn get_input(file_path: &String) -> Vec<Instruction> {
 }
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
+    let args: Vec<String> = std::env::args().collect();
     if args.len() != 2 {
         panic!("Please, add input file path as parameter");
     }
-    let now = Instant::now();
+    let now = std::time::Instant::now();
     let (part1_result, part2_result) = solve(&get_input(&args[1]));
+    let end = now.elapsed().as_secs_f32();
     println!("P1: {}", part1_result);
-    println!("P1: {}", part2_result);
+    println!("P2: {}", part2_result);
     println!();
-    println!("Time: {:?}", now.elapsed().as_secs_f32());
+    println!("Time: {:.7}", end);
 }
