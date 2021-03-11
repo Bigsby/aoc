@@ -94,4 +94,6 @@ function main() {
     console.log(`Time: ${((end[0] * 1e9 + end[1]) / 1e9).toFixed(7)}`)
 }
 
-main()
+if (require.main === module) {
+    main()
+}
