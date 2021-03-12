@@ -1,7 +1,3 @@
-use std::env;
-use std::fs;
-use std::time::{Instant};
-
 fn part2(directions: &Vec<i32>) -> usize {
     let mut current_floor: i32 = 0;
     for (index, direction) in directions.iter().enumerate() {
@@ -18,7 +14,7 @@ fn solve(directions: &Vec<i32>) -> (i32,usize) {
 }
 
 fn get_input(file_path: &String) -> Vec<i32> {
-    fs::read_to_string(file_path).expect("Error reading input file!").trim()
+    std::fs::read_to_string(file_path).expect("Error reading input file!").trim()
         .chars().map(|c| { 
             match c {
                 '(' => 1,
