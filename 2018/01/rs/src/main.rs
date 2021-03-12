@@ -1,6 +1,3 @@
-use std::env;
-use std::fs;
-use std::time::{Instant};
 use std::collections::HashSet;
 
 fn part2(changes: &Vec<i32>) -> i32 {
@@ -20,7 +17,7 @@ fn solve(changes: &Vec<i32>) -> (i32, i32) {
 }
 
 fn get_input(file_path: &String) -> Vec<i32> {
-    fs::read_to_string(file_path).expect("Error reading input file!").split("\n")
+    std::fs::read_to_string(file_path).expect("Error reading input file!").split("\n")
         .map(|line| line.parse().expect(&format!("Unable to parse '{}'", line))).collect()
 }
 
