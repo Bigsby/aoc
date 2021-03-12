@@ -1,6 +1,3 @@
-use std::env;
-use std::fs;
-use std::time::{Instant};
 use regex::Regex;
 use num::complex::Complex;
 
@@ -45,7 +42,7 @@ fn solve(instructions: &Vec<Instruction>) -> (i32,i32) {
 
 fn get_input(file_path: &String) -> Vec<Instruction> {
     let re = Regex::new(r"(?P<direction>[RL])(?P<distance>\d+),?\s?").unwrap();
-    fs::read_to_string(file_path).expect("Error reading input file").split(" ")
+    std::fs::read_to_string(file_path).expect("Error reading input file").split(" ")
         .map(|split| re.captures(split)
             .and_then(|cap| Some(
                     (
