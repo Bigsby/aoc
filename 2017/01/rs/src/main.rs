@@ -1,6 +1,4 @@
-use std::env;
 use std::fs;
-use std::time::{Instant};
 
 fn get_count(numbers: &Vec<u32>, index_offset: usize) -> u32 {
     (0..numbers.len()).fold(0, |count, index| 
