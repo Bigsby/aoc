@@ -83,8 +83,8 @@ fi
 for language in $languages_to_run
 do
     IFS="|" read -r -a parts <<< ${languages[$language]}
-    echo "$year/`printf %02d $day` $language"
-    command_to_run="${parts[0]} $DIR/../$year/`printf %02d $day`/${parts[1]}$input_file"
+    echo "$year/$day $language"
+    command_to_run="${parts[0]} $DIR/../$year/$day/${parts[1]}$input_file"
     if [[ "$time_execution" == "1" ]]; then
         { time $command_to_run ; } 2>&1
     else
