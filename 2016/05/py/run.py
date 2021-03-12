@@ -17,11 +17,9 @@ def solve(door_id: str) -> Tuple[str,str]:
         if result.startswith(PREFIX):
             if len(password1) < 8:
                 password1 += result[5]
-                print("p1", result[5])
             digit_index = result[5]
             if digit_index in missing_indexes:
                 password2[int(digit_index)] = result[6]
-                print("p1", result[6])
                 missing_indexes.remove(digit_index)
         index += 1
     return (
