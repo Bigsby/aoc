@@ -7,7 +7,7 @@ from functools import reduce
 MARKS_COUNT = 256
 def runLengths(marks:List[int], lengths: List[int], currentMark: int, skip: int) -> Tuple[List[int],int,int]:
     for length in lengths:
-        toReverse = []
+        toReverse: List[int] = []
         reverseMark = currentMark
         for _ in range(length):
             toReverse.append(marks[reverseMark])
