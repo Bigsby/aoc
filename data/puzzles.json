@@ -580,6 +580,7 @@
                     "name": "Elves Look, Elves Say",
                     "description": "Look-and-say",
                     "tags": [ "Look/Say" ],
+                    "comments": [ "Optimize Rust" ],
                     "results": [
                         {
                             "p1": "492982",
@@ -2703,7 +2704,7 @@
                     "day": 10,
                     "name": "Knot Hash",
                     "description": "Reverse ranges of numbers in list",
-                    "tags": [ "Maths", "Knots" ],
+                    "tags": [ "Maths", "Knots", "XOR", "Reverse Slice" ],
                     "results": [
                         {
                             "p1": "9656",
@@ -3811,7 +3812,8 @@
                     "day": 10,
                     "name": "The Stars Align",
                     "description": "Reading Screen and read charaters from pixels that move",
-                    "tags": [ "Characters", "LCD", "2D" ],
+                    "tags": [ "Characters", "LCD", "2D", "Complex" ],
+                    "gotchas": [ "Represent pixels in charaters as binary" ],
                     "results": [
                         {
                             "p1": "ZZCBGGCJ",
