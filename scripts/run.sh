@@ -2,7 +2,7 @@ declare -A languages=(
     ["py"]="|py/run.py "
     ["cs"]="dotnet run -p|cs/run.csproj " 
     ["rs"]="cargo run --quiet --manifest-path|rs/Cargo.toml "
-    ["cpp"]="make -f |cpp/MAKEFILE INPUT="
+    ["cpp"]="make -f |cpp/make INPUT="
     ["js"]="node|js/run.js "
 )
 
