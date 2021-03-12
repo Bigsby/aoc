@@ -34,7 +34,7 @@ foreach ($year in 2015..2016) {
         foreach ($language in $languagesToRun) {
             Write-Output "$year/$paddedDay $($language)"
             $sw = [Diagnostics.Stopwatch]::StartNew()
-            $output = Invoke-Expression "$($languages[$language]["prefix"]) ../$year/$paddedDay/$($languages[$language]["sufix"])'../$year/$paddedDay/input.txt'"
+            $output = Invoke-Expression "$($languages[$language]["prefix"]) ../$year/$paddedDay/$($languages[$language]["sufix"])'../$year/$paddedDay/input0.txt'"
             $sw.Stop()
             $duration = $sw.Elapsed
             Write-Output $output

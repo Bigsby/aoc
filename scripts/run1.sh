@@ -80,10 +80,11 @@ for language in $languages_to_run
 do
     IFS="|" read -r -a parts <<< ${languages[$language]}
     echo "$year/`printf %02d $day` $language"
+    command_to_run="${parts[0]} $DIR/../$year/`printf %02d $day`/${parts[1]}$DIR/../$year/`printf %02d $day`/input0.txt"
     if [[ "$time_execution" == "1" ]]; then
-        { time ${parts[0]} $DIR/../$year/`printf %02d $day`/${parts[1]}"$DIR/../$year/`printf %02d $day`/input.txt" ; } 2>&1
+        { time $command_to_run ; } 2>&1
     else
-        ${parts[0]} $DIR/../$year/`printf %02d $day`/${parts[1]}"$DIR/../$year/`printf %02d $day`/input.txt"
+        $command_to_run
     fi
     echo ""
 done
