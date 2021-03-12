@@ -7,71 +7,71 @@ import math
 Asteroid = complex
 
 
-def getVisibleCount(asteroid: Asteroid, asteroids: List[Asteroid], maxX: int, maxY: int) -> int:
+def get_visible_count(asteroid: Asteroid, asteroids: List[Asteroid], maxX: int, maxY: int) -> int:
     asteroids = list(asteroids)
     asteroids.remove(asteroid)
-    visibleCount = 0
+    visible_count = 0
     while asteroids:
-        asteroidToCheck = asteroids.pop()
-        visibleCount += 1
-        delta: complex = asteroidToCheck - asteroid
+        asteroid_to_check = asteroids.pop()
+        visible_count += 1
+        delta: complex = asteroid_to_check - asteroid
         jump = delta / math.gcd(abs(int(delta.real)), abs(int(delta.imag)))
-        asteroidToCheck = asteroid + jump
-        while asteroidToCheck.real >= 0 and asteroidToCheck.real <= maxX \
-            and asteroidToCheck.imag >= 0 and asteroidToCheck.imag <= maxY:
-            if asteroidToCheck in asteroids:
-                asteroids.remove(asteroidToCheck)
-            asteroidToCheck += jump
-    return visibleCount
+        asteroid_to_check = asteroid + jump
+        while asteroid_to_check.real >= 0 and asteroid_to_check.real <= maxX \
+            and asteroid_to_check.imag >= 0 and asteroid_to_check.imag <= maxY:
+            if asteroid_to_check in asteroids:
+                asteroids.remove(asteroid_to_check)
+            asteroid_to_check += jump
+    return visible_count
 
 
 def part1(asteroids: List[Asteroid]) -> Tuple[int,Asteroid]:
-    maxX = int(max(map(lambda asteroid: asteroid.real, asteroids)))
-    maxY = int(max(map(lambda asteroid: asteroid.imag, asteroids)))
-    maxVisibleCount = 0
-    monitoringStation = -1 -1j
+    max_x = int(max(map(lambda asteroid: asteroid.real, asteroids)))
+    max_y = int(max(map(lambda asteroid: asteroid.imag, asteroids)))
+    max_visible_count = 0
+    monitoring_station = -1 -1j
     for asteroid in asteroids:
-        visibleCount = getVisibleCount(asteroid, asteroids, maxX, maxY)
-        if visibleCount > maxVisibleCount:
-            maxVisibleCount = visibleCount
-            monitoringStation = asteroid
-    return maxVisibleCount, monitoringStation
+        visible_count = get_visible_count(asteroid, asteroids, max_x, max_y)
+        if visible_count > max_visible_count:
+            max_visible_count = visible_count
+            monitoring_station = asteroid
+    return max_visible_count, monitoring_station
 
 
-def part2(asteroids: List[Asteroid], monitoringStation: Asteroid) -> int:
-    asteroidAngleDistances: Dict[Asteroid,Tuple[float,int]] = {}
-    asteroids.remove(monitoringStation)
+def part2(asteroids: List[Asteroid], monitoring_station: Asteroid) -> int:
+    asteroid_angle_distances: Dict[Asteroid,Tuple[float,int]] = {}
+    asteroids.remove(monitoring_station)
     for asteroid in asteroids:
-        delta = asteroid - monitoringStation
+        delta = asteroid - monitoring_station
         angle = math.atan2(delta.real, delta.imag) + math.pi
         distance = int(abs(delta.real) + abs(delta.imag))
-        asteroidAngleDistances[asteroid] = (angle, distance)
-    targetCount = 1
+        asteroid_angle_distances[asteroid] = (angle, distance)
+    target_count = 1
     angle = 2 * math.pi
-    lastRemoved = -1 -1j
-    while targetCount <= 200:
-        asteroid, (angle, _) = min(asteroidAngleDistances.items(), \
-            key=lambda kv: (angle == kv[1][0] or targetCount == 1, (angle - kv[1][0]) % (2 * math.pi), kv[1][1]))
-        del asteroidAngleDistances[asteroid]
-        lastRemoved = asteroid
-        targetCount += 1
-    return int(lastRemoved.real) * 100 + int(lastRemoved.imag)
+    last_removed = -1 -1j
+    while target_count <= 200:
+        asteroid, (angle, _) = min(asteroid_angle_distances.items(), \
+            key=lambda kv: (angle == kv[1][0] or target_count == 1, (angle - kv[1][0]) % (2 * math.pi), kv[1][1]))
+        del asteroid_angle_distances[asteroid]
+        last_removed = asteroid
+        target_count += 1
+    return int(last_removed.real) * 100 + int(last_removed.imag)
 
 
 def solve(asteroids: List[Asteroid]) -> Tuple[int,int]:
-    part1Result, monitoringStation = part1(asteroids)
+    max_visible_count, monitoring_station = part1(asteroids)
     return (
-        part1Result,
-        part2(asteroids, monitoringStation)
+        max_visible_count,
+        part2(asteroids, monitoring_station)
     )
 
 
-def getInput(filePath: str) -> List[Asteroid]:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
+def get_input(file_path: str) -> List[Asteroid]:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
     
-    with open(filePath, "r") as file:
-        asteroids = []
+    with open(file_path, "r") as file:
+        asteroids: List[Asteroid] = []
         for (y, line) in enumerate(file.readlines()):
             for (x, c) in enumerate(line.strip()):
                 if c == "#":
@@ -84,10 +84,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
