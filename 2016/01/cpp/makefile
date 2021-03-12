@@ -4,7 +4,9 @@ ifeq ($(INPUT),)
 INPUT := $(mkfile_dir)../input.txt
 endif
 
-run:
-	@g++ $(mkfile_dir)run.cpp
+run: build
 	@./a.out "$(INPUT)"
 	@rm ./a.out
+
+build: $(mkfile_dir)run.cpp
+	@g++ $<
