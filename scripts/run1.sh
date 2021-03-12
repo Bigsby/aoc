@@ -28,7 +28,7 @@ show_usage () {
 }
 
 time_execution=0
-input_file="input.txt"
+input_file=""
 puzzle=""
 if [[ "$1" ]] ; then
     puzzle="$1"
@@ -76,11 +76,15 @@ if [[ "$language" ]] ; then
 fi
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+if [[ -z "$input_file" ]]; then
+    input_file="$DIR/../$year/`printf %02d $day`/input0.txt"
+fi
+
 for language in $languages_to_run
 do
     IFS="|" read -r -a parts <<< ${languages[$language]}
     echo "$year/`printf %02d $day` $language"
-    command_to_run="${parts[0]} $DIR/../$year/`printf %02d $day`/${parts[1]}$DIR/../$year/`printf %02d $day`/input0.txt"
+    command_to_run="${parts[0]} $DIR/../$year/`printf %02d $day`/${parts[1]}$input_file"
     if [[ "$time_execution" == "1" ]]; then
         { time $command_to_run ; } 2>&1
     else
