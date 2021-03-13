@@ -36,39 +36,6 @@
                         }
                     }
                 },
-                "times": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "required": [
-                            "environment",
-                            "inputs"
-                        ],
-                        "additionalProperties": false,
-                        "properties": {
-                            "environment": {
-                                "type": "string"
-                            },
-                            "inputs": {
-                                "type": "array",
-                                "items": {
-                                    "type": "object",
-                                    "required": [
-                                        "p1"
-                                    ],
-                                    "properties": {
-                                        "p1": {
-                                            "type": "number"
-                                        },
-                                        "p2": {
-                                            "type": "number"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
                 "tags": {
                     "type": "array",
                     "items": {
@@ -107,33 +74,6 @@
                     }
                 }
             }
-        },
-        "environment": {
-            "required": [
-                "id",
-                "cpu",
-                "os",
-                "language"
-            ],
-            "additionalProperties": false,
-            "properties": {
-                "id": {
-                    "type": "string"
-                },
-                "cpu": {
-                    "type": "string"
-                },
-                "os": {
-                    "type": "string"
-                },
-                "language": {
-                    "type": "string",
-                    "examples": [
-                        "py",
-                        "cs"
-                    ]
-                }
-            }
         }
     },
     "required": [
@@ -150,10 +90,10 @@
                 "$ref": "#/definitions/year"
             }
         },
-        "environments": {
+        "inputs": {
             "type": "array",
             "items": {
-                "$ref": "#/definitions/environment"
+                "type": "string"
             }
         }
     }
