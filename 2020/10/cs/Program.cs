@@ -27,15 +27,14 @@ namespace AoC
         }
 
         static int CalculateCombinations(int sequence)
-        {
-            if (sequence < 3)
-                return 1;
-            if (sequence == 3)
-                return 2;
-            return CalculateCombinations(sequence - 1)
+            => sequence switch
+            {
+                < 3 => 1,
+                3 => 2,
+                _ => CalculateCombinations(sequence - 1)
                 + CalculateCombinations(sequence - 2)
-                + CalculateCombinations(sequence - 3);
-        }
+                + CalculateCombinations(sequence - 3)
+            };
 
         static long Part2(List<int> adapters)
         {
