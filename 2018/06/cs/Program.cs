@@ -24,15 +24,16 @@ namespace AoC
         static int FindClosestLocation(Complex mapLocation, IEnumerable<Complex> locations)
         {
             var closest = -1;
-            var closesDistance = int.MaxValue;
+            var closestDistance = int.MaxValue;
             foreach (var (location, index) in locations.Select((location, index) => (location, index)))
             {
                 var distance = GetManhatanDistance(mapLocation, location);
-                if (distance < closesDistance)
+                if (distance < closestDistance)
                 {
                     closest = index;
-                    closesDistance = distance;
-                }
+                    closestDistance = distance;
+                } else if (distance == closestDistance)
+                    closest = -1;
             }
             return closest;
         }
@@ -48,7 +49,8 @@ namespace AoC
                 var mapLocation = new Complex(x, y);
                 var closest = FindClosestLocation(mapLocation, locations);
                 mapLocations[mapLocation] = closest;
-                locationCounts[closest]++;
+                if (closest != -1)
+                    locationCounts[closest]++;
             }
             var edgeLocations = new HashSet<int>();
             foreach (var y in Enumerable.Range(startY, endY - startY + 1))

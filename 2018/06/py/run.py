@@ -18,12 +18,14 @@ def get_map_edges(locations: List[complex]) -> Tuple[int, int, int, int]:
 
 def find_closest_location(map_location: complex, locations: List[complex]) -> int:
     closest = -1
-    closes_distance = sys.maxsize
+    closest_distance = sys.maxsize
     for index, location in enumerate(locations):
         distance = get_manhatan_distance(map_location, location)
-        if distance < closes_distance:
+        if distance < closest_distance:
             closest = index
-            closes_distance = distance
+            closest_distance = distance
+        elif distance == closest_distance:
+            closest = -1
     return closest
 
 
@@ -36,7 +38,8 @@ def part1(locations: List[complex]) -> int:
         map_location = map_location_x + map_location_y * 1j
         closest = find_closest_location(map_location, locations)
         map_locations[map_location] = closest
-        location_counts[closest] += 1
+        if closest != -1:
+            location_counts[closest] += 1
     
     edge_locations: Set[int] = set()
     for y in range(start_y, end_y + 1):

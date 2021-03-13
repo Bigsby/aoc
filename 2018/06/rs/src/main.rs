@@ -16,14 +16,16 @@ fn get_map_edges(locations: &Vec<Location>) -> (i32, i32, i32, i32) {
     )
 }
 
-fn find_closest_location(map_location: &Location, locations: &Vec<Location>) -> usize {
-    let mut closest = 0;
+fn find_closest_location(map_location: &Location, locations: &Vec<Location>) -> Option<usize> {
+    let mut closest = None;
     let mut closest_distance = i32::MAX;
     for (index, location) in locations.iter().enumerate() {
         let distance = get_manhatan_distance(&map_location, location);
         if distance < closest_distance {
-            closest = index;
+            closest = Some(index);
             closest_distance = distance;
+        } else if distance == closest_distance {
+            closest = None;
         }
     }
     closest
@@ -31,14 +33,16 @@ fn find_closest_location(map_location: &Location, locations: &Vec<Location>) -> 
 
 fn part1(locations: &Vec<Location>) -> usize {
     let (start_x, end_x, start_y, end_y) = get_map_edges(locations);
-    let mut map_locations = HashMap::new();
+    let mut map_locations: HashMap<Location, Option<usize>> = HashMap::new();
     let mut location_counts: Vec<usize> = (0..locations.len()).map(|_| 0).collect();
     for map_location_x in start_x..(end_x + 1) {
         for map_location_y in start_y..(end_y + 1) {
             let map_location = Complex::new(map_location_x, map_location_y);
             let closest = find_closest_location(&map_location, locations);
-            *map_locations.entry(map_location).or_insert(0) = closest;
-            location_counts[closest] += 1;
+            *map_locations.entry(map_location).or_insert(None) = closest;
+            if let Some(location) = closest {
+                location_counts[location] += 1;
+            }
         }
     }
     let mut edge_locations = HashSet::new();
@@ -50,16 +54,16 @@ fn part1(locations: &Vec<Location>) -> usize {
         edge_locations.insert(map_locations[&Complex::new(x, start_y)]);
         edge_locations.insert(map_locations[&Complex::new(x, end_y)]);
     }
-    *location_counts
-        .iter()
+    location_counts
+        .into_iter()
         .enumerate()
-        .filter(|(index, _)| !edge_locations.contains(&index))
+        .filter(|(index, _)| !edge_locations.contains(&Some(*index)))
         .map(|pair| pair.1)
         .max()
         .unwrap()
 }
 
-const MAX_DISTANCE: i32 = 10000;
+const MAX_DISTANCE: i32 = 10_000;
 fn part2(locations: &Vec<Location>) -> usize {
     let (start_x, end_x, start_y, end_y) = get_map_edges(locations);
     let mut valid_locations_count = 0;
@@ -105,7 +109,7 @@ fn main() {
     let (part1_result, part2_result) = solve(&get_input(&args[1]));
     let end = now.elapsed().as_secs_f32();
     println!("P1: {}", part1_result);
-    println!("P1: {}", part2_result);
+    println!("P2: {}", part2_result);
     println!();
     println!("Time: {:7}", end);
 }
