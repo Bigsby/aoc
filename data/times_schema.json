@@ -1,0 +1,98 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "type": "object",
+    "definitions": {
+        "day": {
+            "properties": {
+                "day": {
+                    "type": "number"
+                },
+                "times": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "env",
+                            "time"
+                        ],
+                        "properties": {
+                            "env": {
+                                "type": "string"
+                            },
+                            "time": {
+                                "type": "number"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "year": {
+            "type": "object",
+            "required": [
+                "year",
+                "days"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "year": {
+                    "type": "number"
+                },
+                "days": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/day"
+                    }
+                }
+            }
+        },
+        "environment": {
+            "required": [
+                "id",
+                "cpu",
+                "os",
+                "language"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "cpu": {
+                    "type": "string"
+                },
+                "os": {
+                    "type": "string"
+                },
+                "language": {
+                    "type": "string",
+                    "examples": [
+                        "py",
+                        "cs"
+                    ]
+                }
+            }
+        }
+    },
+    "required": [
+        "years", "environments"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "$schema": {
+            "type": "string"
+        },
+        "years": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/year"
+            }
+        },
+        "environments": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/environment"
+            }
+        }
+    }
+}

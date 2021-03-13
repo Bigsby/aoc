@@ -1,0 +1,69 @@
+{
+    "$schema": "./times_schema.json",
+    "environments": [
+        {
+            "id": "i9_wsl_py",
+            "os": "WSL",
+            "cpu": "i9-9880H",
+            "language": "py"
+        },
+        {
+            "id": "i9_wsl_cs",
+            "os": "WSL",
+            "cpu": "i9-9880H",
+            "language": "cs"
+        },
+        {
+            "id": "i9_win_py",
+            "os": "Windows",
+            "cpu": "i9-9880H",
+            "language": "py"
+        },
+        {
+            "id": "i9_win_cs",
+            "os": "Windows",
+            "cpu": "i9-9880H",
+            "language": "cs"
+        },
+        {
+            "id": "i5_mac_py",
+            "os": "macOS",
+            "cpu": "i5-7400",
+            "language": "py"
+        },
+        {
+            "id": "i5_mac_cs",
+            "os": "macOS",
+            "cpu": "i5-7400",
+            "language": "cs"
+        },
+        {
+            "id": "celeron_ub_py",
+            "os": "Ubuntu",
+            "cpu": "Celeron N3450",
+            "language": "py"
+        },
+        {
+            "id": "celeron_ub_cs",
+            "os": "Ubuntu",
+            "cpu": "Celeron N3450",
+            "language": "cs"
+        }
+    ],
+    "years": [
+        {
+            "year": 2015,
+            "days": [
+                {
+                    "day": 1,
+                    "times": [
+                        {
+                            "env": "i9_wsl_py",
+                            "time": 0
+                        }           
+                    ]
+                }
+            ]
+        }
+    ]
+}
