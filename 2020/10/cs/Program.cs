@@ -32,7 +32,9 @@ namespace AoC
                 return 1;
             if (sequence == 3)
                 return 2;
-            return CalculateCombinations(sequence - 1) + CalculateCombinations(sequence - 2) + CalculateCombinations(sequence - 3);
+            return CalculateCombinations(sequence - 1)
+                + CalculateCombinations(sequence - 2)
+                + CalculateCombinations(sequence - 3);
         }
 
         static long Part2(List<int> adapters)
