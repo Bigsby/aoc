@@ -1,6 +1,8 @@
 #! /usr/bin/python3
 
-import sys, os, time
+import sys
+import os
+import time
 from typing import Dict, List, Tuple
 import math
 
@@ -18,18 +20,18 @@ def get_visible_count(asteroid: Asteroid, asteroids: List[Asteroid], maxX: int, 
         jump = delta / math.gcd(abs(int(delta.real)), abs(int(delta.imag)))
         asteroid_to_check = asteroid + jump
         while asteroid_to_check.real >= 0 and asteroid_to_check.real <= maxX \
-            and asteroid_to_check.imag >= 0 and asteroid_to_check.imag <= maxY:
+                and asteroid_to_check.imag >= 0 and asteroid_to_check.imag <= maxY:
             if asteroid_to_check in asteroids:
                 asteroids.remove(asteroid_to_check)
             asteroid_to_check += jump
     return visible_count
 
 
-def part1(asteroids: List[Asteroid]) -> Tuple[int,Asteroid]:
+def part1(asteroids: List[Asteroid]) -> Tuple[int, Asteroid]:
     max_x = int(max(map(lambda asteroid: asteroid.real, asteroids)))
     max_y = int(max(map(lambda asteroid: asteroid.imag, asteroids)))
     max_visible_count = 0
-    monitoring_station = -1 -1j
+    monitoring_station = -1 - 1j
     for asteroid in asteroids:
         visible_count = get_visible_count(asteroid, asteroids, max_x, max_y)
         if visible_count > max_visible_count:
@@ -39,7 +41,7 @@ def part1(asteroids: List[Asteroid]) -> Tuple[int,Asteroid]:
 
 
 def part2(asteroids: List[Asteroid], monitoring_station: Asteroid) -> int:
-    asteroid_angle_distances: Dict[Asteroid,Tuple[float,int]] = {}
+    asteroid_angle_distances: Dict[Asteroid, Tuple[float, int]] = {}
     asteroids.remove(monitoring_station)
     for asteroid in asteroids:
         delta = asteroid - monitoring_station
@@ -48,17 +50,17 @@ def part2(asteroids: List[Asteroid], monitoring_station: Asteroid) -> int:
         asteroid_angle_distances[asteroid] = (angle, distance)
     target_count = 1
     angle = 2 * math.pi
-    last_removed = -1 -1j
+    last_removed = -1 - 1j
     while target_count <= 200:
-        asteroid, (angle, _) = min(asteroid_angle_distances.items(), \
-            key=lambda kv: (angle == kv[1][0] or target_count == 1, (angle - kv[1][0]) % (2 * math.pi), kv[1][1]))
+        asteroid, (angle, _) = min(asteroid_angle_distances.items(),
+                                   key=lambda kv: (angle == kv[1][0] or target_count == 1, (angle - kv[1][0]) % (2 * math.pi), kv[1][1]))
         del asteroid_angle_distances[asteroid]
         last_removed = asteroid
         target_count += 1
     return int(last_removed.real) * 100 + int(last_removed.imag)
 
 
-def solve(asteroids: List[Asteroid]) -> Tuple[int,int]:
+def solve(asteroids: List[Asteroid]) -> Tuple[int, int]:
     max_visible_count, monitoring_station = part1(asteroids)
     return (
         max_visible_count,
@@ -69,7 +71,7 @@ def solve(asteroids: List[Asteroid]) -> Tuple[int,int]:
 def get_input(file_path: str) -> List[Asteroid]:
     if not os.path.isfile(file_path):
         raise FileNotFoundError(file_path)
-    
+
     with open(file_path, "r") as file:
         asteroids: List[Asteroid] = []
         for (y, line) in enumerate(file.readlines()):
