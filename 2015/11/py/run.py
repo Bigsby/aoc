@@ -1,23 +1,27 @@
 #! /usr/bin/python3
 
-import sys, os, time
+import sys
+import os
+import time
 from typing import Tuple
 import re
 
 
-FORBIDDEN_LETTERS = [ ord("i"), ord("o"), ord("l") ]
-pairsRegex = re.compile(r"^.*(.)\1{1}.*(.)\2{1}.*$")
-def isPasswordValid(password: str) -> bool:
-    if not pairsRegex.match(password):
+FORBIDDEN_LETTERS = [ord("i"), ord("o"), ord("l")]
+pairs_regex = re.compile(r"^.*(.)\1{1}.*(.)\2{1}.*$")
+
+
+def is_password_valid(password: str) -> bool:
+    if not pairs_regex.match(password):
         return False
     ords = list(map(lambda c: ord(c), password))
     for index in range(len(ords) - 2):
         if ords[index] == ords[index + 1] - 1 and ords[index] == ords[index + 2] - 2:
             return True
     return False
-    
 
-def getNextChar(c: int) -> str:
+
+def get_next_char(c: int) -> str:
     c += 1
     while c in FORBIDDEN_LETTERS:
         c += 1
@@ -26,35 +30,37 @@ def getNextChar(c: int) -> str:
 
 A_CHR = "a"
 Z_ORD = ord("z")
-def getNextPassword(currentPassword: str) -> str:
-    result = list(currentPassword)
+
+
+def calculate_next_password(current_password: str) -> str:
+    result = list(current_password)
     for index in range(len(result) - 1, 0, -1):
-        cOrd = ord(result[index])
-        if cOrd == Z_ORD:
+        c_ord = ord(result[index])
+        if c_ord == Z_ORD:
             result[index] = A_CHR
             continue
-        result[index] = getNextChar(cOrd)
+        result[index] = get_next_char(c_ord)
         break
     return "".join(result)
 
 
-def getNextValidPassword(currentPassword: str) -> str:
-    currentPassword = getNextPassword(currentPassword)
-    while not isPasswordValid(currentPassword):
-        currentPassword = getNextPassword(currentPassword)
-    return currentPassword
+def calculate_next_valid_password(current_password: str) -> str:
+    current_password = calculate_next_password(current_password)
+    while not is_password_valid(current_password):
+        current_password = calculate_next_password(current_password)
+    return current_password
 
 
-def solve(currentPassword: str) -> Tuple[str,str]:
-    part1 = getNextValidPassword(currentPassword)
-    return (part1, getNextValidPassword(part1))
+def solve(current_password: str) -> Tuple[str, str]:
+    part1 = calculate_next_valid_password(current_password)
+    return (part1, calculate_next_valid_password(part1))
 
 
-def getInput(filePath: str):
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
-    
-    with open(filePath, "r") as file:
+def get_input(file_path: str):
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
+
+    with open(file_path, "r") as file:
         return file.read().strip()
 
 
@@ -63,10 +69,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2R_rsult = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2R_rsult)
     print()
     print(f"Time: {end - start:.7f}")
 
