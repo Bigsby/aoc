@@ -12,7 +12,7 @@ namespace AoC
     record Elevator(int partA, int partB);
     record Move(int currentFloor, int nextFloor, Elevator elevator);
     record State(int currentFloor, Floor[] floors);
-    
+
     class Program
     {
         const int EMPTY_SLOT = 0;
@@ -94,14 +94,13 @@ namespace AoC
             return moves;
         }
 
-        
+
         static IEnumerable<T[]> Combinations<T>(IEnumerable<T> source, int length)
         {
             T[] result = new T[length];
             Stack<int> stack = new Stack<int>();
             var data = source.ToArray();
             stack.Push(0);
-
             while (stack.Count > 0)
             {
                 int resultIndex = stack.Count - 1;
@@ -121,7 +120,7 @@ namespace AoC
 
         static IEnumerable<Move> GetValidMoves(State state)
         {
-            var possibleMovesGroups = Combinations(state.floors[state.currentFloor].Concat(new [] { EMPTY_SLOT }), 2)
+            var possibleMovesGroups = Combinations(state.floors[state.currentFloor].Concat(new[] { EMPTY_SLOT }), 2)
                 .Where(IsGroupValid).Select(group => new Elevator(group.ElementAt(0), group.ElementAt(1)));
             var validMoves = GetValidDirectionalMoves(state, 1, possibleMovesGroups)
                 .Concat(GetValidDirectionalMoves(state, -1, possibleMovesGroups)).ToList();
@@ -143,7 +142,6 @@ namespace AoC
                         return movesCount + 1;
                     else
                         stack.Push((newState, movesCount + 1));
-                    
                 }
             }
             throw new Exception("Solution not found");
@@ -155,7 +153,7 @@ namespace AoC
             var part1Result = SolveFloors(floors);
             floors[0] = floors[0].Concat(ParseLine(PART2_EXTRA)).ToList();
             return (
-                part1Result, 
+                part1Result,
                 SolveFloors(floors)
             );
         }
