@@ -19,7 +19,8 @@ namespace AoC
         {
             if (obj.ValueKind == JsonValueKind.Object)
             {
-                if (obj.EnumerateObject().Any(prop => prop.Value.ValueKind == JsonValueKind.String && prop.Value.GetString() == "red"))
+                if (obj.EnumerateObject().Any(prop => prop.Value.ValueKind == JsonValueKind.String
+                    && prop.Value.GetString() == "red"))
                     return 0;
                 return obj.EnumerateObject().Sum(prop => GetTotal(prop.Value));
             }
@@ -32,10 +33,10 @@ namespace AoC
 
         static (int, int) Solve(string puzzleInput)
             => (
-                numberRegex.Matches(puzzleInput).Sum(match => int.Parse(match.Groups[0].Value)), 
+                numberRegex.Matches(puzzleInput).Sum(match => int.Parse(match.Groups[0].Value)),
                 GetTotal(JsonSerializer.Deserialize<JsonElement>(puzzleInput))
             );
-        
+
         static string GetInput(string filePath)
             => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
             : File.ReadAllText(filePath).Trim();
