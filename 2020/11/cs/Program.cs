@@ -19,7 +19,7 @@ namespace AoC
     class Program
     {
         static Complex I = Complex.ImaginaryOne;
-        static Complex[] NEIGHBOR_DIRECTIONS = new [] {
+        static Complex[] NEIGHBOR_DIRECTIONS = new[] {
             - 1 - 1 * I,
                 - 1 * I,
             + 1 - 1 * I,
@@ -40,7 +40,8 @@ namespace AoC
             return total;
         }
 
-        static (bool changed, State newPositionState) GetPositionNewState(Grid grid, Complex position, int tolerance, Func<Grid, Complex, Complex, Complex> getNeighborFunc)
+        static (bool changed, State newPositionState) GetPositionNewState(
+            Grid grid, Complex position, int tolerance, Func<Grid, Complex, Complex, Complex> getNeighborFunc)
         {
             var currentState = grid[position];
             if (currentState == State.Floor)
@@ -53,7 +54,8 @@ namespace AoC
             return (false, currentState);
         }
 
-        static (int changedCount, Grid newState) GetNextState(Grid grid, int tolerance, Func<Grid, Complex, Complex, Complex> getNeighborFunc)
+        static (int changedCount, Grid newState) GetNextState(
+            Grid grid, int tolerance, Func<Grid, Complex, Complex, Complex> getNeighborFunc)
         {
             var newState = new Grid(grid);
             var changedCount = 0;
@@ -83,7 +85,7 @@ namespace AoC
                 position += direction;
             return position;
         }
-        
+
         static (int, int) Solve(Grid grid)
             => (
                 RunGrid(grid, 3, (_, position, direction) => position + direction),
