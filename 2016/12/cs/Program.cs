@@ -62,12 +62,9 @@ namespace AoC
 
         static Instruction[] GetInput(string filePath)
             => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
-            : File.ReadAllLines(filePath).Select(line => {
-                var mnemonic = line[..3];
-                var parameters = line[3..].Trim().Split(" ").ToList();
-                parameters.Insert(0, mnemonic);
-                return parameters;
-            }).ToArray();
+            : File.ReadAllLines(filePath).Select(line =>
+                line.Split(" ").Select(part => part.Trim()).ToList()
+            ).ToArray();
 
         static void Main(string[] args)
         {
