@@ -8,27 +8,34 @@ using System.Text.RegularExpressions;
 
 namespace AoC
 {
-    using Connections = Dictionary<int,List<int>>;
+    using Connections = Dictionary<int, List<int>>;
 
     class Program
     {
-        static HashSet<int> GetProgramGroup(int program, Connections connections, HashSet<int> soFar)
+        static HashSet<int> GetProgramGroup(int program, Connections connections)
         {
-            soFar.Add(program);
-            foreach (var connection in connections[program])
-                if (!soFar.Contains(connection))
-                    soFar.UnionWith(GetProgramGroup(connection, connections, soFar));
-            return soFar;
+            var result = new HashSet<int>();
+            result.Add(program);
+            var queue = new Queue<int>();
+            queue.Enqueue(program);
+            while (queue.Any())
+                foreach (var connection in connections[queue.Dequeue()])
+                    if (!result.Contains(connection))
+                    {
+                        result.Add(connection);
+                        queue.Enqueue(connection);
+                    }
+            return result;
         }
 
         static (int, int) Solve(Connections connections)
         {
-            var part1Result = GetProgramGroup(0, connections, new HashSet<int>()).Count;
+            var part1Result = GetProgramGroup(0, connections).Count;
             var groupsCount = 0;
             while (connections.Count > 0)
             {
                 groupsCount++;
-                foreach (var connection in GetProgramGroup(connections.Keys.First(), connections, new HashSet<int>()))
+                foreach (var connection in GetProgramGroup(connections.Keys.First(), connections))
                     if (connections.ContainsKey(connection))
                         connections.Remove(connection);
             }
@@ -38,7 +45,8 @@ namespace AoC
         static Regex lineRegex = new Regex(@"^(?<one>\d+)\s<->\s(?<two>.*)$", RegexOptions.Compiled);
         static Connections GetInput(string filePath)
             => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
-            : File.ReadLines(filePath).Select(line => {
+            : File.ReadLines(filePath).Select(line =>
+            {
                 var match = lineRegex.Match(line);
                 if (match.Success)
                     return (int.Parse(match.Groups["one"].Value), match.Groups["two"].Value.Split(",").Select(int.Parse).ToList());
