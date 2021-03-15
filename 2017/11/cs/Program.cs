@@ -12,12 +12,12 @@ namespace AoC
     class Program
     {
         static Dictionary<string, Complex> DIRECTIONS = new Dictionary<string, Complex> {
-            { "s", Complex.ImaginaryOne },
-            { "se", 1 },
+            { "s", new Complex(0, 1) },
+            { "se", new Complex(1, 0) },
             { "sw", new Complex( -1, 1) },
             { "ne", new Complex(1, -1) },
-            { "nw", -1 },
-            { "n", -Complex.ImaginaryOne }
+            { "nw", new Complex(-1, 0) },
+            { "n",  new Complex(0, -1) }
         };
 
         static int GetHexManhatanDistance(Complex position)
