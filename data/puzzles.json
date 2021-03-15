@@ -184,7 +184,7 @@
                     "day": 11,
                     "name": "Corporate Policy",
                     "description": "Get next password iterating characters within rules",
-                    "tags": [ "RegEx", "strings" ],
+                    "tags": [ "Regex", "Strings" ],
                     "results": [
                         {
                             "p1": "cqjxxyzz",
@@ -650,6 +650,10 @@
                     "name": "Radioisotope Thermoelectric Generators",
                     "description": "Moving parts between stages with rules",
                     "tags": [ "Maths", "Logic" ],
+                    "gotchas": [ 
+                        "If able to move pair upstairs, don't take just one part", 
+                        "If able to take just one part downstairs, don't take a pair" 
+                    ],
                     "results": [
                         {
                             "p1": "31",
@@ -1147,6 +1151,7 @@
                     "name": "Hex Ed",
                     "description": "Mahatan distances in hexagonal grid",
                     "tags": [ "Hexagonal", "Grid", "Manhatan", "Navigate", "2D" ],
+                    "gotchas": [ "https://www.redblobgames.com/grids/hexagons/" ],
                     "results": [
                         {
                             "p1": "715",
@@ -1655,6 +1660,7 @@
                     "name": "Chronal Charge",
                     "description": "Summed Area Table",
                     "tags": [ "Grid", "Summed Area Table" ],
+                    "gotchas": [ "https://en.wikipedia.org/wiki/Summed-area_table" ],
                     "results": [
                         {
                             "p1": "20,68",
