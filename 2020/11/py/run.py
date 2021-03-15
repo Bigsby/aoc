@@ -1,6 +1,8 @@
 #! /usr/bin/python3
 
-import sys, os, time
+import sys
+import os
+import time
 from typing import Callable, Dict, Tuple
 from enum import Enum
 
@@ -11,79 +13,84 @@ class State(Enum):
     FLOOR = '.'
 
 
-Grid = Dict[complex,State]
-NeighborFinder = Callable[[Grid,complex,complex],complex]
+Grid = Dict[complex, State]
+NeighborFinder = Callable[[Grid, complex, complex], complex]
 
 
 NEIGHBOR_DIRECTIONS = [
-     - 1 - 1j,
-         - 1j,
-     + 1 - 1j,
-     - 1,
-     + 1,
-     - 1 + 1j,
-         + 1j,
-     + 1 + 1j
+    - 1 - 1j,
+        - 1j,
+    + 1 - 1j,
+    - 1,
+    + 1,
+    - 1 + 1j,
+        + 1j,
+    + 1 + 1j
 ]
-def getOccupiedCount(grid: Grid, position: complex, getNeighborFunc: NeighborFinder) -> int:
+
+
+def get_occupied_count(grid: Grid, position: complex, get_neighbor_func: NeighborFinder) -> int:
     total = 0
     for direction in NEIGHBOR_DIRECTIONS:
-        neighbor = getNeighborFunc(grid, position, direction)
+        neighbor = get_neighbor_func(grid, position, direction)
         if neighbor in grid and grid[neighbor] == State.OCCUPIED:
             total += 1
     return total
 
 
-def getPositionNewState(grid: Grid, position: complex, tolerance: int, getNeighborFunc: NeighborFinder) -> Tuple[bool,State]:
-    currentState = grid[position]
-    if currentState == State.FLOOR:
+def get_position_new_state(grid: Grid, position: complex, tolerance: int, get_neighbor_func: NeighborFinder) -> Tuple[bool, State]:
+    current_state = grid[position]
+    if current_state == State.FLOOR:
         return False, State.FLOOR
-    occupiedCount = getOccupiedCount(grid, position, getNeighborFunc)
-    if currentState == State.EMPTY and occupiedCount == 0:
+    occupied_count = get_occupied_count(grid, position, get_neighbor_func)
+    if current_state == State.EMPTY and occupied_count == 0:
         return True, State.OCCUPIED
-    if currentState == State.OCCUPIED and occupiedCount > tolerance:
+    if current_state == State.OCCUPIED and occupied_count > tolerance:
         return True, State.EMPTY
-    return False, currentState
+    return False, current_state
 
 
-def getNextState(grid: Grid, tolerance: int, getNeighborFunc: NeighborFinder) -> Tuple[int,Grid]:
-    newState = dict(grid)
-    changedCount = 0
+def get_next_state(grid: Grid, tolerance: int, get_neighbor_func: NeighborFinder) -> Tuple[bool, Grid]:
+    new_state = dict(grid)
+    any_change = False
     for position in grid:
-        changed, newPositionState = getPositionNewState(grid, position, tolerance, getNeighborFunc)
-        changedCount += changed
-        newState[position] = newPositionState
-    return changedCount, newState
-        
+        changed, new_position_state = get_position_new_state(
+            grid, position, tolerance, get_neighbor_func)
+        any_change |= changed
+        new_state[position] = new_position_state
+    return any_change, new_state
 
-def runGrid(grid: Grid, tolerance: int, getNeighborFunc: NeighborFinder) -> int:
+
+def run_grid(grid: Grid, tolerance: int, get_neighbor_func: NeighborFinder) -> int:
     grid = dict(grid)
-    changed = 1
+    changed = True
+    count = 0
     while changed:
-        changed, grid = getNextState(grid, tolerance, getNeighborFunc)
+        count += 1
+        changed, grid = get_next_state(grid, tolerance, get_neighbor_func)
     return sum(map(lambda value: 1 if value == State.OCCUPIED else 0, grid.values()))
 
 
-def getDirectionalNeighbor(grid: Grid, position: complex, direction: complex) -> complex:
+def get_directional_neighbor(grid: Grid, position: complex, direction: complex) -> complex:
     position += direction
     while position in grid and grid[position] == State.FLOOR:
         position += direction
     return position
 
 
-def solve(grid: Grid) -> Tuple[int,int]:
+def solve(grid: Grid) -> Tuple[int, int]:
     return (
-        runGrid(grid, 3, lambda _, position, direction: position + direction),
-        runGrid(grid, 4, getDirectionalNeighbor)
+        run_grid(grid, 3, lambda _, position, direction: position + direction),
+        run_grid(grid, 4, get_directional_neighbor)
     )
 
 
-def getInput(filePath: str) -> Grid:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
-    
-    with open(filePath, "r") as file:
-        grid = {}
+def get_input(file_path: str) -> Grid:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
+
+    with open(file_path, "r") as file:
+        grid: Grid = {}
         for y, line in enumerate(file.readlines()):
             for x, c in enumerate(line.strip()):
                 grid[x + y * 1j] = State(c)
@@ -95,10 +102,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
