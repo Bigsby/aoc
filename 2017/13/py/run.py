@@ -1,52 +1,54 @@
 #! /usr/bin/python3
 
-import sys, os, time
+import sys
+import os
+import time
 from typing import Dict, Tuple
 
-Scanners = Dict[int,int]
+Scanners = Dict[int, int]
 
 
 def part1(scanners: Scanners, cycles: Scanners) -> int:
     severity: int = 0
-    for currentLayer in range(max(scanners.keys()) + 1):
-        if currentLayer in cycles and currentLayer % cycles[currentLayer] == 0:
-            severity += currentLayer * scanners[currentLayer]
+    for current_layer in range(max(scanners.keys()) + 1):
+        if current_layer in cycles and current_layer % cycles[current_layer] == 0:
+            severity += current_layer * scanners[current_layer]
     return severity
 
 
-def runPacketUntilCaught(cycles: Scanners, offset: int) -> bool:
-    for currentLayer in range(max(cycles.keys()) + 1):
-        if currentLayer in cycles and (currentLayer + offset) % cycles[currentLayer] == 0:
+def run_packet_until_caught(cycles: Scanners, offset: int) -> bool:
+    for current_layer in range(max(cycles.keys()) + 1):
+        if current_layer in cycles and (current_layer + offset) % cycles[current_layer] == 0:
             return False
     return True
 
 
 def part2(cycles: Scanners):
     offset = 1
-    while not runPacketUntilCaught(cycles, offset):
+    while not run_packet_until_caught(cycles, offset):
         offset += 1
     return offset
 
 
-def solve(scanners: Scanners) -> Tuple[int,int]:
-    cycles = { layer: 2 * (range - 1) for layer, range in scanners.items() }
+def solve(scanners: Scanners) -> Tuple[int, int]:
+    cycles = {layer: 2 * (range - 1) for layer, range in scanners.items()}
     return (
         part1(scanners, cycles),
         part2(cycles)
     )
 
 
-def parseLine(line: str) -> Tuple[int,int]:
+def parse_line(line: str) -> Tuple[int, int]:
     depth, range = line.split(":")
     return int(depth.strip()), int(range.strip())
 
 
-def getInput(filePath: str) -> Dict[int,int]:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
+def get_input(file_path: str) -> Dict[int, int]:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
 
-    with open(filePath, "r") as file:
-        return { scanner: depth  for scanner, depth in map(parseLine, file.readlines()) }
+    with open(file_path, "r") as file:
+        return {scanner: depth for scanner, depth in map(parse_line, file.readlines())}
 
 
 def main():
@@ -54,10 +56,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
