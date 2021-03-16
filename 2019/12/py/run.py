@@ -1,13 +1,16 @@
 #! /usr/bin/python3
 
-import sys, os, time
+import sys
+import os
+import time
 from typing import List, Tuple
-import re, math
+import re
+import math
 from copy import deepcopy
 from itertools import combinations
 from functools import reduce
 
-Coordinates = Tuple[int,int,int]
+Coordinates = Tuple[int, int, int]
 
 
 class Moon():
@@ -15,46 +18,51 @@ class Moon():
         self.position: Coordinates = (x, y, z)
         self.velocity: Coordinates = (0, 0, 0)
 
-    @staticmethod    
-    def getDelta(thisValue: int, otherValue: int) -> int: 
-        if thisValue < otherValue:
+    @staticmethod
+    def get_delta(this_value: int, other_value: int) -> int:
+        if this_value < other_value:
             return 1
-        if thisValue > otherValue:
+        if this_value > other_value:
             return -1
         return 0
-    
-    def getMoonDelta(self, otherMoon: Coordinates) -> Coordinates:
+
+    def get_moon_elta(self, other_moon: Coordinates) -> Coordinates:
         return (
-            Moon.getDelta(self.position[0], otherMoon[0]),
-            Moon.getDelta(self.position[1], otherMoon[1]),
-            Moon.getDelta(self.position[2], otherMoon[2])
+            Moon.get_delta(self.position[0], other_moon[0]),
+            Moon.get_delta(self.position[1], other_moon[1]),
+            Moon.get_delta(self.position[2], other_moon[2])
         )
-    
+
     @staticmethod
     def sum(one: Coordinates, two: Coordinates) -> Coordinates:
         return (one[0] + two[0], one[1] + two[1], one[2] + two[2])
-
-    def updateVelocity(self, otherMoon: Coordinates):
-        self.velocity = Moon.sum(self.velocity, self.getMoonDelta(otherMoon))
     
-    def updatePosition(self):
+    @staticmethod
+    def sum_abs(coordinate: Coordinates) -> int:
+        return abs(coordinate[0]) + abs(coordinate[1]) + abs(coordinate[2])
+
+    def update_velocity(self, other_moon: Coordinates):
+        self.velocity = Moon.sum(self.velocity, self.get_moon_elta(other_moon))
+
+    def update_position(self):
         self.position = Moon.sum(self.position, self.velocity)
 
-    def getTotalEnergy(self) -> int:
-        return sum(map(abs, self.position)) * sum(map(abs, self.velocity))
+    def get_total_energy(self) -> int:
+        return Moon.sum_abs(self.position) * Moon.sum_abs(self.velocity)
 
     def __str__(self):
         return f"{self.position} {self.velocity}"
+
     def __repr__(self) -> str:
         return self.__str__()
 
 
-def runStep(moons: List[Moon]):
-    for moonA, moonB in combinations(moons, 2):
-        moonA.updateVelocity(moonB.position)
-        moonB.updateVelocity(moonA.position)
+def run_step(moons: List[Moon]):
+    for moon_a, moon_b in combinations(moons, 2):
+        moon_a.update_velocity(moon_b.position)
+        moon_b.update_velocity(moon_a.position)
     for moon in moons:
-        moon.updatePosition()
+        moon.update_position()
 
 
 def part1(moons: List[Moon]) -> int:
@@ -62,50 +70,54 @@ def part1(moons: List[Moon]) -> int:
     moons = deepcopy(moons)
     while step:
         step -= 1
-        runStep(moons)
-    return sum(map(lambda moon: moon.getTotalEnergy(), moons))
+        run_step(moons)
+    return sum(map(lambda moon: moon.get_total_energy(), moons))
 
 
-def buildStateForCoordinate(coordinate: int, moons: List[Moon]) -> Tuple[Tuple[int,...],Tuple[int,...]]:
+def build_state_for_coordinate(coordinate: int, moons: List[Moon]) -> Tuple[Tuple[int, ...], Tuple[int, ...]]:
     return (tuple(moon.position[coordinate] for moon in moons), tuple(moon.velocity[coordinate] for moon in moons))
 
 
 def part2(moons: List[Moon]) -> int:
     step = 0
-    initialStates = [ buildStateForCoordinate(coordinate, moons) for coordinate in range(3)]
-    cyles = [ 0 ] * 3
+    initial_states = [build_state_for_coordinate(
+        coordinate, moons) for coordinate in range(3)]
+    cyles = [0] * 3
     while not all(cyles):
         step += 1
-        runStep(moons)
+        run_step(moons)
         for coordinate in range(3):
             if not cyles[coordinate]:
-                currentState = buildStateForCoordinate(coordinate, moons)
-                if currentState == initialStates[coordinate]:
+                current_state = build_state_for_coordinate(coordinate, moons)
+                if current_state == initial_states[coordinate]:
                     cyles[coordinate] = step
     return reduce(lambda soFar, cycle: soFar * cycle // math.gcd(soFar, cycle), cyles)
 
 
-def solve(moons: List[Moon]) -> Tuple[int,int]:
+def solve(moons: List[Moon]) -> Tuple[int, int]:
     return (
         part1(moons),
         part2(moons)
     )
 
 
-lineRegex = re.compile(r"^<x=(?P<x>-?\d+),\sy=(?P<y>-?\d+),\sz=(?P<z>-?\d+)>$")
-def parseLine(line: str) -> Moon:
-    match = lineRegex.match(line)
+line_regex = re.compile(
+    r"^<x=(?P<x>-?\d+),\sy=(?P<y>-?\d+),\sz=(?P<z>-?\d+)>$")
+
+
+def parse_line(line: str) -> Moon:
+    match = line_regex.match(line)
     if match:
         return Moon(int(match.group("x")), int(match.group("y")), int(match.group("z")))
     raise Exception("Bad format", line)
 
 
-def getInput(filePath: str) -> List[Moon]:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
-    
-    with open(filePath, "r") as file:
-        return [ parseLine(line) for line in file.readlines() ]
+def get_input(file_path: str) -> List[Moon]:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
+
+    with open(file_path, "r") as file:
+        return [parse_line(line) for line in file.readlines()]
 
 
 def main():
@@ -113,10 +125,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
