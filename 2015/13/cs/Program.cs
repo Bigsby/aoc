@@ -16,7 +16,7 @@ namespace AoC
         {
             if (values.Count() == 1)
                 return new[] { values };
-            return values.SelectMany(v => 
+            return values.SelectMany(v =>
                 Permutations(values.Where(x => x.CompareTo(v) != 0)), (v, p) => p.Prepend(v));
         }
 
@@ -27,7 +27,7 @@ namespace AoC
             foreach (var (person, index) in arrangement.Select((person, index) => (person, index)))
             {
                 total += entries[person][arrangement[index > 0 ? index - 1 : length - 1]];
-                total += entries[person][arrangement[index < length - 1 ? index + 1 : 0]];
+                total += entries[person][arrangement[(index + 1) % length]];
             }
             return total;
         }
@@ -39,7 +39,7 @@ namespace AoC
         {
             var me = "me";
             entries[me] = new Dictionary<string, int>();
-            foreach(var person in entries.Keys.ToArray())
+            foreach (var person in entries.Keys.ToArray())
             {
                 if (person == me)
                     continue;
@@ -65,7 +65,7 @@ namespace AoC
                     var target = match.Groups[1].Value;
                     if (!entries.ContainsKey(target))
                         entries[target] = new Dictionary<string, int>();
-                    entries[target][match.Groups[4].Value] = 
+                    entries[target][match.Groups[4].Value] =
                         (match.Groups[2].Value == "gain" ? 1 : -1) * int.Parse(match.Groups[3].Value);
                 }
                 else
