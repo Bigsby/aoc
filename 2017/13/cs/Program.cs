@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace AoC
 {
-    using Scanners = Dictionary<int,int>;
+    using Scanners = Dictionary<int, int>;
 
     class Program
     {
@@ -47,7 +47,8 @@ namespace AoC
 
         static Scanners GetInput(string filePath)
             => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
-            : File.ReadLines(filePath).Select(line => {
+            : File.ReadLines(filePath).Select(line =>
+            {
                 var split = line.Trim().Split(":");
                 return (int.Parse(split[0].Trim()), int.Parse(split[1].Trim()));
             }).ToDictionary(split => split.Item1, split => split.Item2);
