@@ -1172,6 +1172,7 @@
                     "name": "Digital Plumber",
                     "description": "Counting bidirectional connections in seperate graphs",
                     "tags": [ "Graph" ],
+                    "gotchas": [ "Use queue of connections to process instead of recursion" ],
                     "results": [
                         {
                             "p1": "130",
@@ -1681,6 +1682,7 @@
                     "name": "Subterranean Sustainability",
                     "description": "1D Conway's Game of Life",
                     "tags": [ "Conway", "1D" ],
+                    "gotchas": [ "Generations are cyclic" ],
                     "results": [
                         {
                             "p1": "1816",
@@ -2103,7 +2105,8 @@
                     "day": 12,
                     "name": "The N-Body Problem",
                     "description": "3D objects in space with changing velocities (due to gravity between objects)",
-                    "tags": [ "3D", "Velocity", "Regenerations" ],
+                    "tags": [ "3D", "Velocity", "Regenerations", "Cycles" ],
+                    "gotchas": [ "Find the cycle for each coordinate (x, y, z) and, then, find GCDs" ],
                     "results": [
                         {
                             "p1": "12490",
@@ -2508,6 +2511,7 @@
                     "name": "Rain Risk",
                     "description": "Map navigation with rotation",
                     "tags": [ "2D", "Navigate", "Map", "Rotation", "Manhatan" ],
+                    "gotchas": [ "Use complex numbers for coordinates" ],
                     "results": [
                         {
                             "p1": "439",
