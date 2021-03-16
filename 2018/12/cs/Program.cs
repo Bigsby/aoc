@@ -14,7 +14,7 @@ namespace AoC
     class Program
     {
         static long GetStateValue(long index, State state)
-            => (long)Enumerable.Range(0, 5).Sum(i => state.Contains(i + index - 2) ? Math.Pow(2, i) : 0);
+            => (long)Enumerable.Range(0, 5).Sum(i => state.Contains(i + index - 2) ? 1 << i : 0);
 
         static IEnumerable<long> RunGenerations(State state, Notes notes, int generations)
         {
@@ -62,13 +62,15 @@ namespace AoC
         }
 
         static long ComputePattern(string pattern)
-            => (long)pattern.Select((c, index) => (c, index)).Sum(pair => pair.c == '#' ? Math.Pow(2, pair.index) : 0);
-        
-        static Regex notesRegex = new Regex(@"^(?<pattern>[#\.]{5})\s=>\s(?<result>[#\.])$", RegexOptions.Compiled | RegexOptions.Multiline);
+            => (long)pattern.Select((c, index) => (c, index)).Sum(pair => pair.c == '#' ? 1 << pair.index : 0);
+
+        static Regex notesRegex = new Regex(@"^(?<pattern>[#\.]{5})\s=>\s(?<result>[#\.])$",
+            RegexOptions.Compiled | RegexOptions.Multiline);
         static Notes ParseNotes(string noteLines)
-            => noteLines.Split(Environment.NewLine).Select(line => notesRegex.Match(line))
+            => noteLines.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries)
+                .Select(line => notesRegex.Match(line))
                 .ToDictionary(
-                    match => ComputePattern(match.Groups["pattern"].Value), 
+                    match => ComputePattern(match.Groups["pattern"].Value),
                     match => match.Groups["result"].Value == "#");
 
         static (State, Notes) GetInput(string filePath)
