@@ -28,7 +28,7 @@ namespace AoC
             Complex position = 0;
             foreach (var (direction, value) in instructions)
                 if (CARDINAL_DIRECTIONS.ContainsKey(direction))
-                     if (headingOnCardinal)
+                    if (headingOnCardinal)
                         heading += CARDINAL_DIRECTIONS[direction] * value;
                     else
                         position += CARDINAL_DIRECTIONS[direction] * value;
@@ -48,7 +48,8 @@ namespace AoC
         static Regex lineRegex = new Regex(@"^(?<direction>[NSEWLRF])(?<value>\d+)$", RegexOptions.Compiled);
         static IEnumerable<Instruction> GetInput(string filePath)
             => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
-            : File.ReadLines(filePath).Select(line => {
+            : File.ReadLines(filePath).Select(line =>
+            {
                 var match = lineRegex.Match(line);
                 if (match.Success)
                     return new Instruction(match.Groups["direction"].Value[0], int.Parse(match.Groups["value"].Value));
