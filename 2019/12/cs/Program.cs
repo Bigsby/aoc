@@ -10,12 +10,10 @@ namespace AoC
 {
     class Moon : ICloneable
     {
-        public Tuple<long, long, long> Position { get; set; }
-        public Tuple<long, long, long> Velocity { get; set; } = Tuple.Create(0L, 0L, 0L);
-        public Moon(long x, long y, long z)
-        {
-            Position = Tuple.Create(x, y, z);
-        }
+        public (long x, long y, long z) Position { get; set; }
+        public (long x, long y, long z) Velocity { get; set; } = (0L, 0L, 0L);
+        public Moon(long x, long y, long z) =>
+            Position = (x, y, z);
 
         static long GetDelta(long thisValue, long otherValue)
         {
@@ -26,21 +24,21 @@ namespace AoC
             return 0;
         }
 
-        static Tuple<long, long, long> GetCoordinateDelta(Tuple<long, long, long> one, Tuple<long, long, long> two)
-            => Tuple.Create(GetDelta(one.Item1, two.Item1), GetDelta(one.Item2, two.Item2), GetDelta(one.Item3, two.Item3));
+        static (long x, long y, long z) GetCoordinateDelta((long x, long y, long z) one, (long x, long y, long z) two)
+            => (GetDelta(one.x, two.x), GetDelta(one.y, two.y), GetDelta(one.z, two.z));
 
-        static Tuple<long, long, long> Sum(Tuple<long, long, long> one, Tuple<long, long, long> two)
-            => Tuple.Create(one.Item1 + two.Item1, one.Item2 + two.Item2, one.Item3 + two.Item3);
-        
-        static long SumAbs(Tuple<long, long, long> coordinates)
-            => Math.Abs(coordinates.Item1) + Math.Abs(coordinates.Item2) + Math.Abs(coordinates.Item3);
+        static (long x, long y, long z) Sum((long x, long y, long z) one, (long x, long y, long z) two)
+            => (one.x + two.x, one.y + two.y, one.z + two.z);
+
+        static long SumAbs((long x, long y, long z) coordinates)
+            => Math.Abs(coordinates.x) + Math.Abs(coordinates.y) + Math.Abs(coordinates.z);
 
         public void UpdateVelocity(Moon otherMoon)
             => Velocity = Sum(Velocity, GetCoordinateDelta(Position, otherMoon.Position));
-        
+
         public void UpdatePosition()
             => Position = Sum(Position, Velocity);
-        
+
         public long GetTotalEnergy()
             => SumAbs(Position) * SumAbs(Velocity);
 
@@ -61,11 +59,11 @@ namespace AoC
             {
                 int resultIndex = stack.Count - 1;
                 int dataIndex = stack.Pop();
-                while (dataIndex < data.Length) 
+                while (dataIndex < data.Length)
                 {
                     result[resultIndex++] = data[dataIndex];
                     stack.Push(++dataIndex);
-                    if (resultIndex == length) 
+                    if (resultIndex == length)
                     {
                         yield return result;
                         break;
@@ -97,21 +95,23 @@ namespace AoC
             return moonArray.Sum(moon => moon.GetTotalEnergy());
         }
 
-        static Tuple<long[], long[]> BuildStateForCoordinate(Func<Tuple<long, long, long>, long> getValueFunc,  IEnumerable<Moon> moons)
+        static Tuple<long[], long[]> BuildStateForCoordinate(Func<(long, long, long), long> getValueFunc,
+            IEnumerable<Moon> moons)
             => Tuple.Create(
-                moons.Select(moon => getValueFunc(moon.Position)).ToArray(), 
+                moons.Select(moon => getValueFunc(moon.Position)).ToArray(),
                 moons.Select(moon => getValueFunc(moon.Velocity)).ToArray());
-        
+
         static bool AreArraysEqual(long[] one, long[] two)
             => Enumerable.Range(0, one.Length).All(index => one[index] == two[index]);
-        
-        static bool AreEqualStates(Tuple<long[], long[]> one, Tuple<long[], long[]> two) 
+
+        static bool AreEqualStates(Tuple<long[], long[]> one, Tuple<long[], long[]> two)
              => AreArraysEqual(one.Item1, two.Item1) && AreArraysEqual(one.Item2, two.Item2);
 
-        static Dictionary<char, Func<Tuple<long, long, long>, long>> COORDINATES = new Dictionary<char, Func<Tuple<long, long, long>, long>> {
-            { 'x', t => t.Item1 },
-            { 'y', t => t.Item2 },
-            { 'z', t => t.Item3 }
+        static Dictionary<char, Func<(long x, long y, long z), long>> COORDINATES =
+            new Dictionary<char, Func<(long x, long y, long z), long>> {
+            { 'x', t => t.x },
+            { 'y', t => t.y },
+            { 'z', t => t.z }
         };
 
         static long GCD(long a, long b)
@@ -131,7 +131,7 @@ namespace AoC
             var step = 0;
             var moonsArray = moons.ToArray();
             var initialStates = COORDINATES.ToDictionary(
-                coordinate => coordinate.Key, 
+                coordinate => coordinate.Key,
                 coordinate => BuildStateForCoordinate(coordinate.Value, moonsArray));
             var cycles = COORDINATES.ToDictionary(
                 coordinate => coordinate.Key,
@@ -153,7 +153,7 @@ namespace AoC
             }
             return cycles.Values.Aggregate((soFar, cycle) => soFar * cycle / GCD(soFar, cycle));
         }
-        
+
         static (long, long) Solve(IEnumerable<Moon> moons)
             => (
                 Part1(moons),
@@ -163,7 +163,8 @@ namespace AoC
         static Regex lineRegex = new Regex(@"^<x=(?<x>-?\d+),\sy=(?<y>-?\d+),\sz=(?<z>-?\d+)>$", RegexOptions.Compiled);
         static IEnumerable<Moon> GetInput(string filePath)
             => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
-            : File.ReadAllLines(filePath).Select(line => {
+            : File.ReadAllLines(filePath).Select(line =>
+            {
                 var match = lineRegex.Match(line);
                 if (match.Success)
                     return new Moon(
