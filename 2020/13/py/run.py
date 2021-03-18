@@ -1,26 +1,29 @@
 #! /usr/bin/python3
 
-import sys, os, time
+import sys
+import os
+import time
 from typing import List, Tuple
 from functools import reduce
 
-Bus = Tuple[int,int]
+Bus = Tuple[int, int]
 
-def part1(puzzleInput: Tuple[int,List[Bus]]) -> int:
-    timestamp, busses = puzzleInput
-    closestAfter = sys.maxsize
-    closestBus = None
+
+def part1(puzzle_input: Tuple[int, List[Bus]]) -> int:
+    timestamp, busses = puzzle_input
+    closest_after = sys.maxsize
+    closest_bus = None
     for bus in busses:
-        timeAfter = (timestamp // bus[0] + 1) * bus[0] - timestamp
-        if timeAfter < closestAfter:
-            closestAfter = timeAfter
-            closestBus = bus
-    if closestBus:
-        return closestAfter * closestBus[0]
+        time_after = (timestamp // bus[0] + 1) * bus[0] - timestamp
+        if time_after < closest_after:
+            closest_after = time_after
+            closest_bus = bus
+    if closest_bus:
+        return closest_after * closest_bus[0]
     raise Exception("Closest bus not found")
 
 
-def modularMultiplicativeInverse(a: int, b:int) -> int:
+def modular_multiplicative_inverse(a: int, b: int) -> int:
     q = a % b
     for i in range(1, b):
         if ((q * i) % b) == 1:
@@ -28,30 +31,31 @@ def modularMultiplicativeInverse(a: int, b:int) -> int:
     return 1
 
 
-def part2(puzzleInput: Tuple[int,List[Bus]]) -> int:
-    _, busses = puzzleInput
+def part2(puzzle_input: Tuple[int, List[Bus]]) -> int:
+    _, busses = puzzle_input
     product = reduce(lambda soFar, bus: soFar * bus[0], busses, 1)
     sum = 0
     for bus in busses:
-        currentProduct = product // bus[0]
-        sum += ((bus[0] - bus[1]) % bus[0]) * currentProduct * modularMultiplicativeInverse(currentProduct, bus[0])
+        current_product = product // bus[0]
+        sum += ((bus[0] - bus[1]) % bus[0]) * current_product * \
+            modular_multiplicative_inverse(current_product, bus[0])
     return sum % product
 
 
-def solve(puzzleInput: Tuple[int,List[Bus]]) -> Tuple[int,int]:
+def solve(puzzle_input: Tuple[int, List[Bus]]) -> Tuple[int, int]:
     return (
-        part1(puzzleInput),
-        part2(puzzleInput)
+        part1(puzzle_input),
+        part2(puzzle_input)
     )
 
 
-def getInput(filePath: str) -> Tuple[int,List[Bus]]:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
-    
-    with open(filePath, "r") as file:
+def get_input(file_path: str) -> Tuple[int, List[Bus]]:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
+
+    with open(file_path, "r") as file:
         lines = file.readlines()
-        return int(lines[0]), [ (int(busId), index) for index, busId in enumerate(lines[1].split(",")) if  busId != "x" ]
+        return int(lines[0]), [(int(busId), index) for index, busId in enumerate(lines[1].split(",")) if busId != "x"]
 
 
 def main():
@@ -59,10 +63,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
