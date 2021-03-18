@@ -1,16 +1,14 @@
 #! /usr/bin/python3
 
-import sys, os, time
-from typing import Dict, List, Tuple, Union
+import sys
+import os
+import time
+from typing import Dict, List, Tuple
 from enum import Enum
 from itertools import cycle
-import copy
 
-
-class MapItemType(Enum):
-    Straight = 0
-    Turn = 1
-    Intersection = 2
+Position = complex
+Direction = complex
 
 
 class Orientation(Enum):
@@ -18,26 +16,42 @@ class Orientation(Enum):
     Vertical = 1
 
 
-Position = complex
-Direction = complex
-Straight = Tuple[MapItemType,Orientation]
-Turn = Tuple[MapItemType,Tuple[Direction,Direction]]
-Intersection = Tuple[MapItemType,int]
-Map = Dict[Position,Union[Straight,Turn,Intersection]]
+class MapItem:
+    pass
 
 
-DIRECTION_CHANGES = [ 1j, 1, -1j ]
+class Straight(MapItem):
+    def __init__(self, orientation: Orientation) -> None:
+        self.orientation = orientation
+
+
+class Turn(MapItem):
+    def __init__(self, directions: Tuple[Direction, Direction]) -> None:
+        self.directions = directions
+        self.vertical = directions[1]
+        self.horizontal = directions[0]
+
+
+class Intersection(MapItem):
+    pass
+
+
+Map = Dict[Position, MapItem]
+
+
 class Train():
+    DIRECTION_CHANGES = [1j, 1, -1j]
+
     def __init__(self, position: Position, direction: Direction):
         self.position = position
         self.direction = direction
-        self.directionCycle = cycle(DIRECTION_CHANGES)
-    
+        self.direction_cycle = cycle(Train.DIRECTION_CHANGES)
+
     def tick(self):
         self.position += self.direction
 
     def turn(self):
-        self.direction *= next(self.directionCycle)
+        self.direction *= next(self.direction_cycle)
 
 
 TRAIN_CHAR = {
@@ -46,26 +60,29 @@ TRAIN_CHAR = {
     1j: "^",
     -1j: "v"
 }
-TURN_CHAR = {
+TURN_CHAR: Dict[Tuple[Direction, Direction], str] = {
     (1, 1j): "\\",
     (1, -1j): "/",
     (-1, 1j): "/",
     (-1, -1j): "\\"
 }
-def showMapArea(mapItems: Map, start: Position, end: Position, trains: List[Train]):
+
+
+def show_map_area(map_items: Map, start: Position, end: Position, trains: List[Train]):
     for y in range(int(start.imag), int(end.imag) - 1, -1):
         for x in range(int(start.real), int(end.real) + 1):
             position = x + y * 1j
             c = " "
-            if position in mapItems:
-                mapItem = mapItems[position]
-                if mapItem[0] == MapItemType.Straight:
-                    c = "-" if mapItem[1] == Orientation.Horizontal else "|"
-                elif mapItem[0] == MapItemType.Intersection:
+            if position in map_items:
+                map_item = map_items[position]
+                if isinstance(map_item, Straight):
+                    c = "-" if map_item.orientation == Orientation.Horizontal else "|"
+                elif isinstance(map_item, Intersection):
                     c = "+"
-                elif mapItem[0] == MapItemType.Turn:
-                    c = TURN_CHAR[mapItem[1]]
-            train = next(filter(lambda train: train.position == position, trains), None)
+                elif isinstance(map_item, Turn):
+                    c = TURN_CHAR[map_item.directions]
+            train = next(
+                filter(lambda train: train.position == position, trains), None)
             if train:
                 c = TRAIN_CHAR[train.direction]
             print(c, end="")
@@ -73,46 +90,48 @@ def showMapArea(mapItems: Map, start: Position, end: Position, trains: List[Trai
     print()
 
 
-def showTrain(mapItems: Map, train: Train, trains: List[Train]):
+def show_train(map_items: Map, train: Train, trains: List[Train]):
     offset = 40
-    maxX = max(map(lambda p: p.real, mapItems.keys()))
-    maxY = min(map(lambda p: p.imag, mapItems.keys()))
-    startX = max(0, int(train.position.real) - offset)
-    endX = min(maxX, int(train.position.real) + offset)
-    startY = min(0, int(train.position.imag) + offset)
-    endY = max(maxY, int(train.position.imag) - offset)
-    showMapArea(mapItems, startX + startY * 1j, endX + endY * 1j, trains)
+    max_x = max(map(lambda p: p.real, map_items.keys()))
+    max_y = min(map(lambda p: p.imag, map_items.keys()))
+    start_x = max(0, int(train.position.real) - offset)
+    end_x = min(max_x, int(train.position.real) + offset)
+    start_y = min(0, int(train.position.imag) + offset)
+    end_y = max(max_y, int(train.position.imag) - offset)
+    show_map_area(map_items, start_x + start_y *
+                  1j, end_x + end_y * 1j, trains)
 
 
-def positionToString(position: Position) -> str:
+def position_to_string(position: Position) -> str:
     return f"{int(position.real)},{abs(int(position.imag))}"
 
 
-def solve(mapTrains: Tuple[Map,List[Train]]) -> Tuple[str,str]:
-    mapItems, trains = mapTrains
-    trains = copy.deepcopy(trains)
-    trainLocations = { train.position: train for train in trains }
-    part1Result = ""
+def solve(data: Tuple[Map, List[Train]]) -> Tuple[str, str]:
+    map_items, trains = data
+    train_locations = {train.position: train for train in trains}
+    part1_result = ""
+    cycles = 0
     while True:
-        for position in sorted(list(trainLocations.keys()), key=lambda position: (-position.imag, position.real)):
-            if position not in trainLocations:
+        cycles += 1
+        for position in sorted(list(train_locations.keys()), key=lambda position: (-position.imag, position.real)):
+            if position not in train_locations:
                 continue
-            train = trainLocations[position]
-            del trainLocations[position]
+            train = train_locations[position]
+            del train_locations[position]
             train.tick()
-            if train.position in trainLocations:
-                if not part1Result:
-                    part1Result = positionToString(train.position)
-                del trainLocations[train.position]    
+            if train.position in train_locations:
+                if not part1_result:
+                    part1_result = position_to_string(train.position)
+                del train_locations[train.position]
             else:
-                trainLocations[train.position] = train
-            mapItem = mapItems[train.position]
-            if mapItem[0] == MapItemType.Intersection:
+                train_locations[train.position] = train
+            map_item = map_items[train.position]
+            if isinstance(map_item,  Intersection):
                 train.turn()
-            elif mapItem[0] == MapItemType.Turn:
-                train.direction = mapItem[1][1] if train.direction.real else mapItem[1][0]
-        if len(trainLocations) == 1:
-                return part1Result, positionToString(list(trainLocations.keys())[0])
+            elif isinstance(map_item, Turn):
+                train.direction = map_item.vertical if train.direction.real else map_item.horizontal
+        if len(train_locations) == 1:
+            return part1_result, position_to_string(list(train_locations.keys())[0])
 
 
 TRAINS = {
@@ -121,7 +140,7 @@ TRAINS = {
     "^": 1j,
     "v": -1j
 }
-TURNS = [ "/", "\\" ]
+TURNS = ["/", "\\"]
 TURN_DIRECTIONS = {
     " /": (1, -1j),
     "-/": (-1, 1j),
@@ -130,46 +149,46 @@ TURN_DIRECTIONS = {
     "+\\": (-1, -1j),
     " \\": (1, 1j),
 }
-STRAIGHTS = { 
+STRAIGHTS = {
     "-": Orientation.Horizontal,
     "|": Orientation.Vertical
 }
 INTERSECTION = "+"
-def getInput(filePath: str) -> Tuple[Map,List[Train]]:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
-    
-    with open(filePath, "r") as file:
+
+
+def get_input(file_path: str) -> Tuple[Map, List[Train]]:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
+
+    with open(file_path, "r") as file:
         trains: List[Train] = []
         map: Map = {}
-        previousC = " "
-        trainPositionToFillIn = []
-        trainIndex = 0
+        previous_c = " "
+        train_position_to_fill_in: List[complex] = []
         for y, line in enumerate(file.readlines()):
             for x, c in enumerate(line):
                 position = x - y * 1j
                 if c == INTERSECTION:
-                    map[position] = (MapItemType.Intersection,0)
+                    map[position] = Intersection()
                 elif c in STRAIGHTS:
-                    map[position] = (MapItemType.Straight, STRAIGHTS[c])
+                    map[position] = Straight(STRAIGHTS[c])
                 elif c in TURNS:
-                    if previousC not in [ "-", "+" ]:
-                        previousC = " "
-                    map[position] = (MapItemType.Turn,TURN_DIRECTIONS[previousC + c])
+                    if previous_c not in ["-", "+"]:
+                        previous_c = " "
+                    map[position] = Turn(TURN_DIRECTIONS[previous_c + c])
                 elif c in TRAINS:
                     trains.append(Train(position, TRAINS[c]))
-                    trainIndex += 1
-                    trainPositionToFillIn.append(position)       
-                previousC = c
-        
-        for position in trainPositionToFillIn:
+                    train_position_to_fill_in.append(position)
+                previous_c = c
+        for position in train_position_to_fill_in:
             for direction in TRAINS.values():
                 if position + direction in map:
-                    mapPosition = map[position + direction]
-                    if mapPosition[0] == MapItemType.Straight:
-                        map[position] = mapPosition
-                    elif mapPosition[0] == MapItemType.Intersection:
-                        map[position] = (MapItemType.Straight,Orientation.Horizontal if direction.real else Orientation.Vertical)
+                    map_position = map[position + direction]
+                    if isinstance(map_position, Straight):
+                        map[position] = map_position
+                    elif isinstance(map_position, Intersection):
+                        map[position] = Straight(
+                            Orientation.Horizontal if direction.real else Orientation.Vertical)
         return map, trains
 
 
@@ -178,10 +197,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
