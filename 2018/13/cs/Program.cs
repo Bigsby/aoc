@@ -27,21 +27,21 @@ namespace AoC
 
     record MapItem(MapItemType type);
 
-    record Straight : MapItem 
+    record Straight : MapItem
     {
         public Orientation Orientation { get; }
         public Straight(Orientation orientation)
             : base(MapItemType.Straight) => Orientation = orientation;
     }
 
-    record Turn : MapItem 
+    record Turn : MapItem
     {
-        public Tuple<Direction, Direction> Directions { get; }
-        public Turn(Tuple<Direction, Direction> directions)
+        public (Direction horizontal, Direction vertical) Directions { get; }
+        public Turn((Direction, Direction) directions)
             : base(MapItemType.Turn) => Directions = directions;
     }
-    
-    record Intersection : MapItem 
+
+    record Intersection : MapItem
     {
         public Intersection() : base(MapItemType.Intersection) { }
     }
@@ -66,7 +66,7 @@ namespace AoC
         public Position Position { get; private set; }
         public Direction Direction { get; set; }
 
-        public void Tick() =>  Position += Direction;
+        public void Tick() => Position += Direction;
 
         public void Turn() => Direction *= _directionCycle.Next();
 
@@ -77,8 +77,8 @@ namespace AoC
             Position = position;
             Direction = direction;
         }
-        
-        static Direction[] DIRECTION_CHANGES = new [] { Direction.ImaginaryOne, 1, -Direction.ImaginaryOne };
+
+        static Direction[] DIRECTION_CHANGES = new[] { Direction.ImaginaryOne, 1, -Direction.ImaginaryOne };
         Cycle<Direction> _directionCycle = new Cycle<Direction>(DIRECTION_CHANGES);
     }
 
@@ -91,14 +91,14 @@ namespace AoC
             { Direction.ImaginaryOne, '^' },
             { -Direction.ImaginaryOne, 'v' }
         };
-        static Dictionary<Tuple<Direction, Direction>, char> TURN_CHAR = new Dictionary<Tuple<Position, Position>, char>
+        static Dictionary<(Direction, Direction), char> TURN_CHAR = new Dictionary<(Direction, Direction), char>
         {
-            { Tuple.Create( Direction.One,  Direction.ImaginaryOne), '\\' },
-            { Tuple.Create( Direction.One, -Direction.ImaginaryOne), '/'  },
-            { Tuple.Create(-Direction.One,  Direction.ImaginaryOne), '/'  },
-            { Tuple.Create(-Direction.One, -Direction.ImaginaryOne), '\\' },
+            { ( Direction.One,  Direction.ImaginaryOne), '\\' },
+            { ( Direction.One, -Direction.ImaginaryOne), '/'  },
+            { (-Direction.One,  Direction.ImaginaryOne), '/'  },
+            { (-Direction.One, -Direction.ImaginaryOne), '\\' },
         };
-        static void ShowMapArea(Map mapItems, Position start, Position end, IEnumerable<Train>  trains)
+        static void ShowMapArea(Map mapItems, Position start, Position end, IEnumerable<Train> trains)
         {
             for (var y = (int)start.Imaginary; y > (int)end.Imaginary - 1; y--)
             {
@@ -107,7 +107,7 @@ namespace AoC
                     var position = new Position(x, y);
                     var c = ' ';
                     if (mapItems.ContainsKey(position))
-                        switch(mapItems[position])
+                        switch (mapItems[position])
                         {
                             case Straight straight:
                                 c = straight.Orientation == Orientation.Horizontal ? '-' : '|';
@@ -144,7 +144,7 @@ namespace AoC
         static string PositionToString(Position position)
             => $"{(int)position.Real},{(int)Math.Abs(position.Imaginary)}";
 
-        static (string, string) Solve((Map map,  IEnumerable<Train> trains) data)
+        static (string, string) Solve((Map map, IEnumerable<Train> trains) data)
         {
             var (mapItems, trains) = data;
             var trainLocations = trains.ToDictionary(train => train.Position, train => train.Clone());
@@ -167,13 +167,13 @@ namespace AoC
                     else
                         trainLocations[train.Position] = train;
                     var mapItem = mapItems[train.Position];
-                    switch(mapItem)
+                    switch (mapItem)
                     {
                         case Intersection intersection:
                             train.Turn();
                             break;
                         case Turn turn:
-                            train.Direction = train.Direction.Real != 0 ? turn.Directions.Item2 : turn.Directions.Item1;
+                            train.Direction = train.Direction.Real != 0 ? turn.Directions.vertical : turn.Directions.horizontal;
                             break;
                     }
                 }
@@ -189,15 +189,15 @@ namespace AoC
             { '^', Direction.ImaginaryOne },
             { 'v', -Direction.ImaginaryOne }
         };
-        static char[] TURNS = new [] { '/', '\\' };
-        static Dictionary<string, Tuple<Direction, Direction>> TURN_DIRECTIONS = new Dictionary<string, Tuple<Direction, Direction>>
+        static char[] TURNS = new[] { '/', '\\' };
+        static Dictionary<string, (Direction, Direction)> TURN_DIRECTIONS = new Dictionary<string, (Direction, Direction)>
         {
-            { " /",  Tuple.Create( Direction.One, -Direction.ImaginaryOne) },
-            { "-/",  Tuple.Create(-Direction.One,  Direction.ImaginaryOne) },
-            { "+/",  Tuple.Create(-Direction.One,  Direction.ImaginaryOne) },
-            { "-\\", Tuple.Create(-Direction.One, -Direction.ImaginaryOne) },
-            { "+\\", Tuple.Create(-Direction.One, -Direction.ImaginaryOne) },
-            { " \\", Tuple.Create( Direction.One,  Direction.ImaginaryOne) }
+            { " /",  ( Direction.One, -Direction.ImaginaryOne) },
+            { "-/",  (-Direction.One,  Direction.ImaginaryOne) },
+            { "+/",  (-Direction.One,  Direction.ImaginaryOne) },
+            { "-\\", (-Direction.One, -Direction.ImaginaryOne) },
+            { "+\\", (-Direction.One, -Direction.ImaginaryOne) },
+            { " \\", ( Direction.One,  Direction.ImaginaryOne) }
         };
         static Dictionary<char, Orientation> STRAIGHTS = new Dictionary<char, Orientation>
         {
@@ -205,10 +205,10 @@ namespace AoC
             { '|', Orientation.Vertical }
         };
         const char INTERSECTION = '+';
-        static char[] TURN_PREVIOUS = new [] { '-', '+' };
-        static (Map map,  IEnumerable<Train> trains) GetInput(string filePath)
+        static char[] TURN_PREVIOUS = new[] { '-', '+' };
+        static (Map map, IEnumerable<Train> trains) GetInput(string filePath)
         {
-            if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);        
+            if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
             var trains = new List<Train>();
             var map = new Map();
             var previousC = ' ';
@@ -226,7 +226,7 @@ namespace AoC
                     {
                         if (!TURN_PREVIOUS.Contains(previousC))
                             previousC = ' ';
-                        map[position] = new Turn(TURN_DIRECTIONS[new string(new[]{ previousC, c })]);                        
+                        map[position] = new Turn(TURN_DIRECTIONS[new string(new[] { previousC, c })]);
                     }
                     else if (TRAINS.ContainsKey(c))
                     {
