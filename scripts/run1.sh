@@ -4,6 +4,11 @@ declare -A languages=(
     ["rs"]="cargo run --quiet --manifest-path|rs/Cargo.toml "
     ["cpp"]="make -f |cpp/makefile INPUT="
     ["js"]="node|js/run.js "
+    ["swift"]="|swift/run.swift "
+    # ["go"]
+    # ["ts"]
+    # ["kt"]
+    # ["c"]
 )
 IFS=" "
 years="2015 2016 2017 2018 2019 2020"
