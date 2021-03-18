@@ -217,6 +217,7 @@
                     "name": "Knights of the Dinner Table",
                     "description": "Seatings on round table",
                     "tags": [ "Combinations" ],
+                    "comments": [ "Consider using a matrix" ],
                     "results": [
                         {
                             "p1": "733",
@@ -2123,6 +2124,7 @@
                     "name": "Care Package",
                     "description": "Run machine code to play Arkanoid in screen",
                     "tags": [ "Machine", "IntCode", "Game" ],
+                    "gotchas": [ "Make sure paddle x is equal to ball x" ],
                     "results": [
                         {
                             "p1": "268",
@@ -2524,6 +2526,7 @@
                     "name": "Shuttle Search",
                     "description": "Buses. Chinese Remainder Theorem",
                     "tags": [ "Maths", "Absolution Modulo", "Modulo", "Chinese Remainder Theorem", "CRT" ],
+                    "gotchas": [ "https://rosettacode.org/wiki/Chinese_remainder_theorem" ],
                     "results": [
                         {
                             "p1": "2947",
