@@ -11,7 +11,7 @@ namespace AoC
 
     static class Program
     {
-        static long Part1((long timestamp, IEnumerable<Bus> busses) puzzleInput)
+        static long Part1((long, IEnumerable<Bus>) puzzleInput)
         {
             var (timestamp, busses) = puzzleInput;
             var closestAfter = long.MaxValue;
@@ -37,9 +37,9 @@ namespace AoC
             return 1;
         }
 
-        static long AbsoluteModulo(long a,long n) => ((a % n) + n) % n;
+        static long AbsoluteModulo(long a, long n) => ((a % n) + n) % n;
 
-        static long Part2((long timestamp, IEnumerable<Bus> busses) puzzleInput)
+        static long Part2((long, IEnumerable<Bus>) puzzleInput)
         {
             var (_, busses) = puzzleInput;
             var product = busses.Aggregate(1L, (soFar, bus) => soFar * bus.id);
@@ -47,25 +47,25 @@ namespace AoC
             foreach (var bus in busses)
             {
                 var currentProduct = product / bus.id;
-                sum += AbsoluteModulo(bus.id - bus.index, bus.id) 
-                    * currentProduct 
+                sum += AbsoluteModulo(bus.id - bus.index, bus.id)
+                    * currentProduct
                     * ModularMultiplicativeInverse(currentProduct, bus.id);
             }
             return sum % product;
         }
 
-        static (long, long) Solve((long timestamp, IEnumerable<Bus> busses) puzzleInput)
+        static (long, long) Solve((long, IEnumerable<Bus>) puzzleInput)
             => (
                 Part1(puzzleInput),
                 Part2(puzzleInput)
             );
 
-        static (long timestamp, IEnumerable<Bus> busses) GetInput(string filePath)
+        static (long, IEnumerable<Bus>) GetInput(string filePath)
         {
             if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
             var lines = File.ReadAllLines(filePath);
             return (
-                long.Parse(lines[0]), 
+                long.Parse(lines[0]),
                 lines[1].Split(',').Select((busId, index) => (busId, index))
                     .Where(pair => pair.busId != "x")
                     .Select(pair => new Bus(long.Parse(pair.busId), pair.index)));
