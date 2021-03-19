@@ -22,7 +22,7 @@ func getInput(_ filePath: String) throws -> [Int] {
             contentsOf: URL.init(fileURLWithPath: filePath), 
             encoding: .utf8)
         
-        return contents.trimmingCharacters(in: .whitespacesAndNewlines).map { c in Int(String(c))! }
+        return contents.trimmingCharacters(in: .whitespacesAndNewlines).map { c in c.wholeNumberValue! }
     }
     catch {
         throw "unable to read file"
