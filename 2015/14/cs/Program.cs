@@ -8,7 +8,19 @@ using System.Text.RegularExpressions;
 
 namespace AoC
 {
-    record Entry(string name, int speed, int duration, int rest);
+    record Entry(string name, int speed, int duration, int rest)
+    {
+        public int CalculateDistance(int totalDuration)
+        {
+            var period = this.duration + this.rest;
+            var periods = Math.DivRem(totalDuration, period, out var remainder);
+            var total = periods * this.speed * this.duration;
+            return total + this.speed * Math.Min(remainder, this.duration);
+        }
+
+        public int GetDistanceForTime(int time)
+            => time % (this.duration + this.rest) < this.duration ? this.speed : 0;
+    };
 
     class Deer
     {
@@ -22,24 +34,13 @@ namespace AoC
     {
         const int TIME = 2503;
 
-        static int CalculateDistance(Entry entry, int totalDuration)
-        {
-            var period = entry.duration + entry.rest;
-            var periods = Math.DivRem(totalDuration, period, out var remainder);
-            var total = periods * entry.speed * entry.duration;
-            return total + entry.speed * Math.Min(remainder, entry.duration);
-        }
-
-        static int GetDistanceForTime(Entry entry, int time)
-            => time % (entry.duration + entry.rest) < entry.duration ? entry.speed : 0;
-
         static int Part2(IEnumerable<Entry> entries)
         {
             var deers = entries.Select(entry => new Deer(entry)).ToArray();
             for (var time = 0; time < TIME; time++)
             {
-                var maxDistance = deers.Aggregate(0, (max, deer) => 
-                    Math.Max(max, deer.Distance += GetDistanceForTime(deer.Entry, time)));
+                var maxDistance = deers.Aggregate(0, (max, deer) =>
+                    Math.Max(max, deer.Distance += deer.Entry.GetDistanceForTime(time)));
                 foreach (var deer in deers.Where(deer => deer.Distance == maxDistance))
                     deer.Points++;
             }
@@ -48,7 +49,7 @@ namespace AoC
 
         static (int, int) Solve(IEnumerable<Entry> entries)
             => (
-                entries.Max(entry => CalculateDistance(entry, TIME)),
+                entries.Max(entry => entry.CalculateDistance(TIME)),
                 Part2(entries)
             );
 
