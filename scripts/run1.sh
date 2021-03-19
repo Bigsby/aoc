@@ -5,7 +5,7 @@ declare -A languages=(
     ["cpp"]="make -f |cpp/makefile INPUT="
     ["js"]="node|js/run.js "
     ["swift"]="|swift/run.swift "
-    # ["go"]
+    ["go"]="go run|go/run.go "
     # ["ts"]
     # ["kt"]
     # ["c"]
