@@ -1,0 +1,53 @@
+{
+    "languages": [
+        {
+            "id": "py",
+            "name": "Python",
+            "install": "https://www.python.org/",
+            "docs": "https://docs.python.org/3/"
+        },
+        {
+            "id": "cs",
+            "name": "C#",
+            "install": "https://dotnet.microsoft.com/",
+            "docs": "https://docs.microsoft.com/en-us/dotnet/csharp/"
+        },
+        {
+            "id": "rs",
+            "name": "Rust",
+            "install": "https://www.rust-lang.org/",
+            "docs": "https://doc.rust-lang.org/book/"
+        },
+        {
+            "id": "cpp",
+            "name": "C++",
+            "install": "https://gcc.gnu.org/",
+            "docs": "https://isocpp.org/"
+        },
+        {
+            "id": "js",
+            "name": "JavaScript",
+            "install": "https://nodejs.org/",
+            "docs": "https://developer.mozilla.org/en-US/docs/Web/JavaScript"
+        },
+        {
+            "id": "swift",
+            "name": "Swift",
+            "install": "https://swift.org/download/",
+            "docs": "https://swift.org/documentation/#the-swift-programming-language"
+        },
+        {
+            "id": "kt",
+            "name": "Kotlin",
+            "install": "https://github.com/JetBrains/kotlin",
+            "docs": "https://kotlinlang.org/docs/home.html"
+        },
+        {
+            "id": "go",
+            "name": "Go",
+            "install": "https://golang.org/doc/install",
+            "docs": "https://golang.org/doc/"
+        }
+    ],
+    "machines": []
+}
