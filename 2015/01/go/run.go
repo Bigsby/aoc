@@ -67,5 +67,5 @@ func main() {
 	fmt.Printf("P1: %v\n", part1Result)
 	fmt.Printf("P1: %v\n", part2Result)
 	fmt.Println()
-	fmt.Printf("Time: %.7f\n", float64(duration.Nanoseconds())/1000000000)
+	fmt.Printf("Time: %.7f\n", float64(duration.Nanoseconds())*1e-9)
 }
