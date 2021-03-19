@@ -37,7 +37,7 @@ namespace AoC
         }
         static void PrintList<T>(IEnumerable<T> list) => WriteLine("[ " + string.Join(",", list) + " ]");
 
-        static int[] SUFFIX = new [] { 17, 31, 73, 47, 23 };
+        static int[] SUFFIX = new[] { 17, 31, 73, 47, 23 };
         static string Knothash(string key)
         {
             var lengths = key.Select(c => (int)c);
@@ -57,11 +57,11 @@ namespace AoC
         static string GetRowHashBinaryString(string key, int index)
         {
             var knotHash = Knothash(key + "-" + index.ToString());
-            return string.Join("", Enumerable.Range(0, knotHash.Length / 2).Select(i => 
+            return string.Join("", Enumerable.Range(0, knotHash.Length / 2).Select(i =>
                 Convert.ToString(Convert.ToInt32(knotHash[new Range(2 * i, 2 * (i + 1))], 16), 2).PadLeft(8, '0')));
         }
 
-        static Complex[] DIRECTIONS = new [] { Complex.ImaginaryOne, 1, -Complex.ImaginaryOne, -1 };
+        static Complex[] DIRECTIONS = new[] { Complex.ImaginaryOne, 1, -Complex.ImaginaryOne, -1 };
         static void FindAdjacent(Complex point, HashSet<Complex> grid, HashSet<Complex> visited)
         {
             foreach (var direction in DIRECTIONS)
@@ -82,7 +82,7 @@ namespace AoC
                 foreach (var (c, column) in GetRowHashBinaryString(key, row).Select((c, column) => (c, column)))
                     if (c == '1')
                         gridPoints.Add(new Complex(column, row));
-            var region  = 0;
+            var region = 0;
             while (gridPoints.Any())
             {
                 region++;
