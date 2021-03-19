@@ -14,6 +14,14 @@ class Entry():
         self.duration = int(duration)
         self.rest = int(rest)
         self.period = self.duration + self.rest
+    
+    def calculate_distance(self, total_duration: int) -> int:
+        periods, remainder = divmod(total_duration, self.period)
+        total = periods * self.speed * self.duration
+        return total + self.speed * min(remainder, self.duration)
+
+    def get_distance_for_time(self, time: int) -> int:
+        return self.speed if time % self.period < self.duration else 0
 
 
 class Deer:
@@ -23,51 +31,40 @@ class Deer:
         self.points = 0
 
 
-def calculateDistance(entry: Entry, totalDuration: int) -> int:
-    periods, remainder = divmod(totalDuration, entry.period)
-    total = periods * entry.speed * entry.duration
-    return total + entry.speed * min(remainder, entry.duration)
-
-
-def getDistanceForTime(entry: Entry, time: int) -> int:
-    timeInPeriod = time % entry.period
-    return entry.speed if timeInPeriod < entry.duration else 0
-
-
 def part2(entries: List[Entry]) -> int:
     deers = [ Deer(entry) for entry in entries ]
     for time in range(TIME):
-        maxDistance = 0
+        max_distance = 0
         for deer in deers:
-            deer.distance += getDistanceForTime(deer.entry, time)
-            maxDistance = max(maxDistance, deer.distance)
+            deer.distance += deer.entry.get_distance_for_time(time)
+            max_distance = max(max_distance, deer.distance)
         for deer in deers:
-            if deer.distance == maxDistance:
+            if deer.distance == max_distance:
                 deer.points += 1
     return max(map(lambda deer: deer.points, deers))
 
 
 def solve(entries: List[Entry]) -> Tuple[int,int]:
     return (
-        max(map(lambda entry: calculateDistance(entry, TIME), entries)), 
+        max(map(lambda entry: entry.calculate_distance(TIME), entries)), 
         part2(entries)
     )
 
 
-lineRegex = re.compile(r"^(\w+)\scan\sfly\s(\d+)\skm/s\sfor\s(\d+)\sseconds,\sbut\sthen\smust\srest\sfor\s(\d+)\sseconds.$")
-def parseLine(line: str) -> Entry:
-    match = lineRegex.match(line)
+line_regex = re.compile(r"^(\w+)\scan\sfly\s(\d+)\skm/s\sfor\s(\d+)\sseconds,\sbut\sthen\smust\srest\sfor\s(\d+)\sseconds.$")
+def parse_line(line: str) -> Entry:
+    match = line_regex.match(line)
     if match:
         return Entry(*match.group(1, 2, 3, 4))
     raise Exception("Bad format", line)
 
 
-def getInput(filePath: str) -> List[Entry]:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
+def get_input(file_path: str) -> List[Entry]:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
     
-    with open(filePath, "r") as file:
-        return [ parseLine(line) for line in file.readlines() ]
+    with open(file_path, "r") as file:
+        return [ parse_line(line) for line in file.readlines() ]
 
 
 def main():
@@ -75,10 +72,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
