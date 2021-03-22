@@ -18,7 +18,7 @@ namespace AoC
             Offset = start + index + 1;
         }
     }
-    
+
     class Program
     {
         static int FindWinningPosiiton(IEnumerable<Disc> discs)
