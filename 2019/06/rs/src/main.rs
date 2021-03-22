@@ -50,13 +50,8 @@ static SAN: &str = "SAN";
 fn part2(planet_orbits: &HashMap<String, String>) -> usize {
     let mut you_path = get_path_to_center_of_mass(YOU, planet_orbits);
     let mut san_path = get_path_to_center_of_mass(SAN, planet_orbits);
-    you_path.reverse();
-    san_path.reverse();
-    while you_path[0] == san_path[0] {
-        you_path.remove(0);
-        san_path.remove(0);
-    }
-    you_path.len() + san_path.len()
+    while you_path.pop() == san_path.pop() {}
+    you_path.len() + san_path.len() + 2
 }
 
 fn solve(planet_orbits: &HashMap<String, String>) -> (u32, usize) {
