@@ -83,11 +83,10 @@ namespace AoC
                 requiredFuel = requiredFuel * maxOre / lastNeeded;
                 var oreNeeded = CalculateRequiredOre(reactions, requiredFuel);
                 if (lastNeeded == oreNeeded)
-                    break;
+                    return requiredFuel;
                 else
                     lastNeeded = oreNeeded;
             }
-            return requiredFuel;
         }
 
         static (long, long) Solve(Dictionary<string, Tuple<int, IEnumerable<ChemicalPortion>>> reactions)
