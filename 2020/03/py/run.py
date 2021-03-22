@@ -1,6 +1,8 @@
 #! /usr/bin/python3
 
-import sys, os, time
+import sys
+import os
+import time
 from typing import List, Tuple
 from functools import reduce
 
@@ -25,24 +27,27 @@ STEPS = [
     7 + 1j,
     1 + 2j
 ]
-def solve(trees: Trees) -> Tuple[int,int]:
+
+
+def solve(trees: Trees) -> Tuple[int, int]:
     return (
         calculate_trees(trees, 3 + 1j),
-        reduce(lambda current, step: current * calculate_trees(trees, step), STEPS, 1)
+        reduce(lambda current, step: current *
+               calculate_trees(trees, step), STEPS, 1)
     )
 
 
 def get_input(file_path: str) -> Trees:
     if not os.path.isfile(file_path):
         raise FileNotFoundError(file_path)
-    
+
     with open(file_path, "r") as file:
-        trees = []
+        trees: List[complex] = []
         for y, line in enumerate(file.readlines()):
             for x, c in enumerate(line):
                 if c == '#':
                     trees.append(x + y * 1j)
-    return trees 
+    return trees
 
 
 def main():

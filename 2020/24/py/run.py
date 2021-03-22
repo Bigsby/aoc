@@ -1,24 +1,26 @@
 #! /usr/bin/python3
 
-import sys, os, time
+import sys
+import os
+import time
 from typing import Dict, List, Tuple
 import re
 
 Directions = List[str]
 Tile = complex
-Floor = Dict[Tile,bool]
+Floor = Dict[Tile, bool]
 DIRECTIONS = {
     "e":   1,
     "se":      1j,
     "sw": -1 + 1j,
-    "w":  -1     ,
+    "w": -1,
     "ne":  1 - 1j,
-    "nw":    - 1j
+    "nw": - 1j
 }
 
 
 def flipInitialTiles(tilePaths: List[Directions]) -> Floor:
-    floor = {}
+    floor = Floor()
     for path in tilePaths:
         current = 0
         for direction in path:
@@ -31,11 +33,11 @@ def flipInitialTiles(tilePaths: List[Directions]) -> Floor:
 
 
 def getNeighbors(tile: Tile) -> List[Tile]:
-    return [ tile + direction for direction in DIRECTIONS.values() ]
+    return [tile + direction for direction in DIRECTIONS.values()]
 
 
 def getBlackCount(neighbors: List[Tile], floor: Floor) -> int:
-    return sum([ 1 for neighbor in neighbors if neighbor in floor and floor[neighbor] ])
+    return sum([1 for neighbor in neighbors if neighbor in floor and floor[neighbor]])
 
 
 def getTileState(tile: Tile, floor: Floor) -> bool:
@@ -51,10 +53,11 @@ def getNewState(tile: Tile, floor: Floor) -> bool:
 
 
 def runDay(floor: Floor) -> Floor:
-    newFloor = {}
+    newFloor = Floor()
     edgesToTest = set()
     for tile in floor:
-        edgesToTest.update({ neighbor for neighbor in getNeighbors(tile) if neighbor not in floor })
+        edgesToTest.update(
+            {neighbor for neighbor in getNeighbors(tile) if neighbor not in floor})
         newFloor[tile] = getNewState(tile, floor)
     for tile in edgesToTest:
         newFloor[tile] = getNewState(tile, floor)
@@ -67,7 +70,7 @@ def part2(floor: Floor) -> int:
     return sum(floor.values())
 
 
-def solve(tilePaths: List[Directions]) -> Tuple[int,int]:
+def solve(tilePaths: List[Directions]) -> Tuple[int, int]:
     floor = flipInitialTiles(tilePaths)
     return (
         sum(floor.values()),
@@ -76,12 +79,14 @@ def solve(tilePaths: List[Directions]) -> Tuple[int,int]:
 
 
 lineRegex = re.compile(r"e|se|sw|w|nw|ne")
+
+
 def getInput(filePath: str) -> List[Directions]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
-    
+
     with open(filePath, "r") as file:
-        return [ lineRegex.findall(line.strip()) for line in file.readlines() ]
+        return [lineRegex.findall(line.strip()) for line in file.readlines()]
 
 
 def main():

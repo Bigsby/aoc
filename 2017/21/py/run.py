@@ -1,13 +1,15 @@
 #! /usr/bin/python3
 
-import sys, os, time
+import sys
+import os
+import time
 import re
 from typing import Dict, Iterable, List, Set, Tuple
 
 Position = complex
 Grid = Set[Position]
-Rule = Tuple[Grid,Grid]
-Rules = Dict[int,List[Rule]]
+Rule = Tuple[Grid, Grid]
+Rules = Dict[int, List[Rule]]
 START = ".#./..#/###"
 
 
@@ -21,7 +23,7 @@ def printGrid(grid: Grid):
     print()
 
 
-def parseGrid(text: str) -> Tuple[int,Grid]: 
+def parseGrid(text: str) -> Tuple[int, Grid]:
     grid = set()
     split = text.split("/")
     for y, line in enumerate(split):
@@ -32,11 +34,11 @@ def parseGrid(text: str) -> Tuple[int,Grid]:
 
 
 def mirrorHorizontal(grid: Grid, size: int) -> Grid:
-    return { position.imag * 1j + size - 1 - position.real for position in grid }
+    return {position.imag * 1j + size - 1 - position.real for position in grid}
 
 
 def rotateClockwise(grid: Grid, size: int) -> Grid:
-    return { position.real * 1j + size - 1 - position.imag for position in grid }
+    return {position.real * 1j + size - 1 - position.imag for position in grid}
 
 
 def generatePermutations(grid: Grid, size: int) -> Iterable[Grid]:
@@ -54,19 +56,19 @@ def enhanceGrid(grid: Grid, size: int, rules: List[Rule]) -> Grid:
     raise Exception("Rule not found")
 
 
-def splitGrid(grid: Grid, count: int, size: int) -> Iterable[Tuple[int,int,Grid]]:
+def splitGrid(grid: Grid, count: int, size: int) -> Iterable[Tuple[int, int, Grid]]:
     for yIndex in range(count):
         for xIndex in range(count):
             xOffset = xIndex * size
             yOffset = yIndex * size
-            innerGrid = { 
-                p - (xIndex * size) - (yIndex * size) * 1j 
-                for p in grid 
-                if xOffset <= p.real < xOffset + size and yOffset <= p.imag < yOffset + size }
+            innerGrid = {
+                p - (xIndex * size) - (yIndex * size) * 1j
+                for p in grid
+                if xOffset <= p.real < xOffset + size and yOffset <= p.imag < yOffset + size}
             yield xIndex, yIndex, innerGrid
 
 
-def iterate(grid: Grid, size: int, rules: Rules) -> Tuple[int,Grid]:
+def iterate(grid: Grid, size: int, rules: Rules) -> Tuple[int, Grid]:
     enhancedGrid = set()
     divider = 0
     ruleSize = 0
@@ -78,11 +80,12 @@ def iterate(grid: Grid, size: int, rules: Rules) -> Tuple[int,Grid]:
     divider = size // ruleSize
     for xIndex, yIndex, innerGrid in splitGrid(grid, divider, ruleSize):
         for position in enhanceGrid(innerGrid, ruleSize, ruleSet):
-            enhancedGrid.add(position + xIndex * (ruleSize + 1) + yIndex * 1j * (ruleSize + 1))            
+            enhancedGrid.add(position + xIndex * (ruleSize +
+                                                  1) + yIndex * 1j * (ruleSize + 1))
     return size + divider, enhancedGrid
 
 
-def runIterations(grid: Grid, size: int, rules: Rules, iterations: int) -> Tuple[int,Grid]:
+def runIterations(grid: Grid, size: int, rules: Rules, iterations: int) -> Tuple[int, Grid]:
     for _ in range(iterations):
         size, grid = iterate(grid, size, rules)
     return size, grid
@@ -90,7 +93,7 @@ def runIterations(grid: Grid, size: int, rules: Rules, iterations: int) -> Tuple
 
 def runNext3Iterations(grid: Grid, rules: Rules) -> List[Grid]:
     _, grid = runIterations(grid, 3, rules, 3)
-    return [ innerGrid for _, _, innerGrid in splitGrid(grid, 3, 3) ]
+    return [innerGrid for _, _, innerGrid in splitGrid(grid, 3, 3)]
 
 
 def getGridId(grid: Grid) -> int:
@@ -104,8 +107,8 @@ def getGridId(grid: Grid) -> int:
 
 def part2(rules: Rules, grid: Grid) -> int:
     total = 0
-    calculated: Dict[int,List[Grid]] = {}
-    queue: List[Tuple[Grid,int]] = [ (grid, 0) ]
+    calculated: Dict[int, List[Grid]] = {}
+    queue: List[Tuple[Grid, int]] = [(grid, 0)]
     while queue:
         grid, iterations = queue.pop()
         if iterations == 18:
@@ -119,7 +122,7 @@ def part2(rules: Rules, grid: Grid) -> int:
     return total
 
 
-def solve(rules: Rules) -> Tuple[int,int]:
+def solve(rules: Rules) -> Tuple[int, int]:
     size, grid = parseGrid(START)
     return (
         len(runIterations(grid, size, rules, 5)[1]),
@@ -128,7 +131,9 @@ def solve(rules: Rules) -> Tuple[int,int]:
 
 
 lineRegex = re.compile(r"^(?P<rule>[./#]+) => (?P<result>[./#]+)$")
-def parseLine(line: str) -> Tuple[int,Rule]:
+
+
+def parseLine(line: str) -> Tuple[int, Rule]:
     match = lineRegex.match(line)
     if match:
         ruleSize, ruleGrid = parseGrid(match.group("rule"))
@@ -137,12 +142,12 @@ def parseLine(line: str) -> Tuple[int,Rule]:
     raise Exception("Bad format", line)
 
 
-def getInput(filePath: str) -> Dict[int,List[Rule]]:
+def getInput(filePath: str) -> Dict[int, List[Rule]]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
-    
+
     with open(filePath, "r") as file:
-        rules = { 2: [], 3: []}
+        rules: Dict[int, List[Rule]] = {2: [], 3: []}
         for line in file.readlines():
             size, rule = parseLine(line)
             rules[size].append(rule)

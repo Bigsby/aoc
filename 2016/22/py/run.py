@@ -1,13 +1,15 @@
 #! /usr/bin/python3
 
-import sys, os, time
+import sys
+import os
+import time
 from typing import Dict, List, Tuple
 import re
 
-FileSystem = Dict[complex,Tuple[int,int]]
+FileSystem = Dict[complex, Tuple[int, int]]
 
 
-def getEmptyAndNonViableNodes(fileSystem: FileSystem) -> Tuple[complex,List[complex]]:
+def getEmptyAndNonViableNodes(fileSystem: FileSystem) -> Tuple[complex, List[complex]]:
     nodeNames = fileSystem.keys()
     empty = -0j
     nonViableNodes = set()
@@ -24,10 +26,12 @@ def getEmptyAndNonViableNodes(fileSystem: FileSystem) -> Tuple[complex,List[comp
     return empty, list(nonViableNodes)
 
 
-DIRECTIONS = [ -1j, -1, 1, 1j ]
+DIRECTIONS = [-1j, -1, 1, 1j]
+
+
 def getStepsToTarget(nodes: List[complex], nonViable: List[complex], start: complex, destination: complex) -> int:
-    visited = [ start ]
-    queue: List[Tuple[complex,int]] = [ (start, 0) ]
+    visited = [start]
+    queue: List[Tuple[complex, int]] = [(start, 0)]
     while queue:
         currentNode, length = queue.pop(0)
         for direction in DIRECTIONS:
@@ -40,27 +44,31 @@ def getStepsToTarget(nodes: List[complex], nonViable: List[complex], start: comp
     raise Exception("Path not found")
 
 
-def solve(fileSystem: FileSystem) -> Tuple[int,int]:
+def solve(fileSystem: FileSystem) -> Tuple[int, int]:
     empty, nonViable = getEmptyAndNonViableNodes(fileSystem)
     nodes = list(fileSystem.keys())
     emptyDestination = int(max(n.real for n in nodes))
     return (
         len(fileSystem) - len(nonViable) - 1,
-        getStepsToTarget(nodes, nonViable, empty, emptyDestination) + (emptyDestination - 1) * 5
+        getStepsToTarget(nodes, nonViable, empty,
+                         emptyDestination) + (emptyDestination - 1) * 5
     )
 
 
-lineRegex = re.compile(r"^/dev/grid/node-x(?P<x>\d+)-y(?P<y>\d+)\s+(?P<size>\d+)T\s+(?P<used>\d+)")
+lineRegex = re.compile(
+    r"^/dev/grid/node-x(?P<x>\d+)-y(?P<y>\d+)\s+(?P<size>\d+)T\s+(?P<used>\d+)")
+
+
 def getInput(filePath: str) -> FileSystem:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
-    
+
     with open(filePath, "r") as file:
-        fileSystem = {}
+        fileSystem = FileSystem()
         for line in file.readlines():
             match = lineRegex.match(line)
             if match:
-                fileSystem[int(match.group("x")) + int(match.group("y")) * 1j ] = \
+                fileSystem[int(match.group("x")) + int(match.group("y")) * 1j] = \
                     (int(match.group("size")), int(match.group("used")))
         return fileSystem
 

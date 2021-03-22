@@ -59,7 +59,7 @@ def getInput(filePath: str) -> Grid:
         raise FileNotFoundError(filePath)
     
     with open(filePath, "r") as file:
-        grid = {}
+        grid = Grid()
         for y, line in enumerate(file.readlines()):
             for x, c in enumerate(line.strip()):
                 grid[x + y * 1j] = c == "#"

@@ -1,5 +1,7 @@
 #! /usr/bin/python3
-import sys, os, time
+import sys
+import os
+import time
 from typing import Dict, Iterable, List, Tuple
 import re
 from functools import reduce
@@ -28,11 +30,11 @@ def printTile(tile: Tile):
 
 
 def mirrorHorizontal(tile: Tile, size: int) -> Tile:
-    return [ position.imag * 1j + size - position.real for position in tile ]
+    return [position.imag * 1j + size - position.real for position in tile]
 
 
 def rotateClockwise(tile: Tile, size: int) -> Tile:
-    return [ position.real * 1j + size - position.imag for position in tile ]
+    return [position.real * 1j + size - position.imag for position in tile]
 
 
 def generatePermutations(tile: Tile) -> Iterable[Tile]:
@@ -43,16 +45,18 @@ def generatePermutations(tile: Tile) -> Iterable[Tile]:
         tile = rotateClockwise(tile, size)
 
 
-def generateAllTilesPermutations(tiles: List[Tuple[int,Tile]]) -> Dict[int,List[Tile]]:
-    return { number: list(generatePermutations(tile)) for number, tile in tiles }
+def generateAllTilesPermutations(tiles: List[Tuple[int, Tile]]) -> Dict[int, List[Tile]]:
+    return {number: list(generatePermutations(tile)) for number, tile in tiles}
 
 
 TESTS = {  # ( startOfTileA, StartOfTileB, StepToNextPosition )
-    -1j: ( 0 , 1j, 1  ), # match top with bottom left to right
-      1: ( 1 ,  0, 1j ), # match right with left top to bottom
-     1j: ( 1j,  0, 1  ), # match bottom with top left to right
-     -1: ( 0 ,  1, 1j )  # mathc left with right top to bottom
+    -1j: (0, 1j, 1),  # match top with bottom left to right
+    1: (1,  0, 1j),  # match right with left top to bottom
+    1j: (1j,  0, 1),  # match bottom with top left to right
+    -1: (0,  1, 1j)  # mathc left with right top to bottom
 }
+
+
 def testSides(tileA: Tile, tileB: Tile, side: complex, size: int) -> bool:
     positionAStart, positionBStart, step = TESTS[side]
     positionA = positionAStart * size
@@ -65,14 +69,14 @@ def testSides(tileA: Tile, tileB: Tile, side: complex, size: int) -> bool:
     return True
 
 
-def doPermutationsMatch(permutationA: Tile, permutationB:Tile, size:int, sides: List[complex]) -> Tuple[bool, complex]:
+def doPermutationsMatch(permutationA: Tile, permutationB: Tile, size: int, sides: List[complex]) -> Tuple[bool, complex]:
     for side in sides:
         if testSides(permutationA, permutationB, side, size):
             return True, side
     return False, 0
-    
 
-def doTilesMatch(tileA: Tile, permutations: List[Tile], size: int, sides: List[complex] = list(TESTS.keys())) -> Tuple[bool,complex, Tile]:
+
+def doTilesMatch(tileA: Tile, permutations: List[Tile], size: int, sides: List[complex] = list(TESTS.keys())) -> Tuple[bool, complex, Tile]:
     for permutation in permutations:
         matched, side = doPermutationsMatch(tileA, permutation, size, sides)
         if matched:
@@ -80,54 +84,60 @@ def doTilesMatch(tileA: Tile, permutations: List[Tile], size: int, sides: List[c
     return False, 0, []
 
 
-def getMatchingSides(tile: Tuple[int,Tile], tiles:List[Tuple[int,Tile]], size: int, allPermutations: Dict[int,List[Tile]]) -> List[complex]:
+def getMatchingSides(tile: Tuple[int, Tile], tiles: List[Tuple[int, Tile]], size: int, allPermutations: Dict[int, List[Tile]]) -> List[complex]:
     number, thisTile = tile
-    matchedSides = []
+    matchedSides: List[complex] = []
     for otherNumber, _ in tiles:
         if otherNumber == number:
             continue
-        matched, side, _ = doTilesMatch(thisTile, allPermutations[otherNumber], size)
+        matched, side, _ = doTilesMatch(
+            thisTile, allPermutations[otherNumber], size)
         if matched:
             matchedSides.append(side)
     return matchedSides
 
 
-def getCorners(tiles: List[Tuple[int,Tile]], size: int, allPermutations: Dict[int,List[Tile]]) -> List[Tuple[int,Tile]]:
-    tilesMatchesSides = { number: getMatchingSides((number, tile), tiles, size, allPermutations) for number, tile in tiles }
-    return [ ( number, matchedSides ) for number, matchedSides in tilesMatchesSides.items() if len(matchedSides) == 2 ]
+def getCorners(tiles: List[Tuple[int, Tile]], size: int, allPermutations: Dict[int, List[Tile]]) -> List[Tuple[int, Tile]]:
+    tilesMatchesSides = {number: getMatchingSides(
+        (number, tile), tiles, size, allPermutations) for number, tile in tiles}
+    return [(number, matchedSides) for number, matchedSides in tilesMatchesSides.items() if len(matchedSides) == 2]
 
 
-def buildPuzzle(tiles: List[Tuple[int,Tile]], tileSize: int, tilePermutations: Dict[int,List[Tile]], corners: List[Tuple[int,Tile]]) -> Dict[complex,Tile]:
+def buildPuzzle(tiles: List[Tuple[int, Tile]], tileSize: int, tilePermutations: Dict[int, List[Tile]], corners: List[Tuple[int, Tile]]) -> Dict[complex, Tile]:
     firstCornerNumber, (sideOne, sideTwo) = corners[0]
     puzzleWidth = int(sqrt(len(tiles)))
-    puzzlePosition = (puzzleWidth - 1) * ((1 if sideOne == -1 or sideTwo == -1 else 0) + (1j if sideOne == -1j or sideTwo == -1j else 0))
+    puzzlePosition = (puzzleWidth - 1) * ((1 if sideOne == -1 or sideTwo == -
+                                           1 else 0) + (1j if sideOne == -1j or sideTwo == -1j else 0))
     lastTile = tilePermutations[firstCornerNumber][0]
     del tilePermutations[firstCornerNumber]
-    puzzle = { }
+    puzzle: Dict[complex, Tile] = {}
     puzzle[puzzlePosition] = lastTile
     direction = sideOne
     while tilePermutations:
         puzzlePosition += direction
         for tileNumber, permutations in tilePermutations.items():
-            matched, _, matchedPermutation = doTilesMatch(lastTile, permutations, tileSize, [ direction ])
+            matched, _, matchedPermutation = doTilesMatch(
+                lastTile, permutations, tileSize, [direction])
             if matched:
                 puzzle[puzzlePosition] = lastTile = matchedPermutation
                 del tilePermutations[tileNumber]
                 if direction == sideTwo:
-                    direction = (-1 if (len(puzzle) // puzzleWidth) % 2 else 1) * sideOne
+                    direction = (-1 if (len(puzzle) // puzzleWidth) %
+                                 2 else 1) * sideOne
                 elif len(puzzle) % puzzleWidth == 0:
-                    direction = sideTwo    
+                    direction = sideTwo
                 break
     return puzzle
 
 
-def removeBordersAndJoin(puzzle: Dict[complex,Tile], tileSize: int) -> List[complex]:
+def removeBordersAndJoin(puzzle: Dict[complex, Tile], tileSize: int) -> Tile:
     offsetFactor = tileSize - 1
-    reduced = []
+    reduced = Tile()
     for puzzlePosition, tile in puzzle.items():
         for position in tile:
             if position.real > 0 and position.real < tileSize and position.imag > 0 and position.imag < tileSize:
-                reduced.append((puzzlePosition.real * offsetFactor + position.real - 1) + (puzzlePosition.imag * offsetFactor + position.imag - 1) * 1j)
+                reduced.append((puzzlePosition.real * offsetFactor + position.real - 1) + (
+                    puzzlePosition.imag * offsetFactor + position.imag - 1) * 1j)
     return reduced
 
 
@@ -136,8 +146,10 @@ SEA_MONSTER = [
     "#    ##    ##    ###",
     " #  #  #  #  #  #   "
 ]
+
+
 def getSeaMonster() -> Tile:
-    seaMonster = []
+    seaMonster: Tile = []
     for rowIndex, row in enumerate(SEA_MONSTER):
         for columnIndex, c in enumerate(row):
             if c == "#":
@@ -165,9 +177,9 @@ def getSeaMonsterCount(puzzle: Tile, seaMonster: Tile) -> int:
         if count:
             return count
     return 0
-    
 
-def part2(tiles: List[Tuple[int,Tile]], tilePermutations: Dict[int,List[Tile]], corners: List[Tuple[int,Tile]]) -> int:
+
+def part2(tiles: List[Tuple[int, Tile]], tilePermutations: Dict[int, List[Tile]], corners: List[Tuple[int, Tile]]) -> int:
     tileSize = getSize(tiles[0][1])
     puzzle = buildPuzzle(tiles, tileSize, tilePermutations, corners)
     reduced = removeBordersAndJoin(puzzle, tileSize)
@@ -176,7 +188,7 @@ def part2(tiles: List[Tuple[int,Tile]], tilePermutations: Dict[int,List[Tile]], 
     return len(reduced) - len(seaMonster) * locationCount
 
 
-def solve(tiles: List[Tuple[int,Tile]]) -> Tuple[int,int]:
+def solve(tiles: List[Tuple[int, Tile]]) -> Tuple[int, int]:
     permutations = generateAllTilesPermutations(tiles)
     size = getSize(tiles[0][1])
     corners = getCorners(tiles, size, permutations)
@@ -187,20 +199,22 @@ def solve(tiles: List[Tuple[int,Tile]]) -> Tuple[int,int]:
 
 
 numberLineRegex = re.compile(r"^Tile\s(?P<number>\d+):$")
-def getInput(filePath: str) -> List[Tuple[int,Tile]]:
+
+
+def getInput(filePath: str) -> List[Tuple[int, Tile]]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
-    
+
     with open(filePath, "r") as file:
-        tiles = []
+        tiles: List[Tuple[int, Tile]] = []
         tileNumber = 0
-        tile = []
+        tile = Tile()
         position = 0j
         for line in file.readlines():
             numberMatch = numberLineRegex.match(line)
             if numberMatch:
                 tileNumber = int(numberMatch.group("number"))
-                tile = []
+                tile = Tile()
                 position = 0j
             elif line.strip() == "":
                 tiles.append((tileNumber, tile))

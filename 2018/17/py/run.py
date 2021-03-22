@@ -1,6 +1,8 @@
 #! /usr/bin/python3
 
-import sys, os, time
+import sys
+import os
+import time
 from typing import Iterable, List, Set, Tuple
 import re
 
@@ -11,7 +13,7 @@ Water = Set[Position]
 Spring = Position
 
 
-def getEdges(positions: Iterable[Position]) -> Tuple[int,int,int,int]:
+def getEdges(positions: Iterable[Position]) -> Tuple[int, int, int, int]:
     return int(min(map(lambda s: s.real, positions))), \
         int(max(map(lambda s: s.real, positions))), \
         int(min(map(lambda s: s.imag, positions))), \
@@ -19,7 +21,8 @@ def getEdges(positions: Iterable[Position]) -> Tuple[int,int,int,int]:
 
 
 def printArea(clay: ClaySquares, flowing: Water, settled: Water, spring: Spring, queue: List[Position], all: bool = False):
-    minX, maxX, minY, maxY = getEdges(clay + list(settled) + list(flowing) + [ spring ])
+    minX, maxX, minY, maxY = getEdges(
+        clay + list(settled) + list(flowing) + [spring])
     margins = 20
     if not all:
         minX = max(int(spring.real) - margins * 2, minX)
@@ -45,7 +48,7 @@ def printArea(clay: ClaySquares, flowing: Water, settled: Water, spring: Spring,
     print()
 
 
-def findEdge(spring: Position, direction: int, settled: Water, clay: ClaySquares) -> Tuple[int,bool]:
+def findEdge(spring: Position, direction: int, settled: Water, clay: ClaySquares) -> Tuple[int, bool]:
     x = direction
     while True:
         current = spring + x
@@ -57,25 +60,26 @@ def findEdge(spring: Position, direction: int, settled: Water, clay: ClaySquares
         x += direction
 
 
-def solve(clay: ClaySquares) -> Tuple[int,int]:
+def solve(clay: ClaySquares) -> Tuple[int, int]:
     maxY = int(max(map(lambda s: s.imag, clay)))
     minY = int(min(map(lambda s: s.imag, clay)))
     settled = set()
     flowing = set()
-    queue = [ 500 + minY * 1j ]
+    queue = [500 + minY * 1j]
     while queue:
         spring = queue.pop()
         below = spring + 1j
         if below in flowing:
             continue
         flowing.add(spring)
-        while below.imag <= maxY and below not in clay and below not in settled: 
+        while below.imag <= maxY and below not in clay and below not in settled:
             flowing.add(below)
             below += 1j
         if below in clay or below in settled:
             x, y = int(below.real), below.imag * 1j - 1j
             leftOffset, leftOverflown = findEdge(below - 1j, -1, settled, clay)
-            rightOffset, rightOverflown = findEdge(below - 1j, 1, settled, clay)
+            rightOffset, rightOverflown = findEdge(
+                below - 1j, 1, settled, clay)
             isOverflown = leftOverflown or rightOverflown
             if not isOverflown:
                 queue.append(below - 2j)
@@ -96,12 +100,16 @@ def solve(clay: ClaySquares) -> Tuple[int,int]:
     return len(settled) + len(flowing), len(settled)
 
 
-lineRegex = re.compile(r"^(?P<sC>x|y)=(?P<sV>\d+), (?:x|y)=(?P<mS>\d+)..(?P<mE>\d+)$")
-def parseLine(line:str) -> ClaySquares:
+lineRegex = re.compile(
+    r"^(?P<sC>x|y)=(?P<sV>\d+), (?:x|y)=(?P<mS>\d+)..(?P<mE>\d+)$")
+
+
+def parseLine(line: str) -> ClaySquares:
     match = lineRegex.match(line)
     if match:
-        result = [ ]
-        sC, sV, mS, mE = match.group("sC"), int(match.group("sV")), int(match.group("mS")), int(match.group("mE"))
+        result = ClaySquares()
+        sC, sV, mS, mE = match.group("sC"), int(match.group("sV")), int(
+            match.group("mS")), int(match.group("mE"))
         if sC == "x":
             for y in range(mS, mE + 1):
                 result.append(sV + y * 1j)
@@ -112,12 +120,12 @@ def parseLine(line:str) -> ClaySquares:
     raise Exception("Bad format", line)
 
 
-def getInput(filePath:str) -> ClaySquares:
+def getInput(filePath: str) -> ClaySquares:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
-    
+
     with open(filePath, "r") as file:
-        clay = []
+        clay = ClaySquares()
         for line in file.readlines():
             clay += parseLine(line)
         return clay

@@ -1,12 +1,14 @@
 #! /usr/bin/python3
 
-import sys, os, time
+import sys
+import os
+import time
 from typing import Dict, List, Tuple
 from collections import defaultdict
 
 Bug = complex
 Bugs = List[Bug]
-DIRECTIONS = [ 1, -1, 1j, -1j ]
+DIRECTIONS = [1, -1, 1j, -1j]
 
 
 def getsBug(hasBug: bool, adjacentCount: int) -> bool:
@@ -14,18 +16,19 @@ def getsBug(hasBug: bool, adjacentCount: int) -> bool:
 
 
 def nextMinute(bugs: Bugs) -> Bugs:
-    newState = []
+    newState: List[Bug] = []
     for y in range(5):
         for x in range(5):
             position = x + y * 1j
-            adjacentCount = sum(offset + position in bugs for offset in DIRECTIONS)
+            adjacentCount = sum(
+                offset + position in bugs for offset in DIRECTIONS)
             if getsBug(position in bugs, adjacentCount):
                 newState.append(position)
     return newState
 
 
 def part1(bugs: Bugs) -> int:
-    previous = [ bugs ]
+    previous = [bugs]
     while True:
         bugs = nextMinute(bugs)
         if bugs in previous:
@@ -44,47 +47,54 @@ MIDDLE_TOP = 2 + 1j
 MIDDLE_LEFT = 1 + 2j
 MIDDLE_RIGHT = 3 + 2j
 MIDDLE_BOTTOM = 2 + 3j
-def nextLayeredMinute(layers: Dict[int,Bugs]) -> Dict[int,Bugs]:
-    newState: Dict[int,Bugs] = defaultdict(list)
+
+
+def nextLayeredMinute(layers: Dict[int, Bugs]) -> Dict[int, Bugs]:
+    newState: Dict[int, Bugs] = defaultdict(list)
     for layer in range(min(layers.keys()) - 1, max(layers.keys()) + 2):
         for y in range(5):
             for x in range(5):
                 position = x + y * 1j
                 if position == CENTER:
                     continue
-                adjacentCount = sum(offset + position in layers[layer] for offset in DIRECTIONS)
+                adjacentCount = sum(
+                    offset + position in layers[layer] for offset in DIRECTIONS)
                 if y == 0:
                     adjacentCount += MIDDLE_TOP in layers[layer - 1]
                 elif y == 4:
                     adjacentCount += MIDDLE_BOTTOM in layers[layer - 1]
-                
+
                 if x == 0:
                     adjacentCount += MIDDLE_LEFT in layers[layer - 1]
                 elif x == 4:
                     adjacentCount += MIDDLE_RIGHT in layers[layer - 1]
 
                 if position == MIDDLE_TOP:
-                    adjacentCount += sum(x in layers[layer + 1] for x in range(5))
+                    adjacentCount += sum(x in layers[layer + 1]
+                                         for x in range(5))
                 elif position == MIDDLE_LEFT:
-                    adjacentCount += sum(y * 1j in layers[layer + 1] for y in range(5))
+                    adjacentCount += sum(y *
+                                         1j in layers[layer + 1] for y in range(5))
                 elif position == MIDDLE_RIGHT:
-                    adjacentCount += sum(4 + y * 1j in layers[layer + 1] for y in range(5))
+                    adjacentCount += sum(4 + y *
+                                         1j in layers[layer + 1] for y in range(5))
                 elif position == MIDDLE_BOTTOM:
-                    adjacentCount += sum(x + 4j in layers[layer + 1] for x in range(5))
+                    adjacentCount += sum(x +
+                                         4j in layers[layer + 1] for x in range(5))
                 if getsBug(position in layers[layer], adjacentCount):
                     newState[layer].append(position)
     return newState
 
 
 def part2(bugs: Bugs) -> int:
-    layers: Dict[int,Bugs] = defaultdict(list)
+    layers: Dict[int, Bugs] = defaultdict(list)
     layers[0] = bugs
     for _ in range(200):
         layers = nextLayeredMinute(layers)
     return sum(len(bugs) for bugs in layers.values())
 
 
-def solve(bugs: Bugs) -> Tuple[int,int]:
+def solve(bugs: Bugs) -> Tuple[int, int]:
     return (
         part1(bugs),
         part2(bugs)
@@ -94,7 +104,7 @@ def solve(bugs: Bugs) -> Tuple[int,int]:
 def getInput(filePath: str) -> Bugs:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
-    
+
     with open(filePath, "r") as file:
         bugs: Bugs = []
         for y, line in enumerate(file.readlines()):

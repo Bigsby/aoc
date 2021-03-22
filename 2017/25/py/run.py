@@ -1,18 +1,20 @@
 #! /usr/bin/python3
 
-import sys, os, time
+import sys
+import os
+import time
 from typing import Dict, Tuple
 import re
 from collections import defaultdict
 
-Next = Tuple[int,int,str]
-States = Dict[str,Tuple[Next,Next]]
+Next = Tuple[int, int, str]
+States = Dict[str, Tuple[Next, Next]]
 
 
-def solve(data: Tuple[str,int,States]) -> Tuple[int,str]:
+def solve(data: Tuple[str, int, States]) -> Tuple[int, str]:
     state, steps, states = data
     cursor = 0
-    tape: Dict[int,int] = defaultdict(int)
+    tape: Dict[int, int] = defaultdict(int)
     for _ in range(steps):
         value, direction, state = states[state][tape[cursor]]
         tape[cursor] = value
@@ -20,12 +22,16 @@ def solve(data: Tuple[str,int,States]) -> Tuple[int,str]:
     return sum(tape.values()), ""
 
 
-setupRegex = re.compile(r"^Begin in state (?P<state>\w).*\s+^[^\d]*(?P<steps>\d+)", re.MULTILINE)
-stateRegex = re.compile(r"^In state (?P<state>\w):\n.*If.*\n[^\d]*(?P<fValue>\d).\n.*(?P<fSlot>right|left).\n.*state (?P<fState>\w).\n.*If.*\n[^\d]*(?P<tValue>\d).\n.*(?P<tSlot>right|left).\n.*state (?P<tState>\w)", re.MULTILINE)
-def getInput(filePath: str) -> Tuple[str,int,States]:
+setupRegex = re.compile(
+    r"^Begin in state (?P<state>\w).*\s+^[^\d]*(?P<steps>\d+)", re.MULTILINE)
+stateRegex = re.compile(
+    r"^In state (?P<state>\w):\n.*If.*\n[^\d]*(?P<fValue>\d).\n.*(?P<fSlot>right|left).\n.*state (?P<fState>\w).\n.*If.*\n[^\d]*(?P<tValue>\d).\n.*(?P<tSlot>right|left).\n.*state (?P<tState>\w)", re.MULTILINE)
+
+
+def getInput(filePath: str) -> Tuple[str, int, States]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
-    states = {}
+    states = States()
     initialState = ""
     steps = 0
     with open(filePath, "r") as file:
@@ -39,7 +45,7 @@ def getInput(filePath: str) -> Tuple[str,int,States]:
             if stateMatch:
                 states[stateMatch.group("state")] = \
                     ((int(stateMatch.group("fValue")), 1 if stateMatch.group("fSlot") == "right" else -1, stateMatch.group("fState")),
-                    (int(stateMatch.group("tValue")), 1 if stateMatch.group("tSlot") == "right" else -1, stateMatch.group("tState")))
+                     (int(stateMatch.group("tValue")), 1 if stateMatch.group("tSlot") == "right" else -1, stateMatch.group("tState")))
     return initialState, steps, states
 
 

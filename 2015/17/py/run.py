@@ -1,13 +1,17 @@
 #! /usr/bin/python3
 
-import sys, os, time
+import sys
+import os
+import time
 from typing import List, Tuple
 from itertools import combinations
 
 
 TARGET_TOTAL = 150
-def getValidCombinations(containers: List[int]) -> List[Tuple[int,...]]:
-    validCombinations = []
+
+
+def getValidCombinations(containers: List[int]) -> List[Tuple[int, ...]]:
+    validCombinations: List[Tuple[int, ...]] = []
     for containerCount in range(2, len(containers)):
         for combination in combinations(containers, containerCount):
             if sum(combination) == TARGET_TOTAL:
@@ -15,20 +19,21 @@ def getValidCombinations(containers: List[int]) -> List[Tuple[int,...]]:
     return validCombinations
 
 
-def solve(containers: List[int]) -> Tuple[int,int]:
+def solve(containers: List[int]) -> Tuple[int, int]:
     validCombinations = getValidCombinations(containers)
-    minCount = min([ len(combination) for combination in validCombinations ])
+    minCount = min([len(combination) for combination in validCombinations])
     return \
         len(validCombinations), \
-        len([ combination for combination in validCombinations if len(combination) == minCount ])
+        len([combination for combination in validCombinations if len(
+            combination) == minCount])
 
 
 def getInput(filePath: str) -> List[int]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
-    
+
     with open(filePath, "r") as file:
-        return [ int(line) for line in file.readlines() ]
+        return [int(line) for line in file.readlines()]
 
 
 def main():
@@ -42,7 +47,6 @@ def main():
     print("P2:", part2Result)
     print()
     print(f"Time: {end - start:.7f}")
-
 
 
 if __name__ == "__main__":

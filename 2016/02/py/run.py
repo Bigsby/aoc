@@ -20,7 +20,7 @@ def get_button_for_path(position: complex, path: str, keypad: Dict[complex,str])
 
 def get_code(paths: List[str], keypad: Dict[complex,str]) -> str:
     position = 0
-    code = []
+    code: List[str] = []
     for path in paths:
         position, digit = get_button_for_path(position, path, keypad)
         code.append(digit)

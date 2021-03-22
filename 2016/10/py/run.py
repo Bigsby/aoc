@@ -25,10 +25,10 @@ def solve(instructions: Instructions) -> Tuple[int, int]:
             bots[bot] = []
         bots[bot].append(value)
     outputs: Dict[int, int] = {}
-    part1_result = 0
+    part1_result: int = 0
     part2_result = 0
     while part1_result == 0 or part2_result == 0:
-        bot = next(bot for bot, chips in bots.items() if len(chips) == 2)
+        bot: int = next(bot for bot, chips in bots.items() if len(chips) == 2)
         low_chip = min(bots[bot])
         high_chip = max(bots[bot])
         low_target, low, high_target, high = compare_instructions[bot]

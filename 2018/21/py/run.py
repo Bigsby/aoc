@@ -1,15 +1,19 @@
 #! /usr/bin/python3
 
-import sys, os, time
+import sys
+import os
+import time
 from typing import List, Tuple
 import re
 
-Operation = Tuple[str,int,int,int]
+Operation = Tuple[str, int, int, int]
 
 
 MASK = 16777215
 MULTIPLIER = 65899
-def solve(data: Tuple[int,List[Operation]]) -> Tuple[int,int]:
+
+
+def solve(data: Tuple[int, List[Operation]]) -> Tuple[int, int]:
     _, operations = data
     magicNumber = operations[7][1]
     part1Result = 0
@@ -20,7 +24,8 @@ def solve(data: Tuple[int,List[Operation]]) -> Tuple[int,int]:
         accumulator = result | 0x10000
         result = magicNumber
         while True:
-            result = (((result + (accumulator & 0xFF)) & MASK) * MULTIPLIER) & MASK
+            result = (((result + (accumulator & 0xFF)) & MASK)
+                      * MULTIPLIER) & MASK
             if accumulator <= 0xFF:
                 if part1Result == 0:
                     part1Result = result
@@ -35,19 +40,23 @@ def solve(data: Tuple[int,List[Operation]]) -> Tuple[int,int]:
                 accumulator //= 0x100
 
 
-operationRegex = re.compile(r"^(?P<mnemonic>\w+) (?P<A>\d+) (?P<B>\d+) (?P<C>\d+)$")
-def getInput(filePath: str) -> Tuple[int,List[Operation]]:
+operationRegex = re.compile(
+    r"^(?P<mnemonic>\w+) (?P<A>\d+) (?P<B>\d+) (?P<C>\d+)$")
+
+
+def getInput(filePath: str) -> Tuple[int, List[Operation]]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
 
     with open(filePath, "r") as file:
         lines = file.readlines()
         ip = int(lines[0].split(" ")[1])
-        operations = []
+        operations: List[Operation] = []
         for line in lines[1:]:
             match = operationRegex.match(line)
             if match:
-                operations.append((match.group("mnemonic"), int(match.group("A")), int(match.group("B")), int(match.group("C"))))
+                operations.append((match.group("mnemonic"), int(
+                    match.group("A")), int(match.group("B")), int(match.group("C"))))
         return ip, operations
 
 

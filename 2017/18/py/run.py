@@ -1,10 +1,12 @@
 #! /usr/bin/python3
 
-import sys, os, time
+import sys
+import os
+import time
 from typing import Dict, List, Tuple
 from collections import defaultdict
 
-Instruction = Tuple[str,List[str]]
+Instruction = Tuple[str, List[str]]
 
 
 class Program:
@@ -12,7 +14,7 @@ class Program:
         self.instructions = instructions
         self.id = id
         self.outputOnRcv = outputOnRcv
-        self.registers: Dict[str,int] = defaultdict(int)
+        self.registers: Dict[str, int] = defaultdict(int)
         self.registers["p"] = id
         self.pointer = 0
         self.outputs: List[int] = []
@@ -21,15 +23,15 @@ class Program:
         self.outputting = False
         self.polling = False
         self.outputCount = 0
-        self.params = []
-    
+        self.params: List[str] = []
+
     def _getValue(self, offset: int) -> int:
         value = self.params[offset]
         try:
             return int(value)
         except:
             return self.registers[value]
-    
+
     def tick(self):
         if self.running:
             mnemonic, self.params = self.instructions[self.pointer]
@@ -80,7 +82,7 @@ def part2(instructions: List[Instruction]) -> int:
     return program1.outputCount
 
 
-def solve(instructions: List[Instruction]) -> Tuple[int,int]:
+def solve(instructions: List[Instruction]) -> Tuple[int, int]:
     return (
         part1(instructions),
         part2(instructions)
@@ -95,9 +97,9 @@ def parseLine(line: str) -> Instruction:
 def getInput(filePath: str) -> List[Instruction]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
-    
+
     with open(filePath, "r") as file:
-        return [ parseLine(line.strip()) for line in file.readlines() ]
+        return [parseLine(line.strip()) for line in file.readlines()]
 
 
 def main():

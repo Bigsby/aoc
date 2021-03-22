@@ -1,13 +1,15 @@
 #! /usr/bin/python3
 
-import sys, os, time
+import sys
+import os
+import time
 from typing import List, Tuple
 
-Point = Tuple[int,int,int,int]
+Point = Tuple[int, int, int, int]
 
 
-def solve(points: List[Point]) -> Tuple[int,str]:
-    edges = [ set() for _ in range(len(points)) ]
+def solve(points: List[Point]) -> Tuple[int, str]:
+    edges = [set() for _ in range(len(points))]
     for thisPoint, (w0, x0, y0, z0) in enumerate(points):
         for thatPoint, (w1, x1, y1, z1) in enumerate(points):
             if abs(w0 - w1) + abs(x0 - x1) + abs(y0 - y1) + abs(z0 - z1) < 4:
@@ -18,7 +20,7 @@ def solve(points: List[Point]) -> Tuple[int,str]:
         if thisPoint in visited:
             continue
         constellations += 1
-        queue = [ thisPoint ]
+        queue = [thisPoint]
         while queue:
             currentPoint = queue.pop(0)
             if currentPoint in visited:
@@ -32,11 +34,11 @@ def solve(points: List[Point]) -> Tuple[int,str]:
 def getInput(filePath: str) -> List[Point]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
-    
+
     with open(filePath, "r") as file:
-        points = []
+        points: List[Point] = []
         for line in file.readlines():
-            points.append(tuple(map(int,line.strip().split(","))))
+            points.append(tuple(map(int, line.strip().split(","))))
         return points
 
 

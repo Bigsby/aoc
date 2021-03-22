@@ -1,6 +1,8 @@
 #! /usr/bin/python3
 
-import sys, os, time
+import sys
+import os
+import time
 from typing import Dict, List, Tuple, Set
 import re
 
@@ -12,7 +14,7 @@ def part1(planet_orbits: Dict[str, str]) -> int:
     for orbiter, orbited in planet_orbits.items():
         planets.add(orbited)
         planets.add(orbiter)
-    orbit_counts: Dict[str, int] = { CENTER_OF_MASS: 0 }
+    orbit_counts: Dict[str, int] = {CENTER_OF_MASS: 0}
     while len(orbit_counts) != len(planets):
         for planet in planets:
             if planet in orbit_counts:
@@ -26,7 +28,7 @@ def part1(planet_orbits: Dict[str, str]) -> int:
     return sum(orbit_counts.values())
 
 
-def get_path_to_center_of_mass(planet:str, planet_orbits: Dict[str, str]) -> List[str]:
+def get_path_to_center_of_mass(planet: str, planet_orbits: Dict[str, str]) -> List[str]:
     route: List[str] = []
     while planet != CENTER_OF_MASS:
         planet = planet_orbits[planet]
@@ -36,18 +38,17 @@ def get_path_to_center_of_mass(planet:str, planet_orbits: Dict[str, str]) -> Lis
 
 YOU = "YOU"
 SAN = "SAN"
+
+
 def part2(planet_orbits: Dict[str, str]):
     you_path: List[str] = get_path_to_center_of_mass(YOU, planet_orbits)
     san_path: List[str] = get_path_to_center_of_mass(SAN, planet_orbits)
-    you_path.reverse()
-    san_path.reverse()
-    while you_path[0] == san_path[0]:
-        del you_path[0]
-        del san_path[0]
-    return len(you_path) + len(san_path)
+    while you_path.pop() == san_path.pop():
+        pass
+    return len(you_path) + len(san_path) + 2
 
 
-def solve(planet_orbits: Dict[str, str]) -> Tuple[int,int]:
+def solve(planet_orbits: Dict[str, str]) -> Tuple[int, int]:
     return (
         part1(planet_orbits),
         part2(planet_orbits)
@@ -55,6 +56,8 @@ def solve(planet_orbits: Dict[str, str]) -> Tuple[int,int]:
 
 
 line_regex = re.compile(r"^(?P<orbited>[A-Z\d]{3})\)(?P<orbiter>[A-Z\d]{3})$")
+
+
 def parseLine(line: str) -> Tuple[str, str]:
     match = line_regex.match(line)
     if match:
@@ -66,9 +69,9 @@ def parseLine(line: str) -> Tuple[str, str]:
 def get_input(file_path: str) -> Dict[str, str]:
     if not os.path.isfile(file_path):
         raise FileNotFoundError(file_path)
-    
+
     with open(file_path, "r") as file:
-        return {  orbiter: orbited for orbited, orbiter in map(lambda line:  parseLine(line), file.readlines()) }
+        return {orbiter: orbited for orbited, orbiter in map(lambda line:  parseLine(line), file.readlines())}
 
 
 def main():

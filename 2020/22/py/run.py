@@ -1,21 +1,23 @@
 #! /usr/bin/python3
 
-import sys, os, time
-from typing import List, Tuple
+import sys
+import os
+import time
+from typing import List, Set, Tuple
 
 
 class Player():
     def __init__(self, name: str, cards: List[int]):
         self.name = name
         self.cards = cards
-        self.previousHands = [ ] 
+        self.previousHands: List[Set[int]] = []
         self.lastCard = 0
 
     @staticmethod
     def fromLines(lines: str) -> 'Player':
         name, *cards = lines.split("\n")
         name = name.replace("Player", "").replace(":", "").strip()
-        cards = [ c for c in cards if c ]
+        cards = [c for c in cards if c]
         return Player(name, list(map(lambda i: int(i.strip()), cards)))
 
     def __str__(self) -> str:
@@ -32,11 +34,11 @@ class Player():
     def hasRepeatedHand(self) -> bool:
         return set(self.cards) in self.previousHands
 
-    def clone(self, keepState: bool  = False) -> 'Player':
+    def clone(self, keepState: bool = False) -> 'Player':
         if keepState:
             return Player(self.name, list(self.cards[:self.lastCard]))
         return Player(self.name, list(self.cards))
-    
+
     def getScore(self) -> int:
         worth = 1
         result = 0
@@ -46,12 +48,12 @@ class Player():
         return result
 
 
-def getPlayersFromInput(players: Tuple[Player,Player]) -> Tuple[Player,Player]:
+def getPlayersFromInput(players: Tuple[Player, Player]) -> Tuple[Player, Player]:
     player1, player2 = players
     return player1.clone(), player2.clone()
 
 
-def part1(players: Tuple[Player,Player]) -> int:
+def part1(players: Tuple[Player, Player]) -> int:
     player1, player2 = getPlayersFromInput(players)
     while len(player1.cards) and len(player2.cards):
         player1Card = player1.getTopCard()
@@ -64,7 +66,7 @@ def part1(players: Tuple[Player,Player]) -> int:
     return winner.getScore()
 
 
-def decideRound(player1: Player, player2: Player) -> Tuple[Player,Player]:
+def decideRound(player1: Player, player2: Player) -> Tuple[Player, Player]:
     if all(player.lastCard <= len(player.cards) for player in [player1, player2]):
         winner = playGame(player1.clone(True), player2.clone(True))
         if winner.name == player1.name:
@@ -93,23 +95,23 @@ def playGame(player1: Player, player2: Player) -> Player:
         return player2
 
 
-def part2(players: Tuple[Player,Player]) -> int:
+def part2(players: Tuple[Player, Player]) -> int:
     player1, player2 = getPlayersFromInput(players)
     winner = playGame(player1, player2)
     return winner.getScore()
 
 
-def solve(players: Tuple[Player,Player]) -> Tuple[int,int]:
+def solve(players: Tuple[Player, Player]) -> Tuple[int, int]:
     return (
         part1(players),
         part2(players)
     )
 
 
-def getInput(filePath: str) -> Tuple[Player,Player]:
+def getInput(filePath: str) -> Tuple[Player, Player]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
-    
+
     with open(filePath, "r") as file:
         contents = file.read()
         players = contents.split("\n\n")

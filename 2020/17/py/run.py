@@ -1,28 +1,33 @@
 #! /usr/bin/python3
 
-import sys, os, time
-from typing import Dict, Iterable, Tuple
+import sys
+import os
+import time
+from typing import Dict, Iterable, List, Tuple
 
-Coordinate = Tuple[int,...]
-Universe = Dict[Coordinate,bool]
+Coordinate = Tuple[int, ...]
+Universe = Dict[Coordinate, bool]
 
 
-def getLimits(universe: Universe) -> Tuple[Coordinate,Coordinate]:
-    lowerLimit = []
-    upperLimit = []
+def getLimits(universe: Universe) -> Tuple[Coordinate, Coordinate]:
+    lowerLimit: List[int] = []
+    upperLimit: List[int] = []
     for index in range(len(list(universe.keys())[0])):
         lowerLimit.append(min(key[index] for key in universe.keys()))
         upperLimit.append(max(key[index] for key in universe.keys()))
     return (tuple(lowerLimit), tuple(upperLimit))
 
 
-OUTER_DIMENSIONS = [ "z", "w" ]
+OUTER_DIMENSIONS = ["z", "w"]
+
+
 def printUniverse(universe: Universe):
     lowerLimit, upperLimit = getLimits(universe)
     dimensionCount = len(list(universe.keys())[0])
     for coordinate in cycleCoordinates(lowerLimit, upperLimit):
         if coordinate[-1] == lowerLimit[-1] and coordinate[-2] == lowerLimit[-2]:
-            print("\n" + ", ".join(OUTER_DIMENSIONS[index] + "=" + str(coordinate[index]) for index in range(dimensionCount - 2)), end="")
+            print("\n" + ", ".join(OUTER_DIMENSIONS[index] + "=" + str(
+                coordinate[index]) for index in range(dimensionCount - 2)), end="")
         if coordinate[-1] == lowerLimit[-1]:
             print()
         print('#' if universe[coordinate] else '.', end="")
@@ -45,7 +50,7 @@ def over(coordinate: Coordinate) -> Coordinate:
 
 
 def addDimension(coordiate: Coordinate) -> Coordinate:
-    return tuple([ 0 ] + list(coordiate))
+    return tuple([0] + list(coordiate))
 
 
 def nextCoordinateValue(current: Coordinate, lowerLimit: Coordinate, upperLimit: Coordinate) -> Coordinate:
@@ -67,8 +72,8 @@ def cycleCoordinates(lowerLimit: Coordinate, upperLimit: Coordinate) -> Iterable
 
 
 def getNeighborActiveCount(universe: Universe, coordinate: Coordinate) -> int:
-    return sum(neighbor != coordinate and neighbor in universe and universe[neighbor] 
-        for neighbor in cycleCoordinates(under(coordinate), over(coordinate)))
+    return sum(neighbor != coordinate and neighbor in universe and universe[neighbor]
+               for neighbor in cycleCoordinates(under(coordinate), over(coordinate)))
 
 
 def nextCycle(universe: Universe) -> Universe:
@@ -91,16 +96,18 @@ def runCycles(universe: Universe) -> int:
     return sum(universe.values())
 
 
-def solve(universe: Universe) -> Tuple[int,int]:
+def solve(universe: Universe) -> Tuple[int, int]:
     return (
         runCycles(universe),
-        runCycles({ addDimension(coordinate): value for coordinate, value in universe.items() })
+        runCycles({addDimension(coordinate): value for coordinate,
+                   value in universe.items()})
     )
+
 
 def getInput(filePath: str) -> Universe:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
-    
+
     universe: Universe = dict()
     with open(filePath, "r") as file:
         for y, line in enumerate(file.readlines()):

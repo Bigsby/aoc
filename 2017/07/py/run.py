@@ -44,8 +44,9 @@ def part2(records: Records, top_tower: str) -> int:
             k for k, v in weight_counts.items() if v == 1)
         weight_difference = next(
             k for k, v in weight_counts.items() if v > 1) - single_weight
-        current_tower = records[next(
-            child for child in current_tower[1] if combined_weights[child] == single_weight)]
+        next_tower: str = next(
+            child for child in current_tower[1] if combined_weights[child] == single_weight)
+        current_tower = records[next_tower]
 
 
 def solve(records: Records) -> Tuple[str, int]:

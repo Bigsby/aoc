@@ -1,7 +1,9 @@
 #! /usr/bin/python3
 
-import sys, os, time
-from typing import Dict, Iterable, Tuple
+import sys
+import os
+import time
+from typing import Dict, Iterable, List, Tuple
 from collections import defaultdict
 
 
@@ -11,10 +13,12 @@ DIRECTIONS = {
     "E": 1,
     "W": -1
 }
+
+
 def getDistances(routes: str) -> Iterable[int]:
-    distances: Dict[complex,int] = defaultdict(lambda:sys.maxsize)
+    distances: Dict[complex, int] = defaultdict(lambda: sys.maxsize)
     distances[0j] = 0
-    groupEnds = []
+    groupEnds: List[complex] = []
     head = 0j
     for c in routes[1:-1]:
         if c == "(":
@@ -30,7 +34,7 @@ def getDistances(routes: str) -> Iterable[int]:
     return distances.values()
 
 
-def solve(routes: str) -> Tuple[int,int]:
+def solve(routes: str) -> Tuple[int, int]:
     distances = getDistances(routes)
     return (
         max(distances),
@@ -41,7 +45,7 @@ def solve(routes: str) -> Tuple[int,int]:
 def getInput(filePath: str) -> str:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
-    
+
     with open(filePath, "r") as file:
         return file.read().strip()
 

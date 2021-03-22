@@ -1,16 +1,18 @@
 #! /usr/bin/python3
 
-import sys, os, time
+import sys
+import os
+import time
 from typing import Dict, List, Tuple
 
 Position = complex
 Tubes = List[Position]
-Letters = Dict[Position,str]
+Letters = Dict[Position, str]
 
 
-def solve(data: Tuple[Tubes,Letters,Position]) -> Tuple[str,int]:
+def solve(data: Tuple[Tubes, Letters, Position]) -> Tuple[str, int]:
     tubes, letters, currentPosition = data
-    path = []
+    path: List[str] = []
     direction = 1j
     steps = 0
     while True:
@@ -30,14 +32,16 @@ def solve(data: Tuple[Tubes,Letters,Position]) -> Tuple[str,int]:
     return "".join(path), steps
 
 
-TUBES = [ "|", "+", "-" ]
-def getInput(filePath: str) -> Tuple[Tubes,Letters,Position]:
+TUBES = ["|", "+", "-"]
+
+
+def getInput(filePath: str) -> Tuple[Tubes, Letters, Position]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
-    
+
     with open(filePath, "r") as file:
-        tubes = []
-        letters = {}
+        tubes = Tubes()
+        letters = Letters()
         start = -1j
         for y, line in enumerate(file.readlines()):
             for x, c in enumerate(line):
@@ -48,7 +52,7 @@ def getInput(filePath: str) -> Tuple[Tubes,Letters,Position]:
                         start = position
                 if "A" <= c <= "Z":
                     letters[position] = c
-                    tubes.append(position)        
+                    tubes.append(position)
         return tubes, letters, start
 
 

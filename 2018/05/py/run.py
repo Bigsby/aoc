@@ -1,12 +1,13 @@
 #! /usr/bin/python3
 
-import sys, os, time
+import sys
+import os
+import time
 from typing import Tuple
-import re
 
 
 def part1(polymer: str) -> int:
-    polymer_ints = [ ord(c) for c in polymer]
+    polymer_ints = [ord(c) for c in polymer]
     had_changes = True
     while had_changes:
         had_changes = False
@@ -16,7 +17,7 @@ def part1(polymer: str) -> int:
                 del polymer_ints[index]
                 del polymer_ints[index]
                 had_changes = True
-            else:      
+            else:
                 index += 1
     return len(polymer_ints)
 
@@ -30,7 +31,7 @@ def part2(polymer: str) -> int:
     return min_units
 
 
-def solve(polymer: str) -> Tuple[int,int]:
+def solve(polymer: str) -> Tuple[int, int]:
     return (
         part1(polymer),
         part2(polymer)
@@ -40,7 +41,7 @@ def solve(polymer: str) -> Tuple[int,int]:
 def get_input(file_path: str) -> str:
     if not os.path.isfile(file_path):
         raise FileNotFoundError(file_path)
-    
+
     with open(file_path, "r") as file:
         return file.read().strip()
 

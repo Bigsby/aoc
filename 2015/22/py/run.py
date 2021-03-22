@@ -1,21 +1,26 @@
 #! /usr/bin/python3
 
-import sys, os, time
+import sys
+import os
+import time
 from typing import List, Tuple
 import re
 
 
-SPELLS = [ # cost, damage, hitPoints, armor, mana, duration
-    (53,  4, 0, 0,   0, 0), # Magic Missile
-    (73,  2, 2, 0,   0, 0), # Drain
-    (113, 0, 0, 7,   0, 6), # Shield
-    (173, 3, 0, 0,   0, 6), # Poison
+SPELLS = [  # cost, damage, hitPoints, armor, mana, duration
+    (53,  4, 0, 0,   0, 0),  # Magic Missile
+    (73,  2, 2, 0,   0, 0),  # Drain
+    (113, 0, 0, 7,   0, 6),  # Shield
+    (173, 3, 0, 0,   0, 6),  # Poison
     (229, 0, 0, 0, 101, 5)  # Recharge
 ]
-def getLeastWinningMana(data: Tuple[int,int], loseHitOnPlayerTurn: bool) -> int:
+
+
+def getLeastWinningMana(data: Tuple[int, int], loseHitOnPlayerTurn: bool) -> int:
     bossHit, bossDamage = data
     leastManaSpent = sys.maxsize
-    queue: List[Tuple[int,int,int,List[Tuple[int,...]],bool,int]] = [(bossHit, 50, 500, [], True, 0)]
+    queue: List[Tuple[int, int, int, List[Tuple[int, ...]], bool, int]] = [
+        (bossHit, 50, 500, [], True, 0)]
     while queue:
         bossHit, playerHit, playerMana, activeSpells, playerTurn, manaSpent = queue.pop()
         if loseHitOnPlayerTurn and playerTurn:
@@ -23,7 +28,7 @@ def getLeastWinningMana(data: Tuple[int,int], loseHitOnPlayerTurn: bool) -> int:
             if playerHit <= 0:
                 continue
         playerArmor = 0
-        newActiveSpells = []
+        newActiveSpells: List[Tuple[int, int, int, int, int, int]] = []
         for activeSpell in activeSpells:
             cost, damage, hitPoints, armor, mana, duration = activeSpell
             if duration >= 0:
@@ -32,36 +37,40 @@ def getLeastWinningMana(data: Tuple[int,int], loseHitOnPlayerTurn: bool) -> int:
                 playerArmor += armor
                 playerMana += mana
             if duration > 1:
-                newActiveSpells.append((cost, damage, hitPoints, armor, mana, duration - 1))
+                newActiveSpells.append(
+                    (cost, damage, hitPoints, armor, mana, duration - 1))
         if bossHit <= 0:
             leastManaSpent = min(leastManaSpent, manaSpent)
             continue
         if manaSpent > leastManaSpent:
             continue
         if playerTurn:
-            activeCosts = [ spell[0] for spell in newActiveSpells ] # cost is unique per spell
+            # cost is unique per spell
+            activeCosts = [spell[0] for spell in newActiveSpells]
             for spell in SPELLS:
                 spellCost = spell[0]
                 if spellCost not in activeCosts and spellCost <= playerMana:
-                    queue.append((bossHit, playerHit, playerMana - spellCost, newActiveSpells + [spell], False, manaSpent + spellCost))
+                    queue.append((bossHit, playerHit, playerMana - spellCost,
+                                  newActiveSpells + [spell], False, manaSpent + spellCost))
         else:
             playerHit -= max(1, bossDamage - playerArmor)
             if playerHit > 0:
-                queue.append((bossHit, playerHit, playerMana, newActiveSpells, True, manaSpent))
+                queue.append((bossHit, playerHit, playerMana,
+                              newActiveSpells, True, manaSpent))
     return leastManaSpent
 
 
-def solve(data: Tuple[int,int]) -> Tuple[int,int]:
+def solve(data: Tuple[int, int]) -> Tuple[int, int]:
     return (
         getLeastWinningMana(data, False),
         getLeastWinningMana(data, True)
     )
 
 
-def getInput(filePath: str) -> Tuple[int,int]:
+def getInput(filePath: str) -> Tuple[int, int]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
-    
+
     with open(filePath, "r") as file:
         return tuple(map(int, re.findall(r"(\d+)", file.read())))
 

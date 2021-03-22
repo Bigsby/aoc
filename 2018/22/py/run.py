@@ -1,6 +1,8 @@
 #! /usr/bin/python3
 
-import sys, os, time
+import sys
+import os
+import time
 from typing import Dict, Tuple
 import re
 from itertools import product
@@ -12,7 +14,7 @@ GEOLOGIC_Y_CONSTANT = 48271
 EROSION_CONSTANT = 20183
 
 
-def getGeologicIndex(coordinate: Coordinate, depth: int, target: Coordinate, calculated: Dict[Coordinate,int]) -> int:
+def getGeologicIndex(coordinate: Coordinate, depth: int, target: Coordinate, calculated: Dict[Coordinate, int]) -> int:
     if coordinate == 0 or coordinate == target:
         return 0
     x, y = int(coordinate.real), int(coordinate.imag)
@@ -21,35 +23,38 @@ def getGeologicIndex(coordinate: Coordinate, depth: int, target: Coordinate, cal
     elif y == 0:
         return x * GEOLOGIC_X_CONSTANT
     return getErosionLevel(x - 1 + y * 1j, depth, target, calculated) \
-        * getErosionLevel(x + (y - 1)* 1j, depth, target, calculated)
+        * getErosionLevel(x + (y - 1) * 1j, depth, target, calculated)
 
 
-def getErosionLevel(coordinate: Coordinate, depth: int, target: Coordinate, calculated: Dict[Coordinate,int]) -> int:
+def getErosionLevel(coordinate: Coordinate, depth: int, target: Coordinate, calculated: Dict[Coordinate, int]) -> int:
     if coordinate not in calculated:
-        calculated[coordinate] = (getGeologicIndex(coordinate, depth, target, calculated) + depth) % EROSION_CONSTANT
+        calculated[coordinate] = (getGeologicIndex(
+            coordinate, depth, target, calculated) + depth) % EROSION_CONSTANT
     return calculated[coordinate]
 
 
-def getRisk(coordinate: Coordinate, depth: int, target: Coordinate, calculated: Dict[Coordinate,int]) -> int:
+def getRisk(coordinate: Coordinate, depth: int, target: Coordinate, calculated: Dict[Coordinate, int]) -> int:
     return getErosionLevel(coordinate, depth, target, calculated) % 3
 
 
-def part1(data: Tuple[int,int,int]) -> int:
+def part1(data: Tuple[int, int, int]) -> int:
     depth, targetX, targetY = data
     target = targetX + targetY * 1j
-    calculated = {}
-    return sum(getRisk(x + y *1j, depth, target, calculated) \
-        for x, y in product(range(targetX + 1), range(targetY + 1)))
+    calculated: Dict[Coordinate, int] = {}
+    return sum(getRisk(x + y * 1j, depth, target, calculated)
+               for x, y in product(range(targetX + 1), range(targetY + 1)))
 
 
-DIRECTIONS = [ 1, 1j, -1, -1j]
-def part2(data: Tuple[int,int,int]) -> int:
+DIRECTIONS = [1, 1j, -1, -1j]
+
+
+def part2(data: Tuple[int, int, int]) -> int:
     depth, x, y = data
     target = x + y * 1j
-    calculated = {}
+    calculated: Dict[Coordinate, int] = {}
     final = (x, y, 1)
-    queue = [(0, 0, 0, 1)] # 1 = torch, 0 neither, 2 climbing
-    bestTimes: Dict[Tuple[int,int,int],int] = dict()
+    queue = [(0, 0, 0, 1)]  # 1 = torch, 0 neither, 2 climbing
+    bestTimes: Dict[Tuple[int, int, int], int] = dict()
     while queue:
         duration, x, y, risk = heappop(queue)
         coordinate = x + y * 1j
@@ -65,21 +70,23 @@ def part2(data: Tuple[int,int,int]) -> int:
         for direction in DIRECTIONS:
             newCoordinate = coordinate + direction
             if newCoordinate.real >= 0 and newCoordinate.imag >= 0 \
-                and getRisk(newCoordinate, depth, target, calculated) != risk:
-                heappush(queue, (duration + 1, int(newCoordinate.real), int(newCoordinate.imag), risk))
-    raise Exception("Path not found")            
+                    and getRisk(newCoordinate, depth, target, calculated) != risk:
+                heappush(queue, (duration + 1, int(newCoordinate.real),
+                                 int(newCoordinate.imag), risk))
+    raise Exception("Path not found")
 
 
-def solve(data: Tuple[int,int,int]) -> Tuple[int,int]:
+def solve(data: Tuple[int, int, int]) -> Tuple[int, int]:
     return (
         part1(data),
         part2(data)
     )
 
-def getInput(filePath: str) -> Tuple[int,int,int]:
+
+def getInput(filePath: str) -> Tuple[int, int, int]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
-    
+
     with open(filePath, "r") as file:
         return tuple(map(int, re.findall(r"\d+", file.read())))
 

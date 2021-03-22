@@ -1,6 +1,8 @@
 #! /usr/bin/python3
 
-import sys, os, time
+import sys
+import os
+import time
 from typing import List, Tuple
 
 
@@ -10,7 +12,7 @@ class Node:
         self.value = value
 
 
-def buildLinkedList(cups: List[int]) -> Tuple[Node,List[Node]]:
+def buildLinkedList(cups: List[int]) -> Tuple[Node, List[Node]]:
     start = previous = last = Node(cups[0])
     values = [start] * len(cups)
     values[start.value - 1] = start
@@ -31,14 +33,15 @@ def playGame(cups: List[int], moves: int) -> Node:
         moves -= 1
         firstRemoved = current.next
         lastRemoved = firstRemoved.next.next
-        removedValues = {firstRemoved.value, firstRemoved.next.value, lastRemoved.value}
+        removedValues = {firstRemoved.value,
+                         firstRemoved.next.value, lastRemoved.value}
         current.next = lastRemoved.next
         destinationValue = current.value - 1
         while destinationValue in removedValues or destinationValue < 1:
             destinationValue -= 1
             if destinationValue < 0:
                 destinationValue = maxValue
-                
+
         destinationLink = values[destinationValue - 1]
         lastRemoved.next = destinationLink.next
         destinationLink.next = firstRemoved
@@ -48,7 +51,7 @@ def playGame(cups: List[int], moves: int) -> Node:
 
 def part1(cups: List[int]) -> str:
     oneNode = playGame(cups, 100)
-    result = []
+    result: List[int] = []
     currentNode = oneNode.next
     while currentNode.value != 1:
         result.append(currentNode.value)
@@ -57,12 +60,12 @@ def part1(cups: List[int]) -> str:
 
 
 def part2(cups: List[int]) -> int:
-    cups += [ *range(10, 10**6 + 1) ]
+    cups += [*range(10, 10**6 + 1)]
     oneNode = playGame(cups, 10**7)
     return oneNode.next.value * oneNode.next.next.value
 
 
-def solve(cups: List[int]) -> Tuple[str,int]:
+def solve(cups: List[int]) -> Tuple[str, int]:
     return (
         part1(cups),
         part2(cups)
@@ -72,9 +75,9 @@ def solve(cups: List[int]) -> Tuple[str,int]:
 def getInput(filePath: str) -> List[int]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
-    
+
     with open(filePath, "r") as file:
-        return [ int(c) for c in file.read().strip() ]
+        return [int(c) for c in file.read().strip()]
 
 
 def main():

@@ -41,7 +41,7 @@ def getQuadraticABC(particleA: Particle, particleB: Particle, coordinate: int) -
 
 def getColitionTimes(particleA: Particle, particleB: Particle) -> List[int]:
     a, b, c = getQuadraticABC(particleA, particleB, 0)
-    times = []
+    times: List[float] = []
     if a == 0:
         if b != 0:
             times.append(-c / b)
@@ -56,9 +56,9 @@ def getColitionTimes(particleA: Particle, particleB: Particle) -> List[int]:
             rt = math.sqrt(bb - ac4)
             times.append((-b + rt) / (2 * a))
             times.append((-b - rt) / (2 * a))
-    times = map(int, filter(lambda t: t >= 0 and round(t) == t, times))
-    result = []
-    for t in times:
+    int_times = map(int, filter(lambda t: t >= 0 and round(t) == t, times))
+    result: List[int] = []
+    for t in int_times:
         collide = True
         for k in [1, 2]:
             a, b, c = getQuadraticABC(particleA, particleB, k)

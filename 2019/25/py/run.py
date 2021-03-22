@@ -1,18 +1,21 @@
 #! /usr/bin/python3
 
-import sys, os, time
-from typing import List, Tuple
+import sys
+import os
+import time
+from typing import Dict, List, Tuple
 from collections import defaultdict
 import re
 from itertools import combinations
 
 
 class IntCodeComputer():
-    def __init__(self, memory: List[int], inputs: List[int] = [], defaultInput:bool = False, defaultValue: int = -1):
-        self.memory = defaultdict(int, [ (index, value) for index, value in enumerate(memory) ])
+    def __init__(self, memory: List[int], inputs: List[int] = [], defaultInput: bool = False, defaultValue: int = -1):
+        self.memory = defaultdict(int, [(index, value)
+                                        for index, value in enumerate(memory)])
         self.pointer = 0
         self.inputs = inputs
-        self.outputs = [ ]
+        self.outputs: List[int] = []
         self.base = 0
         self.running = True
         self.polling = False
@@ -20,59 +23,61 @@ class IntCodeComputer():
         self.outputing = False
         self.defaultInput = defaultInput
         self.defaultValue = defaultValue
-    
+
     def setInput(self, value: int):
         self.inputs.insert(0, value)
-    
+
     def runUntilHalt(self) -> List[int]:
         while self.running:
             self.tick()
         return self.outputs
-    
+
     def runUntilPaused(self):
         self.paused = False
         while not self.paused and self.running:
             self.tick()
         return self
-    
+
     def getParameter(self, offset: int, mode: int) -> int:
         value = self.memory[self.pointer + offset]
-        if mode == 0: # POSITION
+        if mode == 0:  # POSITION
             return self.memory[value]
-        if mode == 1: # IMMEDIATE
+        if mode == 1:  # IMMEDIATE
             return value
-        elif mode == 2: # RELATIVE
+        elif mode == 2:  # RELATIVE
             return self.memory[self.base + value]
         raise Exception("Unrecognized parameter mode", mode)
-    
+
     def getAddress(self, offset: int, mode: int) -> int:
         value = self.memory[self.pointer + offset]
-        if mode == 0: # POSITION
+        if mode == 0:  # POSITION
             return value
-        if mode == 2: # RELATIVE
+        if mode == 2:  # RELATIVE
             return self.base + value
         raise Exception("Unrecognized address mode", mode)
-
 
     def getOutput(self) -> int:
         self.outputing = False
         return self.outputs.pop()
-    
+
     def addInput(self, value: int):
         self.inputs.append(value)
 
     def tick(self):
         instruction = self.memory[self.pointer]
-        opcode, p1mode, p2mode, p3mode = instruction % 100, (instruction // 100) % 10, (instruction // 1000) % 10, (instruction // 10000) % 10
+        opcode, p1mode, p2mode, p3mode = instruction % 100, (
+            instruction // 100) % 10, (instruction // 1000) % 10, (instruction // 10000) % 10
         if not self.running:
             return
-        if opcode == 1: # ADD
-            self.memory[self.getAddress(3, p3mode)] = self.getParameter(1, p1mode) + self.getParameter(2, p2mode)
+        if opcode == 1:  # ADD
+            self.memory[self.getAddress(3, p3mode)] = self.getParameter(
+                1, p1mode) + self.getParameter(2, p2mode)
             self.pointer += 4
-        elif opcode == 2: # MUL
-            self.memory[self.getAddress(3, p3mode)] = self.getParameter(1, p1mode) * self.getParameter(2, p2mode)
+        elif opcode == 2:  # MUL
+            self.memory[self.getAddress(3, p3mode)] = self.getParameter(
+                1, p1mode) * self.getParameter(2, p2mode)
             self.pointer += 4
-        elif opcode == 3: # INPUT
+        elif opcode == 3:  # INPUT
             if self.inputs:
                 self.polling = False
                 self.memory[self.getAddress(1, p1mode)] = self.inputs.pop(0)
@@ -83,40 +88,43 @@ class IntCodeComputer():
                 self.polling = True
             else:
                 self.paused = True
-        elif opcode == 4: # OUTPUT
+        elif opcode == 4:  # OUTPUT
             self.outputing = True
             self.outputs.append(self.getParameter(1, p1mode))
             self.pointer += 2
-        elif opcode == 5: # JMP_TRUE
+        elif opcode == 5:  # JMP_TRUE
             if self.getParameter(1, p1mode):
                 self.pointer = self.getParameter(2, p2mode)
             else:
                 self.pointer += 3
-        elif opcode == 6: # JMP_FALSE
+        elif opcode == 6:  # JMP_FALSE
             if not self.getParameter(1, p1mode):
                 self.pointer = self.getParameter(2, p2mode)
             else:
                 self.pointer += 3
-        elif opcode == 7: # LESS_THAN
-            self.memory[self.getAddress(3, p3mode)] = 1 if self.getParameter(1, p1mode) < self.getParameter(2, p2mode) else 0
+        elif opcode == 7:  # LESS_THAN
+            self.memory[self.getAddress(3, p3mode)] = 1 if self.getParameter(
+                1, p1mode) < self.getParameter(2, p2mode) else 0
             self.pointer += 4
-        elif opcode == 8: # EQUALS
-            self.memory[self.getAddress(3, p3mode)] = 1 if self.getParameter(1, p1mode) == self.getParameter(2, p2mode) else 0
+        elif opcode == 8:  # EQUALS
+            self.memory[self.getAddress(3, p3mode)] = 1 if self.getParameter(
+                1, p1mode) == self.getParameter(2, p2mode) else 0
             self.pointer += 4
-        elif opcode == 9: # SET_BASE
+        elif opcode == 9:  # SET_BASE
             self.base += self.getParameter(1, p1mode)
             self.pointer += 2
-        elif opcode == 99: # HALT
+        elif opcode == 99:  # HALT
             self.running = False
         else:
-            raise Exception(f"Unknown instruction", self.pointer, instruction, opcode, p1mode, p2mode, p3mode)
+            raise Exception(f"Unknown instruction", self.pointer,
+                            instruction, opcode, p1mode, p2mode, p3mode)
 
 
-def parseRoomOutput(output:str) -> Tuple[str,List[str],List[str]]:
+def parseRoomOutput(output: str) -> Tuple[str, List[str], List[str]]:
     stage = 0
     room = ""
-    doors = []
-    items = []
+    doors: List[str] = []
+    items: List[str] = []
     for line in output.split("\n"):
         if stage == 0:
             match = re.match(r"^== (?P<room>.*) ==", line)
@@ -172,7 +180,7 @@ WAY_INVERSE = {
     "west": "east",
     "east": "west"
 }
-FORBIDEN_ITEMS = [ 
+FORBIDEN_ITEMS = [
     "molten lava",
     "photons",
     "infinite loop",
@@ -182,12 +190,14 @@ FORBIDEN_ITEMS = [
 PRESSURE_ROOM = "Pressure-Sensitive Floor"
 SECURITY_CHECKPOINT = "Security Checkpoint"
 TAKE = "take "
-def navigateRooms(droid: IntCodeComputer, command: str, destination: str, pickupItems: bool) -> Tuple[str,List[str],str]:
-    visited = []
-    wayIn = {}
+
+
+def navigateRooms(droid: IntCodeComputer, command: str, destination: str, pickupItems: bool) -> Tuple[str, List[str], str]:
+    visited: List[Tuple[str, str]] = []
+    wayIn: Dict[str, str] = {}
     lastDirection = ""
     pressureRoomWayIn = ""
-    inventory = []
+    inventory: List[str] = []
     while droid.running:
         output = runCommand(droid, command)
         room, doors, items = parseRoomOutput(output)
@@ -221,12 +231,14 @@ def navigateRooms(droid: IntCodeComputer, command: str, destination: str, pickup
 
 
 DROP = "drop "
+
+
 def findPassword(memory: List[int]) -> str:
     droid = IntCodeComputer(memory)
     # navigate all rooms and pickup non-forbiden items
     command, inventory, pressureRoomWayIn = navigateRooms(droid, "", "", True)
     # go to Security Checkpoint
-    navigateRooms(droid, command, SECURITY_CHECKPOINT, False)    
+    navigateRooms(droid, command, SECURITY_CHECKPOINT, False)
     # test combinations of items
     for newInventory in combinations(inventory, 4):
         for item in newInventory:
@@ -243,16 +255,16 @@ def findPassword(memory: List[int]) -> str:
     raise Exception("Password not found")
 
 
-def solve(memory: List[int]) -> Tuple[str,str]:
+def solve(memory: List[int]) -> Tuple[str, str]:
     return findPassword(memory), ""
 
 
 def getInput(filePath: str) -> List[int]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
-    
+
     with open(filePath, "r") as file:
-        return [ int(i) for i in file.read().split(",") ]
+        return [int(i) for i in file.read().split(",")]
 
 
 def main():

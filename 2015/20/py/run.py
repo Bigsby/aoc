@@ -1,17 +1,17 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from typing import Iterable, Tuple
+from typing import Iterable, List, Tuple
 import math
 
 
 def getDivisors(number: int) -> Iterable[int]:
-    large_divisors = []
+    large_divisors: List[int] = []
     for i in range(1, int(math.sqrt(number) + 1)):
         if number % i == 0:
             yield i
             if i * i != number:
-                large_divisors.append(number / i)
+                large_divisors.append(int(number / i))
     for divisor in reversed(large_divisors):
         yield divisor
 
