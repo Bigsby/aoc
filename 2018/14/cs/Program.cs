@@ -9,17 +9,17 @@ namespace AoC
 {
     class Program
     {
-        static (int elf1, int elf2) ImproveRecipes(List<int> recipes, int elf1, int elf2)
+        static (int elf1, int elf2) ImproveRecipes(List<byte> recipes, int elf1, int elf2)
         {
             var elf1Score = recipes[elf1];
             var elf2Score = recipes[elf2];
-            recipes.AddRange((elf1Score + elf2Score).ToString().Select(c => int.Parse(c.ToString())));
+            recipes.AddRange((elf1Score + elf2Score).ToString().Select(c => byte.Parse(c.ToString())));
             elf1 = (elf1 + elf1Score + 1) % recipes.Count;
             elf2 = (elf2 + elf2Score + 1) % recipes.Count;
             return (elf1, elf2);
         }
 
-        static bool DoSequencesMatch(int start, IEnumerable<int> recipes, int[] score)
+        static bool DoSequencesMatch(int start, IEnumerable<byte> recipes, int[] score)
         {
             if (start < 0)
                 return false;
@@ -33,7 +33,7 @@ namespace AoC
         {
             var scoreSequence = target.ToString().Select(c => int.Parse(c.ToString())).ToArray();
             var sequenceLength = scoreSequence.Length;
-            var recipes = new List<int> { 3, 7 };
+            var recipes = new List<byte> { 3, 7 };
             var elf1 = 0;
             var elf2 = 1;
             var index = 0;
