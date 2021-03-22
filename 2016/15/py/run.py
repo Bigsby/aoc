@@ -1,6 +1,8 @@
 #! /usr/bin/python3
 
-import sys, os, time
+import sys
+import os
+import time
 from typing import List, Tuple
 import re
 
@@ -11,7 +13,7 @@ class Disc():
         self.offset = start + index + 1
 
 
-def findWinningPosition(discs: List[Disc]) -> int:
+def find_winning_position(discs: List[Disc]) -> int:
     jump = 1
     offset = 0
     for disc in discs:
@@ -21,31 +23,34 @@ def findWinningPosition(discs: List[Disc]) -> int:
     return offset
 
 
-def solve(discs: List[Disc]) -> Tuple[int,int]:
-    part1Result = findWinningPosition(discs)
+def solve(discs: List[Disc]) -> Tuple[int, int]:
+    part1_result = find_winning_position(discs)
     discs.append(Disc(11, 0, len(discs)))
     return (
-        part1Result,
-        findWinningPosition(discs)
+        part1_result,
+        find_winning_position(discs)
     )
 
 
-lineRegex = re.compile(r"^Disc #\d has (?P<positions>\d+) positions; at time=0, it is at position (?P<start>\d+).$")
-def parseLine(line: str, index: int) -> Disc:
-    match = lineRegex.match(line)
+line_regex = re.compile(
+    r"^Disc #\d has (?P<positions>\d+) positions; at time=0, it is at position (?P<start>\d+).$")
+
+
+def parse_line(line: str, index: int) -> Disc:
+    match = line_regex.match(line)
     if match:
         positions = int(match.group("positions"))
         start = int(match.group("start"))
         return Disc(positions, start, index)
     raise Exception("Bad format", line)
 
-    
-def getInput(filePath: str) -> List[Disc]:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
-    
-    with open(filePath, "r") as file:
-        return [ parseLine(line, index) for index, line in enumerate(file.readlines()) ]
+
+def get_input(file_path: str) -> List[Disc]:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
+
+    with open(file_path, "r") as file:
+        return [parse_line(line, index) for index, line in enumerate(file.readlines())]
 
 
 def main():
@@ -53,10 +58,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
