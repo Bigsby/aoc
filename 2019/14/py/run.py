@@ -43,10 +43,9 @@ def part2(reactions: Dict[str, Tuple[int, List[ChemicalPortion]]]):
         required_fuel = required_fuel * max_ore // last_needed
         ore_needed = calculate_required_ore(reactions, required_fuel)
         if last_needed == ore_needed:
-            break
+            return required_fuel
         else:
             last_needed = ore_needed
-    return required_fuel
 
 
 def solve(reactions: Dict[str, Tuple[int, List[ChemicalPortion]]]) -> Tuple[int, int]:
