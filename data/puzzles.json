@@ -2141,6 +2141,7 @@
                     "name": "Space Stoichiometry",
                     "description": "Optimize production of chemicals that require other chemicals",
                     "tags": [ "Maths", "Optimizations" ],
+                    "gotchas": [ "Keep record of already produced chemicals", "Aproximate Max ORE until valu eis repeated" ],
                     "results": [
                         {
                             "p1": "502491",
@@ -2542,7 +2543,8 @@
                     "day": 14,
                     "name": "Docking Data",
                     "description": "Instructions in computer memory with masks",
-                    "tags": [ "Assembly", "Binayer", "Bitwise", "Bitwise Mask" ],
+                    "tags": [ "Assembly", "Binary", "Bitwise", "Bitwise Mask" ],
+                    "gotchas": [ "Shift bit to flip on masked memory" ],
                     "results": [
                         {
                             "p1": "7623288591070",
