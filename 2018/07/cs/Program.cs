@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 namespace AoC
 {
     record Pair(char Dependency, char Dependant);
-    
+
     class Program
     {
         static Dictionary<char, List<char>> BuildDependencyGraph(IEnumerable<Pair> pairs)
@@ -31,7 +31,10 @@ namespace AoC
             var path = new List<char>();
             while (dependencies.Count > 0)
             {
-                var nextStep = dependencies.Where(pair => !pair.Value.Any()).Select(pair => pair.Key).OrderBy(step => step).First();
+                var nextStep = dependencies
+                    .Where(pair => !pair.Value.Any())
+                    .Select(pair => pair.Key)
+                    .OrderBy(step => step).First();
                 dependencies.Remove(nextStep);
                 path.Add(nextStep);
                 foreach (var stepDependencies in dependencies.Values)
@@ -63,7 +66,10 @@ namespace AoC
                         if (stepDependencies.Contains(step))
                             stepDependencies.Remove(step);
                 }
-                foreach (var nextStep in dependencies.Where(pair => !pair.Value.Any()).Select(pair => pair.Key).OrderBy(step => step))
+                foreach (var nextStep in dependencies
+                                            .Where(pair => !pair.Value.Any())
+                                            .Select(pair => pair.Key)
+                                            .OrderBy(step => step))
                 {
                     if (runningWorkers.Count > WORKER_COUNT)
                         break;
@@ -87,7 +93,8 @@ namespace AoC
         static Regex lineRegex = new Regex(@"\s([A-Z])\s", RegexOptions.Compiled);
         static IEnumerable<Pair> GetInput(string filePath)
             => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
-            : File.ReadAllLines(filePath).Select(line => {
+            : File.ReadAllLines(filePath).Select(line =>
+            {
                 var matches = lineRegex.Matches(line);
                 if (matches.Count == 2)
                     return new Pair(matches[0].Groups[1].Value[0], matches[1].Groups[1].Value[0]);
