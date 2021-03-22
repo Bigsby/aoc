@@ -11,7 +11,7 @@ fn solve(puzzle_input: &str) -> (usize,usize) {
     (part1(puzzle_input), part2(puzzle_input))
 }
 
-fn get_input(file_path: &String) -> &str {
+fn get_input(file_path: &String) -> String {
     std::fs::read_to_string(file_path).expect("Error reading input file!")
 }
 
