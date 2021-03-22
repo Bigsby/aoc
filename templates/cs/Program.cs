@@ -9,12 +9,14 @@ namespace AoC
 {
     static class Program
     {
-        static void Part1(object puzzleInput)
-        {
+        static int Part1(object puzzleInput)
+        { 
+            return 1;
         }
 
-        static void Part2(object puzzleInput)
+        static int Part2(object puzzleInput)
         {
+            return 2;
         }
 
         static (int, int) Solve(object puzzleInput)

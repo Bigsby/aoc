@@ -4,15 +4,15 @@ import sys, os, time
 from typing import Tuple
 
 
-def part1(puzzle_input):
-    pass
+def part1(puzzle_input: str) -> int:
+    return 1
 
 
-def part2(puzzle_input):
-    pass
+def part2(puzzle_input: str) -> int:
+    return 2
 
 
-def solve(puzzle_input) -> Tuple[int,int]:
+def solve(puzzle_input: str) -> Tuple[int,int]:
     return (part1(puzzle_input), part2(puzzle_input))
 
 
