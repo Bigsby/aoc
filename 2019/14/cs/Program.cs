@@ -42,7 +42,7 @@ namespace AoC
 
     class Program
     {
-        static long GetRequiredOre(Dictionary<string, Tuple<int, IEnumerable<ChemicalPortion>>> reactions, long requireFuel)
+        static long CalculateRequiredOre(Dictionary<string, Tuple<int, IEnumerable<ChemicalPortion>>> reactions, long requireFuel)
         {
             var requiredChemicals = new DefaultDictionary<string, long>();
             requiredChemicals["FUEL"] = requireFuel;
@@ -73,17 +73,15 @@ namespace AoC
             return oreCount;
         }
 
-        static long Part1(Dictionary<string, Tuple<int, IEnumerable<ChemicalPortion>>> reactions) => GetRequiredOre(reactions, 1);
-
         static long Part2(Dictionary<string, Tuple<int, IEnumerable<ChemicalPortion>>> reactions)
         {
             var requiredFuel = 1L;
-            var lastNeeded = GetRequiredOre(reactions, requiredFuel);
-            var maxOre = 1000_000_000_000;
+            var lastNeeded = CalculateRequiredOre(reactions, requiredFuel);
+            var maxOre = 1_000_000_000_000;
             while (true)
             {
                 requiredFuel = requiredFuel * maxOre / lastNeeded;
-                var oreNeeded = GetRequiredOre(reactions, requiredFuel);
+                var oreNeeded = CalculateRequiredOre(reactions, requiredFuel);
                 if (lastNeeded == oreNeeded)
                     break;
                 else
@@ -94,19 +92,20 @@ namespace AoC
 
         static (long, long) Solve(Dictionary<string, Tuple<int, IEnumerable<ChemicalPortion>>> reactions)
             => (
-                GetRequiredOre(reactions, 1),
+                CalculateRequiredOre(reactions, 1),
                 Part2(reactions)
             );
 
         static Regex lineRegex = new Regex(@"(\d+)\s([A-Z]+)", RegexOptions.Compiled);
         static Dictionary<string, Tuple<int, IEnumerable<ChemicalPortion>>> GetInput(string filePath)
             => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
-            : File.ReadLines(filePath).Select(line => {
+            : File.ReadLines(filePath).Select(line =>
+            {
                 var matches = new Stack<Match>(lineRegex.Matches(line));
                 var result = matches.Pop();
                 return (
-                    result.Groups[2].Value, 
-                    int.Parse(result.Groups[1].Value), 
+                    result.Groups[2].Value,
+                    int.Parse(result.Groups[1].Value),
                     matches.Select(match => Tuple.Create(int.Parse(match.Groups[1].Value), match.Groups[2].Value)));
             }).ToDictionary(group => group.Item1, group => Tuple.Create(group.Item2, group.Item3));
 
