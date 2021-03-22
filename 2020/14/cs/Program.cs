@@ -40,8 +40,9 @@ namespace AoC
                     _mask = maskInstruction.Mask;
                     break;
                 case MemoryInstruction memoryInstruction:
+                    var value = GetValue(memoryInstruction.Value);
                     foreach (var location in GetMemoryLocations(memoryInstruction.Location))
-                        _memory[location] = GetValue(memoryInstruction.Value);
+                        _memory[location] = value;
                     break;
             }
         }
@@ -68,8 +69,8 @@ namespace AoC
         protected override IEnumerable<long> GetMemoryLocations(long location)
         {
             location |= GetOrMask();
-            var maskBitOfffset = _mask.Length - 1;
-            var flipBits = _xRegex.Matches(_mask).Select(match => maskBitOfffset - match.Index);
+            var maskBitOffset = _mask.Length - 1;
+            var flipBits = _xRegex.Matches(_mask).Select(match => maskBitOffset - match.Index);
             foreach (var occurence in Enumerable.Range(0, 1 << flipBits.Count()))
             {
                 var currentLocation = location;
