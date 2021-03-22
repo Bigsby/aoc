@@ -53,12 +53,11 @@ fn part2(reactions: &HashMap<u32, (u64, Vec<ChemicalPortion>)>) -> u64 {
         required_fuel = required_fuel * max_ore / last_needed;
         let ore_needed = calculate_required_ore(reactions, required_fuel);
         if last_needed == ore_needed {
-            break;
+            return required_fuel;
         } else {
             last_needed = ore_needed;
         }
     }
-    required_fuel
 }
 
 fn solve(reactions: &HashMap<u32, (u64, Vec<ChemicalPortion>)>) -> (u64, u64) {
