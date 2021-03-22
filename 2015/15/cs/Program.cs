@@ -8,29 +8,14 @@ using System.Text.RegularExpressions;
 
 namespace AoC
 {
-    record Entry(string name, int capacity, int durability, int flavor, int texture, int calories);
+    record Entry(int name, int capacity, int durability, int flavor, int texture, int calories);
 
     class Program
     {
-        static int GetValueForProperty(Dictionary<string, int> solution, IEnumerable<Entry> entries, string property)
-            => entries.Aggregate(0, (soFar, entry) => 
-                soFar + solution[entry.name] * (int)typeof(Entry).GetProperty(property).GetValue(entry));
-
-        static string[] VALUE_PROPERTIES = new [] { "capacity", "durability", "flavor", "texture" };
-        static (int score, int calories) FindValueForSolution(Dictionary<string, int> solution, IEnumerable<Entry> entries)
-        {
-            var values = new Dictionary<string, int>();
-            foreach (var property in VALUE_PROPERTIES)
-                values[property] = GetValueForProperty(solution, entries, property);
-            var totalScore = values.Aggregate(1, (soFar, pair) => soFar * (pair.Value > 0 ? pair.Value : 0));
-            var calories = GetValueForProperty(solution, entries, "calories");
-            return (totalScore, calories);
-        }
-
-        static List<List<T>> GenerateCombinations<T>(IEnumerable<T> combinationList, int k)
+        static List<List<T>> GenerateCombinations<T>(IEnumerable<T> combinationList, int length)
         {
             var combinations = new List<List<T>>();
-            if (k == 0)
+            if (length == 0)
             {
                 var emptyCombination = new List<T>();
                 combinations.Add(emptyCombination);
@@ -40,26 +25,42 @@ namespace AoC
                 return combinations;
             var head = combinationList.First();
             var copiedCombinationList = new List<T>(combinationList);
-            var subcombinations = GenerateCombinations(copiedCombinationList, k - 1);
+            var subcombinations = GenerateCombinations(copiedCombinationList, length - 1);
             foreach (var subcombination in subcombinations)
             {
                 subcombination.Insert(0, head);
                 combinations.Add(subcombination);
             }
             combinationList = combinationList.Skip(1);
-            combinations.AddRange(GenerateCombinations(combinationList, k));
+            combinations.AddRange(GenerateCombinations(combinationList, length));
             return combinations;
         }
 
-        static Dictionary<string, int> CreateSolutionFromCombination(IEnumerable<string> combination, IEnumerable<string> ingredients)
-            => ingredients.ToDictionary(ingredient => ingredient, ingredient => combination.Count(i => i == ingredient));
+        static int GetValueForProperty(Dictionary<int, int> solution, IEnumerable<Entry> entries, string property)
+            => entries.Aggregate(0, (soFar, entry) =>
+                soFar + solution[entry.name] * (int)typeof(Entry).GetProperty(property).GetValue(entry));
 
-        static (IEnumerable<string> ingredients, IEnumerable<IEnumerable<string>> combination) GetIngredientCombinations(IEnumerable<Entry> entries, int totalSpoons)
+        static string[] VALUE_PROPERTIES = new[] { "capacity", "durability", "flavor", "texture" };
+        static (int score, int calories)
+            FindValueForSolution(Dictionary<int, int> solution, IEnumerable<Entry> entries)
+        => (
+            VALUE_PROPERTIES.Select(property => GetValueForProperty(solution, entries, property))
+                .Aggregate(1, (soFar, value) => soFar * (value > 0 ? value : 0)),
+            GetValueForProperty(solution, entries, "calories"));
+
+        static Dictionary<int, int>
+            CreateSolutionFromCombination(IEnumerable<int> combination, IEnumerable<int> ingredients)
+            => ingredients.ToDictionary(
+                ingredient => ingredient,
+                ingredient => combination.Count(i => i == ingredient));
+
+        static (IEnumerable<int> ingredients, IEnumerable<IEnumerable<int>> combination)
+            GetIngredientCombinations(IEnumerable<Entry> entries, int totalSpoons)
         {
             var ingredients = entries.Select(entry => entry.name);
             return (ingredients, GenerateCombinations(ingredients, totalSpoons));
         }
-    
+
         static (int, int) Solve(IEnumerable<Entry> entries)
         {
             var (ingredients, possibleCombinations) = GetIngredientCombinations(entries, 100);
@@ -78,11 +79,12 @@ namespace AoC
         static Regex lineRegex = new Regex(@"^(\w+):\scapacity\s(-?\d+),\sdurability\s(-?\d+),\sflavor\s(-?\d+),\stexture\s(-?\d+),\scalories\s(-?\d+)$", RegexOptions.Compiled);
         static IEnumerable<Entry> GetInput(string filePath)
             => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
-            : File.ReadLines(filePath).Select(line => {
+            : File.ReadLines(filePath).Select((line, index) =>
+            {
                 var match = lineRegex.Match(line);
                 if (match.Success)
                     return new Entry(
-                        match.Groups[1].Value,
+                        index,
                         int.Parse(match.Groups[2].Value),
                         int.Parse(match.Groups[3].Value),
                         int.Parse(match.Groups[4].Value),
