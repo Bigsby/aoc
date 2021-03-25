@@ -27,15 +27,15 @@ class IntCodeComputer():
         self.polling = False
         self.outputing = False
 
-    def setInput(self, value: int):
+    def set_input(self, value: int):
         self.inputs.insert(0, value)
 
-    def runUntilHalt(self) -> List[int]:
+    def run(self) -> List[int]:
         while self.running:
             self.tick()
         return self.outputs
 
-    def getParameter(self, offset: int, mode: int) -> int:
+    def get_parameter(self, offset: int, mode: int) -> int:
         value = self.memory[self.pointer + offset]
         if mode == 0:  # POSITION
             return self.memory[value]
@@ -45,7 +45,7 @@ class IntCodeComputer():
             return self.memory[self.base + value]
         raise Exception("Unrecognized parameter mode", mode)
 
-    def getAddress(self, offset: int, mode: int) -> int:
+    def get_address(self, offset: int, mode: int) -> int:
         value = self.memory[self.pointer + offset]
         if mode == 0:  # POSITION
             return value
@@ -53,86 +53,86 @@ class IntCodeComputer():
             return self.base + value
         raise Exception("Unrecognized address mode", mode)
 
-    def getOutput(self) -> int:
+    def get_output(self) -> int:
         self.outputing = False
         return self.outputs.pop()
 
-    def addInput(self, value: int):
+    def add_input(self, value: int):
         self.inputs.append(value)
 
     def tick(self):
         instruction = self.memory[self.pointer]
-        opcode, p1mode, p2mode, p3mode = instruction % 100, (
+        opcode, p1_mode, p2_mode, p3_mode = instruction % 100, (
             instruction // 100) % 10, (instruction // 1000) % 10, (instruction // 10000) % 10
         if not self.running:
             return
         if opcode == 1:  # ADD
-            self.memory[self.getAddress(3, p3mode)] = self.getParameter(
-                1, p1mode) + self.getParameter(2, p2mode)
+            self.memory[self.get_address(3, p3_mode)] = self.get_parameter(
+                1, p1_mode) + self.get_parameter(2, p2_mode)
             self.pointer += 4
         elif opcode == 2:  # MUL
-            self.memory[self.getAddress(3, p3mode)] = self.getParameter(
-                1, p1mode) * self.getParameter(2, p2mode)
+            self.memory[self.get_address(3, p3_mode)] = self.get_parameter(
+                1, p1_mode) * self.get_parameter(2, p2_mode)
             self.pointer += 4
         elif opcode == 3:  # INPUT
             if self.inputs:
                 self.polling = False
-                self.memory[self.getAddress(1, p1mode)] = self.inputs.pop(0)
+                self.memory[self.get_address(1, p1_mode)] = self.inputs.pop(0)
                 self.pointer += 2
             else:
                 self.polling = True
         elif opcode == 4:  # OUTPUT
             self.outputing = True
-            self.outputs.append(self.getParameter(1, p1mode))
+            self.outputs.append(self.get_parameter(1, p1_mode))
             self.pointer += 2
         elif opcode == 5:  # JMP_TRUE
-            if self.getParameter(1, p1mode):
-                self.pointer = self.getParameter(2, p2mode)
+            if self.get_parameter(1, p1_mode):
+                self.pointer = self.get_parameter(2, p2_mode)
             else:
                 self.pointer += 3
         elif opcode == 6:  # JMP_FALSE
-            if not self.getParameter(1, p1mode):
-                self.pointer = self.getParameter(2, p2mode)
+            if not self.get_parameter(1, p1_mode):
+                self.pointer = self.get_parameter(2, p2_mode)
             else:
                 self.pointer += 3
         elif opcode == 7:  # LESS_THAN
-            self.memory[self.getAddress(3, p3mode)] = 1 if self.getParameter(
-                1, p1mode) < self.getParameter(2, p2mode) else 0
+            self.memory[self.get_address(3, p3_mode)] = 1 if self.get_parameter(
+                1, p1_mode) < self.get_parameter(2, p2_mode) else 0
             self.pointer += 4
         elif opcode == 8:  # EQUALS
-            self.memory[self.getAddress(3, p3mode)] = 1 if self.getParameter(
-                1, p1mode) == self.getParameter(2, p2mode) else 0
+            self.memory[self.get_address(3, p3_mode)] = 1 if self.get_parameter(
+                1, p1_mode) == self.get_parameter(2, p2_mode) else 0
             self.pointer += 4
         elif opcode == 9:  # SET_BASE
-            self.base += self.getParameter(1, p1mode)
+            self.base += self.get_parameter(1, p1_mode)
             self.pointer += 2
         elif opcode == 99:  # HALT
             self.running = False
         else:
             raise Exception(f"Unknown instruction", self.pointer,
-                            instruction, opcode, p1mode, p2mode, p3mode)
+                            instruction, opcode, p1_mode, p2_mode, p3_mode)
 
     def clone(self):
-        cloneComputer = IntCodeComputer([])
-        cloneComputer.memory = dict(self.memory)
-        cloneComputer.pointer = self.pointer
-        cloneComputer.base = self.base
-        return cloneComputer
+        clone_computer = IntCodeComputer([])
+        clone_computer.memory = dict(self.memory)
+        clone_computer.pointer = self.pointer
+        clone_computer.base = self.base
+        return clone_computer
 
 
-def drawArea(oxygen: List[Position], walls: List[Position], openSpaces: List[Position]):
-    allPosiitons = walls + oxygen
-    minX = int(min(map(lambda p: p.real, allPosiitons)))
-    maxX = int(max(map(lambda p: p.real, allPosiitons)))
-    minY = int(min(map(lambda p: p.imag, allPosiitons)))
-    maxY = int(max(map(lambda p: p.imag, allPosiitons)))
-    for y in range(maxY, minY - 1, - 1):
-        for x in range(minX, maxX + 1):
+def draw_area(oxygen: List[Position], walls: List[Position], open_spaces: List[Position]):
+    all_posiitons = walls + oxygen
+    min_x = int(min(map(lambda p: p.real, all_posiitons)))
+    max_x = int(max(map(lambda p: p.real, all_posiitons)))
+    min_y = int(min(map(lambda p: p.imag, all_posiitons)))
+    max_y = int(max(map(lambda p: p.imag, all_posiitons)))
+    for y in range(max_y, min_y - 1, - 1):
+        for x in range(min_x, max_x + 1):
             position = x + y * 1j
             c = " "
             if position in walls:
                 c = "#"
-            if position in openSpaces:
+            if position in open_spaces:
                 c = "."
             if position in oxygen:
                 c = "O"
@@ -141,59 +141,59 @@ def drawArea(oxygen: List[Position], walls: List[Position], openSpaces: List[Pos
     print()
 
 
-def runUntilOxygenSystem(memory: List[int]) -> Tuple[int, Position, List[Position]]:
-    startPosition = 0j
-    openSpaces: List[Position] = []
-    oxygenPosition = 0j
-    queue = [(startPosition, [startPosition], IntCodeComputer(memory))]
-    visited = [startPosition]
-    stepsToOxygenSystem = 0
+def run_until_oxygen_system(memory: List[int]) -> Tuple[int, Position, List[Position]]:
+    start_position = 0j
+    open_spaces: List[Position] = []
+    oxygen_position = 0j
+    queue = [(start_position, [start_position], IntCodeComputer(memory))]
+    visited = [start_position]
+    steps_to_oxygen_system = 0
     while queue:
         position, path, droid = queue.pop(0)
         for command, direction in DIRECTIONS.items():
-            newPosition = position + direction
-            if newPosition not in visited:
-                visited.append(newPosition)
-                newDroid = droid.clone()
-                newDroid.inputs.append(command)
-                while not newDroid.outputing:
-                    newDroid.tick()
-                status = newDroid.getOutput()
+            new_position = position + direction
+            if new_position not in visited:
+                visited.append(new_position)
+                new_droid = droid.clone()
+                new_droid.inputs.append(command)
+                while not new_droid.outputing:
+                    new_droid.tick()
+                status = new_droid.get_output()
                 if status == 2:  # Oxygen system
-                    if stepsToOxygenSystem == 0:
-                        stepsToOxygenSystem = len(path)
-                    oxygenPosition = newPosition
+                    if steps_to_oxygen_system == 0:
+                        steps_to_oxygen_system = len(path)
+                    oxygen_position = new_position
                 elif status == 1:  # Open space
-                    openSpaces.append(newPosition)
-                    while not newDroid.polling:
-                        newDroid.tick()
-                    newPath = list(path)
-                    newPath.append(newPosition)
-                    queue.append((newPosition, newPath, newDroid))
-    return stepsToOxygenSystem, oxygenPosition, openSpaces
+                    open_spaces.append(new_position)
+                    while not new_droid.polling:
+                        new_droid.tick()
+                    new_path = list(path)
+                    new_path.append(new_position)
+                    queue.append((new_position, new_path, new_droid))
+    return steps_to_oxygen_system, oxygen_position, open_spaces
 
 
 def solve(memory: List[int]) -> Tuple[int, int]:
-    stepsToOxygenSystem, oxygenSystemPosition, openSpaces = runUntilOxygenSystem(
+    steps_to_oxygen_system, oxygen_system_position, open_spaces = run_until_oxygen_system(
         memory)
-    filled = [oxygenSystemPosition]
+    filled = [oxygen_system_position]
     minutes = 0
-    while openSpaces:
+    while open_spaces:
         minutes += 1
         for oxygen in list(filled):
             for direction in DIRECTIONS.values():
                 position = oxygen + direction
-                if position in openSpaces:
+                if position in open_spaces:
                     filled.append(position)
-                    openSpaces.remove(position)
-    return stepsToOxygenSystem, minutes
+                    open_spaces.remove(position)
+    return steps_to_oxygen_system, minutes
 
 
-def getInput(filePath: str) -> List[int]:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
+def get_input(file_path: str) -> List[int]:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
 
-    with open(filePath, "r") as file:
+    with open(file_path, "r") as file:
         return [int(i) for i in file.read().split(",")]
 
 
@@ -202,10 +202,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
