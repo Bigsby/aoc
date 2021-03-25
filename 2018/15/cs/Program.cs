@@ -9,11 +9,11 @@ using System.Numerics;
 namespace AoC
 {
     using Walls = IEnumerable<Complex>;
-    using Team = Dictionary<Complex,int>;
+    using Team = Dictionary<Complex, int>;
 
     class Program
     {
-        static Complex[] ATTACK_DIRECTIONS = new [] { Complex.ImaginaryOne, -1, 1, -Complex.ImaginaryOne };
+        static Complex[] ATTACK_DIRECTIONS = new[] { Complex.ImaginaryOne, -1, 1, -Complex.ImaginaryOne };
 
         static void DrawGame(Walls walls, Team elves, Team goblins)
         {
@@ -38,16 +38,15 @@ namespace AoC
             WriteLine();
         }
 
-        static IEnumerable<Complex> GetAttackPositions(Team mates, Team enemies, Walls walls)
+        static IEnumerable<Complex> GetAttackPositions(Team enemies, Walls invalidPositions)
         {
             var attackPositions = new HashSet<Complex>();
             foreach (var enemy in enemies.Keys)
                 foreach (var direction in ATTACK_DIRECTIONS)
                 {
                     var attackPosition = enemy + direction;
-                    if (!mates.ContainsKey(attackPosition) 
-                        && !enemies.ContainsKey(attackPosition) 
-                        && !walls.Contains(attackPosition))
+                    if (!invalidPositions.Contains(attackPosition)
+                        && !enemies.ContainsKey(attackPosition))
                         attackPositions.Add(attackPosition);
                 }
             return attackPositions.OrderBy(p => p.Imaginary).ThenBy(p => p.Real);
@@ -64,31 +63,32 @@ namespace AoC
             }
             if (targets.Any())
             {
-                var target = targets.OrderBy(t => t.hitPoints)
+                var targetPosition = targets.OrderBy(t => t.hitPoints)
                     .ThenBy(t => -t.position.Imaginary)
-                    .ThenBy(t => t.position.Real).First();
-                enemies[target.position] -= attackPower;
-                if (enemies[target.position] <= 0)
-                    enemies.Remove(target.position);
+                    .ThenBy(t => t.position.Real).First().position;
+                enemies[targetPosition] -= attackPower;
+                if (enemies[targetPosition] <= 0)
+                    enemies.Remove(targetPosition);
                 return true;
             }
             return false;
         }
 
-        static Complex[] MOVE_DIRECTIONS = new [] { -Complex.ImaginaryOne, Complex.ImaginaryOne, -1, 1 };
-        static Complex GetMove(Complex start, IEnumerable<Complex> targets, Walls invalidPositions)
+        static Complex[] MOVE_DIRECTIONS = new[] { -Complex.ImaginaryOne, Complex.ImaginaryOne, -1, 1 };
+        static Complex? GetMove(Complex start, IEnumerable<Complex> targets, Walls invalidPositions)
         {
-            var firstMoves = MOVE_DIRECTIONS.Select(direction => start + direction)
-                .Where(p => !invalidPositions.Contains(p));
             var bestMoves = new List<(Complex firstMove, int length, Complex destination)>();
-            foreach (var move in firstMoves)
+            var minLength = int.MaxValue;
+            var seenPositions = new List<Complex>();
+            foreach (var move in MOVE_DIRECTIONS.Select(direction => start + direction)
+                .Where(p => !invalidPositions.Contains(p)))
             {
                 if (targets.Contains(move))
                 {
                     bestMoves.Add((move, 1, move));
                     continue;
                 }
-                var seenPositions = new List<Complex>();
+                seenPositions.Clear();
                 seenPositions.Add(start);
                 seenPositions.Add(move);
                 var stack = MOVE_DIRECTIONS
@@ -98,7 +98,7 @@ namespace AoC
                 var run = true;
                 while (run)
                 {
-                    length += 1;
+                    length++;
                     var newStack = new List<Complex>();
                     foreach (var newPosition in stack)
                     {
@@ -107,13 +107,15 @@ namespace AoC
                         seenPositions.Add(newPosition);
                         if (targets.Contains(newPosition))
                         {
+                            minLength = length;
                             bestMoves.Add((move, length, newPosition));
                             run = false;
                             continue;
                         }
-                        newStack.AddRange(MOVE_DIRECTIONS.Select(direction => newPosition + direction).Where(p =>
-                            !seenPositions.Contains(p) && !invalidPositions.Contains(p)
-                        ));
+                        if (length < minLength)
+                            newStack.AddRange(MOVE_DIRECTIONS.Select(direction => newPosition + direction).Where(p =>
+                                !seenPositions.Contains(p) && !invalidPositions.Contains(p)
+                            ));
                     }
                     stack = newStack.ToList();
                     if (!stack.Any())
@@ -121,10 +123,10 @@ namespace AoC
                 }
             }
             if (!bestMoves.Any())
-                return -1;
-            var minLength = bestMoves.Min(m => m.length);
-            return bestMoves.Where(m => m.length == minLength)
-                .OrderBy(m => -m.destination.Imaginary).ThenBy(m => m.destination.Real)
+                return null;
+            return bestMoves
+                .OrderBy(m => m.length)
+                .ThenBy(m => -m.destination.Imaginary).ThenBy(m => m.destination.Real)
                 .ThenBy(m => -m.firstMove.Imaginary).ThenBy(m => m.firstMove.Real).First().firstMove;
         }
 
@@ -132,16 +134,16 @@ namespace AoC
         {
             if (Attack(unitPosition, enemies, attackPower))
                 return unitPosition;
-            var attackPositions = GetAttackPositions(mates, enemies, walls);
             var wholeMap = walls.Concat(mates.Keys).Concat(enemies.Keys);
+            var attackPositions = GetAttackPositions(enemies, wholeMap);
             var newPosition = GetMove(unitPosition, attackPositions, wholeMap);
-            if (newPosition != -1)
+            if (newPosition.HasValue)
             {
                 var hitPoints = mates[unitPosition];
                 mates.Remove(unitPosition);
-                mates[newPosition] = hitPoints;
-                Attack(newPosition, enemies, attackPower);
-                return newPosition;
+                mates[newPosition.Value] = hitPoints;
+                Attack(newPosition.Value, enemies, attackPower);
+                return newPosition.Value;
             }
             return unitPosition;
         }
@@ -164,7 +166,8 @@ namespace AoC
                         return false;
                     newPosition = MakeUnitTurn(position, goblins, elves, walls, DEFAULT_POWER);
                     newPositions.Add(newPosition);
-                } else if (elves.ContainsKey(position))
+                }
+                else if (elves.ContainsKey(position))
                 {
                     if (!goblins.Any())
                         return false;
