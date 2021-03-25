@@ -11,26 +11,21 @@ namespace AoC
     {
         static (int, int) Solve(IEnumerable<int> numbers)
         {
+            const int TURNS = 30_000_000;
             var part1Result = 0;
             var turn = 0;
-            var occurrences = new Dictionary<int, (int lastOccurrence, int secondLastOccurence)>();
-            foreach (var number in numbers)
-                occurrences[number] = (++turn, 0);
             var lastNumber = numbers.Last();
-            while (turn < 30_000_000)
+            var occurrences = new int[TURNS];
+            foreach (var number in numbers)
+                occurrences[number] = ++turn;
+            while (turn < TURNS)
             {
+                var lastOccurrence = occurrences[lastNumber];
+                occurrences[lastNumber] = turn;
                 if (turn == 2020)
                     part1Result = lastNumber;
+                lastNumber = lastOccurrence != 0 ? turn - lastOccurrence : 0;
                 turn++;
-                var (lastOccurrence, secondLastOccurence) = occurrences[lastNumber];
-                if (secondLastOccurence == 0)
-                    lastNumber = 0;
-                else
-                    lastNumber = lastOccurrence - secondLastOccurence;
-                if (occurrences.ContainsKey(lastNumber))
-                    occurrences[lastNumber] = (turn, occurrences[lastNumber].lastOccurrence);
-                else
-                    occurrences[lastNumber] = (turn, 0);
             }
             return (part1Result, lastNumber);
         }
