@@ -59,7 +59,7 @@ def find_adjacent(point: complex, grid: Set[complex], visited: Set[complex]):
 
 
 def part2(key: str) -> int:
-    grid_points = set()
+    grid_points: Set[complex] = set()
     for row in range(128):
         for column, c in enumerate(get_row_hash_binary_string(key, row)):
             if c == "1":

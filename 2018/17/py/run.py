@@ -63,8 +63,8 @@ def findEdge(spring: Position, direction: int, settled: Water, clay: ClaySquares
 def solve(clay: ClaySquares) -> Tuple[int, int]:
     maxY = int(max(map(lambda s: s.imag, clay)))
     minY = int(min(map(lambda s: s.imag, clay)))
-    settled = set()
-    flowing = set()
+    settled = Water()
+    flowing = Water()
     queue = [500 + minY * 1j]
     while queue:
         spring = queue.pop()

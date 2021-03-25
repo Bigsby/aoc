@@ -3,7 +3,7 @@
 import sys
 import os
 import time
-from typing import Dict, List, Tuple
+from typing import Dict, List, Set, Tuple
 import re
 
 FileSystem = Dict[complex, Tuple[int, int]]
@@ -12,7 +12,7 @@ FileSystem = Dict[complex, Tuple[int, int]]
 def getEmptyAndNonViableNodes(fileSystem: FileSystem) -> Tuple[complex, List[complex]]:
     nodeNames = fileSystem.keys()
     empty = -0j
-    nonViableNodes = set()
+    nonViableNodes: Set[complex] = set()
     for thisNode in nodeNames:
         thisUsed = fileSystem[thisNode][1]
         if thisUsed == 0:

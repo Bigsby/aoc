@@ -193,7 +193,7 @@ def solve(tiles: List[Tuple[int, Tile]]) -> Tuple[int, int]:
     size = getSize(tiles[0][1])
     corners = getCorners(tiles, size, permutations)
     return (
-        reduce(lambda soFar, corner: soFar * corner[0], corners, 1),
+        int(reduce(lambda soFar, corner: soFar * corner[0], corners, 1)),
         part2(tiles, permutations, corners)
     )
 

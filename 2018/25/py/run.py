@@ -3,18 +3,18 @@
 import sys
 import os
 import time
-from typing import List, Tuple
+from typing import List, Set, Tuple
 
 Point = Tuple[int, int, int, int]
 
 
 def solve(points: List[Point]) -> Tuple[int, str]:
-    edges = [set() for _ in range(len(points))]
+    edges: List[Set[int]] = [set() for _ in range(len(points))]
     for thisPoint, (w0, x0, y0, z0) in enumerate(points):
         for thatPoint, (w1, x1, y1, z1) in enumerate(points):
             if abs(w0 - w1) + abs(x0 - x1) + abs(y0 - y1) + abs(z0 - z1) < 4:
                 edges[thisPoint].add(thatPoint)
-    visited = set()
+    visited: Set[int] = set()
     constellations = 0
     for thisPoint in range(len(points)):
         if thisPoint in visited:

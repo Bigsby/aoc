@@ -3,7 +3,7 @@
 import sys
 import os
 import time
-from typing import List, Tuple
+from typing import List, Set, Tuple
 import re
 
 
@@ -15,7 +15,7 @@ class Edge():
 
 
 def get_single_nodes(edges: List[Edge]) -> List[str]:
-    nodes = set()
+    nodes: Set[str] = set()
     for path in edges:
         nodes.add(path.node_a)
         nodes.add(path.node_b)

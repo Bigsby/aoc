@@ -76,7 +76,7 @@ def testRecord(before: Registers, operation: Operation, after: Registers, opCode
 
 def solve(puzzleInput: Tuple[List[Record], List[Operation]]) -> Tuple[int, int]:
     records, program = puzzleInput
-    opCodes = {mnemonic: set() for mnemonic in MNEMONICS}
+    opCodes: Dict[str, Set[int]] = {mnemonic: set() for mnemonic in MNEMONICS}
     threeOrMore = 0
     for before, operation, after in records:
         if testRecord(before, operation, after, opCodes) >= 3:

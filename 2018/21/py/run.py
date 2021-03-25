@@ -3,7 +3,7 @@
 import sys
 import os
 import time
-from typing import List, Tuple
+from typing import List, Set, Tuple
 import re
 
 Operation = Tuple[str, int, int, int]
@@ -17,7 +17,7 @@ def solve(data: Tuple[int, List[Operation]]) -> Tuple[int, int]:
     _, operations = data
     magicNumber = operations[7][1]
     part1Result = 0
-    seen = set()
+    seen: Set[int] = set()
     result = 0
     lastResult = -1
     while True:

@@ -1,13 +1,15 @@
 #! /usr/bin/python3
 
-import sys, os, time
-from typing import List, Tuple
+import sys
+import os
+import time
+from typing import List, Set, Tuple
 
 
 def part2(changes: List[int]) -> int:
     changes_length = len(changes)
     frequency = 0
-    previous = set() 
+    previous: Set[int] = set()
     index = 0
     while frequency not in previous:
         previous.add(frequency)
@@ -16,7 +18,7 @@ def part2(changes: List[int]) -> int:
     return frequency
 
 
-def solve(changes: List[int]) -> Tuple[int,int]:
+def solve(changes: List[int]) -> Tuple[int, int]:
     return (
         sum(changes),
         part2(changes)
@@ -26,9 +28,9 @@ def solve(changes: List[int]) -> Tuple[int,int]:
 def get_input(file_path: str) -> List[int]:
     if not os.path.isfile(file_path):
         raise FileNotFoundError(file_path)
-    
+
     with open(file_path, "r") as file:
-        return [ int(line) for line in file.readlines() ]
+        return [int(line) for line in file.readlines()]
 
 
 def main():

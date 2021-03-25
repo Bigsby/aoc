@@ -3,7 +3,7 @@
 import sys
 import os
 import time
-from typing import Dict, List, Tuple
+from typing import Dict, List, Set, Tuple
 import re
 
 Directions = List[str]
@@ -54,7 +54,7 @@ def getNewState(tile: Tile, floor: Floor) -> bool:
 
 def runDay(floor: Floor) -> Floor:
     newFloor = Floor()
-    edgesToTest = set()
+    edgesToTest: Set[Tile] = set()
     for tile in floor:
         edgesToTest.update(
             {neighbor for neighbor in getNeighbors(tile) if neighbor not in floor})

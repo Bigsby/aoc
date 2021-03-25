@@ -1,6 +1,8 @@
 #! /usr/bin/python3
 
-import sys, os, time
+import sys
+import os
+import time
 from typing import List, Set, Tuple
 
 
@@ -11,7 +13,7 @@ def process_direction(visited_houses: Set[complex], position: complex, direction
 
 
 def part1(directions: List[complex]):
-    visited_houses = set()
+    visited_houses: Set[complex] = set()
     visited_houses.add(0)
     position = 0
     for direction in directions:
@@ -20,18 +22,20 @@ def part1(directions: List[complex]):
 
 
 def part2(directions: List[complex]):
-    visited_houses = set()
+    visited_houses: Set[complex] = set()
     visited_houses.add(0)
     santa_position = robot_position = 0
     for index, direction in enumerate(directions):
         if index % 2:
-            santa_position = process_direction(visited_houses, santa_position, direction)
+            santa_position = process_direction(
+                visited_houses, santa_position, direction)
         else:
-            robot_position = process_direction(visited_houses, robot_position, direction)
+            robot_position = process_direction(
+                visited_houses, robot_position, direction)
     return len(visited_houses)
 
 
-def solve(directions: List[complex]) -> Tuple[int,int]:
+def solve(directions: List[complex]) -> Tuple[int, int]:
     return (part1(directions), part2(directions))
 
 
@@ -41,12 +45,14 @@ DIRECTIONS = {
     ">": 1,
     "<": -1
 }
+
+
 def get_input(file_path: str) -> List[complex]:
     if not os.path.isfile(file_path):
         raise FileNotFoundError(file_path)
-    
+
     with open(file_path, "r") as file:
-        return [ DIRECTIONS[c] for c in file.read().strip() if c in DIRECTIONS ]
+        return [DIRECTIONS[c] for c in file.read().strip() if c in DIRECTIONS]
 
 
 def main():

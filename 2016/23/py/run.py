@@ -1,19 +1,22 @@
 #! /usr/bin/python3
 
-import sys, os, time
+import sys
+import os
+import time
 from typing import Dict, List, Tuple
-import re, math
+import re
+import math
 
 Instruction = List[str]
 
 
-def getValue(param: str, registers: Dict[str,int]) -> int:
+def getValue(param: str, registers: Dict[str, int]) -> int:
     return int(param) if re.match(r"-?\d+", param) else registers[param]
 
 
-def runInstructions(instructions: List[Instruction], inputs: Dict[str,int] = {}):
+def runInstructions(instructions: List[Instruction], inputs: Dict[str, int] = {}):
     instructions = instructions[:]
-    registers = { register: 0 for register in [ "a", "b", "c", "d" ]}
+    registers = {register: 0 for register in ["a", "b", "c", "d"]}
     registers.update(inputs)
     pointer = 0
     while pointer < len(instructions):
@@ -44,7 +47,7 @@ def runInstructions(instructions: List[Instruction], inputs: Dict[str,int] = {})
                 newMnemonic, *currentParams = instructions[pointerToChange]
                 if newMnemonic == "inc":
                     newMnemonic = "dec"
-                elif mnemonic == "dec":
+                elif newMnemonic == "dec":
                     newMnemonic = "inc"
                 elif newMnemonic == "tgl":
                     newMnemonic = "inc"
@@ -52,16 +55,16 @@ def runInstructions(instructions: List[Instruction], inputs: Dict[str,int] = {})
                     newMnemonic = "cpy"
                 elif newMnemonic == "cpy":
                     newMnemonic = "jnz"
-                instructions[pointerToChange] = [ newMnemonic, *currentParams ]
+                instructions[pointerToChange] = [newMnemonic, *currentParams]
             pointer += 1
     return registers["a"]
 
 
-def solve(instructions: List[Instruction]) -> Tuple[int,int]:
+def solve(instructions: List[Instruction]) -> Tuple[int, int]:
     a = int(instructions[19][1])
     b = int(instructions[20][1])
     return (
-        runInstructions(instructions, { "a": 7 }),
+        runInstructions(instructions, {"a": 7}),
         math.factorial(12) + a * b
     )
 
@@ -69,15 +72,15 @@ def solve(instructions: List[Instruction]) -> Tuple[int,int]:
 def parseLine(line: str) -> Instruction:
     mnemonic = line[:3]
     parameters = line[3:].strip()
-    return [ mnemonic ] + parameters.split(" ")
+    return [mnemonic] + parameters.split(" ")
 
 
 def getInput(filePath: str) -> List[Instruction]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
-    
+
     with open(filePath, "r") as file:
-        return [ parseLine(line) for line in file.readlines() ]
+        return [parseLine(line) for line in file.readlines()]
 
 
 def main():

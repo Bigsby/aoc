@@ -3,7 +3,7 @@
 import sys
 import os
 import time
-from typing import List, Optional, Tuple
+from typing import List, Optional, Set, Tuple
 import re
 
 
@@ -39,7 +39,7 @@ def combat(groups: List[Group], boost: int) -> Tuple[int, int]:
     while True:
         groups = sorted(
             groups, key=lambda u: (-u.effectivePower(), -u.initiative))
-        selectedTargets = set()
+        selectedTargets: Set[str] = set()
         for group in groups:
             targets = [target for target in groups
                        if target.army != group.army and target.id not in selectedTargets and group.damageTo(target) > 0]

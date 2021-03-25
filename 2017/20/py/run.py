@@ -1,12 +1,15 @@
 #! /usr/bin/python3
 
-import sys, os, time
+import sys
+import os
+import time
 from typing import Dict, List, Set, Tuple
-import re, math
+import re
+import math
 from collections import defaultdict
 
-Values = Tuple[int,int,int]
-Particle = Tuple[Values,Values,Values]
+Values = Tuple[int, int, int]
+Particle = Tuple[Values, Values, Values]
 
 
 def getManhatanValue(values: Values) -> int:
@@ -29,10 +32,10 @@ def part1(particles: List[Particle]) -> int:
     return closestParticle
 
 
-def getQuadraticABC(particleA: Particle, particleB: Particle, coordinate: int) -> Tuple[float,float,int]:
+def getQuadraticABC(particleA: Particle, particleB: Particle, coordinate: int) -> Tuple[float, float, int]:
     pAp = particleA[0][coordinate]
     pAa = particleA[2][coordinate]
-    pAv = particleA[1][coordinate] + pAa / 2 
+    pAv = particleA[1][coordinate] + pAa / 2
     pBp = particleB[0][coordinate]
     pBa = particleB[2][coordinate]
     pBv = particleB[1][coordinate] + pBa / 2
@@ -71,14 +74,14 @@ def getColitionTimes(particleA: Particle, particleB: Particle) -> List[int]:
 
 
 def part2(particles: List[Particle]) -> int:
-    collisions: Dict[int,List[Tuple[int,int]]] = defaultdict(list)
+    collisions: Dict[int, List[Tuple[int, int]]] = defaultdict(list)
     for thisIndex in range(len(particles) - 1):
         for otherIndex in range(thisIndex + 1, len(particles)):
             for time in getColitionTimes(particles[thisIndex], particles[otherIndex]):
                 collisions[time].append((thisIndex, otherIndex))
     particleIndexes: Set[int] = set(range(len(particles)))
     for time in sorted(list(collisions.keys())):
-        collidedToRemove = set()
+        collidedToRemove: Set[int] = set()
         for indexA, indexB in collisions[time]:
             if indexA in particleIndexes and indexB in particleIndexes:
                 collidedToRemove.add(indexA)
@@ -87,27 +90,30 @@ def part2(particles: List[Particle]) -> int:
     return len(particleIndexes)
 
 
-def solve(particles: List[Particle]) -> Tuple[int,int]:
+def solve(particles: List[Particle]) -> Tuple[int, int]:
     return (
         part1(particles),
         part2(particles)
     )
 
 
-lineRegex = re.compile(r"^p=<(?P<p>[^>]+)>, v=<(?P<v>[^>]+)>, a=<(?P<a>[^>]+)>$")
+lineRegex = re.compile(
+    r"^p=<(?P<p>[^>]+)>, v=<(?P<v>[^>]+)>, a=<(?P<a>[^>]+)>$")
+
+
 def parseLine(line: str) -> Particle:
     match = lineRegex.match(line)
     if match:
-        return tuple(map(int,match.group("p").split(","))), tuple(map(int,match.group("v").split(","))), tuple(map(int,match.group("a").split(",")))
+        return tuple(map(int, match.group("p").split(","))), tuple(map(int, match.group("v").split(","))), tuple(map(int, match.group("a").split(",")))
     raise Exception("Bad format", line)
 
 
 def getInput(filePath: str) -> List[Particle]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
-    
+
     with open(filePath, "r") as file:
-        return [ parseLine(line) for line in file.readlines() ]
+        return [parseLine(line) for line in file.readlines()]
 
 
 def main():

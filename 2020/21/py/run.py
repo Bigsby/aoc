@@ -16,7 +16,7 @@ class Food():
 
 
 def getAllergens(foods: List[Food]) -> Set[str]:
-    allergens = set()
+    allergens: Set[str] = set()
     for food in foods:
         for allergen in food.allergens:
             allergens.add(allergen)

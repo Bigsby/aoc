@@ -24,7 +24,7 @@ def printGrid(grid: Grid):
 
 
 def parseGrid(text: str) -> Tuple[int, Grid]:
-    grid = set()
+    grid = Grid()
     split = text.split("/")
     for y, line in enumerate(split):
         for x, c in enumerate(line):
@@ -69,7 +69,7 @@ def splitGrid(grid: Grid, count: int, size: int) -> Iterable[Tuple[int, int, Gri
 
 
 def iterate(grid: Grid, size: int, rules: Rules) -> Tuple[int, Grid]:
-    enhancedGrid = set()
+    enhancedGrid = Grid()
     divider = 0
     ruleSize = 0
     if size % 2 == 0:

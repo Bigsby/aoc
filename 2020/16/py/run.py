@@ -12,7 +12,7 @@ Rule = Tuple[str, int, int, int, int]
 
 
 def getValidNumbers(rules: List[Rule]) -> Set[int]:
-    validNumbers = set()
+    validNumbers: Set[int] = set()
     for _, startOne, endOne, startTwo, endTwo in rules:
         for number in range(startOne, endOne + 1):
             validNumbers.add(number)
