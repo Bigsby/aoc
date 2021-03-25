@@ -731,6 +731,7 @@
                     "name": "Timing is Everything",
                     "description": "Match offsets of cyclic indexes (Discs)",
                     "tags": [ "Maths", "Offsets" ],
+                    "comments": [ "Document jumps maths", "CRT" ],
                     "results": [
                         {
                             "p1": "376777",
@@ -1234,6 +1235,7 @@
                     "name": "Dueling Generators",
                     "description": "Generator pairs of numbers by multiplication and modulus and match least significant 16bits",
                     "tags": [ "Maths", "Modules", "Big Numbers" ],
+                    "gotchas": [ "Dynamic iterators" ],
                     "results": [
                         {
                             "p1": "609",
@@ -1744,6 +1746,7 @@
                     "name": "Beverage Bandits",
                     "description": "Dangeons game (elves and goblins)",
                     "tags": [ "2D", "Grid", "BFS" ],
+                    "comments": [ "Optimize Rust" ],
                     "results": [
                         {
                             "p1": "191216",
