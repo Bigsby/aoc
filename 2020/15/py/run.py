@@ -1,39 +1,36 @@
 #! /usr/bin/python3
 
-import sys, os, time
-from typing import Dict, List, Tuple
+import sys
+import os
+import time
+from typing import List, Tuple
 
 
-def solve(numbers: List[int]) -> Tuple[int,int]:
-    part1Result = 0
+def solve(numbers: List[int]) -> Tuple[int, int]:
+    TURNS = 30_000_000
+    part1_result = 0
     turn = 0
-    occurrences: Dict[int,Tuple[int,int]] = {}
+    last_number = numbers[-1]
+    occurences = [0] * TURNS
     for number in numbers:
         turn += 1
-        occurrences[number] = (turn, 0)
-    lastNumber = numbers[-1]
-    while turn < 30_000_000:
+        occurences[number] = turn
+    while turn < TURNS:
+        last_occurence = occurences[last_number]
+        occurences[last_number] = turn
         if turn == 2020:
-            part1Result = lastNumber
+            part1_result = last_number
+        last_number = turn - last_occurence if last_occurence else 0
         turn += 1
-        lastOccurrence, secondLastOccurence = occurrences[lastNumber]
-        if secondLastOccurence == 0:
-            lastNumber = 0
-        else:
-            lastNumber = lastOccurrence - secondLastOccurence
-        if lastNumber in occurrences:
-            occurrences[lastNumber] = (turn, occurrences[lastNumber][0])
-        else:
-            occurrences[lastNumber] = (turn, 0)
-    return part1Result, lastNumber
+    return part1_result, last_number
 
 
-def getInput(filePath: str) -> List[int]:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
-    
-    with open(filePath, "r") as file:
-        return [ int(i) for i in file.read().split(",") ]
+def get_input(file_path: str) -> List[int]:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
+
+    with open(file_path, "r") as file:
+        return [int(i) for i in file.read().split(",")]
 
 
 def main():
@@ -41,10 +38,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
