@@ -13,7 +13,7 @@ namespace AoC
         public Memory(long[] memory)
             => _memory = memory.Select((value, index) => (value, index))
                 .ToDictionary(pair => (long)pair.index, pair => (long)pair.value);
-        
+
         public static Memory FromMemory(Memory memory)
         {
             var result = new Memory(new long[0]);
@@ -40,7 +40,7 @@ namespace AoC
         public bool Running { get; private set; } = true;
         public bool Polling { get; private set; }
         public bool Outputing { get; private set; }
-        
+
         public IntCodeComputer(long[] memory, IEnumerable<long> input = default(List<long>))
         {
             _memory = new Memory(memory);
@@ -171,7 +171,7 @@ namespace AoC
         }
     }
 
- 
+
     static class Program
     {
         static Dictionary<int, Complex> DIRECTIONS = new Dictionary<int, Complex>
@@ -189,7 +189,7 @@ namespace AoC
             var oxygenPosition = Complex.Zero;
             var stepsToOxygenSystem = 0;
             var queue = new Queue<(Complex position, IEnumerable<Complex> path, IntCodeComputer droid)>();
-            queue.Enqueue((startPosition, new [] { startPosition }, new IntCodeComputer(memory)));
+            queue.Enqueue((startPosition, new[] { startPosition }, new IntCodeComputer(memory)));
             var visited = new List<Complex>();
             visited.Add(startPosition);
             while (queue.Any())
@@ -238,12 +238,12 @@ namespace AoC
             {
                 minutes++;
                 foreach (var oxygen in filled.ToArray())
-                    foreach(var direction in DIRECTIONS.Values)
+                    foreach (var direction in DIRECTIONS.Values)
                     {
                         var position = oxygen + direction;
                         if (openSpacesList.Contains(position))
                             filled.Add(position);
-                            openSpacesList.Remove(position);
+                        openSpacesList.Remove(position);
                     }
             }
             return (stepsToOxygenSystem, minutes);
