@@ -3,27 +3,31 @@
 import sys
 import os
 import time
-from typing import Dict, List, Tuple
+from typing import Dict, List, Set, Tuple
 
 Position = complex
 Walls = List[Position]
 Team = Dict[Position, int]
+WALL = "#"
+ELF = "E"
+GOBLIN = "G"
+STARTING_HITPOINTS = 200
 
 
-def drawGame(walls: Walls, elves: Team, goblins: Team):
+def draw_game(walls: Walls, elves: Team, goblins: Team):
     print(chr(27) + "[2J")
-    maxX = int(max(map(lambda w: w.real, walls)))
-    minY = int(min(map(lambda w: w.imag, walls)))
-    for y in range(0, minY - 1, -1):
-        for x in range(0, maxX + 1):
+    max_x = int(max(map(lambda w: w.real, walls)))
+    min_y = int(min(map(lambda w: w.imag, walls)))
+    for y in range(0, min_y - 1, -1):
+        for x in range(0, max_x + 1):
             position = x + y * 1j
             c = "."
             if position in walls:
-                c = "#"
+                c = WALL
             elif position in elves:
-                c = "E"
+                c = ELF
             elif position in goblins:
-                c = "G"
+                c = GOBLIN
             print(c, end="")
         print()
     print(elves)
@@ -35,28 +39,31 @@ def drawGame(walls: Walls, elves: Team, goblins: Team):
 ATTACK_DIRECTIONS = [1j, -1, 1, -1j]
 
 
-def getAttackPositions(mates: Team, enemies: Team, walls: Walls) -> List[complex]:
-    attackPositions = set()
+def get_attack_positions(mates: Team, enemies: Team, walls: Walls) -> List[Position]:
+    attack_positions: Set[Position] = set()
     for enemy in enemies.keys():
         for direction in ATTACK_DIRECTIONS:
-            attackPosition = enemy + direction
-            if attackPosition not in mates and attackPosition not in enemies and attackPosition not in walls:
-                attackPositions.add(attackPosition)
-    return list(sorted(attackPositions, key=lambda p: (p.imag, p.real)))
+            attack_position = enemy + direction
+            if attack_position not in mates and attack_position not in enemies and attack_position not in walls:
+                attack_positions.add(attack_position)
+    return list(attack_positions)
 
 
-def attack(unitPosition: complex, enemies: Team, attackPower: int) -> bool:
+def attack(unit_position: Position, enemies: Team, attack_power: int) -> bool:
     targets: List[Tuple[int, Position]] = []
     for direction in ATTACK_DIRECTIONS:
-        enemyPosition = unitPosition + direction
-        if enemyPosition in enemies:
-            targets.append((enemies[enemyPosition], enemyPosition))
+        enemy_position = unit_position + direction
+        if enemy_position in enemies:
+            targets.append((enemies[enemy_position], enemy_position))
     if targets:
         targets.sort(key=lambda t: (t[0], -t[1].imag, t[1].real))
-        targetPosition = targets[0][1]
-        enemies[targetPosition] -= attackPower
-        if enemies[targetPosition] <= 0:
-            del enemies[targetPosition]
+        target_position = targets[0][1]
+        enemies[target_position] -= attack_power
+        # print(unit_position, "attacks", target_position, enemies[target_position]); input()
+        if enemies[target_position] <= 0:
+            # print(target_position, "dies")
+            # input()
+            del enemies[target_position]
         return True
     return False
 
@@ -64,108 +71,109 @@ def attack(unitPosition: complex, enemies: Team, attackPower: int) -> bool:
 MOVE_DIRECTIONS = [-1j, 1j, -1, 1]
 
 
-def getMove(start: Position, targets: List[Position], invalidPositions: Walls) -> Position:
-    firstMoves = [start + direction for direction in MOVE_DIRECTIONS]
-    firstMoves = [x for x in firstMoves if x not in invalidPositions]
-    bestMoves: List[Tuple[Position, int, Position]] = []
-    for move in firstMoves:
+def get_move(start: Position, targets: List[Position], invalid_positions: Walls) -> Position:
+    first_moves = [start + direction for direction in MOVE_DIRECTIONS]
+    first_moves = [x for x in first_moves if x not in invalid_positions]
+    best_moves: List[Tuple[Position, int, Position]] = []
+    for move in first_moves:
         if move in targets:
-            bestMoves.append((move, 1, move))
+            best_moves.append((move, 1, move))
             continue
-        seenPositions = {start, move}
-        stack = [move + direction for direction in MOVE_DIRECTIONS]
-        stack = [m for m in stack if m not in invalidPositions]
+        seen_positions = {start, move}
+        stack = [move + direction for direction in MOVE_DIRECTIONS if move +
+                 direction not in invalid_positions]
         length = 1
         run = True
         while run:
             length += 1
-            newStack: List[Position] = []
-            for newPosition in stack:
-                if newPosition in seenPositions:
+            new_stack: List[Position] = []
+            for new_position in stack:
+                if new_position in seen_positions:
                     continue
-                seenPositions.add(newPosition)
-                if newPosition in targets:
-                    bestMoves.append((move, length, newPosition))
+                seen_positions.add(new_position)
+                if new_position in targets:
+                    best_moves.append((move, length, new_position))
                     run = False
                     continue
-                newTiles = [newPosition +
-                            direction for direction in MOVE_DIRECTIONS]
-                newStack += [newTile for newTile in newTiles if newTile not in seenPositions and newTile not in invalidPositions]
-            stack = list(newStack)
+                new_tiles = [new_position +
+                             direction for direction in MOVE_DIRECTIONS]
+                new_stack += [new_tile
+                              for new_tile in new_tiles
+                              if new_tile not in seen_positions and new_tile not in invalid_positions]
+            stack = list(new_stack)
             if not stack:
                 run = False
-    if not bestMoves:
+    if not best_moves:
         return -1
-    minLength = min([x[1] for x in bestMoves])
-    bestMoves = [x for x in bestMoves if x[1] == minLength]
-    bestMoves.sort(key=lambda x: (-x[2].imag,
-                                  x[2].real, -x[0].imag, x[0].real))
-    return bestMoves[0][0]
+    min_length = min([x[1] for x in best_moves])
+    best_moves = [x for x in best_moves if x[1] == min_length]
+    best_moves.sort(key=lambda x: (-x[2].imag,
+                                   x[2].real, -x[0].imag, x[0].real))
+    return best_moves[0][0]
 
 
-def makeUnitTurn(unitPosition: complex, mates: Team, enemies: Team, walls: Walls, attackPower: int) -> Position:
-    if attack(unitPosition, enemies, attackPower):
-        return unitPosition
-    attackPositions = getAttackPositions(mates, enemies, walls)
-    wholeMap = [*mates.keys(), *enemies.keys(), *walls]
-    newPosition = getMove(unitPosition, attackPositions, wholeMap)
-    if newPosition != -1:
-        hitPoints = mates[unitPosition]
-        del mates[unitPosition]
-        mates[newPosition] = hitPoints
-        attack(newPosition, enemies, attackPower)
-        return newPosition
-    return unitPosition
+def make_unit_turn(unit_position: Position, mates: Team, enemies: Team, walls: Walls, attack_power: int) -> Position:
+    if attack(unit_position, enemies, attack_power):
+        return unit_position
+    attack_positions = get_attack_positions(mates, enemies, walls)
+    whole_map = [*mates.keys(), *enemies.keys(), *walls]
+    new_position = get_move(unit_position, attack_positions, whole_map)
+    if new_position != -1:
+        hit_points = mates[unit_position]
+        del mates[unit_position]
+        mates[new_position] = hit_points
+        attack(new_position, enemies, attack_power)
+        return new_position
+
+    return unit_position
 
 
 DEFAULT_POWER = 3
 
 
-def makeRound(walls: Walls, elves: Team, goblins: Team, elfPower: int):
-    unitsToPlay = sorted([* elves, *goblins], key=lambda p: (-p.imag, p.real))
-    newPositions: List[Position] = []
-    while unitsToPlay:
-        position = unitsToPlay.pop(0)
-        if position in newPositions:
+def make_round(walls: Walls, elves: Team, goblins: Team, elf_power: int) -> bool:
+    units_to_play = sorted([*elves, *goblins],
+                           key=lambda p: (-p.imag, p.real))
+    new_positions: List[Position] = []
+    while units_to_play:
+        position = units_to_play.pop(0)
+        if position in new_positions:
             continue
-        newPosition = -1
         if position in goblins:
             if not elves:
                 return False
-            newPosition = makeUnitTurn(
-                position, goblins, elves, walls, DEFAULT_POWER)
-            newPositions.append(newPosition)
+            new_positions.append(make_unit_turn(
+                position, goblins, elves, walls, DEFAULT_POWER))
         elif position in elves:
             if not goblins:
                 return False
-            newPosition = makeUnitTurn(
-                position, elves, goblins, walls, elfPower)
-        newPositions.append(newPosition)
+            new_positions.append(make_unit_turn(
+                position, elves, goblins, walls, elf_power))
     return True
 
 
-def runGame(walls: Walls, elves: Team, goblins: Team, allElves: bool, elfPower: int = DEFAULT_POWER) -> Tuple[bool, int]:
+def run_game(walls: Walls, elves: Team, goblins: Team, all_elves: bool, elfPower: int = DEFAULT_POWER) -> Tuple[bool, int]:
     elves = dict(elves)
-    startingElves = len(elves)
+    starting_elves = len(elves)
     goblins = dict(goblins)
     round = 0
-    while makeRound(walls, elves, goblins, elfPower) and not (allElves and len(elves) != startingElves):
+    while make_round(walls, elves, goblins, elfPower) and not (all_elves and len(elves) != starting_elves):
         round += 1
-    return len(elves) == startingElves, round * (sum(elves.values()) + sum(goblins.values()))
+    return len(elves) == starting_elves, round * (sum(elves.values()) + sum(goblins.values()))
 
 
 def part1(game: Tuple[Walls, Team, Team]) -> int:
     walls, elves, goblins = game
-    _, result = runGame(walls, elves, goblins, False)
+    _, result = run_game(walls, elves, goblins, False)
     return result
 
 
 def part2(game: Tuple[Walls, Team, Team]) -> int:
     walls, elves, goblins = game
-    elfPower = 10
+    elf_power = 10
     while True:
-        elfPower += 1
-        success, result = runGame(walls, elves, goblins, True, elfPower)
+        elf_power += 1
+        success, result = run_game(walls, elves, goblins, True, elf_power)
         if success:
             return result
 
@@ -177,17 +185,11 @@ def solve(game: Tuple[Walls, Team, Team]) -> Tuple[int, int]:
     )
 
 
-WALL = "#"
-ELF = "E"
-GOBLIN = "G"
-STARTING_HITPOINTS = 200
+def get_input(file_path: str) -> Tuple[Walls, Team, Team]:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
 
-
-def getInput(filePath: str) -> Tuple[Walls, Team, Team]:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
-
-    with open(filePath, "r") as file:
+    with open(file_path, "r") as file:
         walls: List[Position] = []
         elves: Dict[Position, int] = {}
         goblins: Dict[Position, int] = {}
@@ -208,10 +210,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
