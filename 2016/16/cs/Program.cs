@@ -15,7 +15,7 @@ namespace AoC
             data = data[Range.EndAt(diskLength)];
             while (data.Length % 2 == 0)
                 data = new string(Enumerable.Range(0, data.Length / 2)
-                    .Select(index => data[2 * index] == data[2 * index + 1] ? '1' : '0' ).ToArray());
+                    .Select(index => data[2 * index] == data[2 * index + 1] ? '1' : '0').ToArray());
             return data;
         }
 
