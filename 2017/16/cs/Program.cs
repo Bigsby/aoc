@@ -17,9 +17,8 @@ namespace AoC
 
         static List<int> Dance(IEnumerable<Instruction> instructions, List<int> programs)
         {
-            foreach (var instruction in instructions)
+            foreach (var (move, a, b) in instructions)
             {
-                var (move, a, b) = instruction;
                 if (move == 0)
                 {
                     var index = programs.Count() - a;
@@ -68,7 +67,8 @@ namespace AoC
 
         static Instruction[] GetInput(string filePath)
             => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
-            : File.ReadAllText(filePath).Split(',').Select(text => {
+            : File.ReadAllText(filePath).Split(',').Select(text =>
+            {
                 if (text.StartsWith("s"))
                     return Tuple.Create(0, int.Parse(text[1..]), 0);
                 else if (text.StartsWith("x"))
