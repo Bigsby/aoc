@@ -25,8 +25,18 @@ namespace AoC
             Properties[prop3Name] = int.Parse(prop3Value);
         }
 
-        static string[] PROPS = new [] { 
-            "children", "cats", "samoyeds", "pomeranians", "akitas", "vizslas", "goldfish", "trees", "cars", "perfumes" };
+        static string[] PROPS = new[] {
+            "children",
+            "cats",
+            "samoyeds",
+            "pomeranians",
+            "akitas",
+            "vizslas",
+            "goldfish",
+            "trees",
+            "cars",
+            "perfumes"
+        };
     }
 
     enum Operator
@@ -36,7 +46,15 @@ namespace AoC
         LESS
     }
 
-    record Reading(int value, Operator oper = Operator.EQUAL);
+    record Reading(int value, Operator oper = Operator.EQUAL) {
+        public bool IsValid(int check) =>
+            oper switch {
+                Operator.EQUAL => check == value,
+                Operator.GREATER => check > value,
+                Operator.LESS => check < value,
+                _ => false
+            };
+    };
 
     static class Program
     {
@@ -48,7 +66,7 @@ namespace AoC
             { "akitas", new Reading(0) },
             { "vizslas", new Reading(0) },
             { "goldfish", new Reading(5, Operator.LESS) },
-            { "trees", new Reading(5, Operator.GREATER) },
+            { "trees", new Reading(3, Operator.GREATER) },
             { "cars", new Reading(2) },
             { "perfumes", new Reading(1) }
         };
@@ -63,9 +81,7 @@ namespace AoC
                 var readingValue = reading.value;
                 if (checkOperator)
                 {
-                    if ((reading.oper == Operator.EQUAL && recordValue != readingValue)
-                        || (reading.oper == Operator.GREATER && recordValue <= readingValue)
-                        || (reading.oper == Operator.LESS && recordValue >= readingValue))
+                    if (!reading.IsValid(recordValue))
                         return false;
                 }
                 else if (recordValue != readingValue)
@@ -76,14 +92,15 @@ namespace AoC
 
         static (int, int) Solve(IEnumerable<AuntRecord> aunts)
             => (
-                aunts.First(record => IsValidRecord(record)).Number, 
+                aunts.First(record => IsValidRecord(record)).Number,
                 aunts.First(record => IsValidRecord(record, true)).Number
             );
 
         static Regex lineRegex = new Regex(@"^Sue\s(\d+):\s(\w+):\s(\d+),\s(\w+):\s(\d+),\s(\w+):\s(\d+)$", RegexOptions.Compiled);
         static IEnumerable<AuntRecord> GetInput(string filePath)
             => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
-            : File.ReadLines(filePath).Select(line => {
+            : File.ReadLines(filePath).Select(line =>
+            {
                 var match = lineRegex.Match(line);
                 if (match.Success)
                     return new AuntRecord(
