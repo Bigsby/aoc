@@ -25,29 +25,28 @@ namespace AoC
 
         static Registers RunOperation(Registers registers, Operation operation, string mnemonic)
         {
-            var (_, A, B, C) = operation;
+            var (_, a, b, c) = operation;
             var result = new[] { registers.Item1, registers.Item2, registers.Item3, registers.Item4 };
-            var value = -1;
-            switch (mnemonic)
+            result[c] = mnemonic switch
             {
-                case "addr": value = result[A] + result[B]; break;
-                case "addi": value = result[A] + B; break;
-                case "mulr": value = result[A] * result[B]; break;
-                case "muli": value = result[A] * B; break;
-                case "banr": value = result[A] & result[B]; break;
-                case "bani": value = result[A] & B; break;
-                case "borr": value = result[A] | result[B]; break;
-                case "bori": value = result[A] | B; break;
-                case "setr": value = result[A]; break;
-                case "seti": value = A; break;
-                case "gtir": value = A > result[B] ? 1 : 0; break;
-                case "gtri": value = result[A] > B ? 1 : 0; break;
-                case "gtrr": value = result[A] > result[B] ? 1 : 0; break;
-                case "eqir": value = A == result[B] ? 1 : 0; break;
-                case "eqri": value = result[A] == B ? 1 : 0; break;
-                case "eqrr": value = result[A] == result[B] ? 1 : 0; break;
-            }
-            result[C] = value;
+                "addr" => result[a] + result[b],
+                "addi" => result[a] + b,
+                "mulr" => result[a] * result[b],
+                "muli" => result[a] * b,
+                "banr" => result[a] & result[b],
+                "bani" => result[a] & b,
+                "borr" => result[a] | result[b],
+                "bori" => result[a] | b,
+                "setr" => result[a],
+                "seti" => a,
+                "gtir" => a > result[b] ? 1 : 0,
+                "gtri" => result[a] > b ? 1 : 0,
+                "gtrr" => result[a] > result[b] ? 1 : 0,
+                "eqir" => a == result[b] ? 1 : 0,
+                "eqri" => result[a] == b ? 1 : 0,
+                "eqrr" => result[a] == result[b] ? 1 : 0,
+                _ => throw new Exception($"Uknow mnemonic '{mnemonic}'")
+            };
             return Tuple.Create(result[0], result[1], result[2], result[3]);
         }
 
