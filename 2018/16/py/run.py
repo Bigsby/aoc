@@ -20,97 +20,100 @@ MNEMONICS = [
 ]
 
 
-def runOperation(registers: Registers, operation: Operation, mnemonic: str) -> Registers:
-    _, A, B, C = operation
+def run_operation(registers: Registers, operation: Operation, mnemonic: str) -> Registers:
+    _, a, b, c = operation
     result = list(registers)
     value = -1
     if mnemonic == "addr":
-        value = registers[A] + registers[B]
+        value = registers[a] + registers[b]
     elif mnemonic == "addi":
-        value = registers[A] + B
+        value = registers[a] + b
     elif mnemonic == "mulr":
-        value = registers[A] * registers[B]
+        value = registers[a] * registers[b]
     elif mnemonic == "muli":
-        value = registers[A] * B
+        value = registers[a] * b
     elif mnemonic == "banr":
-        value = registers[A] & registers[B]
+        value = registers[a] & registers[b]
     elif mnemonic == "bani":
-        value = registers[A] & B
+        value = registers[a] & b
     elif mnemonic == "borr":
-        value = registers[A] | registers[B]
+        value = registers[a] | registers[b]
     elif mnemonic == "bori":
-        value = registers[A] | B
+        value = registers[a] | b
     elif mnemonic == "setr":
-        value = registers[A]
+        value = registers[a]
     elif mnemonic == "seti":
-        value = A
+        value = a
     elif mnemonic == "gtir":
-        value = 1 if A > registers[B] else 0
+        value = 1 if a > registers[b] else 0
     elif mnemonic == "gtri":
-        value = 1 if registers[A] > B else 0
+        value = 1 if registers[a] > b else 0
     elif mnemonic == "gtrr":
-        value = 1 if registers[A] > registers[B] else 0
+        value = 1 if registers[a] > registers[b] else 0
     elif mnemonic == "eqir":
-        value = 1 if A == registers[B] else 0
+        value = 1 if a == registers[b] else 0
     elif mnemonic == "eqri":
-        value = 1 if registers[A] == B else 0
+        value = 1 if registers[a] == b else 0
     elif mnemonic == "eqrr":
-        value = 1 if registers[A] == registers[B] else 0
-    result[C] = value
+        value = 1 if registers[a] == registers[b] else 0
+    result[c] = value
     return tuple(result)
 
 
-def testRecord(before: Registers, operation: Operation, after: Registers, opCodes: Dict[str, Set[int]]) -> int:
+def test_record(before: Registers, operation: Operation, after: Registers, opcodes: Dict[str, Set[int]]) -> int:
     count = 0
-    opCode, *_ = operation
+    opcode, *_ = operation
     for mnenomic in MNEMONICS:
-        if after == runOperation(before, operation, mnenomic):
-            if -opCode not in opCodes[mnenomic]:
-                opCodes[mnenomic].add(opCode)
+        if after == run_operation(before, operation, mnenomic):
+            if -opcode not in opcodes[mnenomic]:
+                opcodes[mnenomic].add(opcode)
             count += 1
-        elif opCode in opCodes[mnenomic]:
-            opCodes[mnenomic].remove(opCode)
-            opCodes[mnenomic].add(-opCode)
+        elif opcode in opcodes[mnenomic]:
+            opcodes[mnenomic].remove(opcode)
+            opcodes[mnenomic].add(-opcode)
     return count
 
 
-def solve(puzzleInput: Tuple[List[Record], List[Operation]]) -> Tuple[int, int]:
-    records, program = puzzleInput
-    opCodes: Dict[str, Set[int]] = {mnemonic: set() for mnemonic in MNEMONICS}
-    threeOrMore = 0
+def solve(puzzle_input: Tuple[List[Record], List[Operation]]) -> Tuple[int, int]:
+    records, program = puzzle_input
+    opcodes: Dict[str, Set[int]] = {mnemonic: set() for mnemonic in MNEMONICS}
+    three_or_more = 0
     for before, operation, after in records:
-        if testRecord(before, operation, after, opCodes) >= 3:
-            threeOrMore += 1
-    for mnemonic, valid in opCodes.items():
-        opCodes[mnemonic] = {op for op in valid if op >= 0}
-    while any(len(valid) > 1 for valid in opCodes.values()):
-        singleValid = [next(iter(valid))
-                       for valid in opCodes.values() if len(valid) == 1]
-        for _, valid in opCodes.items():
+        if test_record(before, operation, after, opcodes) >= 3:
+            three_or_more += 1
+    print(opcodes)
+    for mnemonic, valid in opcodes.items():
+        opcodes[mnemonic] = {op for op in valid if op >= 0}
+    while any(len(valid) > 1 for valid in opcodes.values()):
+        single_valid = [next(iter(valid))
+                        for valid in opcodes.values() if len(valid) == 1]
+        for _, valid in opcodes.items():
             if len(valid) > 1:
-                for single in singleValid:
+                for single in single_valid:
                     if single in valid:
                         valid.remove(single)
-    ops = {next(iter(valid)): mnemonic for mnemonic, valid in opCodes.items()}
+    print(opcodes)
+    ops = {next(iter(valid)): mnemonic for mnemonic, valid in opcodes.items()}
+    print(ops)
     registers = (0, 0, 0, 0)
     for op in program:
-        registers = runOperation(registers, op, ops[op[0]])
-    return threeOrMore, registers[0]
+        registers = run_operation(registers, op, ops[op[0]])
+    return three_or_more, registers[0]
 
 
-recordRegex = re.compile(
+record_regex = re.compile(
     r"Before: \[(?P<b0>\d+), (?P<b1>\d+), (?P<b2>\d+), (?P<b3>\d+)]\n(?P<opCode>\d+) (?P<A>\d) (?P<B>\d) (?P<C>\d)\nAfter:  \[(?P<a0>\d+), (?P<a1>\d+), (?P<a2>\d+), (?P<a3>\d+)]")
-operationRegex = re.compile(r"(?P<opCode>\d+) (?P<A>\d) (?P<B>\d) (?P<C>\d)")
+operation_regex = re.compile(r"(?P<opCode>\d+) (?P<A>\d) (?P<B>\d) (?P<C>\d)")
 
 
-def getInput(filePath: str) -> Tuple[List[Record], List[Operation]]:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
+def get_input(file_path: str) -> Tuple[List[Record], List[Operation]]:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
 
-    with open(filePath, "r") as file:
-        recordsText, programText = file.read().split("\n\n\n\n")
+    with open(file_path, "r") as file:
+        records_text, program_text = file.read().split("\n\n\n\n")
         records: List[Record] = []
-        for match in recordRegex.finditer(recordsText):
+        for match in record_regex.finditer(records_text):
             records.append((
                 (int(match.group("b0")), int(match.group("b1")),
                  int(match.group("b2")), int(match.group("b3"))),
@@ -120,7 +123,7 @@ def getInput(filePath: str) -> Tuple[List[Record], List[Operation]]:
                  int(match.group("a2")), int(match.group("a3")))
             ))
         operations: List[Operation] = []
-        for match in operationRegex.finditer(programText):
+        for match in operation_regex.finditer(program_text):
             operations.append((int(match.group("opCode")), int(
                 match.group("A")), int(match.group("B")), int(match.group("C"))))
         return records, operations
@@ -131,10 +134,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
