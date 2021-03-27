@@ -9,23 +9,19 @@ namespace AoC
 {
     static class Program
     {
-        static int[] PATTERN = new [] { 0, 1, 0, -1 };
+        static int[] PATTERN = new[] { 0, 1, 0, -1 };
         static int GetValue(int offset, IEnumerable<int> signal)
         {
             var total = 0;
             foreach (var (number, index) in signal.Select((number, index) => (number, index)))
-            {
-                var indexInPattern = ((index + 1) / offset) % PATTERN.Length;
-                var multiplier = PATTERN[indexInPattern];
-                total += number * multiplier;
-            }
+                total += number * PATTERN[((index + 1) / offset) % PATTERN.Length];
             return Math.Abs(total) % 10;
         }
 
         static IEnumerable<int> NextPhase(IEnumerable<int> signal)
         {
             var result = new List<int>();
-            foreach (var (number, index) in signal.Select((number, index) => (number, index)))
+            foreach (var index in Enumerable.Range(0, signal.Count()))
                 result.Add(GetValue(index + 1, signal));
             return result;
         }
