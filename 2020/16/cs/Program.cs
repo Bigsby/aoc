@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 namespace AoC
 {
     using Ticket = List<int>;
-    using Rule = Tuple<string,int,int,int,int>;
+    using Rule = Tuple<string, int, int, int, int>;
 
     static class Program
     {
@@ -25,21 +25,21 @@ namespace AoC
             }
             return validNumbers;
         }
-    
+
         static int Part1(IEnumerable<Ticket> tickets, IEnumerable<int> validNumbers)
         {
-            var invalidNumbers = new List<int>();
+            var total = 0;
             foreach (var ticket in tickets)
                 foreach (var number in ticket)
                     if (!validNumbers.Contains(number))
-                        invalidNumbers.Add(number);
-            return invalidNumbers.Sum();
+                        total += number;
+            return total;
         }
 
         static long Part2(IEnumerable<Rule> rules, Ticket myTicket, IEnumerable<Ticket> tickets, IEnumerable<int> validNumbers)
         {
             var validTickets = tickets.Where(ticket => ticket.All(number => validNumbers.Contains(number)));
-            var ranges = rules.ToDictionary(rule => rule.Item1, rule => Tuple.Create(rule.Item2, rule.Item3, rule.Item4, rule.Item5));
+            var ranges = rules.ToDictionary(rule => rule.Item1, rule => (rule.Item2, rule.Item3, rule.Item4, rule.Item5));
             var positions = rules.ToDictionary(rule => rule.Item1, _ => Enumerable.Range(0, rules.Count()).ToList());
             var names = rules.Select(rule => rule.Item1);
             foreach (var ticket in validTickets)
