@@ -1,16 +1,18 @@
 #! /usr/bin/python3
 
-import sys, os, time
+import sys
+import os
+import time
 from typing import Tuple
 
 
 def part1(steps: int) -> int:
-    spinLock = [ 0 ]
+    spin_lock = [0]
     position = 0
     for number in range(1, 2017 + 1):
-        position = (position + steps) % len(spinLock) + 1
-        spinLock.insert(position, number)
-    return spinLock[position + 1]
+        position = (position + steps) % len(spin_lock) + 1
+        spin_lock.insert(position, number)
+    return spin_lock[position + 1]
 
 
 def part2(steps: int) -> int:
@@ -23,17 +25,18 @@ def part2(steps: int) -> int:
     return result
 
 
-def solve(steps: int) -> Tuple[int,int]:
+def solve(steps: int) -> Tuple[int, int]:
     return (
         part1(steps),
         part2(steps)
     )
 
-def getInput(filePath: str) -> int:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
-    
-    with open(filePath, "r") as file:
+
+def get_input(file_path: str) -> int:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
+
+    with open(file_path, "r") as file:
         return int(file.read().strip())
 
 
@@ -42,10 +45,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
