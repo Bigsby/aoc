@@ -9,7 +9,7 @@ namespace AoC
     static class Program
     {
         static int Part1(int steps)
-        { 
+        {
             var spinlock = new List<int> { 0 };
             var position = 0;
             for (var number = 1; number <= 2017; number++)
