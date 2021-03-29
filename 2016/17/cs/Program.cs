@@ -37,7 +37,8 @@ namespace AoC
                         longestPathFound = Math.Max(longestPathFound, path.Length);
                         continue;
                     }
-                    var pathHash = string.Join("", md5.ComputeHash(ENCODING.GetBytes(passcode + path)).Select(hashByte => hashByte.ToString("x2")));
+                    var pathHash = string.Join("", md5.ComputeHash(ENCODING.GetBytes(passcode + path))
+                        .Select(hashByte => hashByte.ToString("x2")));
                     foreach (var (index, pathLetter, direction) in DIRECTIONS)
                     {
                         var newRoom = room + direction;
