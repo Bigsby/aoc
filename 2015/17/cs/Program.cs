@@ -21,11 +21,11 @@ namespace AoC
             {
                 int resultIndex = stack.Count - 1;
                 int dataIndex = stack.Pop();
-                while (dataIndex < data.Length) 
+                while (dataIndex < data.Length)
                 {
                     result[resultIndex++] = data[dataIndex];
                     stack.Push(++dataIndex);
-                    if (resultIndex == length) 
+                    if (resultIndex == length)
                     {
                         yield return result;
                         break;
