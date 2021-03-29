@@ -62,7 +62,7 @@ namespace AoC
 
         static void PrintArea(IEnumerable<Coordinate> clay, IEnumerable<Coordinate> flowing, IEnumerable<Coordinate> settled, Coordinate spring, bool all = false)
         {
-            var (minX, maxX, minY, maxY) = GetEdges(clay.Concat(flowing).Concat(settled).Concat(new []{ spring }));
+            var (minX, maxX, minY, maxY) = GetEdges(clay.Concat(flowing).Concat(settled).Concat(new[] { spring }));
             var margins = 20;
             if (!all)
             {
@@ -163,15 +163,16 @@ namespace AoC
         static Regex lineRegex = new Regex(@"^(?<sC>x|y)=(?<sV>\d+), (?:x|y)=(?<mS>\d+)..(?<mE>\d+)$", RegexOptions.Compiled);
         static IEnumerable<Coordinate> GetInput(string filePath)
             => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
-            : File.ReadLines(filePath).SelectMany(line => { 
+            : File.ReadLines(filePath).SelectMany(line =>
+            {
                 var match = lineRegex.Match(line);
                 if (match.Success)
                 {
                     var result = new List<Coordinate>();
                     var (sC, sV, mS, mE) = (
-                        match.Groups["sC"].Value, 
-                        int.Parse(match.Groups["sV"].Value), 
-                        int.Parse(match.Groups["mS"].Value), 
+                        match.Groups["sC"].Value,
+                        int.Parse(match.Groups["sV"].Value),
+                        int.Parse(match.Groups["mS"].Value),
                         int.Parse(match.Groups["mE"].Value));
                     if (sC == "x")
                         for (var y = mS; y < mE + 1; y++)
