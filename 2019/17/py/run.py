@@ -20,15 +20,15 @@ class IntCodeComputer():
         self.polling = False
         self.outputing = False
 
-    def setInput(self, value: int):
+    def set_input(self, value: int):
         self.inputs.insert(0, value)
 
-    def runUntilHalt(self) -> List[int]:
+    def run(self) -> List[int]:
         while self.running:
             self.tick()
         return self.outputs
 
-    def getParameter(self, offset: int, mode: int) -> int:
+    def get_parameter(self, offset: int, mode: int) -> int:
         value = self.memory[self.pointer + offset]
         if mode == 0:  # POSITION
             return self.memory[value]
@@ -38,7 +38,7 @@ class IntCodeComputer():
             return self.memory[self.base + value]
         raise Exception("Unrecognized parameter mode", mode)
 
-    def getAddress(self, offset: int, mode: int) -> int:
+    def get_address(self, offset: int, mode: int) -> int:
         value = self.memory[self.pointer + offset]
         if mode == 0:  # POSITION
             return value
@@ -46,71 +46,71 @@ class IntCodeComputer():
             return self.base + value
         raise Exception("Unrecognized address mode", mode)
 
-    def getOutput(self) -> int:
+    def get_output(self) -> int:
         self.outputing = False
         return self.outputs.pop()
 
-    def addInput(self, value: int):
+    def add_input(self, value: int):
         self.inputs.append(value)
 
     def tick(self):
         instruction = self.memory[self.pointer]
-        opcode, p1mode, p2mode, p3mode = instruction % 100, (
+        opcode, p1_mode, p2_mode, p3_mode = instruction % 100, (
             instruction // 100) % 10, (instruction // 1000) % 10, (instruction // 10000) % 10
         if not self.running:
             return
         if opcode == 1:  # ADD
-            self.memory[self.getAddress(3, p3mode)] = self.getParameter(
-                1, p1mode) + self.getParameter(2, p2mode)
+            self.memory[self.get_address(3, p3_mode)] = self.get_parameter(
+                1, p1_mode) + self.get_parameter(2, p2_mode)
             self.pointer += 4
         elif opcode == 2:  # MUL
-            self.memory[self.getAddress(3, p3mode)] = self.getParameter(
-                1, p1mode) * self.getParameter(2, p2mode)
+            self.memory[self.get_address(3, p3_mode)] = self.get_parameter(
+                1, p1_mode) * self.get_parameter(2, p2_mode)
             self.pointer += 4
         elif opcode == 3:  # INPUT
             if self.inputs:
                 self.polling = False
-                self.memory[self.getAddress(1, p1mode)] = self.inputs.pop(0)
+                self.memory[self.get_address(1, p1_mode)] = self.inputs.pop(0)
                 self.pointer += 2
             else:
                 self.polling = True
         elif opcode == 4:  # OUTPUT
             self.outputing = True
-            self.outputs.append(self.getParameter(1, p1mode))
+            self.outputs.append(self.get_parameter(1, p1_mode))
             self.pointer += 2
         elif opcode == 5:  # JMP_TRUE
-            if self.getParameter(1, p1mode):
-                self.pointer = self.getParameter(2, p2mode)
+            if self.get_parameter(1, p1_mode):
+                self.pointer = self.get_parameter(2, p2_mode)
             else:
                 self.pointer += 3
         elif opcode == 6:  # JMP_FALSE
-            if not self.getParameter(1, p1mode):
-                self.pointer = self.getParameter(2, p2mode)
+            if not self.get_parameter(1, p1_mode):
+                self.pointer = self.get_parameter(2, p2_mode)
             else:
                 self.pointer += 3
         elif opcode == 7:  # LESS_THAN
-            self.memory[self.getAddress(3, p3mode)] = 1 if self.getParameter(
-                1, p1mode) < self.getParameter(2, p2mode) else 0
+            self.memory[self.get_address(3, p3_mode)] = 1 if self.get_parameter(
+                1, p1_mode) < self.get_parameter(2, p2_mode) else 0
             self.pointer += 4
         elif opcode == 8:  # EQUALS
-            self.memory[self.getAddress(3, p3mode)] = 1 if self.getParameter(
-                1, p1mode) == self.getParameter(2, p2mode) else 0
+            self.memory[self.get_address(3, p3_mode)] = 1 if self.get_parameter(
+                1, p1_mode) == self.get_parameter(2, p2_mode) else 0
             self.pointer += 4
         elif opcode == 9:  # SET_BASE
-            self.base += self.getParameter(1, p1mode)
+            self.base += self.get_parameter(1, p1_mode)
             self.pointer += 2
         elif opcode == 99:  # HALT
             self.running = False
         else:
             raise Exception(f"Unknown instruction", self.pointer,
-                            instruction, opcode, p1mode, p2mode, p3mode)
+                            instruction, opcode, p1_mode, p2_mode, p3_mode)
 
     def clone(self):
-        cloneComputer = IntCodeComputer([])
-        cloneComputer.memory = dict(self.memory)
-        cloneComputer.pointer = self.pointer
-        cloneComputer.base = self.base
-        return cloneComputer
+        clone_computer = IntCodeComputer([])
+        clone_computer.memory = dict(self.memory)
+        clone_computer.pointer = self.pointer
+        clone_computer.base = self.base
+        return clone_computer
 
 
 DIRECTIONS = {"v": 1j, ">": 1, "^": -1j, "<": -1}
@@ -120,14 +120,15 @@ PathStretch = Tuple[int, int]
 Path = List[str]
 
 
-def printArea(scafolds: Scafolds, robot: Robot):
-    minX = int(min(map(lambda p: p.real, scafolds)))
-    maxX = int(max(map(lambda p: p.real, scafolds)))
-    minY = int(min(map(lambda p: p.imag, scafolds)))
-    maxY = int(max(map(lambda p: p.imag, scafolds)))
-    print(minX, maxX, minY, maxY)
-    for y in range(minY, maxY + 1):
-        for x in range(minX, maxX + 1):
+def print_area(scafolds: Scafolds, robot: Robot):
+    min_x = int(min(map(lambda p: p.real, scafolds)))
+    max_x = int(max(map(lambda p: p.real, scafolds)))
+    min_y = int(min(map(lambda p: p.imag, scafolds)))
+    max_y = int(max(map(lambda p: p.imag, scafolds)))
+    print(min_x, max_x, min_y, max_y)
+    print(robot)
+    for y in range(min_y, max_y + 1):
+        for x in range(min_x, max_x + 1):
             position = x + y * 1j
             c = "."
             if position in scafolds:
@@ -140,14 +141,14 @@ def printArea(scafolds: Scafolds, robot: Robot):
     print()
 
 
-def getScafoldsAndRobot(asciiComputer: IntCodeComputer) -> Tuple[Scafolds, Robot]:
+def get_scafolds_and_robot(ascii_computer: IntCodeComputer) -> Tuple[Scafolds, Robot]:
     position = 0j
     scafolds: List[complex] = []
     robot = (0j, 0j)
-    while asciiComputer.running:
-        asciiComputer.tick()
-        if asciiComputer.outputing:
-            code = asciiComputer.getOutput()
+    while ascii_computer.running:
+        ascii_computer.tick()
+        if ascii_computer.outputing:
+            code = ascii_computer.get_output()
             if code == 35:  # "#"
                 scafolds.append(position)
                 position += 1
@@ -172,102 +173,104 @@ def part1(scafolds: Scafolds) -> int:
 TURNS = [(-1j, "L"), (1j, "R")]
 
 
-def findPath(scafolds: Scafolds, robot: Robot) -> Path:
+def find_path(scafolds: Scafolds, robot: Robot) -> Path:
     path: Path = []
-    currentTurn = ""
-    turnFound = True
-    while turnFound:
+    current_turn = ""
+    turn_found = True
+    while turn_found:
         position, direction = robot
         if position + direction not in scafolds:
-            turnFound = False
+            turn_found = False
             for turn, code in TURNS:
                 if position + direction * turn in scafolds:
-                    turnFound = True
-                    currentTurn = code
+                    turn_found = True
+                    current_turn = code
                     robot = position, direction * turn
         else:
-            currentLength = 0
+            current_length = 0
             while position + direction in scafolds:
                 position += direction
-                currentLength += 1
+                current_length += 1
             robot = position, direction
-            path.append(currentTurn)
-            path.append(str(currentLength))
+            path.append(current_turn)
+            path.append(str(current_length))
     return path
 
 
-def getRepeatsInPath(path: Path, segment: Path) -> List[Tuple[int, int]]:
-    return [(start, start + len(segment)) for start in range(len(path) - len(segment) + 1) if path[start:start + len(segment)] == segment]
+def get_repeats_in_path(path: Path, segment: Path) -> List[Tuple[int, int]]:
+    return [(start, start + len(segment))
+            for start in range(len(path) - len(segment) + 1)
+            if path[start:start + len(segment)] == segment]
 
 
-def isPermutationValid(path: Path, permutation: Tuple[Tuple[int, int], ...]) -> bool:
+def is_permutation_valid(path: Path, permutation: Tuple[Tuple[int, int], ...]) -> bool:
     path = list(path)
-    for length, repeatCount in permutation:
+    for length, repeat_count in permutation:
         segment = path[:length]
         if len(segment) * 2 - 1 > 20:
             return False
-        repeatIndexes = getRepeatsInPath(path, segment)
-        if len(repeatIndexes) != repeatCount:
+        repeat_indexes = get_repeats_in_path(path, segment)
+        if len(repeat_indexes) != repeat_count:
             return False
-        repeatIndexes.reverse()
-        for start, _ in repeatIndexes:
+        repeat_indexes.reverse()
+        for start, _ in repeat_indexes:
             for _ in range(length):
                 del path[start]
     return not path
 
 
-def getRoutines(path: Path) -> Dict[int, Tuple[Path, List[Tuple[int, int]]]]:
+def get_routines(path: Path) -> Dict[int, Tuple[Path, List[Tuple[int, int]]]]:
     routines: Dict[int, Tuple[Path, List[Tuple[int, int]]]] = {}
     # possible (length, repeat counts)
     for permutation in permutations([(6, 4), (10, 3), (8, 3), (6, 3)], 3):
-        if isPermutationValid(path, permutation):
-            indexesToGroup = [i for i in range(len(path))]
+        if is_permutation_valid(path, permutation):
+            indexes_to_group = [i for i in range(len(path))]
             for c, (length, _) in enumerate(permutation):
-                index = min(indexesToGroup)
+                index = min(indexes_to_group)
                 segment = path[index:index + length]
-                repeatIndexes = getRepeatsInPath(path, segment)
-                routines[c + ord("A")] = segment, repeatIndexes
-                for start, end in repeatIndexes:
+                repeat_indexes = get_repeats_in_path(path, segment)
+                routines[c + ord("A")] = segment, repeat_indexes
+                for start, end in repeat_indexes:
                     for i in range(start, end):
-                        indexesToGroup.remove(i)
+                        indexes_to_group.remove(i)
             break
     return routines
 
 
 def part2(memory: List[int], scafolds: Scafolds, robot: Robot) -> int:
-    asciiComputer = IntCodeComputer(memory)
-    asciiComputer.memory[0] = 2
-    path = findPath(scafolds, robot)
-    routines = getRoutines(path)
-    mainRoutineSegments: Dict[int, int] = {}
+    ascii_computer = IntCodeComputer(memory)
+    ascii_computer.memory[0] = 2
+    path = find_path(scafolds, robot)
+    routines = get_routines(path)
+    main_routine_segments: Dict[int, int] = {}
     inputs: List[str] = []
     for routine, (segements, indexes) in routines.items():
         inputs.append(",".join(segements) + chr(10))
-        for indexGroup in indexes:
-            mainRoutineSegments[indexGroup[0]] = routine
+        for index_group in indexes:
+            main_routine_segments[index_group[0]] = routine
     inputs.insert(0, ",".join([chr(routine) for _, routine in sorted(
-        mainRoutineSegments.items())]) + chr(10))
+        main_routine_segments.items())]) + chr(10))
     inputs.append("n" + chr(10))
-    for inputLine in inputs:
-        for c in inputLine:
-            asciiComputer.inputs.append(ord(c))
-    return asciiComputer.runUntilHalt().pop()
+    for input_line in inputs:
+        for c in input_line:
+            ascii_computer.inputs.append(ord(c))
+    return ascii_computer.run().pop()
 
 
 def solve(memory: List[int]) -> Tuple[int, int]:
-    asciiComputer = IntCodeComputer(memory)
-    scafolds, robot = getScafoldsAndRobot(asciiComputer)
+    ascii_computer = IntCodeComputer(memory)
+    scafolds, robot = get_scafolds_and_robot(ascii_computer)
     return (
         part1(scafolds),
         part2(memory, scafolds, robot)
     )
 
 
-def getInput(filePath: str) -> List[int]:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
+def get_input(file_path: str) -> List[int]:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
 
-    with open(filePath, "r") as file:
+    with open(file_path, "r") as file:
         return [int(i) for i in file.read().split(",")]
 
 
@@ -276,10 +279,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
