@@ -400,7 +400,10 @@ namespace AoC
                 foreach (var indexGroup in indexes)
                     mainRoutineSegments[indexGroup.Item1] = routine;
             }
-            inputs.Insert(0, string.Join(",", mainRoutineSegments.OrderBy(pair => pair.Key).Select(pair => (char)pair.Value)) + (char)10);
+            inputs.Insert(0, string.Join(",", 
+                mainRoutineSegments
+                    .OrderBy(pair => pair.Key)
+                    .Select(pair => (char)pair.Value)) + (char)10);
             inputs.Add("n" + (char)10);
             memory[0] = 2;
             var asciiComputer = new IntCodeComputer(memory);
