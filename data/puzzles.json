@@ -771,7 +771,7 @@
                     "day": 17,
                     "name": "Two Steps Forward",
                     "description": "Open doors with MD5 hasing",
-                    "tags": [ "MD5", "2D", "Navigate" ],
+                    "tags": [ "MD5", "2D", "Navigate", "BFS" ],
                     "results": [
                         {
                             "p1": "DRLRDDURDR",
@@ -1276,6 +1276,7 @@
                     "name": "Spinlock",
                     "description": "Inserting and rotating circular list",
                     "tags": [ "Shuffling", "Maths" ],
+                    "gotchas": [ "Modulo length", "P2 - Just keep track of result position (1)" ],
                     "results": [
                         {
                             "p1": "136",
@@ -1783,6 +1784,7 @@
                     "name": "Reservoir Research",
                     "description": "Water falling in recepients",
                     "tags": [ "DFS", "Waterflow" ],
+                    "comments": [ "Optimize Rust and C#" ],
                     "results": [
                         {
                             "p1": "42389",
@@ -2193,6 +2195,7 @@
                     "name": "Set and Forget",
                     "description": "Run machine code and find path trails",
                     "tags": [ "Machine", "IntCode", "2D", "Navigate", "Tracks" ],
+                    "comments": [ "Re-check Rust" ],
                     "results": [
                         {
                             "p1": "5056",
