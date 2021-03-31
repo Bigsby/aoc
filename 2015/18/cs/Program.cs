@@ -8,7 +8,7 @@ using System.Numerics;
 
 namespace AoC
 {
-    using Grid = Dictionary<Complex,bool>;
+    using Grid = Dictionary<Complex, bool>;
 
     static class Program
     {
@@ -26,7 +26,7 @@ namespace AoC
             ReadLine();
         }
 
-        static Complex[] NEIGHBOR_DIRECTIONS = new [] {
+        static Complex[] NEIGHBOR_DIRECTIONS = new[] {
             new Complex(-1, -1),
             new Complex( 0, -1),
             new Complex( 1, -1),
@@ -41,18 +41,17 @@ namespace AoC
 
         static Grid GetNextState(Grid grid, IEnumerable<Complex> alwaysOn)
         {
-            foreach(var position in alwaysOn)
-                grid[position] = true;
             var newState = new Grid();
             foreach (var position in grid.Keys)
             {
-                var neighborCount = GetNeighbors(position).Count(neighbor => grid.ContainsKey(neighbor) && grid[neighbor]);
-                if (grid[position])
-                    newState[position] = neighborCount == 2 || neighborCount == 3;
-                else
-                    newState[position] = neighborCount == 3;
+                var neighborActiveCount = GetNeighbors(position)
+                    .Count(neighbor => grid.ContainsKey(neighbor) && grid[neighbor]);
+                newState[position] = grid[position] ?
+                    neighborActiveCount == 2 || neighborActiveCount == 3
+                    :
+                    neighborActiveCount == 3;
             }
-            foreach(var position in alwaysOn)
+            foreach (var position in alwaysOn)
                 newState[position] = true;
             return newState;
         }
@@ -60,9 +59,11 @@ namespace AoC
         static int RunSteps(Grid grid, IEnumerable<Complex> alwaysOn = default(List<Complex>))
         {
             alwaysOn ??= new Complex[0];
+            foreach (var position in alwaysOn)
+                grid[position] = true;
             foreach (var _ in Enumerable.Range(0, 100))
                 grid = GetNextState(grid, alwaysOn);
-            return  grid.Values.Count(v => v);
+            return grid.Values.Count(v => v);
         }
 
         static (int, int) Solve(Grid grid)
@@ -70,7 +71,7 @@ namespace AoC
             var side = (int)grid.Keys.Max(p => p.Real);
             return (
                 RunSteps(grid),
-                RunSteps(grid, new [] {
+                RunSteps(grid, new[] {
                     Complex.Zero,
                     new Complex(0, side),
                     new Complex(side, 0),
