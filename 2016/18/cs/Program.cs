@@ -11,7 +11,7 @@ namespace AoC
 
     static class Program
     {
-        static void PrintTiles(IEnumerable<bool> list) => WriteLine(string.Join("", list.Select(v => v ? '.' : '^' )));
+        static void PrintTiles(IEnumerable<bool> list) => WriteLine(string.Join("", list.Select(v => v ? '.' : '^')));
 
         static (int, int) Solve(Tiles tiles)
         {
