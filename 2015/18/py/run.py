@@ -1,65 +1,68 @@
 #! /usr/bin/python3
 
-import sys, os, time
+import sys
+import os
+import time
 from typing import Dict, Iterable, List, Tuple
 
-Grid = Dict[complex,bool]
+Grid = Dict[complex, bool]
 NEIGHBOR_DIRECTIONS: List[complex] = [
-     - 1 - 1j,
-         - 1j,
-     + 1 - 1j,
-     - 1,
-     + 1,
-     - 1 + 1j,
-         + 1j,
-     + 1 + 1j
+    - 1 - 1j,
+    - 1j,
+    + 1 - 1j,
+    - 1,
+    + 1,
+    - 1 + 1j,
+    + 1j,
+    + 1 + 1j
 ]
-def getNeighbors(pos: complex) -> Iterable[complex]:
+
+
+def get_neighbors(position: complex) -> Iterable[complex]:
     for direction in NEIGHBOR_DIRECTIONS:
-        yield pos + direction
+        yield position + direction
 
 
-def getNextState(grid: Grid, alwaysOn: List[complex]) -> Grid:
-    for position in alwaysOn:
-            grid[position] = True
-    newState = dict(grid)
+def get_next_state(grid: Grid, always_on: List[complex]) -> Grid:
+    new_state: Grid = {}
     for position in grid:
-        neighbors = sum(map(lambda neighbor: grid[neighbor] if neighbor in grid else 0, getNeighbors(position)))
-        if grid[position]:
-            newState[position] = neighbors == 2 or neighbors == 3
-        else:
-            newState[position] = neighbors == 3
-    for position in alwaysOn:
-            newState[position] = True
-    return newState
+        neighbors_active_count = sum(map(
+            lambda neighbor: grid[neighbor] if neighbor in grid else 0, get_neighbors(position)))
+        new_state[position] = neighbors_active_count == 2 or neighbors_active_count == 3 \
+            if grid[position] else \
+            neighbors_active_count == 3
+    for position in always_on:
+        new_state[position] = True
+    return new_state
 
 
-def runSteps(grid: Grid, alwaysOn: List[complex] = []) -> int:
+def run_steps(grid: Grid, always_on: List[complex] = []) -> int:
+    for position in always_on:
+        grid[position] = True
     for _ in range(100):
-        grid = getNextState(grid, alwaysOn)
+        grid = get_next_state(grid, always_on)
     return sum(grid.values())
 
 
-def solve(grid: Grid) -> Tuple[int,int]:
+def solve(grid: Grid) -> Tuple[int, int]:
     side = max(map(lambda key: key.real, grid.keys()))
-    alwaysOn: List[complex] = [
-        0,
-        side * 1j,
-        side,
-        side * (1 + 1j)
-    ]
     return (
-        runSteps(grid), 
-        runSteps(grid, alwaysOn)
+        run_steps(grid),
+        run_steps(grid, [
+            0,
+            side * 1j,
+            side,
+            side * (1 + 1j)
+        ])
     )
 
 
-def getInput(filePath: str) -> Grid:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
-    
-    with open(filePath, "r") as file:
-        grid = Grid()
+def get_input(file_path: str) -> Grid:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
+
+    with open(file_path, "r") as file:
+        grid: Grid = {}
         for y, line in enumerate(file.readlines()):
             for x, c in enumerate(line.strip()):
                 grid[x + y * 1j] = c == "#"
@@ -71,10 +74,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
