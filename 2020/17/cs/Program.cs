@@ -14,7 +14,7 @@ namespace AoC
     {
         public Coordinate(params int[] coordinates) => _coordinates = coordinates;
 
-        public int this[int index] 
+        public int this[int index]
         {
             get => _coordinates[index];
             set => _coordinates[index] = value;
@@ -39,7 +39,7 @@ namespace AoC
         IEnumerator IEnumerable.GetEnumerator() => _coordinates.GetEnumerator();
         public static implicit operator Coordinate(int[] values) => new Coordinate(values);
         public static implicit operator Coordinate(List<int> values) => new Coordinate(values.ToArray());
-        
+
         public static Coordinate operator +(Coordinate a, int i)
             => Enumerable.Range(0, a.Count).Select(index => a[index] + i).ToArray();
         public static Coordinate operator -(Coordinate a, int i)
@@ -70,13 +70,7 @@ namespace AoC
 
     static class Program
     {
-        static (Coordinate, Coordinate) GetLimits(Universe universe)
-            => (
-                Enumerable.Range(0, universe.Keys.First().Count).Select(index => universe.Keys.Min(coordinate => coordinate[index])).ToArray(),
-                Enumerable.Range(0, universe.Keys.First().Count).Select(index => universe.Keys.Max(coordinate => coordinate[index])).ToArray()
-            );
-        
-        static char[] OUTER_DIMENSIONS = new [] { 'z', 'w' };
+        static char[] OUTER_DIMENSIONS = new[] { 'z', 'w' };
         static void PrintUniverse(Universe universe)
         {
             var dimensionCount = universe.Keys.First().Count;
@@ -87,11 +81,19 @@ namespace AoC
                     Write("\n" + string.Join(", ", Enumerable.Range(0, dimensionCount - 2).Select(index => OUTER_DIMENSIONS[index] + "=" + coordinate[index])));
                 if (coordinate[^1] == lowerLimits[^1])
                     WriteLine();
-                Write(universe[coordinate] ? '#': '.');
+                Write(universe[coordinate] ? '#' : '.');
             }
             WriteLine();
             ReadLine();
         }
+
+        static (Coordinate, Coordinate) GetLimits(Universe universe)
+            => (
+                Enumerable.Range(0, universe.Keys.First().Count)
+                    .Select(index => universe.Keys.Min(coordinate => coordinate[index])).ToArray(),
+                Enumerable.Range(0, universe.Keys.First().Count)
+                    .Select(index => universe.Keys.Max(coordinate => coordinate[index])).ToArray()
+            );
 
         static Coordinate NextCoordinateValue(Coordinate current, Coordinate lowerLimits, Coordinate upperLimits)
         {
@@ -118,22 +120,8 @@ namespace AoC
             }
         }
 
-        static IEnumerable<Coordinate> GetNeighbors(Coordinate coordinate)
-        {
-            var lowerLimit = coordinate - 1;
-            var upperLimit = coordinate + 1;
-            var current = (Coordinate)lowerLimit.ToArray();
-            current[^1]--;
-            while (current != upperLimit)
-            {
-                current = NextCoordinateValue(current, lowerLimit, upperLimit);
-                if (current != coordinate)
-                    yield return current;
-            }
-        }
-
         static int GetActiveNeighborCount(Universe universe, Coordinate coordinate)
-            => CycleCoordinates(coordinate - 1, coordinate + 1).Count(neighbor => 
+            => CycleCoordinates(coordinate - 1, coordinate + 1).Count(neighbor =>
                 neighbor != coordinate
                 && universe.ContainsKey(neighbor)
                 && universe[neighbor]
@@ -146,12 +134,11 @@ namespace AoC
             foreach (var coordinate in CycleCoordinates(--lowerLimits, ++upperLimits))
             {
                 var activeNeighborCount = GetActiveNeighborCount(universe, coordinate);
-                var newValue = false;
-                if (universe.ContainsKey(coordinate) && universe[coordinate])
-                    newValue = activeNeighborCount == 2 || activeNeighborCount == 3;
-                else
-                    newValue = activeNeighborCount == 3;
-                newState[coordinate] = newValue;
+                newState[coordinate] = (universe.ContainsKey(coordinate) && universe[coordinate]) ?
+                    activeNeighborCount == 2 || activeNeighborCount == 3
+                    :
+                    activeNeighborCount == 3
+                ;
             }
             return newState;
         }
@@ -161,16 +148,16 @@ namespace AoC
                 .Aggregate(universe, (current, _) => NextCycle(current))
                 .Values.Count(v => v);
 
-        static (int, int) Solve(Dictionary<Coordinate, bool> universe)
+        static (int, int) Solve(Universe universe)
             => (
                 RunCycles(universe),
                 RunCycles(universe.ToDictionary(pair => pair.Key * 1, pair => pair.Value))
             );
 
-        static Dictionary<Coordinate, bool> GetInput(string filePath)
+        static Universe GetInput(string filePath)
         {
             if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            var universe = new Dictionary<Coordinate, bool>();
+            var universe = new Universe();
             foreach (var (line, y) in File.ReadLines(filePath).Select((line, index) => (line, index)))
             {
                 foreach (var (c, x) in line.Select((c, x) => (c, x)))
