@@ -10,19 +10,18 @@ Instruction = Tuple[str, List[str]]
 
 
 class Program:
-    def __init__(self, instructions: List[Instruction], id: int, outputOnRcv: bool = False) -> None:
+    def __init__(self, instructions: List[Instruction], id: int, output_on_receive: bool = False) -> None:
         self.instructions = instructions
         self.id = id
-        self.outputOnRcv = outputOnRcv
+        self.output_on_receive = output_on_receive
         self.registers: Dict[str, int] = defaultdict(int)
         self.registers["p"] = id
         self.pointer = 0
         self.outputs: List[int] = []
         self.inputs: List[int] = []
         self.running = True
-        self.outputting = False
         self.polling = False
-        self.outputCount = 0
+        self.output_count = 0
         self.params: List[str] = []
 
     def _getValue(self, offset: int) -> int:
@@ -32,7 +31,7 @@ class Program:
         except:
             return self.registers[value]
 
-    def tick(self):
+    def tick(self) -> bool:
         if self.running:
             mnemonic, self.params = self.instructions[self.pointer]
             self.pointer += 1
@@ -45,11 +44,11 @@ class Program:
             elif mnemonic == "mod":
                 self.registers[self.params[0]] %= self._getValue(1)
             elif mnemonic == "snd":
-                self.outputCount += 1
+                self.output_count += 1
                 self.outputs.append(self._getValue(0))
             elif mnemonic == "rcv":
-                if self.outputOnRcv:
-                    self.outputting = True
+                if self.output_on_receive:
+                    return False
                 elif self.inputs:
                     self.polling = False
                     self.registers[self.params[0]] = self.inputs.pop(0)
@@ -59,15 +58,13 @@ class Program:
             elif mnemonic == "jgz" and self._getValue(0) > 0:
                 self.pointer += self._getValue(1) - 1
         self.running = self.pointer < len(self.instructions)
-
-    def isActive(self):
         return self.running and not self.polling
 
 
 def part1(instructions: List[Instruction]) -> int:
     program = Program(instructions, 0, True)
-    while not program.outputting:
-        program.tick()
+    while program.tick():
+        pass
     return program.outputs[-1]
 
 
@@ -76,10 +73,9 @@ def part2(instructions: List[Instruction]) -> int:
     program1 = Program(instructions, 1)
     program1.inputs = program0.outputs
     program0.inputs = program1.outputs
-    while program0.isActive() or program1.isActive():
-        program0.tick()
-        program1.tick()
-    return program1.outputCount
+    while program0.tick() or program1.tick():
+        pass
+    return program1.output_count
 
 
 def solve(instructions: List[Instruction]) -> Tuple[int, int]:
