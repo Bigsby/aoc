@@ -77,22 +77,28 @@ namespace AoC
             new Coordinate( 1,  1),
         };
         static int GetCountAround(Coordinate position, Grid grid, State state)
-            => NEIGHBOR_DIRECTIONS.Count(direction => grid.ContainsKey(position + direction) && grid[position + direction] == state);
+            => NEIGHBOR_DIRECTIONS.Count(direction =>
+                grid.ContainsKey(position + direction)
+                &&
+                grid[position + direction] == state);
 
         static Grid GetNextMinute(Grid grid)
         {
             var newState = new Grid();
             foreach (var (position, state) in grid.Select(pair => (pair.Key, pair.Value)))
-                switch(state)
+                switch (state)
                 {
                     case State.Open:
-                        newState[position] = GetCountAround(position, grid, State.Tree)  > 2 ? State.Tree : State.Open;
+                        newState[position] = GetCountAround(position, grid, State.Tree) > 2 ? State.Tree : State.Open;
                         break;
                     case State.Tree:
-                        newState[position] = GetCountAround(position, grid, State.Lumberyard) > 2 ? State.Lumberyard : State.Tree;
+                        newState[position] = GetCountAround(position, grid, State.Lumberyard) > 2
+                            ? State.Lumberyard : State.Tree;
                         break;
                     case State.Lumberyard:
-                        newState[position] = GetCountAround(position, grid, State.Lumberyard) > 0 && GetCountAround(position, grid, State.Tree) > 0 ? State.Lumberyard : State.Open;
+                        newState[position] = GetCountAround(position, grid, State.Lumberyard) > 0
+                            && GetCountAround(position, grid, State.Tree) > 0
+                            ? State.Lumberyard : State.Open;
                         break;
                 }
             return newState;
@@ -101,19 +107,16 @@ namespace AoC
         static int GetResourceValue(Grid grid)
             => grid.Values.Count(v => v == State.Tree) * grid.Values.Count(v => v == State.Lumberyard);
 
-        static int Part1(Grid grid)
-        {
-            foreach (var _ in Enumerable.Range(0, 10))
-                grid = GetNextMinute(grid);
-            return GetResourceValue(grid);
-        }
-
-        static int FindRepeat(IEnumerable<Grid> previousGrids, Grid current)
+        static bool TryFindRepeat(IEnumerable<Grid> previousGrids, Grid current, out int repeatIndex)
         {
             foreach (var (previous, index) in previousGrids.Select((previous, index) => (previous, index)))
                 if (previous.All(pair => current[pair.Key] == pair.Value))
-                    return index;
-            return -1;
+                {
+                    repeatIndex = index;
+                    return true;
+                }
+            repeatIndex = 0;
+            return false;
         }
 
         static (int, int) Solve(Grid grid)
@@ -123,15 +126,16 @@ namespace AoC
             var total = 1_000_000_000;
             var minute = 0;
             var part1Result = 0;
+            var repeatFound = false;
             while (minute < total)
             {
                 if (minute == 10)
                     part1Result = GetResourceValue(grid);
                 minute++;
                 grid = GetNextMinute(grid);
-                var repeatIndex = FindRepeat(previousGrids, grid);
-                if (repeatIndex != -1)
+                if (!repeatFound && TryFindRepeat(previousGrids, grid, out var repeatIndex))
                 {
+                    repeatFound = true;
                     var period = minute - repeatIndex;
                     minute += ((total - minute) / period) * period;
                 }
