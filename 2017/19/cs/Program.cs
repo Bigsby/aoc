@@ -42,7 +42,7 @@ namespace AoC
             return (path, steps);
         }
 
-        static char[] TUBES = new [] { '|', '+', '-' };
+        static char[] TUBES = new[] { '|', '+', '-' };
         static (Tubes, Letters, Complex) GetInput(string filePath)
         {
             if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
