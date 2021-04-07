@@ -33,7 +33,7 @@ namespace AoC
 
         public bool IsEmpty() => size < 1;
         public T Peek() => size < 1 ? throw new ApplicationException("The heap is empty!") : heap[1];
-        
+
         public virtual T Pop()
         {
             if (size < 1)
