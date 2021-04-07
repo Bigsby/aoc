@@ -96,7 +96,8 @@ namespace AoC
         {
             if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
             var lines = File.ReadAllLines(filePath);
-            return (int.Parse(lines[0].Split(" ")[1]), lines[1..].Select(line => {
+            return (int.Parse(lines[0].Split(" ")[1]), lines[1..].Select(line =>
+            {
                 var match = operationRegex.Match(line);
                 if (match.Success)
                     return Tuple.Create(match.Groups["opCode"].Value, int.Parse(match.Groups["A"].Value), int.Parse(match.Groups["B"].Value), int.Parse(match.Groups["C"].Value));
