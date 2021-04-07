@@ -34,9 +34,9 @@ namespace AoC
             return rule switch
             {
                 LetterRule letterRule => letterRule.letter,
-                SetRule setRule => "(?:" + 
-                    string.Join("|", 
-                        setRule.sets.Select(ruleSet => string.Join("", ruleSet.Select(innerRule => GenerateRegex(rules, innerRule))))                        
+                SetRule setRule => "(?:" +
+                    string.Join("|",
+                        setRule.sets.Select(ruleSet => string.Join("", ruleSet.Select(innerRule => GenerateRegex(rules, innerRule))))
                     ) + ")",
                 _ => throw new Exception("Unrecoginzed rule")
             };
@@ -77,7 +77,7 @@ namespace AoC
         static (int, int) Solve((Rules, List<string>) puzzleInput)
         {
             var (rules, messages) = puzzleInput;
-            var rule0 = "^" +  GenerateRegex(rules, 0) + "$";
+            var rule0 = "^" + GenerateRegex(rules, 0) + "$";
             var rule42 = "^" + GenerateRegex(rules, 42);
             var rule31 = "^" + GenerateRegex(rules, 31);
             return (
@@ -100,16 +100,18 @@ namespace AoC
                     var ruleMatch = ruleRegex.Match(line);
                     if (ruleMatch.Success)
                     {
-                        try {
-                        var ruleNumber = ruleMatch.Groups["number"].Value;
-                        var definition = ruleMatch.Groups["rule"].Value.Trim();
-                        var letterMatch = letterRegex.Match(definition);
-                        rules[int.Parse(ruleNumber)] = letterMatch.Success ?
-                            new LetterRule(ruleNumber, letterMatch.Groups["letter"].Value)
-                            :
-                            new SetRule(ruleNumber, definition);
+                        try
+                        {
+                            var ruleNumber = ruleMatch.Groups["number"].Value;
+                            var definition = ruleMatch.Groups["rule"].Value.Trim();
+                            var letterMatch = letterRegex.Match(definition);
+                            rules[int.Parse(ruleNumber)] = letterMatch.Success ?
+                                new LetterRule(ruleNumber, letterMatch.Groups["letter"].Value)
+                                :
+                                new SetRule(ruleNumber, definition);
                         }
-                        catch {
+                        catch
+                        {
                             WriteLine(line);
                             ReadLine();
                         }
