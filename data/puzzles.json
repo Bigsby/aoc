@@ -1801,6 +1801,7 @@
                     "name": "Settlers of The North Pole",
                     "description": "Tri-state Conway's Game of Life with repeating period",
                     "tags": [ "2D", "Conway", "Tri-state", "Cycle" ],
+                    "gotchas": [ "Find state repetition" ],
                     "comments": [ "Optimize C#" ],
                     "results": [
                         {
@@ -2212,6 +2213,7 @@
                     "name": "Many-Worlds Interpretation",
                     "description": "Maze with doors and keys",
                     "tags": [ "2D", "Navigate", "Maze", "BFS", "Dijkstra", "Heap" ],
+                    "gotchas": [ "Create graph between keys to apply Dijkstra" ],
                     "results": [
                         {
                             "p1": "4770",
@@ -2615,6 +2617,7 @@
                     "name": "Operation Order",
                     "description": "Parse arithmetic expressions",
                     "tags": [ "Maths", "Parse", "RegEx" ],
+                    "gotchas": [ "Replace evaluation result in expression" ],
                     "results": [
                         {
                             "p1": "6811433855019",
