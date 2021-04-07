@@ -34,9 +34,10 @@ namespace AoC
             var targetMolecule = "e";
             molecule = Reverse(molecule);
             var replacemntDict = replacements.ToDictionary(rep => Reverse(rep.target), rep => Reverse(rep.source));
+            var replacementRegex = new Regex(string.Join("|", replacemntDict.Keys), RegexOptions.Compiled);
             var count = 0;
             while (molecule != targetMolecule)
-                molecule = Regex.Replace(molecule, string.Join("|", replacemntDict.Keys), match =>
+                molecule = replacementRegex.Replace(molecule, match =>
                 {
                     count++;
                     return replacemntDict[match.Value];
@@ -64,7 +65,7 @@ namespace AoC
                 else
                     molecule += line;
             }
-            return (replacements, molecule);
+            return (replacements, molecule.Trim());
         }
 
         static void Main(string[] args)
