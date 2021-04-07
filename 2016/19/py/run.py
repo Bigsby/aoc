@@ -15,27 +15,27 @@ class Elf:
         self.next.previous = self.previous
 
 
-def part2(elfCount: int) -> int:
-    elves = list(map(Elf, range(elfCount)))
-    for index in range(elfCount):
-        elves[index].next = elves[(index + 1) % elfCount]
-        elves[index].previous = elves[(index -1 ) % elfCount]
-    currentElf = elves[0]
-    elfToRemove = elves[elfCount // 2]
-    for index in range(elfCount - 1):
-        elfToRemove.remove()
-        elfToRemove = elfToRemove.next
-        if (elfCount - index) % 2 == 1:
-            elfToRemove = elfToRemove.next
-        currentElf = currentElf.next
-    return currentElf.position
+def part2(elf_count: int) -> int:
+    elves = list(map(Elf, range(elf_count)))
+    for index in range(elf_count):
+        elves[index].next = elves[(index + 1) % elf_count]
+        elves[index].previous = elves[(index -1 ) % elf_count]
+    current_elf = elves[0]
+    elf_to_remove = elves[elf_count // 2]
+    for index in range(elf_count - 1):
+        elf_to_remove.remove()
+        elf_to_remove = elf_to_remove.next
+        if (elf_count - index) % 2 == 1:
+            elf_to_remove = elf_to_remove.next
+        current_elf = current_elf.next
+    return current_elf.position
 
 
-def solve(elfCount: int) -> Tuple[int,int]:
+def solve(elf_count: int) -> Tuple[int,int]:
     return (
         # 1 + 2 * (elfCount - 2 ** (math.floor(math.log(elfCount, 2))))
-        int(f"{elfCount:b}"[1:] + "1", 2),
-        part2(elfCount)
+        int(f"{elf_count:b}"[1:] + "1", 2),
+        part2(elf_count)
     )
 
 
