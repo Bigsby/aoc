@@ -26,7 +26,7 @@ namespace AoC
 
         static long PerformOperation(long first, string operation, long second)
         {
-            switch(operation)
+            switch (operation)
             {
                 case "*": return first * second;
                 case "+": return first + second;
@@ -41,7 +41,7 @@ namespace AoC
             var parenMatch = parenRegex.Match(expression);
             while (parenMatch.Success)
             {
-                expression = 
+                expression =
                     expression[Range.EndAt(parenMatch.Index)] +
                     EvaluateExpression(parenMatch.Groups["expression"].Value, addFirst).ToString() +
                     expression[Range.StartAt(parenMatch.Index + parenMatch.Length)];
@@ -52,7 +52,7 @@ namespace AoC
                 var plusMatch = plusRegex.Match(expression);
                 while (plusMatch.Success)
                 {
-                    expression = 
+                    expression =
                         expression[Range.EndAt(plusMatch.Index)] +
                         (long.Parse(plusMatch.Groups["first"].Value) + long.Parse(plusMatch.Groups["second"].Value)).ToString() +
                         expression[Range.StartAt(plusMatch.Index + plusMatch.Length)];
@@ -62,14 +62,14 @@ namespace AoC
             string token;
             (token, expression) = GetNextToken(expression);
             var currentValue = long.Parse(token);
-            var operationToPeform = "";
+            var operationToPerform = "";
             while (!string.IsNullOrEmpty(expression))
             {
                 (token, expression) = GetNextToken(expression);
                 if (long.TryParse(token, out var value))
-                    currentValue = PerformOperation(currentValue, operationToPeform, value);
+                    currentValue = PerformOperation(currentValue, operationToPerform, value);
                 else
-                    operationToPeform = token;
+                    operationToPerform = token;
             }
             return currentValue;
         }
