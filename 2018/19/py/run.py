@@ -11,7 +11,7 @@ Registers = List[int]
 Operation = Tuple[str, int, int, int]
 
 
-def runOperation(registers: Registers, operation: Operation) -> Registers:
+def run_operation(registers: Registers, operation: Operation) -> Registers:
     mnemonic, A, B, C = operation
     result = list(registers)
     value = -1
@@ -55,12 +55,12 @@ def part1(data: Tuple[int, List[Operation]]) -> int:
     ip, operations = data
     registers = [0 for _ in range(6)]
     while registers[ip] < len(operations):
-        registers = runOperation(registers, operations[registers[ip]])
+        registers = run_operation(registers, operations[registers[ip]])
         registers[ip] += 1
     return registers[0]
 
 
-def getDivisors(number: int) -> Iterable[int]:
+def get_divisors(number: int) -> Iterable[int]:
     large_divisors: List[int] = []
     for i in range(1, int(math.sqrt(number) + 1)):
         if number % i == 0:
@@ -82,9 +82,9 @@ def part2(data: Tuple[int, List[Operation]]) -> int:
     registers = [0 for _ in range(6)]
     registers[0] = 1
     while registers[ip] != 1:
-        registers = runOperation(registers, operations[registers[ip]])
+        registers = run_operation(registers, operations[registers[ip]])
         registers[ip] += 1
-    return sum(getDivisors(registers[VALUE_REGISTER[ip]]))
+    return sum(get_divisors(registers[VALUE_REGISTER[ip]]))
 
 
 def solve(data: Tuple[int, List[Operation]]) -> Tuple[int, int]:
@@ -94,20 +94,20 @@ def solve(data: Tuple[int, List[Operation]]) -> Tuple[int, int]:
     )
 
 
-operationRegex = re.compile(
+operation_regex = re.compile(
     r"^(?P<mnemonic>\w+) (?P<A>\d+) (?P<B>\d+) (?P<C>\d+)$")
 
 
-def getInput(filePath: str) -> Tuple[int, List[Operation]]:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
+def get_input(file_path: str) -> Tuple[int, List[Operation]]:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
 
-    with open(filePath, "r") as file:
+    with open(file_path, "r") as file:
         lines = file.readlines()
         ip = int(lines[0].split(" ")[1])
         operations: List[Operation] = []
         for line in lines[1:]:
-            match = operationRegex.match(line)
+            match = operation_regex.match(line)
             if match:
                 operations.append((match.group("mnemonic"), int(
                     match.group("A")), int(match.group("B")), int(match.group("C"))))
@@ -119,10 +119,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
