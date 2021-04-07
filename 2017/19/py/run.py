@@ -11,22 +11,22 @@ Letters = Dict[Position, str]
 
 
 def solve(data: Tuple[Tubes, Letters, Position]) -> Tuple[str, int]:
-    tubes, letters, currentPosition = data
+    tubes, letters, current_position = data
     path: List[str] = []
     direction = 1j
     steps = 0
     while True:
         steps += 1
-        if currentPosition in letters:
-            path.append(letters[currentPosition])
-        if currentPosition + direction in tubes:
-            currentPosition += direction
-        elif currentPosition + direction * 1j in tubes:
+        if current_position in letters:
+            path.append(letters[current_position])
+        if current_position + direction in tubes:
+            current_position += direction
+        elif current_position + direction * 1j in tubes:
             direction *= 1j
-            currentPosition += direction
-        elif currentPosition + direction * -1j in tubes:
+            current_position += direction
+        elif current_position + direction * -1j in tubes:
             direction *= -1j
-            currentPosition += direction
+            current_position += direction
         else:
             break
     return "".join(path), steps
@@ -35,13 +35,13 @@ def solve(data: Tuple[Tubes, Letters, Position]) -> Tuple[str, int]:
 TUBES = ["|", "+", "-"]
 
 
-def getInput(filePath: str) -> Tuple[Tubes, Letters, Position]:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
+def get_input(file_path: str) -> Tuple[Tubes, Letters, Position]:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
 
-    with open(filePath, "r") as file:
-        tubes = Tubes()
-        letters = Letters()
+    with open(file_path, "r") as file:
+        tubes: Tubes = []
+        letters: Letters = {}
         start = -1j
         for y, line in enumerate(file.readlines()):
             for x, c in enumerate(line):
@@ -61,10 +61,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
