@@ -8,42 +8,42 @@ import re
 import math
 from collections import defaultdict
 
-Values = Tuple[int, int, int]
+Values = Tuple[int, ...]
 Particle = Tuple[Values, Values, Values]
 
 
-def getManhatanValue(values: Values) -> int:
+def get_manhatan_value(values: Values) -> int:
     return abs(values[0]) + abs(values[1]) + abs(values[2])
 
 
 def part1(particles: List[Particle]) -> int:
-    closestParticle = 0
-    lowestAcceleration = sys.maxsize
-    lowestPosition = sys.maxsize
+    closest_particle = 0
+    lowest_acceleration = sys.maxsize
+    lowest_position = sys.maxsize
     for index, (position, _, acceleration) in enumerate(particles):
-        accelerationTotal = getManhatanValue(acceleration)
-        if accelerationTotal < lowestAcceleration:
-            lowestAcceleration = accelerationTotal
-            closestParticle = index
-            lowestPosition = getManhatanValue(position)
-        if accelerationTotal == lowestAcceleration and getManhatanValue(position) < lowestPosition:
-            closestParticle = index
-            lowestPosition = getManhatanValue(position)
-    return closestParticle
+        acceleration_total = get_manhatan_value(acceleration)
+        if acceleration_total < lowest_acceleration:
+            lowest_acceleration = acceleration_total
+            closest_particle = index
+            lowest_position = get_manhatan_value(position)
+        if acceleration_total == lowest_acceleration and get_manhatan_value(position) < lowest_position:
+            closest_particle = index
+            lowest_position = get_manhatan_value(position)
+    return closest_particle
 
 
-def getQuadraticABC(particleA: Particle, particleB: Particle, coordinate: int) -> Tuple[float, float, int]:
-    pAp = particleA[0][coordinate]
-    pAa = particleA[2][coordinate]
-    pAv = particleA[1][coordinate] + pAa / 2
-    pBp = particleB[0][coordinate]
-    pBa = particleB[2][coordinate]
-    pBv = particleB[1][coordinate] + pBa / 2
-    return (pAa - pBa) / 2, pAv - pBv, pAp - pBp
+def get_quadratic_abc(particle_a: Particle, particle_b: Particle, coordinate: int) -> Tuple[float, float, int]:
+    p_a_p = particle_a[0][coordinate]
+    p_a_a = particle_a[2][coordinate]
+    p_a_v = particle_a[1][coordinate] + p_a_a / 2
+    p_b_p = particle_b[0][coordinate]
+    p_b_a = particle_b[2][coordinate]
+    p_b_v = particle_b[1][coordinate] + p_b_a / 2
+    return (p_a_a - p_b_a) / 2, p_a_v - p_b_v, p_a_p - p_b_p
 
 
-def getColitionTimes(particleA: Particle, particleB: Particle) -> List[int]:
-    a, b, c = getQuadraticABC(particleA, particleB, 0)
+def get_colition_times(particle_a: Particle, particle_b: Particle) -> List[int]:
+    a, b, c = get_quadratic_abc(particle_a, particle_b, 0)
     times: List[float] = []
     if a == 0:
         if b != 0:
@@ -64,7 +64,7 @@ def getColitionTimes(particleA: Particle, particleB: Particle) -> List[int]:
     for t in int_times:
         collide = True
         for k in [1, 2]:
-            a, b, c = getQuadraticABC(particleA, particleB, k)
+            a, b, c = get_quadratic_abc(particle_a, particle_b, k)
             if a * t * t + b * t + c != 0:
                 collide = False
                 break
@@ -75,19 +75,19 @@ def getColitionTimes(particleA: Particle, particleB: Particle) -> List[int]:
 
 def part2(particles: List[Particle]) -> int:
     collisions: Dict[int, List[Tuple[int, int]]] = defaultdict(list)
-    for thisIndex in range(len(particles) - 1):
-        for otherIndex in range(thisIndex + 1, len(particles)):
-            for time in getColitionTimes(particles[thisIndex], particles[otherIndex]):
-                collisions[time].append((thisIndex, otherIndex))
-    particleIndexes: Set[int] = set(range(len(particles)))
+    for this_index in range(len(particles) - 1):
+        for other_index in range(this_index + 1, len(particles)):
+            for time in get_colition_times(particles[this_index], particles[other_index]):
+                collisions[time].append((this_index, other_index))
+    particle_indexes: Set[int] = set(range(len(particles)))
     for time in sorted(list(collisions.keys())):
-        collidedToRemove: Set[int] = set()
-        for indexA, indexB in collisions[time]:
-            if indexA in particleIndexes and indexB in particleIndexes:
-                collidedToRemove.add(indexA)
-                collidedToRemove.add(indexB)
-        particleIndexes -= collidedToRemove
-    return len(particleIndexes)
+        collided_to_temove: Set[int] = set()
+        for index_a, index_b in collisions[time]:
+            if index_a in particle_indexes and index_b in particle_indexes:
+                collided_to_temove.add(index_a)
+                collided_to_temove.add(index_b)
+        particle_indexes -= collided_to_temove
+    return len(particle_indexes)
 
 
 def solve(particles: List[Particle]) -> Tuple[int, int]:
@@ -97,23 +97,26 @@ def solve(particles: List[Particle]) -> Tuple[int, int]:
     )
 
 
-lineRegex = re.compile(
+line_regex = re.compile(
     r"^p=<(?P<p>[^>]+)>, v=<(?P<v>[^>]+)>, a=<(?P<a>[^>]+)>$")
 
 
-def parseLine(line: str) -> Particle:
-    match = lineRegex.match(line)
+def parse_line(line: str) -> Particle:
+    match = line_regex.match(line)
     if match:
-        return tuple(map(int, match.group("p").split(","))), tuple(map(int, match.group("v").split(","))), tuple(map(int, match.group("a").split(",")))
+        return \
+            tuple(map(int, match.group("p").split(","))), \
+            tuple(map(int, match.group("v").split(","))), \
+            tuple(map(int, match.group("a").split(",")))
     raise Exception("Bad format", line)
 
 
-def getInput(filePath: str) -> List[Particle]:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
+def get_input(file_path: str) -> List[Particle]:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
 
-    with open(filePath, "r") as file:
-        return [parseLine(line) for line in file.readlines()]
+    with open(file_path, "r") as file:
+        return [parse_line(line) for line in file.readlines()]
 
 
 def main():
@@ -121,10 +124,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
