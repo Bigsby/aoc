@@ -5,7 +5,7 @@ from typing import Iterable, List, Tuple
 import math
 
 
-def getDivisors(number: int) -> Iterable[int]:
+def get_divisors(number: int) -> Iterable[int]:
     large_divisors: List[int] = []
     for i in range(1, int(math.sqrt(number) + 1)):
         if number % i == 0:
@@ -16,51 +16,51 @@ def getDivisors(number: int) -> Iterable[int]:
         yield divisor
 
 
-def getPresentCountForHouse(number: int) -> int:
-    return sum(getDivisors(number))
+def get_present_count_for_house(number: int) -> int:
+    return sum(get_divisors(number))
 
 
-def part1(puzzleInput: int) -> int:
-    houseNumber = 0 
-    presentsReceived = 0
+def part1(puzzle_input: int) -> int:
+    house_number = 0 
+    presents_received = 0
     step = 2 * 3 * 5 * 7 * 11 
-    targetPresents = puzzleInput / 10
-    while presentsReceived <= targetPresents:
-        houseNumber += step
-        presentsReceived = getPresentCountForHouse(houseNumber)
-    return houseNumber
+    target_presents = puzzle_input / 10
+    while presents_received <= target_presents:
+        house_number += step
+        presents_received = get_present_count_for_house(house_number)
+    return house_number
 
 
-def getPresentCountForHouse2(number: int) -> int:
+def get_present_count_for_house2(number: int) -> int:
     presents = 0
-    for divisor in getDivisors(number):
+    for divisor in get_divisors(number):
         if number / divisor < 50:
             presents += divisor * 11
     return presents
 
 
-def part2(puzzleInput: int, houseNumber: int) -> int:
+def part2(puzzle_input: int, house_number: int) -> int:
     step = 1
-    presentsReceived = 0
-    while presentsReceived <= puzzleInput:
-        houseNumber += step
-        presentsReceived = getPresentCountForHouse2(houseNumber)
-    return houseNumber
+    presents_received = 0
+    while presents_received <= puzzle_input:
+        house_number += step
+        presents_received = get_present_count_for_house2(house_number)
+    return house_number
 
 
-def solve(puzzleInput: int) -> Tuple[int,int]:
-    part1Result = part1(puzzleInput)
+def solve(puzzle_input: int) -> Tuple[int,int]:
+    part1_result = part1(puzzle_input)
     return (
-        part1Result, 
-        part2(puzzleInput, part1Result)
+        part1_result, 
+        part2(puzzle_input, part1_result)
     )
 
 
-def getInput(filePath: str) -> int:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
+def get_input(file_path: str) -> int:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
     
-    with open(filePath, "r") as file:
+    with open(file_path, "r") as file:
         return int(file.read().strip())
 
 
@@ -69,10 +69,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
