@@ -14,10 +14,12 @@ namespace AoC
         public bool Any() => _innerDictionary.Any();
         public IEnumerable<TKey> Keys => _innerDictionary.Keys;
 
-        public DefaultDictionary(Dictionary<TKey, TValue> init = default(Dictionary<TKey, TValue>), Func<TValue> generator = null)
+        public DefaultDictionary(
+            Dictionary<TKey, TValue> init = default(Dictionary<TKey, TValue>),
+            Func<TValue> generator = null)
         {
-             _innerDictionary = init ?? new Dictionary<TKey, TValue>();
-             _generator = generator ?? (() => default(TValue));
+            _innerDictionary = init ?? new Dictionary<TKey, TValue>();
+            _generator = generator ?? (() => default(TValue));
         }
 
         public TValue this[TKey key]
@@ -78,7 +80,9 @@ namespace AoC
             return closestParticle;
         }
 
-        static (double, double, int) GetQuadraticABC((int[], int[], int[]) particleA, (int[], int[], int[]) particleB, int coordinate)
+        static (double, double, int) GetQuadraticABC(
+            (int[], int[], int[]) particleA,
+            (int[], int[], int[]) particleB, int coordinate)
         {
             var pAp = particleA.Item1[coordinate];
             var pAa = particleA.Item3[coordinate];
@@ -106,7 +110,7 @@ namespace AoC
                     yield break;
                 else if (bb == ac4)
                     yield return (int)(-b / (2 * a));
-                else 
+                else
                 {
                     var rt = Math.Sqrt(bb - ac4);
                     var value = (-b + rt) / (2 * a);
@@ -124,7 +128,7 @@ namespace AoC
             foreach (var time in GetXCollitionTimes(particleA, particleB))
             {
                 var collide = true;
-                foreach (var k in new [] { 1 , 2 })
+                foreach (var k in new[] { 1, 2 })
                 {
                     var (a, b, c) = GetQuadraticABC(particleA, particleB, k);
                     if (a * time * time + b * time + c != 0)
@@ -137,7 +141,7 @@ namespace AoC
                     yield return time;
             }
         }
-    
+
         static int Part2(Particles particles)
         {
             var particlesArray = particles.ToArray();
@@ -170,7 +174,8 @@ namespace AoC
         static Regex lineRegex = new Regex(@"^p=<(?<p>[^>]+)>, v=<(?<v>[^>]+)>, a=<(?<a>[^>]+)>$", RegexOptions.Compiled);
         static IEnumerable<(int[], int[], int[])> GetInput(string filePath)
             => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
-            : File.ReadLines(filePath).Select(line => {
+            : File.ReadLines(filePath).Select(line =>
+            {
                 var match = lineRegex.Match(line);
                 if (match.Success)
                     return (
