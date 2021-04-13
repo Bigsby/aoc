@@ -1,11 +1,13 @@
 #! /usr/bin/python3
 
-import sys, os, time
+import sys
+import os
+import time
 from typing import Iterable, Tuple
 import re
 from itertools import combinations
 
-Player = Tuple[int,int,int]
+Player = Tuple[int, int, int]
 WEAPONS = [
     (8, 4, 0),
     (10, 5, 0),
@@ -19,7 +21,7 @@ ARMORS = [
     (31, 0, 2),
     (53, 0, 3),
     (75, 0, 4),
-    (102, 0,5)
+    (102, 0, 5)
 ]
 RINGS = [
     (0, 0, 0),
@@ -33,47 +35,51 @@ RINGS = [
 ]
 
 
-def playGame(player: Player, boss: Player) -> bool:
-    playerHit, playerDamage, playerArmor = player
-    bossHit, bossDamage, bossArmor = boss
-    playerDamage = max(1, playerDamage - bossArmor)
-    bossDamage = max(1, bossDamage - playerArmor)
+def play_game(player: Player, boss: Player) -> bool:
+    player_hit, player_damage, player_armor = player
+    boss_hit, boss_damage, boss_armor = boss
+    player_damage = max(1, player_damage - boss_armor)
+    boss_damage = max(1, boss_damage - player_armor)
     while True:
-        bossHit -= playerDamage
-        if bossHit <= 0:
+        boss_hit -= player_damage
+        if boss_hit <= 0:
             return True
-        playerHit -= bossDamage
-        if playerHit <= 0:
+        player_hit -= boss_damage
+        if player_hit <= 0:
             return False
 
 
-def getInventoryCombinations() -> Iterable[Tuple[int,int,int]]:
+def get_inventory_combinations() -> Iterable[Tuple[int, int, int]]:
     for weapon in WEAPONS:
         for armor in ARMORS:
             for ring1, ring2 in combinations(RINGS, 2):
-                inventory = [ weapon, armor, ring1, ring2 ]
-                cost, damage, defense = (sum(tool[index] for tool in inventory) for index in range(3))
+                inventory = [weapon, armor, ring1, ring2]
+                cost, damage, defense = (
+                    sum(tool[index] for tool in inventory) for index in range(3))
                 yield cost, damage, defense
 
 
-def solve(boss: Player) -> Tuple[int,int]:
-    minCost = sys.maxsize
-    maxCost = 0
-    for cost, damage, defense in getInventoryCombinations():
-        if playGame((100, damage, defense), boss):
-            minCost = min(minCost, cost)
+def solve(boss: Player) -> Tuple[int, int]:
+    min_cost = sys.maxsize
+    max_cost = 0
+    for cost, damage, defense in get_inventory_combinations():
+        if play_game((100, damage, defense), boss):
+            min_cost = min(min_cost, cost)
         else:
-            maxCost = max(maxCost, cost)
-    return (minCost, maxCost)
+            max_cost = max(max_cost, cost)
+    return (min_cost, max_cost)
 
 
-inputRegex = re.compile(r"^Hit Points: (?P<hit>\d+)\W+Damage: (?P<damage>\d+)\W+^Armor: (?P<armor>\d+)", flags=re.MULTILINE)
-def getInput(filePath: str) -> Player:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
-    
-    with open(filePath, "r") as file:
-        match = inputRegex.match(file.read())
+input_regex = re.compile(
+    r"^Hit Points: (?P<hit>\d+)\W+Damage: (?P<damage>\d+)\W+^Armor: (?P<armor>\d+)", flags=re.MULTILINE)
+
+
+def get_input(file_path: str) -> Player:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
+
+    with open(file_path, "r") as file:
+        match = input_regex.match(file.read())
         if match:
             return int(match.group("hit")), int(match.group("damage")), int(match.group("armor"))
         else:
@@ -85,10 +91,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
