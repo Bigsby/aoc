@@ -34,7 +34,7 @@ namespace AoC
 
         static Tile MirrorHorizontal(Tile tile, int size)
             => tile.Select(position => new Complex(size - position.Real, position.Imaginary));
-        
+
         static Tile RotateClockwise(Tile tile, int size)
             => tile.Select(position => new Complex(size - position.Imaginary, position.Real));
 
@@ -51,13 +51,13 @@ namespace AoC
 
         static Dictionary<int, Tile[]> GenerateAllTilesPermutations(IEnumerable<(int number, Tile tile)> tiles)
             => tiles.ToDictionary(pair => pair.number, pair => GeneratePermutations(pair.tile).ToArray());
-        
+
         static Complex I = Complex.ImaginaryOne;
         static Dictionary<Complex, (Complex, Complex, Complex)> TESTS = new Dictionary<Complex, (Complex, Complex, Complex)> {
             { -I, (0, I, 1) },
             {  1, (1, 0, I) },
             {  I, (I, 0, 1) },
-            {  -1, (0, 1, I) }
+            { -1, (0, 1, I) }
         };
         static bool TestSides(Tile tileA, Tile tileB, Complex side, int size)
         {
@@ -138,7 +138,7 @@ namespace AoC
                 puzzlePosition += direction;
                 foreach (var (tileNumber, permutations) in tilePermutations.Select(pair => (pair.Key, pair.Value)))
                 {
-                    var (matched, _, matchedPermutation) = DoTilesMatch(lastTile, permutations, tileSize, new [] { direction });
+                    var (matched, _, matchedPermutation) = DoTilesMatch(lastTile, permutations, tileSize, new[] { direction });
                     if (matched)
                     {
                         puzzle[puzzlePosition] = lastTile = matchedPermutation;
@@ -165,7 +165,7 @@ namespace AoC
             return reduced;
         }
 
-        static string[] SEA_MONSTER = new [] {
+        static string[] SEA_MONSTER = new[] {
             "                  # ",
             "#    ##    ##    ###",
             " #  #  #  #  #  #   "
@@ -181,7 +181,7 @@ namespace AoC
         }
 
         static bool IsMonsterInLocation(Complex location, Tile puzzle, Tile seaMonster)
-        
+
         {
             foreach (var monsterPosition in seaMonster)
                 if (!puzzle.Contains(monsterPosition + location))
