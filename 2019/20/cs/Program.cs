@@ -87,7 +87,7 @@ namespace AoC
         static int Part1((Maze, Portals, Coordinate, Coordinate) data)
         {
             var (maze, portals, start, end) = data;
-            var visited = new List<Coordinate>();
+            var visited = new HashSet<Coordinate>();
             visited.Add(start);
             var queue = new Queue<(Coordinate, int)>();
             queue.Enqueue((start, 1));
@@ -102,11 +102,8 @@ namespace AoC
                 {
                     if (newPosition == end)
                         return distance;
-                    if (!visited.Contains(newPosition) && maze.Contains(newPosition))
-                    {
-                        visited.Add(newPosition);
+                    if (maze.Contains(newPosition) && visited.Add(newPosition))
                         queue.Enqueue((newPosition, distance + 1));
-                    }
                 }
             }
             throw new Exception("Path not found");
@@ -115,7 +112,7 @@ namespace AoC
         static (int, string)[] GetDistancesFromPosition(Maze maze, Portals portals, Coordinate start)
         {
             var paths = new List<(int, string)>();
-            var visited = new List<Coordinate>();
+            var visited = new HashSet<Coordinate>();
             visited.Add(start);
             var queue = new Queue<(Coordinate, int)>();
             queue.Enqueue((start, 0));
@@ -126,11 +123,8 @@ namespace AoC
                     paths.Add((distance + 1, BuildPortalKey(portals[position], position, 0)));
                 else
                     foreach (var newPosition in DIRECTIONS.Select(direction => position + direction))
-                        if (!visited.Contains(newPosition) && maze.Contains(newPosition))
-                        {
-                            visited.Add(newPosition);
+                        if (maze.Contains(newPosition) && visited.Add(newPosition))
                             queue.Enqueue((newPosition, distance + 1));
-                        }
             }
             return paths.ToArray();
         }
