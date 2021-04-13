@@ -12,14 +12,14 @@ namespace AoC
 
     static class Program
     {
-        static IEnumerable<(int, int, int)> WEAPONS = new [] {
+        static IEnumerable<(int, int, int)> WEAPONS = new[] {
             (8, 4, 0),
             (10, 5, 0),
             (25, 6, 0),
             (40, 7, 0),
             (74, 8, 0)
         };
-        static IEnumerable<(int, int, int)> ARMORS = new [] {
+        static IEnumerable<(int, int, int)> ARMORS = new[] {
             (0, 0, 0),
             (13, 0, 1),
             (31, 0, 2),
@@ -27,7 +27,7 @@ namespace AoC
             (75, 0, 4),
             (102, 0,5)
         };
-        static IEnumerable<(int, int, int)> RINGS = new [] {
+        static IEnumerable<(int, int, int)> RINGS = new[] {
             (0, 0, 0),
             (0, 0, 0),
             (25, 1, 0),
@@ -84,9 +84,10 @@ namespace AoC
                 foreach (var armor in ARMORS)
                     foreach (var rings in Combinations(RINGS, 2))
                     {
-                        var inventory = new [] { weapon, armor, rings[0], rings[1] };
-                        var (cost, damage, defense) = inventory.Aggregate((soFar, current) => (soFar.Item1 + current.Item1, soFar.Item2 + current.Item2, soFar.Item3 + current.Item3));
-                        yield return (cost, damage, defense);
+                        var inventory = new[] { weapon, armor, rings[0], rings[1] };
+                        yield return inventory
+                            .Aggregate((soFar, current) => 
+                                (soFar.Item1 + current.Item1, soFar.Item2 + current.Item2, soFar.Item3 + current.Item3));
                     }
         }
 
