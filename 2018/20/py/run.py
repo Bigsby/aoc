@@ -15,18 +15,18 @@ DIRECTIONS = {
 }
 
 
-def getDistances(routes: str) -> Iterable[int]:
+def get_distances(routes: str) -> Iterable[int]:
     distances: Dict[complex, int] = defaultdict(lambda: sys.maxsize)
     distances[0j] = 0
-    groupEnds: List[complex] = []
+    group_ends: List[complex] = []
     head = 0j
     for c in routes[1:-1]:
         if c == "(":
-            groupEnds.append(head)
+            group_ends.append(head)
         elif c == ")":
-            head = groupEnds.pop()
+            head = group_ends.pop()
         elif c == "|":
-            head = groupEnds[-1]
+            head = group_ends[-1]
         else:
             previous = head
             head += DIRECTIONS[c]
@@ -35,18 +35,18 @@ def getDistances(routes: str) -> Iterable[int]:
 
 
 def solve(routes: str) -> Tuple[int, int]:
-    distances = getDistances(routes)
+    distances = get_distances(routes)
     return (
         max(distances),
         sum(1 for distance in distances if distance >= 1000)
     )
 
 
-def getInput(filePath: str) -> str:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
+def get_input(file_path: str) -> str:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
 
-    with open(filePath, "r") as file:
+    with open(file_path, "r") as file:
         return file.read().strip()
 
 
@@ -55,10 +55,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 

@@ -33,7 +33,8 @@ namespace AoC
         static IEnumerable<(long, long)> GetInput(string filePath)
         {
             if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            return File.ReadLines(filePath).Select(line => {
+            return File.ReadLines(filePath).Select(line =>
+            {
                 var splits = line.Trim().Split('-');
                 return (long.Parse(splits[0]), long.Parse(splits[1]));
             });
