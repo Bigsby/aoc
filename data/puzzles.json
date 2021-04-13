@@ -2747,7 +2747,11 @@
                     "name": "Donut Maze",
                     "description": "Find shortest path in maze with portals and multiple levels",
                     "comments": [
-                        "testinput2 doesn't work on part 2"
+                        "testinput2 doesn't work on part 2",
+                        "optimize py and cs"
+                    ],
+                    "gotchas": [
+                        "Build distances graph before applying Dijkstra"
                     ],
                     "tags": [
                         "BFS",
