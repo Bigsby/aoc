@@ -15,36 +15,36 @@ MULTIPLIER = 65899
 
 def solve(data: Tuple[int, List[Operation]]) -> Tuple[int, int]:
     _, operations = data
-    magicNumber = operations[7][1]
-    part1Result = 0
+    magic_number = operations[7][1]
+    part1_result = 0
     seen: Set[int] = set()
     result = 0
-    lastResult = -1
+    last_result = -1
     while True:
         accumulator = result | 0x10000
-        result = magicNumber
+        result = magic_number
         while True:
             result = (((result + (accumulator & 0xFF)) & MASK)
                       * MULTIPLIER) & MASK
             if accumulator <= 0xFF:
-                if part1Result == 0:
-                    part1Result = result
+                if part1_result == 0:
+                    part1_result = result
                 else:
                     if result not in seen:
                         seen.add(result)
-                        lastResult = result
+                        last_result = result
                         break
                     else:
-                        return part1Result, lastResult
+                        return part1_result, last_result
             else:
                 accumulator //= 0x100
 
 
-operationRegex = re.compile(
+operation_regex = re.compile(
     r"^(?P<mnemonic>\w+) (?P<A>\d+) (?P<B>\d+) (?P<C>\d+)$")
 
 
-def getInput(filePath: str) -> Tuple[int, List[Operation]]:
+def get_input(filePath: str) -> Tuple[int, List[Operation]]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
 
@@ -53,7 +53,7 @@ def getInput(filePath: str) -> Tuple[int, List[Operation]]:
         ip = int(lines[0].split(" ")[1])
         operations: List[Operation] = []
         for line in lines[1:]:
-            match = operationRegex.match(line)
+            match = operation_regex.match(line)
             if match:
                 operations.append((match.group("mnemonic"), int(
                     match.group("A")), int(match.group("B")), int(match.group("C"))))
@@ -65,10 +65,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
