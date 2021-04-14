@@ -9,68 +9,68 @@ import re
 FileSystem = Dict[complex, Tuple[int, int]]
 
 
-def getEmptyAndNonViableNodes(fileSystem: FileSystem) -> Tuple[complex, List[complex]]:
-    nodeNames = fileSystem.keys()
+def get_empty_and_non_viable_nodes(file_system: FileSystem) -> Tuple[complex, List[complex]]:
+    node_names = file_system.keys()
     empty = -0j
-    nonViableNodes: Set[complex] = set()
-    for thisNode in nodeNames:
-        thisUsed = fileSystem[thisNode][1]
-        if thisUsed == 0:
-            empty = thisNode
+    non_viable_nodes: Set[complex] = set()
+    for this_node in node_names:
+        this_used = file_system[this_node][1]
+        if this_used == 0:
+            empty = this_node
             continue
-        for otherNode in nodeNames:
-            if otherNode == thisNode:
+        for other_node in node_names:
+            if other_node == this_node:
                 continue
-            if thisUsed > fileSystem[otherNode][0]:
-                nonViableNodes.add(thisNode)
-    return empty, list(nonViableNodes)
+            if this_used > file_system[other_node][0]:
+                non_viable_nodes.add(this_node)
+    return empty, list(non_viable_nodes)
 
 
 DIRECTIONS = [-1j, -1, 1, 1j]
 
 
-def getStepsToTarget(nodes: List[complex], nonViable: List[complex], start: complex, destination: complex) -> int:
+def get_steps_to_target(nodes: List[complex], non_viable: List[complex], start: complex, destination: complex) -> int:
     visited = [start]
     queue: List[Tuple[complex, int]] = [(start, 0)]
     while queue:
-        currentNode, length = queue.pop(0)
+        current_node, length = queue.pop(0)
         for direction in DIRECTIONS:
-            newNode = currentNode + direction
-            if newNode == destination:
+            new_node = current_node + direction
+            if new_node == destination:
                 return length + 1
-            if newNode in nodes and newNode not in visited and newNode not in nonViable:
-                visited.append(newNode)
-                queue.append((newNode, length + 1))
+            if new_node in nodes and new_node not in visited and new_node not in non_viable:
+                visited.append(new_node)
+                queue.append((new_node, length + 1))
     raise Exception("Path not found")
 
 
-def solve(fileSystem: FileSystem) -> Tuple[int, int]:
-    empty, nonViable = getEmptyAndNonViableNodes(fileSystem)
-    nodes = list(fileSystem.keys())
-    emptyDestination = int(max(n.real for n in nodes))
+def solve(file_system: FileSystem) -> Tuple[int, int]:
+    empty, non_viable = get_empty_and_non_viable_nodes(file_system)
+    nodes = list(file_system.keys())
+    empty_destination = int(max(n.real for n in nodes))
     return (
-        len(fileSystem) - len(nonViable) - 1,
-        getStepsToTarget(nodes, nonViable, empty,
-                         emptyDestination) + (emptyDestination - 1) * 5
+        len(file_system) - len(non_viable) - 1,
+        get_steps_to_target(nodes, non_viable, empty,
+                         empty_destination) + (empty_destination - 1) * 5
     )
 
 
-lineRegex = re.compile(
+line_regex = re.compile(
     r"^/dev/grid/node-x(?P<x>\d+)-y(?P<y>\d+)\s+(?P<size>\d+)T\s+(?P<used>\d+)")
 
 
-def getInput(filePath: str) -> FileSystem:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
+def get_input(file_path: str) -> FileSystem:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
 
-    with open(filePath, "r") as file:
-        fileSystem = FileSystem()
+    with open(file_path, "r") as file:
+        file_system: FileSystem = {}
         for line in file.readlines():
-            match = lineRegex.match(line)
+            match = line_regex.match(line)
             if match:
-                fileSystem[int(match.group("x")) + int(match.group("y")) * 1j] = \
+                file_system[int(match.group("x")) + int(match.group("y")) * 1j] = \
                     (int(match.group("size")), int(match.group("used")))
-        return fileSystem
+        return file_system
 
 
 def main():
@@ -78,10 +78,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
