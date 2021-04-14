@@ -14,14 +14,18 @@ namespace AoC
     {
         static Dictionary<string, HashSet<string>> BuildAllergenGraph(IEnumerable<Food> foods)
             => foods.SelectMany(food => food.allergens).ToHashSet().ToDictionary(
-                allergen => allergen, 
+                allergen => allergen,
                 allergen => foods.Where(food => food.allergens.Contains(allergen))
-                    .Aggregate(new HashSet<string>(), 
-                        (soFar , food) => soFar.Any() ? soFar.Intersect(food.ingredients).ToHashSet() : food.ingredients.ToHashSet()));
+                    .Aggregate(new HashSet<string>(),
+                        (soFar, food) => soFar.Any()
+                                        ?
+                                        soFar.Intersect(food.ingredients).ToHashSet()
+                                        :
+                                        food.ingredients.ToHashSet()));
 
         static int Part1(IEnumerable<Food> foods, Dictionary<string, HashSet<string>> allergenGraph)
         {
-            var foundIngredients = allergenGraph.Values.Aggregate(new HashSet<string>(), 
+            var foundIngredients = allergenGraph.Values.Aggregate(new HashSet<string>(),
                 (soFar, ingredientsForAllergen) => soFar.Union(ingredientsForAllergen).ToHashSet());
             return foods.Sum(food => food.ingredients.Count(ingredient => !foundIngredients.Contains(ingredient)));
         }
@@ -51,7 +55,8 @@ namespace AoC
         static Regex lineRegex = new Regex(@"^(?<ingredients>[^\(]+)\s\(contains\s(?<allergens>[^\)]+)\)$", RegexOptions.Compiled);
         static IEnumerable<Food> GetInput(string filePath)
             => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
-            : File.ReadLines(filePath).Select(line => {
+            : File.ReadLines(filePath).Select(line =>
+            {
                 var match = lineRegex.Match(line);
                 if (match.Success)
                     return new Food(match.Groups["ingredients"].Value.Split(" "), match.Groups["allergens"].Value.Split(", "));
