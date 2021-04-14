@@ -12,7 +12,7 @@ namespace AoC
         public Memory(long[] memory)
             => _memory = memory.Select((value, index) => (value, index))
                 .ToDictionary(pair => (long)pair.index, pair => (long)pair.value);
-        
+
         public static Memory FromMemory(Memory memory)
         {
             var result = new Memory(new long[0]);
@@ -39,7 +39,7 @@ namespace AoC
         public bool Running { get; private set; } = true;
         public bool Polling { get; private set; }
         public bool Outputing { get; private set; }
-        
+
         public IntCodeComputer(long[] memory, IEnumerable<long> input = default(List<long>))
         {
             _memory = new Memory(memory);
@@ -186,12 +186,12 @@ namespace AoC
 
         static (long, long) Solve(long[] memory)
             => (
-                RunDroid(memory, new [] {
-                    "NOT C J", 
-                    "AND D J", 
-                    "NOT A T", 
-                    "OR T J", 
-                    "WALK" 
+                RunDroid(memory, new[] {
+                    "NOT C J",
+                    "AND D J",
+                    "NOT A T",
+                    "OR T J",
+                    "WALK"
                 }),
                 RunDroid(memory, new[] {
                     "OR E J",
