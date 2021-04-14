@@ -65,18 +65,18 @@ namespace AoC
         const int WEAKENED = 1;
         const int INFECTED = 2;
         const int FLAGGED = 3;
-        static Complex[] STATE_DIRECTIONS = new [] { 
+        static Complex[] STATE_DIRECTIONS = new[] {
             Complex.ImaginaryOne,
             1,
             -Complex.ImaginaryOne,
             -1
         };
-        static int[] STATE_TRANSITIONS = new [] {
+        static int[] STATE_TRANSITIONS = new[] {
             WEAKENED,
             INFECTED,
             FLAGGED,
             CLEAN
-        };       
+        };
         static int Part2(InfectionStatus initalState)
         {
             var quadState = new DefaultDictionary<Complex, int>(initalState.ToDictionary(pair => pair.Key, pair => pair.Value ? INFECTED : CLEAN));
