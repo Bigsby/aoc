@@ -11,7 +11,7 @@ namespace AoC
     using Spell = Tuple<int, int, int, int, int, int>;
     static class Program
     {
-        static Spell[] SPELLS = new [] {
+        static Spell[] SPELLS = new[] {
             Tuple.Create(53,  4, 0, 0,   0, 0), // Magic Missile
             Tuple.Create(73,  2, 2, 0,   0, 0), // Drain
             Tuple.Create(113, 0, 0, 7,   0, 6), // Shield
@@ -28,7 +28,7 @@ namespace AoC
             {
                 var (bossHit, playerHit, playerMana, activeSpells, playerTurn, manaSpent) = queue.Pop();
                 if (loseHitOnPlayerTurn && playerTurn)
-                { 
+                {
                     playerHit--;
                     if (playerHit <= 0)
                         continue;
@@ -62,7 +62,12 @@ namespace AoC
                     {
                         var spellCost = spell.Item1;
                         if (!activeCosts.Contains(spellCost) && spellCost <= playerMana)
-                            queue.Push((bossHit, playerHit, playerMana - spellCost, newActiveSpells.Concat(new [] { spell }), false, manaSpent + spellCost));
+                            queue.Push((
+                                bossHit, playerHit,
+                                playerMana - spellCost,
+                                newActiveSpells.Concat(new[] { spell }),
+                                false,
+                                manaSpent + spellCost));
                     }
                 }
                 else
@@ -77,7 +82,7 @@ namespace AoC
 
         static (int, int) Solve((int bossHit, int bossDamage) data)
             => (
-                GetLeastWinningMana(data.bossHit, data.bossDamage, false), 
+                GetLeastWinningMana(data.bossHit, data.bossDamage, false),
                 GetLeastWinningMana(data.bossHit, data.bossDamage, true)
             );
 
