@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 
 namespace AoC
 {
-    using FileSystem = Dictionary<Complex,(int size, int used)>;
+    using FileSystem = Dictionary<Complex, (int size, int used)>;
 
     static class Program
     {
@@ -37,7 +37,7 @@ namespace AoC
             return (empty, nonViableNodes);
         }
 
-        static Complex[] DIRECTIONS = new [] { -Complex.ImaginaryOne, -1, 1, Complex.ImaginaryOne };
+        static Complex[] DIRECTIONS = new[] { -Complex.ImaginaryOne, -1, 1, Complex.ImaginaryOne };
         static int GetStepsToTarget(IEnumerable<Complex> nodes, IEnumerable<Complex> nonViable, Complex start, Complex destination)
         {
             var visited = new HashSet<Complex>();
