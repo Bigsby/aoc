@@ -9,16 +9,16 @@ InfectionStatus = Dict[complex,bool]
 
 def part1(state: InfectionStatus) -> int:
     state = defaultdict(bool, state.items())
-    infectionCount = 0
-    currentNode = max(n.real for n in state.keys()) // 2 + (min(n.imag for n in state.keys()) // 2)* 1j
+    infection_count = 0
+    current_node = max(n.real for n in state.keys()) // 2 + (min(n.imag for n in state.keys()) // 2)* 1j
     direction = 1j
     for _ in range(10_000):
-        nodeState = state[currentNode]
-        direction *= -1j if nodeState else 1j
-        state[currentNode] = not nodeState
-        currentNode += direction
-        infectionCount += not nodeState
-    return infectionCount
+        node_state = state[current_node]
+        direction *= -1j if node_state else 1j
+        state[current_node] = not node_state
+        current_node += direction
+        infection_count += not node_state
+    return infection_count
 
 
 CLEAN = 0
@@ -33,18 +33,19 @@ STATE_TRANSITIONS = [
     CLEAN
 ]
 def part2(state: InfectionStatus) -> int:
-    quadState: Dict[complex,int] = defaultdict(lambda: CLEAN,[ (node, INFECTED if value else CLEAN) for node, value in state.items() ])
-    currentNode = max(n.real for n in state.keys()) // 2 + (min(n.imag for n in state.keys()) // 2)* 1j
+    quad_state: Dict[complex,int] = \
+        defaultdict(lambda: CLEAN,[ (node, INFECTED if value else CLEAN) for node, value in state.items() ])
+    current_node = max(n.real for n in state.keys()) // 2 + (min(n.imag for n in state.keys()) // 2)* 1j
     direction = 1j
-    infectionCount = 0
+    infection_count = 0
     for _ in range(10_000_000):
-        nodeState = quadState[currentNode]
-        newState = STATE_TRANSITIONS[nodeState]
-        direction *= STATE_DIRECTIONS[nodeState]
-        quadState[currentNode] = newState
-        currentNode += direction
-        infectionCount += newState == INFECTED
-    return infectionCount
+        node_state = quad_state[current_node]
+        new_state = STATE_TRANSITIONS[node_state]
+        direction *= STATE_DIRECTIONS[node_state]
+        quad_state[current_node] = new_state
+        current_node += direction
+        infection_count += new_state == INFECTED
+    return infection_count
 
 
 def solve(state: InfectionStatus) -> Tuple[int,int]:
@@ -54,16 +55,16 @@ def solve(state: InfectionStatus) -> Tuple[int,int]:
     )
 
 
-def getInput(filePath: str) -> InfectionStatus:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
+def get_input(file_path: str) -> InfectionStatus:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
     
-    with open(filePath, "r") as file:
-        infectionStatus: InfectionStatus = {}
+    with open(file_path, "r") as file:
+        infection_status: InfectionStatus = {}
         for y, line in enumerate(file.readlines()):
             for x, c in enumerate(line.strip()):
-                infectionStatus[x - y *1j] = c == "#"
-        return infectionStatus
+                infection_status[x - y *1j] = c == "#"
+        return infection_status
 
 
 def main():
@@ -71,10 +72,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
