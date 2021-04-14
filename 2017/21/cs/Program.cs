@@ -43,7 +43,7 @@ namespace AoC
 
         static Grid MirrorHorizontal(Grid grid, int size)
             => grid.Select(position => new Complex(size - 1 - position.Real, position.Imaginary)).ToHashSet();
-        
+
         static Grid RotateClockwise(Grid grid, int size)
             => grid.Select(position => new Complex(size - 1 - position.Imaginary, position.Real)).ToHashSet();
 
