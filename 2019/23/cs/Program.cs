@@ -12,7 +12,7 @@ namespace AoC
         public Memory(long[] memory)
             => _memory = memory.Select((value, index) => (value, index))
                 .ToDictionary(pair => (long)pair.index, pair => (long)pair.value);
-        
+
         public static Memory FromMemory(Memory memory)
         {
             var result = new Memory(new long[0]);
@@ -41,7 +41,7 @@ namespace AoC
         public bool Outputing { get; private set; }
         public int OutputCount => _output.Count;
         public int InputCount => _input.Count;
-        
+
         public IntCodeComputer(long[] memory, IEnumerable<long> input = default(List<long>), bool defaultInput = false, long defaultValue = -1)
         {
             _memory = new Memory(memory);
@@ -106,7 +106,7 @@ namespace AoC
                     }
                     else if (_defaultInput)
                     {
-                     
+
                         _memory[GetAddress(1, p1Mode)] = _defaultValue;
                         _pointer += 2;
                         Polling = true;
@@ -246,7 +246,7 @@ namespace AoC
                             var address = computer.GetOutput();
                             if (address == 255)
                                 natPacket = (x, y);
-                            else 
+                            else
                             {
                                 network[address].AddInput(x);
                                 network[address].AddInput(y);
