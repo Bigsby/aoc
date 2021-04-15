@@ -7,11 +7,11 @@ using System.Collections.Generic;
 
 namespace AoC
 {
-    using Instruction = Tuple<int, string ,int>;
+    using Instruction = Tuple<int, string, int>;
 
     static class Program
     {
-        const int HLF = 0; 
+        const int HLF = 0;
         const int TPL = 1;
         const int INC = 2;
         const int JMP = 3;
@@ -20,7 +20,7 @@ namespace AoC
 
         static int RunProgram(Instruction[] instructions, Dictionary<string, int> init = null)
         {
-            var registers = new [] { "a", "b" }.ToDictionary(key => key, _ => 0);
+            var registers = new[] { "a", "b" }.ToDictionary(key => key, _ => 0);
             if (init is not null)
                 foreach (var pair in init)
                     registers[pair.Key] = pair.Value;
@@ -59,7 +59,8 @@ namespace AoC
         };
         static Instruction[] GetInput(string filePath)
             => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
-            : File.ReadLines(filePath).Select(line => {
+            : File.ReadLines(filePath).Select(line =>
+            {
                 foreach (var key in INSTRUCTION_PARSERS.Keys)
                     if (line.StartsWith(key))
                         return INSTRUCTION_PARSERS[key](line);
