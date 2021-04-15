@@ -1,35 +1,39 @@
 #! /usr/bin/python3
 
-import sys, os, time
+import sys
+import os
+import time
 from typing import List, Tuple
 
-Shuffle = Tuple[int,int]
+Shuffle = Tuple[int, int]
 NEW_STACK, CUT, INCREMENT = 0, 1, 2
 
 
-def doShuffles(cards: List[int], shuffles: List[Shuffle]) -> List[int]:
-    cardsCount = len(cards)
-    replacement = [ 0 ] * cardsCount
+def do_shuffles(cards: List[int], shuffles: List[Shuffle]) -> List[int]:
+    cards_count = len(cards)
+    replacement = [0] * cards_count
     for shuffle, count in shuffles:
         if shuffle == NEW_STACK:
             cards = cards[::-1]
         elif shuffle == CUT:
             cards = cards[count:] + cards[:count]
         else:
-            for index in range(cardsCount):
-                replacement[(index * count) % cardsCount] = cards.pop(0)
+            for index in range(cards_count):
+                replacement[(index * count) % cards_count] = cards.pop(0)
             cards = replacement
     return cards
 
 
-def inverseModulo(a: int, n:int) -> int: 
+def inverse_modulo(a: int, n: int) -> int:
     return pow(a, n-2, n)
 
 
 CARDS2 = 119315717514047
 RUNS = 101741582076661
 POSITION2 = 2020
-def part2(shuffles: List[Shuffle]) -> int:    
+
+
+def part2(shuffles: List[Shuffle]) -> int:
     la = lb = 0
     a, b = 1, 0
     for shuffle, count in shuffles:
@@ -42,20 +46,23 @@ def part2(shuffles: List[Shuffle]) -> int:
         a = (la * a) % CARDS2
         b = (la * b + lb) % CARDS2
     Ma = pow(a, RUNS, CARDS2)
-    Mb = (b * (Ma - 1) * inverseModulo(a - 1, CARDS2)) % CARDS2
-    return ((POSITION2 - Mb) * inverseModulo(Ma, CARDS2)) % CARDS2
+    Mb = (b * (Ma - 1) * inverse_modulo(a - 1, CARDS2)) % CARDS2
+    return ((POSITION2 - Mb) * inverse_modulo(Ma, CARDS2)) % CARDS2
 
 
 CARDS1 = 10007
 POSITION1 = 2019
-def solve(shuffles: List[Shuffle]) -> Tuple[int,int]:
+
+
+def solve(shuffles: List[Shuffle]) -> Tuple[int, int]:
     return (
-        doShuffles([ card for card in range(CARDS1) ], shuffles).index(POSITION1),
+        do_shuffles([card for card in range(CARDS1)],
+                    shuffles).index(POSITION1),
         part2(shuffles)
     )
 
 
-def parseLine(line:str) -> Shuffle:
+def parse_line(line: str) -> Shuffle:
     if line.startswith("deal into"):
         return NEW_STACK, 0
     if line.startswith("cut"):
@@ -65,12 +72,12 @@ def parseLine(line:str) -> Shuffle:
     raise Exception("Unknow shuffle", line)
 
 
-def getInput(filePath: str):
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
-    
-    with open(filePath, "r") as file:
-        return [ parseLine(line) for line in file.readlines() ]
+def get_input(file_path: str):
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
+
+    with open(file_path, "r") as file:
+        return [parse_line(line) for line in file.readlines()]
 
 
 def main():
@@ -78,10 +85,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
