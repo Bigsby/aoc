@@ -40,7 +40,7 @@ namespace AoC
             return cardsArray;
         }
 
-        static BigInteger InverModulo(BigInteger a, BigInteger n)
+        static BigInteger InverseModulo(BigInteger a, BigInteger n)
             => BigInteger.ModPow(a, n - 2, n);
 
         static BigInteger AbsoluteModulo(BigInteger a, BigInteger n) => ((a % n) + n) % n;
@@ -73,8 +73,8 @@ namespace AoC
                 b = (long)AbsoluteModulo(la * b + lb, CARDS2);
             }
             var Ma = System.Numerics.BigInteger.ModPow(a, RUNS, CARDS2);
-            var Mb = AbsoluteModulo((b * (Ma - 1) * InverModulo(a - 1, CARDS2)), CARDS2);
-            return AbsoluteModulo((POSITION2 - Mb) * InverModulo(Ma, CARDS2), CARDS2);
+            var Mb = AbsoluteModulo((b * (Ma - 1) * InverseModulo(a - 1, CARDS2)), CARDS2);
+            return AbsoluteModulo((POSITION2 - Mb) * InverseModulo(Ma, CARDS2), CARDS2);
         }
 
         const int CARDS1 = 10007;
