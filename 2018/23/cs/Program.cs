@@ -25,14 +25,14 @@ namespace AoC
 
         static int Part2(Nanobots nanobots)
         {
-            var xs = nanobots.Select(bot => bot.x);
-            var ys = nanobots.Select(bot => bot.y);
-            var zs = nanobots.Select(bot => bot.z);
-            var (minX, maxX) = (xs.Min(), xs.Max() + 1);
-            var (minY, maxY) = (ys.Min(), ys.Max() + 1);
-            var (minZ, maxZ) = (zs.Min(), zs.Max() + 1);
+            var allXs = nanobots.Select(bot => bot.x);
+            var allYs = nanobots.Select(bot => bot.y);
+            var allZs = nanobots.Select(bot => bot.z);
+            var (minX, maxX) = (allXs.Min(), allXs.Max() + 1);
+            var (minY, maxY) = (allYs.Min(), allYs.Max() + 1);
+            var (minZ, maxZ) = (allZs.Min(), allZs.Max() + 1);
             var locationRadius = 1;
-            while (locationRadius < xs.Max() - xs.Min())
+            while (locationRadius < maxX - minX)
                 locationRadius *= 2;
             while (true)
             {
@@ -51,7 +51,8 @@ namespace AoC
                                     count++;
                             }
                             var locationDistance = Math.Abs(x) + Math.Abs(y) + Math.Abs(z);
-                            if (count > hightestCount || (count == hightestCount && (shortestDistance == -1 || locationDistance < shortestDistance)))
+                            if (count > hightestCount ||
+                                (count == hightestCount && (shortestDistance == -1 || locationDistance < shortestDistance)))
                             {
                                 hightestCount = count;
                                 shortestDistance = locationDistance;
@@ -78,7 +79,8 @@ namespace AoC
 
         static Nanobots GetInput(string filePath)
             => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
-            : File.ReadLines(filePath).Select(line => {
+            : File.ReadLines(filePath).Select(line =>
+            {
                 var matches = Regex.Matches(line, @"-?\d+");
                 return (
                     int.Parse(matches[0].Value),
