@@ -70,7 +70,7 @@ namespace AoC
                         if (pointerToChange >= 0 && pointerToChange < instructions.Length)
                         {
                             var currentInstruction = instructions[pointerToChange];
-                            instructions[pointerToChange] = new [] { INSTRUCTION_TOGGLE[currentInstruction[0]]}.Concat(currentInstruction.Skip(1)).ToList();
+                            instructions[pointerToChange] = new[] { INSTRUCTION_TOGGLE[currentInstruction[0]] }.Concat(currentInstruction.Skip(1)).ToList();
                         }
                         pointer++;
                         break;
@@ -92,7 +92,8 @@ namespace AoC
         static Instruction[] GetInput(string filePath)
         {
             if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            return File.ReadAllLines(filePath).Select(line => {
+            return File.ReadAllLines(filePath).Select(line =>
+            {
                 var mnemonic = line[..3];
                 var parameters = line[3..].Trim().Split(" ").ToList();
                 parameters.Insert(0, mnemonic);
