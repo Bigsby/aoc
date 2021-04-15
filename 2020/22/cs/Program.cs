@@ -34,7 +34,7 @@ namespace AoC
         }
 
         public bool HasRepeatedHand()
-            => _previousHands.Any(previous => !_cards.Except(previous).Any() && ! previous.Except(_cards).Any());
+            => _previousHands.Any(previous => !_cards.Except(previous).Any() && !previous.Except(_cards).Any());
 
         public int GetScore()
         {
@@ -84,7 +84,7 @@ namespace AoC
             return winner.GetScore();
         }
 
-        static (Player, Player) DecideRound (Player player1, Player player2)
+        static (Player, Player) DecideRound(Player player1, Player player2)
         {
             if (player1.LastCardSmaller && player2.LastCardSmaller)
             {
@@ -92,7 +92,7 @@ namespace AoC
                 if (winner.Name == player1.Name)
                     return (player1, player2);
                 return (player2, player1);
-            } 
+            }
             else
             {
                 if (player1.LastCard > player2.LastCard)
