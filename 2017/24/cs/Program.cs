@@ -9,7 +9,7 @@ namespace AoC
 {
     static class Program
     {
-        static (int, int) Max((int, int) a,  (int, int) b)
+        static (int, int) Max((int, int) a, (int, int) b)
         {
             if (a.Item1 > b.Item1)
                 return a;
@@ -18,7 +18,7 @@ namespace AoC
             return b;
         }
 
-        static bool Equal((int, int) a,  (int, int) b)
+        static bool Equal((int, int) a, (int, int) b)
             => a.Item1 == b.Item1 && a.Item2 == b.Item2;
 
         static bool Connects((int port1, int port2) component, int port)
@@ -29,7 +29,7 @@ namespace AoC
             var starts = components.Where(component => Connects(component, 0));
             var stack = new Stack<(int, int, IEnumerable<(int port1, int port2)>)>();
             foreach (var start in starts)
-                stack.Push((start.port1 == 0 ? start.port2 : start.port1, 0, new [] { start }));
+                stack.Push((start.port1 == 0 ? start.port2 : start.port1, 0, new[] { start }));
             var longestStrongest1 = (0, 0);
             var longestStrongest2 = (0, 0);
             while (stack.Any())
@@ -56,7 +56,8 @@ namespace AoC
 
         static IEnumerable<(int, int)> GetInput(string filePath)
             => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
-            : File.ReadLines(filePath).Select(line => {
+            : File.ReadLines(filePath).Select(line =>
+            {
                 var split = line.Split('/');
                 return (
                     int.Parse(split[0]),
