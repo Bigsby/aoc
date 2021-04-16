@@ -11,22 +11,22 @@ def solve(components: List[Component]) -> Tuple[int,int]:
     starts = [ component for component in components if 0 in component ]
     queue: List[Tuple[int,int,List[Component]]] = [ (next(port for port in start if port != 0), 0, [start]) 
         for start in starts ]
-    longestStrongest1 = (0, 0)
-    longestStrongest2 = (0, 0)
+    longest_strongest_1 = (0, 0)
+    longest_strongest_2 = (0, 0)
     while queue:
-        lastPort, strength, used = queue.pop(0)
+        last_port, strength, used = queue.pop(0)
         continued = False
         for component in components:
-            if lastPort in component and component not in used:
+            if last_port in component and component not in used:
                 continued = True
-                nextPort = lastPort if component[0] == component[1] else next(port for port in component if port != lastPort)
+                nextPort = last_port if component[0] == component[1] else next(port for port in component if port != last_port)
                 newUsed = used[:]
                 newUsed.append(component)
-                queue.append((nextPort, strength + lastPort * 2, newUsed))
+                queue.append((nextPort, strength + last_port * 2, newUsed))
         if not continued:
-            longestStrongest1 = max(longestStrongest1, (0, strength + lastPort))
-            longestStrongest2 = max(longestStrongest2, (len(used), strength + lastPort))
-    return longestStrongest1[1], longestStrongest2[1]
+            longest_strongest_1 = max(longest_strongest_1, (0, strength + last_port))
+            longest_strongest_2 = max(longest_strongest_2, (len(used), strength + last_port))
+    return longest_strongest_1[1], longest_strongest_2[1]
 
 
 def getInput(filePath: str) -> List[Component]:
