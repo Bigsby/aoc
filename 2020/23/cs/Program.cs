@@ -47,7 +47,7 @@ namespace AoC
                 moves--;
                 var firstRemoved = current.Next;
                 var lastRemoved = firstRemoved.Next.Next;
-                var removedValues = new [] { firstRemoved.Value, firstRemoved.Next.Value, lastRemoved.Value };
+                var removedValues = new[] { firstRemoved.Value, firstRemoved.Next.Value, lastRemoved.Value };
                 current.Next = lastRemoved.Next;
                 var destinationValue = current.Value - 1;
                 while (removedValues.Contains(destinationValue) || destinationValue < 1)
@@ -81,7 +81,7 @@ namespace AoC
         {
             cups = cups.Concat(Enumerable.Range(10, 1_000_000 - 9).Select(c => (long)c));
             var oneNode = PlayGame(cups, 10_000_000);
-            return oneNode.Next.Value * oneNode.Next.Next.Value; 
+            return oneNode.Next.Value * oneNode.Next.Next.Value;
         }
 
         static (string, long) Solve(IEnumerable<long> cups)
