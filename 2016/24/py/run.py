@@ -13,59 +13,59 @@ Maze = List[complex]
 DIRECTIONS = [-1, -1j, 1, 1j]
 
 
-def findPathsFromLocation(maze: Maze, numbers: Dict[Location, int], start: Location) -> Dict[int, int]:
+def find_paths_from_location(maze: Maze, numbers: Dict[Location, int], start: Location) -> Dict[int, int]:
     visited = {start}
     queue: List[Tuple[complex, int]] = [(start, 0)]
     paths: Dict[int, int] = {}
     while queue:
         position, distance = queue.pop(0)
         for direction in DIRECTIONS:
-            newPosition = position + direction
-            if newPosition in maze and newPosition not in visited:
-                visited.add(newPosition)
-                if newPosition in numbers:
-                    paths[numbers[newPosition]] = distance + 1
-                queue.append((newPosition, distance + 1))
+            new_position = position + direction
+            if new_position in maze and new_position not in visited:
+                visited.add(new_position)
+                if new_position in numbers:
+                    paths[numbers[new_position]] = distance + 1
+                queue.append((new_position, distance + 1))
     return paths
 
 
-def getStepsForPath(path: Iterable[int], pathsFromNumbers: Dict[int, Dict[int, int]], returnHome: bool) -> int:
+def get_steps_for_path(path: Iterable[int], paths_from_numbers: Dict[int, Dict[int, int]], return_home: bool) -> int:
     steps = 0
     current = 0
-    pathList = list(path)
-    while pathList:
-        next = pathList.pop(0)
-        steps += pathsFromNumbers[current][next]
+    path_list = list(path)
+    while path_list:
+        next = path_list.pop(0)
+        steps += paths_from_numbers[current][next]
         current = next
-    if returnHome:
-        steps += pathsFromNumbers[current][0]
+    if return_home:
+        steps += paths_from_numbers[current][0]
     return steps
 
 
 def solve(data: Tuple[Maze, Dict[Location, int]]) -> Tuple[int, int]:
     maze, numbers = data
-    pathsFromNumbers = {number: findPathsFromLocation(
+    paths_from_numbers = {number: find_paths_from_location(
         maze, numbers, location) for location, number in numbers.items()}
-    numbersBesidesStart = [
+    numbers_besides_start = [
         number for number in numbers.values() if number != 0]
-    pathCombinations = list(permutations(
-        numbersBesidesStart, len(numbersBesidesStart)))
-    minimumSterps = sys.maxsize
-    returnMinimumSteps = sys.maxsize
-    for combination in pathCombinations:
-        minimumSterps = min(minimumSterps, getStepsForPath(
-            combination, pathsFromNumbers, False))
-        returnMinimumSteps = min(returnMinimumSteps, getStepsForPath(
-            combination, pathsFromNumbers, True))
-    return minimumSterps, returnMinimumSteps
+    path_combinations = list(permutations(
+        numbers_besides_start, len(numbers_besides_start)))
+    minimum_steps = sys.maxsize
+    return_minimum_steps = sys.maxsize
+    for combination in path_combinations:
+        minimum_steps = min(minimum_steps, get_steps_for_path(
+            combination, paths_from_numbers, False))
+        return_minimum_steps = min(return_minimum_steps, get_steps_for_path(
+            combination, paths_from_numbers, True))
+    return minimum_steps, return_minimum_steps
 
 
-def getInput(filePath: str) -> Tuple[Maze, Dict[Location, int]]:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
+def get_input(file_path: str) -> Tuple[Maze, Dict[Location, int]]:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
 
-    with open(filePath, "r") as file:
-        maze = Maze()
+    with open(file_path, "r") as file:
+        maze: Maze = []
         numbers: Dict[Location, int] = {}
         for y, line in enumerate(file.readlines()):
             for x, c in enumerate(line.strip()):
@@ -83,10 +83,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
