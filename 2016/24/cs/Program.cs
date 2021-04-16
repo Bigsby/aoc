@@ -13,7 +13,7 @@ namespace AoC
 
     static class Program
     {
-        static Complex[] DIRECTIONS = new [] { -1, -Complex.ImaginaryOne, 1, Complex.ImaginaryOne };
+        static Complex[] DIRECTIONS = new[] { -1, -Complex.ImaginaryOne, 1, Complex.ImaginaryOne };
         static Dictionary<int, int> FindPathsFromLocation(Maze maze, Numbers numbers, Complex start)
         {
             var visited = new List<Complex>();
