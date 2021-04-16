@@ -1,33 +1,36 @@
 #! /usr/bin/python3
 
-import sys, os, time
+import sys
+import os
+import time
 from typing import List, Tuple
 from functools import reduce
 from itertools import combinations
 
 
-def getMinimumGroupEntanglement(weights: List[int], groupCount: int) -> int:
-    groupWeight = sum(weights) // groupCount
+def get_minimum_group_entanglement(weights: List[int], group_count: int) -> int:
+    group_weight = sum(weights) // group_count
     for size in range(1, len(weights)):
-        entanglements = [ reduce(lambda soFar, weight: soFar * weight, group) \
-            for group in combinations(weights, size) if sum(group) == groupWeight ]
+        entanglements = [reduce(lambda soFar, weight: soFar * weight, group)
+                         for group in combinations(weights, size) if sum(group) == group_weight]
         if entanglements:
             return min(entanglements)
     raise Exception("Group not found")
 
 
-def solve(weights: List[int]) -> Tuple[int,int]:
+def solve(weights: List[int]) -> Tuple[int, int]:
     return (
-        getMinimumGroupEntanglement(weights, 3), 
-        getMinimumGroupEntanglement(weights, 4)
+        get_minimum_group_entanglement(weights, 3),
+        get_minimum_group_entanglement(weights, 4)
     )
+
 
 def getInput(filePath: str) -> List[int]:
     if not os.path.isfile(filePath):
         raise FileNotFoundError(filePath)
-    
+
     with open(filePath, "r") as file:
-        return [ int(line.strip()) for line in file.readlines() ]
+        return [int(line.strip()) for line in file.readlines()]
 
 
 def main():
