@@ -12,7 +12,7 @@ namespace AoC
     {
         public bool Any() => _innerDictionary.Any();
         public IEnumerable<TKey> Keys => _innerDictionary.Keys;
-        public IEnumerable<TValue> Values => _innerDictionary.Values; 
+        public IEnumerable<TValue> Values => _innerDictionary.Values;
 
         public DefaultDictionary(Func<TValue> generator)
             => _generator = generator;
@@ -44,7 +44,7 @@ namespace AoC
 
     static class Program
     {
-        static Complex[] DIRECTIONS = new [] { 1, -1, Complex.ImaginaryOne, -Complex.ImaginaryOne };
+        static Complex[] DIRECTIONS = new[] { 1, -1, Complex.ImaginaryOne, -Complex.ImaginaryOne };
 
         static bool GetsBug(bool hasBug, int adjacentCount)
             => hasBug ? adjacentCount == 1 : adjacentCount == 1 || adjacentCount == 2;
@@ -107,12 +107,12 @@ namespace AoC
                             adjacentCount++;
                         else if (y == 4 && layers[layer - 1].Contains(MIDDLE_BOTTOM))
                             adjacentCount++;
-                        
+
                         if (x == 0 && layers[layer - 1].Contains(MIDDLE_LEFT))
                             adjacentCount++;
                         else if (x == 4 && layers[layer - 1].Contains(MIDDLE_RIGHT))
                             adjacentCount++;
-                        
+
                         if (position == MIDDLE_TOP)
                             adjacentCount += CYCLE.Count(x => layers[layer + 1].Contains(new Complex(x, 0)));
                         else if (position == MIDDLE_LEFT)
