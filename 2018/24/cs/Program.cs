@@ -22,7 +22,7 @@ namespace AoC
         public int EffectivePower => Units * Damage;
         public Group Target { get; set; }
 
-        public Group(string id, int units, int hit, IEnumerable<string> immunities, 
+        public Group(string id, int units, int hit, IEnumerable<string> immunities,
             IEnumerable<string> weaknesses, int initiative, string type, int damage, int army)
         {
             Id = id;
@@ -39,7 +39,7 @@ namespace AoC
         public int DamageTo(Group target)
             => target.Immunities.Contains(Type) ? 0
                 : EffectivePower * (target.Weaknesses.Contains(Type) ? 2 : 1);
-        
+
         public Group Clone(int boost)
             => new Group(Id, Units, HitPoints, Immunities, Weaknesses, Initiative, Type, Damage + boost, Army);
     }
@@ -54,7 +54,6 @@ namespace AoC
                 groups = groups.OrderByDescending(group => group.EffectivePower).ThenByDescending(group => group.Initiative).ToArray();
                 var selectedTargets = new List<string>();
                 var ts = new Dictionary<string, string>();
-
                 foreach (var group in groups)
                 {
                     var targets = groups.Where(target => target.Army != group.Army && !selectedTargets.Contains(target.Id) && group.DamageTo(target) > 0);
