@@ -40,7 +40,8 @@ namespace AoC
 
         static IEnumerable<(int, int, int, int)> GetInput(string filePath)
             => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
-            : File.ReadLines(filePath).Select(line => {
+            : File.ReadLines(filePath).Select(line =>
+            {
                 var split = line.Split(',');
                 return (
                     int.Parse(split[0]),
