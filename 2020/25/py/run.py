@@ -1,43 +1,47 @@
 #! /usr/bin/python3
 
-import sys, os, time
+import sys
+import os
+import time
 from typing import Tuple
 
 
 BASE_SUBJECT_NUMBER = 7
 DIVIDER = 20201227
-def getNextValue(value: int, subjectNumber: int = BASE_SUBJECT_NUMBER) -> int:
-    return (value * subjectNumber) % DIVIDER
 
 
-def getLoopSize(target: int) -> int:
+def get_next_value(value: int, subject_number: int = BASE_SUBJECT_NUMBER) -> int:
+    return (value * subject_number) % DIVIDER
+
+
+def get_loop_size(target: int) -> int:
     value = 1
     cycle = 0
     while value != target:
         cycle += 1
-        value = getNextValue(value)
+        value = get_next_value(value)
     return cycle
 
 
-def transform(subjectNumber: int, cycles: int) -> int:
+def transform(subject_number: int, cycles: int) -> int:
     value = 1
     while cycles:
         cycles -= 1
-        value = getNextValue(value, subjectNumber)
+        value = get_next_value(value, subject_number)
     return value
 
 
-def solve(puzzleInput: Tuple[int,...]) -> Tuple[int,str]:
-    card, door = puzzleInput
-    return transform(card, getLoopSize(door)), ""
+def solve(puzzle_input: Tuple[int, ...]) -> Tuple[int, str]:
+    card, door = puzzle_input
+    return transform(card, get_loop_size(door)), ""
 
 
-def getInput(filePath: str) -> Tuple[int,...]:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
-    
-    with open(filePath, "r") as file:
-        return  tuple(int(line.strip()) for line in file.readlines())
+def get_input(file_path: str) -> Tuple[int, ...]:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
+
+    with open(file_path, "r") as file:
+        return tuple(int(line.strip()) for line in file.readlines())
 
 
 def main():
@@ -45,10 +49,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
