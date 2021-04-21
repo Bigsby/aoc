@@ -21,24 +21,24 @@ class IntCodeComputer():
         self.polling = False
         self.paused = False
         self.outputing = False
-        self.defaultInput = defaultInput
-        self.defaultValue = defaultValue
+        self.default_input = defaultInput
+        self.default_value = defaultValue
 
-    def setInput(self, value: int):
+    def set_input(self, value: int):
         self.inputs.insert(0, value)
 
-    def runUntilHalt(self) -> List[int]:
+    def run(self) -> List[int]:
         while self.running:
             self.tick()
         return self.outputs
 
-    def runUntilPaused(self):
+    def run_until_paused(self):
         self.paused = False
         while not self.paused and self.running:
             self.tick()
         return self
 
-    def getParameter(self, offset: int, mode: int) -> int:
+    def get_parameter(self, offset: int, mode: int) -> int:
         value = self.memory[self.pointer + offset]
         if mode == 0:  # POSITION
             return self.memory[value]
@@ -48,7 +48,7 @@ class IntCodeComputer():
             return self.memory[self.base + value]
         raise Exception("Unrecognized parameter mode", mode)
 
-    def getAddress(self, offset: int, mode: int) -> int:
+    def get_address(self, offset: int, mode: int) -> int:
         value = self.memory[self.pointer + offset]
         if mode == 0:  # POSITION
             return value
@@ -56,71 +56,71 @@ class IntCodeComputer():
             return self.base + value
         raise Exception("Unrecognized address mode", mode)
 
-    def getOutput(self) -> int:
+    def get_output(self) -> int:
         self.outputing = False
         return self.outputs.pop()
 
-    def addInput(self, value: int):
+    def add_input(self, value: int):
         self.inputs.append(value)
 
     def tick(self):
         instruction = self.memory[self.pointer]
-        opcode, p1mode, p2mode, p3mode = instruction % 100, (
+        opcode, p1_mode, p2_mode, p3_mode = instruction % 100, (
             instruction // 100) % 10, (instruction // 1000) % 10, (instruction // 10000) % 10
         if not self.running:
             return
         if opcode == 1:  # ADD
-            self.memory[self.getAddress(3, p3mode)] = self.getParameter(
-                1, p1mode) + self.getParameter(2, p2mode)
+            self.memory[self.get_address(3, p3_mode)] = self.get_parameter(
+                1, p1_mode) + self.get_parameter(2, p2_mode)
             self.pointer += 4
         elif opcode == 2:  # MUL
-            self.memory[self.getAddress(3, p3mode)] = self.getParameter(
-                1, p1mode) * self.getParameter(2, p2mode)
+            self.memory[self.get_address(3, p3_mode)] = self.get_parameter(
+                1, p1_mode) * self.get_parameter(2, p2_mode)
             self.pointer += 4
         elif opcode == 3:  # INPUT
             if self.inputs:
                 self.polling = False
-                self.memory[self.getAddress(1, p1mode)] = self.inputs.pop(0)
+                self.memory[self.get_address(1, p1_mode)] = self.inputs.pop(0)
                 self.pointer += 2
-            elif self.defaultInput:
-                self.memory[self.getAddress(1, p1mode)] = self.defaultValue
+            elif self.default_input:
+                self.memory[self.get_address(1, p1_mode)] = self.default_value
                 self.pointer += 2
                 self.polling = True
             else:
                 self.paused = True
         elif opcode == 4:  # OUTPUT
             self.outputing = True
-            self.outputs.append(self.getParameter(1, p1mode))
+            self.outputs.append(self.get_parameter(1, p1_mode))
             self.pointer += 2
         elif opcode == 5:  # JMP_TRUE
-            if self.getParameter(1, p1mode):
-                self.pointer = self.getParameter(2, p2mode)
+            if self.get_parameter(1, p1_mode):
+                self.pointer = self.get_parameter(2, p2_mode)
             else:
                 self.pointer += 3
         elif opcode == 6:  # JMP_FALSE
-            if not self.getParameter(1, p1mode):
-                self.pointer = self.getParameter(2, p2mode)
+            if not self.get_parameter(1, p1_mode):
+                self.pointer = self.get_parameter(2, p2_mode)
             else:
                 self.pointer += 3
         elif opcode == 7:  # LESS_THAN
-            self.memory[self.getAddress(3, p3mode)] = 1 if self.getParameter(
-                1, p1mode) < self.getParameter(2, p2mode) else 0
+            self.memory[self.get_address(3, p3_mode)] = 1 if self.get_parameter(
+                1, p1_mode) < self.get_parameter(2, p2_mode) else 0
             self.pointer += 4
         elif opcode == 8:  # EQUALS
-            self.memory[self.getAddress(3, p3mode)] = 1 if self.getParameter(
-                1, p1mode) == self.getParameter(2, p2mode) else 0
+            self.memory[self.get_address(3, p3_mode)] = 1 if self.get_parameter(
+                1, p1_mode) == self.get_parameter(2, p2_mode) else 0
             self.pointer += 4
         elif opcode == 9:  # SET_BASE
-            self.base += self.getParameter(1, p1mode)
+            self.base += self.get_parameter(1, p1_mode)
             self.pointer += 2
         elif opcode == 99:  # HALT
             self.running = False
         else:
             raise Exception(f"Unknown instruction", self.pointer,
-                            instruction, opcode, p1mode, p2mode, p3mode)
+                            instruction, opcode, p1_mode, p2_mode, p3_mode)
 
 
-def parseRoomOutput(output: str) -> Tuple[str, List[str], List[str]]:
+def parse_room_output(output: str) -> Tuple[str, List[str], List[str]]:
     stage = 0
     room = ""
     doors: List[str] = []
@@ -152,24 +152,24 @@ def parseRoomOutput(output: str) -> Tuple[str, List[str], List[str]]:
     return room, doors, items
 
 
-def runCommand(droid: IntCodeComputer, command: str) -> str:
+def run_command(droid: IntCodeComputer, command: str) -> str:
     if command != "":
         for c in command + '\n':
             droid.inputs.append(ord(c))
-    droid.runUntilPaused()
+    droid.run_until_paused()
     output = "".join(chr(c) for c in droid.outputs)
     droid.outputs.clear()
     return output
 
 
 # use to play manually
-def manualScout(memory: List[int]):
+def manual_scout(memory: List[int]):
     print("Scounting")
     droid = IntCodeComputer(memory)
     command = ""
     while command != "quit" and droid.running:
-        output = runCommand(droid, command)
-        print(parseRoomOutput(output))
+        output = run_command(droid, command)
+        print(parse_room_output(output))
         command = input("$ ")
 
 
@@ -192,78 +192,78 @@ SECURITY_CHECKPOINT = "Security Checkpoint"
 TAKE = "take "
 
 
-def navigateRooms(droid: IntCodeComputer, command: str, destination: str, pickupItems: bool) -> Tuple[str, List[str], str]:
+def navigate_rooms(droid: IntCodeComputer, command: str, destination: str, pickup_items: bool) -> Tuple[str, List[str], str]:
     visited: List[Tuple[str, str]] = []
-    wayIn: Dict[str, str] = {}
-    lastDirection = ""
-    pressureRoomWayIn = ""
+    way_in: Dict[str, str] = {}
+    last_direction = ""
+    pressure_room_way_in = ""
     inventory: List[str] = []
     while droid.running:
-        output = runCommand(droid, command)
-        room, doors, items = parseRoomOutput(output)
+        output = run_command(droid, command)
+        room, doors, items = parse_room_output(output)
         if room == destination:
             break
         if room == PRESSURE_ROOM:
-            pressureRoomWayIn = lastDirection
-        if room not in wayIn:
-            wayIn[room] = lastDirection
-        if pickupItems:
+            pressure_room_way_in = last_direction
+        if room not in way_in:
+            way_in[room] = last_direction
+        if pickup_items:
             for item in items:
                 if item not in FORBIDEN_ITEMS:
-                    runCommand(droid, TAKE + item)
+                    run_command(droid, TAKE + item)
                     inventory.append(item)
-        newDoor = False
+        new_door = False
         for door in doors:
             if (room, door) not in visited:
-                if door == WAY_INVERSE[wayIn[room]]:
+                if door == WAY_INVERSE[way_in[room]]:
                     continue
-                newDoor = True
+                new_door = True
                 visited.append((room, door))
-                command = lastDirection = door
+                command = last_direction = door
                 break
-        if not newDoor:
-            if wayIn[room] == "":
+        if not new_door:
+            if way_in[room] == "":
                 # assume that first room only has 1 door
                 command = doors[0]
                 break
-            command = WAY_INVERSE[wayIn[room]]
-    return command, inventory, pressureRoomWayIn
+            command = WAY_INVERSE[way_in[room]]
+    return command, inventory, pressure_room_way_in
 
 
 DROP = "drop "
 
 
-def findPassword(memory: List[int]) -> str:
+def find_password(memory: List[int]) -> str:
     droid = IntCodeComputer(memory)
     # navigate all rooms and pickup non-forbiden items
-    command, inventory, pressureRoomWayIn = navigateRooms(droid, "", "", True)
+    command, inventory, pressure_room_way_in = navigate_rooms(droid, "", "", True)
     # go to Security Checkpoint
-    navigateRooms(droid, command, SECURITY_CHECKPOINT, False)
+    navigate_rooms(droid, command, SECURITY_CHECKPOINT, False)
     # test combinations of items
-    for newInventory in combinations(inventory, 4):
-        for item in newInventory:
+    for new_inventory in combinations(inventory, 4):
+        for item in new_inventory:
             if item not in inventory:
-                runCommand(droid, TAKE + item)
+                run_command(droid, TAKE + item)
         for item in inventory:
-            if item not in newInventory:
-                runCommand(droid, DROP + item)
-        output = runCommand(droid, pressureRoomWayIn)
-        passwordMatch = re.search(r"typing (?P<password>\d+)", output)
-        if passwordMatch:
-            return passwordMatch.group("password")
-        inventory = newInventory
+            if item not in new_inventory:
+                run_command(droid, DROP + item)
+        output = run_command(droid, pressure_room_way_in)
+        password_match = re.search(r"typing (?P<password>\d+)", output)
+        if password_match:
+            return password_match.group("password")
+        inventory = new_inventory
     raise Exception("Password not found")
 
 
 def solve(memory: List[int]) -> Tuple[str, str]:
-    return findPassword(memory), ""
+    return find_password(memory), ""
 
 
-def getInput(filePath: str) -> List[int]:
-    if not os.path.isfile(filePath):
-        raise FileNotFoundError(filePath)
+def get_input(file_path: str) -> List[int]:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
 
-    with open(filePath, "r") as file:
+    with open(file_path, "r") as file:
         return [int(i) for i in file.read().split(",")]
 
 
@@ -272,10 +272,10 @@ def main():
         raise Exception("Please, add input file path as parameter")
 
     start = time.perf_counter()
-    part1Result, part2Result = solve(getInput(sys.argv[1]))
+    part1_result, part2_result = solve(get_input(sys.argv[1]))
     end = time.perf_counter()
-    print("P1:", part1Result)
-    print("P2:", part2Result)
+    print("P1:", part1_result)
+    print("P2:", part2_result)
     print()
     print(f"Time: {end - start:.7f}")
 
