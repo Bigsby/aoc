@@ -8,5 +8,5 @@ run: build
 	@./a.out "$(INPUT)"
 	@rm ./a.out
 
-build: $(mkfile_dir)aoc1501.cpp
+build: $(mkfile_dir)run.cpp
 	@g++ $<
