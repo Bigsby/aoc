@@ -65,7 +65,7 @@ namespace AoC
                 Tick();
             return this;
         }
-        
+
         public void AddInput(long value) => _input.Enqueue(value);
 
         public IEnumerable<long> GetOutputs() => _output.ToArray();
@@ -341,7 +341,7 @@ namespace AoC
             }
             return (command, inventory, pressureRoomWayIn);
         }
-        
+
         static IEnumerable<T[]> Combinations<T>(IEnumerable<T> source, int length)
         {
             T[] result = new T[length];
@@ -377,9 +377,9 @@ namespace AoC
             foreach (var newInventory in Combinations(inventory, 4))
             {
                 foreach (var item in newInventory.Where(item => !inventory.Contains(item)))
-                        RunCommand(droid, TAKE + item);
+                    RunCommand(droid, TAKE + item);
                 foreach (var item in inventory.Where(item => !newInventory.Contains(item)))
-                        RunCommand(droid, DROP + item);
+                    RunCommand(droid, DROP + item);
                 var output = RunCommand(droid, pressureRoomWayIn);
                 var passwordMatch = Regex.Match(output, @"typing (?<password>\d+)", RegexOptions.Multiline);
                 if (passwordMatch.Success)
