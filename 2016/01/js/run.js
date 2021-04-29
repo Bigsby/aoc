@@ -49,17 +49,13 @@ class Instruction {
     }
 }
 
-function getNewHeading(heading, direction) {
-    return heading.multiply(direction === 'L' ? Complex.i : Complex.ni)
-}
-
 function solve(instructions) {
     let position = new Complex(0, 0)
     let heading = new Complex(0, 1)
     let part2 = 0
     let visited = []
     for (const instruction of instructions) {
-        heading = getNewHeading(heading, instruction.direction)
+        heading = heading.multiply(instruction.direction === 'L' ? Complex.i : Complex.ni);
         for (const _ of new Array(instruction.distance)) {
             position = position.add(heading)
             if (part2 === 0) {
