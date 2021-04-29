@@ -5,3 +5,5 @@ obj/
 target/
 
 .mypy_cache/
+
+a.out
