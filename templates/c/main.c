@@ -36,7 +36,12 @@ Input getInput(char *filePath)
     }
     fseek(file, 0, SEEK_END);
     long length = ftell(file);
+    rewind(file);
     return length;
+}
+
+void freeInput(Input input)
+{
 }
 
 int main(int argc, char **argv)
@@ -48,8 +53,10 @@ int main(int argc, char **argv)
     }
     struct timeval starts, ends;
     gettimeofday(&starts, NULL);
-    Results results = solve(getInput(argv[1]));
+    Input input = getInput(argv[1]);
+    Results results = solve(input);
     gettimeofday(&ends, NULL);
+    freeInput(input);
     printf("P1: %d\n", results.part1);
     printf("P2: %d\n\n", results.part2);
     printf("Time: %.7f\n", (double)((ends.tv_sec - starts.tv_sec) * 1000000 + ends.tv_usec - starts.tv_usec) / 1000000);
