@@ -9,23 +9,24 @@ struct Results
     int part1;
     int part2;
 };
+typedef string Input;
 
-int part1(string puzzleInput)
+int part1(Input puzzleInput)
 {
     return puzzleInput.length();
 }
 
-int part2(string puzzleInput)
+int part2(Input puzzleInput)
 {
     return puzzleInput.length();
 }
 
-Results solve(string puzzleInput)
+Results solve(Input puzzleInput)
 {
     return {part1(puzzleInput), part2(puzzleInput)};
 }
 
-string getInput(char *filePath)
+Input getInput(char *filePath)
 {
     ifstream file(filePath);
     if (!file.is_open())
