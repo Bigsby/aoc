@@ -26,11 +26,6 @@ struct Instruction
     }
 };
 
-complex<double> getNewHeading(complex<double> heading, char direction)
-{
-    return heading * (direction == 'L' ? 1i : -1i);
-}
-
 int getManhatanDistance(complex<double> position)
 {
     return abs<double>(position.real()) + abs<double>(position.imag());
@@ -44,7 +39,7 @@ Results solve(vector<Instruction> instructions)
     vector<complex<double>> visited;
     for (Instruction instruction : instructions)
     {
-        heading = getNewHeading(heading, instruction.direction);
+        heading *= instruction.direction == 'L' ? 1i : -1i;
         for (auto i = 0; i < instruction.distance; i++)
         {
             position += heading;
