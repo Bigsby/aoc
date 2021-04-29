@@ -5,6 +5,12 @@
 
 using namespace std;
 
+struct Results
+{
+    int part1;
+    int part2;
+};
+
 int getCount(vector<int> numbers, int indexOffset)
 {
     int count = 0;
@@ -14,22 +20,11 @@ int getCount(vector<int> numbers, int indexOffset)
     return count;
 }
 
-struct Results
-{
-    int part1;
-    int part2;
-    Results(int p1, int p2)
-    {
-        part1 = p1;
-        part2 = p2;
-    }
-};
-
 Results solve(vector<int> numbers)
 {
-    return Results(
+    return {
         getCount(numbers, numbers.size() - 1),
-        getCount(numbers, numbers.size() / 2));
+        getCount(numbers, numbers.size() / 2)};
 }
 
 vector<int> getInput(char *filePath)

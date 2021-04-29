@@ -9,6 +9,12 @@
 using namespace std;
 using namespace std::complex_literals;
 
+struct Results
+{
+    int part1;
+    int part2;
+};
+
 struct Instruction
 {
     char direction;
@@ -20,24 +26,15 @@ struct Instruction
     }
 };
 
-complex<double> getNewHeading(complex<double> heading, char direction) {    
+complex<double> getNewHeading(complex<double> heading, char direction)
+{
     return heading * (direction == 'L' ? 1i : -1i);
 }
 
-int getManhatanDistance(complex<double> position) {
+int getManhatanDistance(complex<double> position)
+{
     return abs<double>(position.real()) + abs<double>(position.imag());
 }
-
-struct Results
-{
-    int part1;
-    int part2;
-    Results(int p1, int p2)
-    {
-        part1 = p1;
-        part2 = p2;
-    }
-};
 
 Results solve(vector<Instruction> instructions)
 {
@@ -45,20 +42,26 @@ Results solve(vector<Instruction> instructions)
     complex<double> heading = 1i;
     int part2 = 0;
     vector<complex<double>> visited;
-    for (Instruction instruction: instructions) {
+    for (Instruction instruction : instructions)
+    {
         heading = getNewHeading(heading, instruction.direction);
-        for (auto i = 0; i < instruction.distance; i++) {
+        for (auto i = 0; i < instruction.distance; i++)
+        {
             position += heading;
-            if (part2 == 0) {
-                if (find(visited.begin(), visited.end(), position) != visited.end()) {
+            if (part2 == 0)
+            {
+                if (find(visited.begin(), visited.end(), position) != visited.end())
+                {
                     part2 = getManhatanDistance(position);
-                } else {
+                }
+                else
+                {
                     visited.push_back(position);
                 }
             }
         }
     }
-    return Results(getManhatanDistance(position), part2);
+    return {getManhatanDistance(position), part2};
 }
 
 vector<Instruction> getInput(char *filePath)
@@ -71,8 +74,8 @@ vector<Instruction> getInput(char *filePath)
     file.close();
     regex instructions_regex("([RL])(\\d+),?\\s?");
     vector<Instruction> instructions;
-    for (sregex_iterator i = sregex_iterator(content.begin(), content.end(), instructions_regex); 
-            i != sregex_iterator(); i++)
+    for (sregex_iterator i = sregex_iterator(content.begin(), content.end(), instructions_regex);
+         i != sregex_iterator(); i++)
     {
         smatch match = *i;
         instructions.push_back(Instruction(match.str(1)[0], stoi(match.str(2))));

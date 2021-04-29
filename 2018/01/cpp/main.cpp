@@ -7,6 +7,12 @@
 
 using namespace std;
 
+struct Results
+{
+    int part1;
+    int part2;
+};
+
 int part2(vector<int> changes)
 {
     int changes_length = changes.size();
@@ -22,21 +28,13 @@ int part2(vector<int> changes)
     return frequency;
 }
 
-struct Results
-{
-    int part1;
-    int part2;
-    Results(int p1, int p2)
-    {
-        part1 = p1;
-        part2 = p2;
-    }
-};
-
 Results solve(vector<int> changes)
 {
     int sum;
-    return Results(std::accumulate(changes.begin(), changes.end(), 0), part2(changes));
+    return {
+        accumulate(changes.begin(),
+                        changes.end(), 0),
+        part2(changes)};
 }
 
 vector<int> getInput(char *filePath)

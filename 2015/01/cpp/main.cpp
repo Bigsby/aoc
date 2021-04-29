@@ -5,6 +5,12 @@
 
 using namespace std;
 
+struct Results
+{
+    int part1;
+    int part2;
+};
+
 int part1(vector<int> directions)
 {
     int total = 0;
@@ -25,20 +31,9 @@ int part2(vector<int> directions)
     throw runtime_error("Did not go below 0!");
 }
 
-struct Results
+struct Results solve(vector<int> directions)
 {
-    int part1;
-    int part2;
-    Results(int p1, int p2)
-    {
-        part1 = p1;
-        part2 = p2;
-    }
-};
-
-Results solve(vector<int> directions)
-{
-    return Results(part1(directions), part2(directions));
+    return {part1(directions), part2(directions)};
 }
 
 vector<int> getInput(char *filePath)
@@ -65,7 +60,8 @@ vector<int> getInput(char *filePath)
     return directions;
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     if (argc != 2)
         throw runtime_error("Please, add input file path as parameter");
 

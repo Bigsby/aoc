@@ -4,39 +4,40 @@
 
 using namespace std;
 
-int part1(string puzzleInput) {
-    return puzzleInput.length();
-}
-
-int part2(string puzzleInput) {
-    return puzzleInput.length();
-}
-
-struct Results {
+struct Results
+{
     int part1;
     int part2;
-    Results(int p1, int p2) {
-        part1 = p1;
-        part2 = p2;
-    }
 };
 
-Results solve(string puzzleInput) {
-    return Results(part1(puzzleInput), part2(puzzleInput));
+int part1(string puzzleInput)
+{
+    return puzzleInput.length();
 }
 
-string getInput(char *filePath) {
+int part2(string puzzleInput)
+{
+    return puzzleInput.length();
+}
+
+Results solve(string puzzleInput)
+{
+    return {part1(puzzleInput), part2(puzzleInput)};
+}
+
+string getInput(char *filePath)
+{
     ifstream file(filePath);
     if (!file.is_open())
         throw runtime_error("Error reading input file!");
-    
+
     string content((istreambuf_iterator<char>(file)), (istreambuf_iterator<char>()));
     file.close();
-    return content;    
+    return content;
 }
 
-
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     if (argc != 2)
         throw runtime_error("Please, add input file path as parameter");
 
