@@ -5,10 +5,10 @@ declare -A languages=(
     ["cpp"]="make -f |cpp/makefile INPUT="
     ["js"]="node|js/run.js "
     ["swift"]="|swift/run.swift "
-    ["go"]="go run|go/run.go "
+    ["go"]="go run|go/run.go ",
+    ["c"]="make -f |c/makefile INPUT="
     # ["ts"]
     # ["kt"]
-    # ["c"]
     # ["hs"]
 )
 IFS=" "
