@@ -10,6 +10,7 @@ struct Results
     int part1;
     int part2;
 };
+typedef vector<int> Input;
 
 int part1(vector<int> directions)
 {
@@ -31,12 +32,12 @@ int part2(vector<int> directions)
     throw runtime_error("Did not go below 0!");
 }
 
-struct Results solve(vector<int> directions)
+struct Results solve(Input directions)
 {
     return {part1(directions), part2(directions)};
 }
 
-vector<int> getInput(char *filePath)
+Input getInput(char *filePath)
 {
     ifstream file(filePath);
     if (!file.is_open())
