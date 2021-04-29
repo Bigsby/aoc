@@ -13,9 +13,6 @@ namespace AoC
 
     class Program
     {
-        static Complex GetNewHeading(Complex heading, char direction)
-            => heading * (direction == 'L' ? Complex.ImaginaryOne : -Complex.ImaginaryOne);
-
         static int GetManhatanDistance(Complex position)
             => (int)(Math.Abs(position.Real) + Math.Abs(position.Imaginary));
 
@@ -27,7 +24,7 @@ namespace AoC
             var part2 = 0;
             foreach (var instruction in instructions)
             {
-                heading = GetNewHeading(heading, instruction.direction);
+                heading *= instruction.direction == 'L' ? Complex.ImaginaryOne : -Complex.ImaginaryOne;
                 for (var i = 0; i < instruction.distance; i++)
                 {
                     position += heading;
