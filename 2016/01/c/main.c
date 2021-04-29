@@ -22,11 +22,6 @@ typedef struct
 
 typedef double complex Lattice;
 
-Lattice getNewHeading(Lattice heading, char direction)
-{
-    return heading * (direction == 'L' ? I : -I);
-}
-
 int getManhatanDistance(Lattice position)
 {
     return (int)(fabs(creal(position)) + fabs(cimag(position)));
@@ -67,7 +62,7 @@ Results solve(Input input)
     int step;
     while (current != NULL)
     {
-        heading = getNewHeading(heading, current->direction);
+        heading *= current->direction == 'L' ? I : -I;
         for (step = 0; step < current->distance; step++)
         {
             position += heading;
