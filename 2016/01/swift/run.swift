@@ -38,17 +38,13 @@ extension Coordinate {
     }
 }
 
-func getNewHeading(_ heading: Coordinate, _ direction: Character) -> Coordinate {
-    heading * (direction == "L" ? 1 : -1) * Coordinate.i
-}
-
 func solve(_ instructions: [Instruction]) -> (Int, Int) {
     var position = Coordinate(0, 0)
     var heading = Coordinate(0, 1)
     var part2 = 0
     var visited: [Coordinate] = []
     for (direction, distance) in instructions {
-        heading = getNewHeading(heading, direction);
+        heading = heading * (direction == "L" ? 1 : -1) * Coordinate.i;
         for _ in 0..<distance {
             position += heading
             if part2 == 0 {
