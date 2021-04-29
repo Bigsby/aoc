@@ -33,7 +33,7 @@ Results solve(vector<int> changes)
     int sum;
     return {
         accumulate(changes.begin(),
-                        changes.end(), 0),
+                   changes.end(), 0),
         part2(changes)};
 }
 
