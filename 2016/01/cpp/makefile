@@ -6,7 +6,6 @@ endif
 
 run: build
 	@./a.out "$(INPUT)"
-	@rm ./a.out
 
-build: $(mkfile_dir)run.cpp
+build: $(mkfile_dir)main.cpp
 	@g++ $<
