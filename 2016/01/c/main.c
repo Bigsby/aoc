@@ -67,12 +67,8 @@ Results solve(Input input)
         {
             position += heading;
             if (part2 == 0)
-            {
                 if (isVisited(visited, position))
-                {
                     part2 = getManhatanDistance(position);
-                }
-            }
         }
         current = current->next;
     }
@@ -109,9 +105,7 @@ Input getInput(char *filePath)
             direction = c;
         }
         else if (isdigit(c))
-        {
             distance = distance * 10 + (c - '0');
-        }
         else if (!skip)
         {
             skip = 1;
@@ -121,16 +115,13 @@ Input getInput(char *filePath)
             newInstruction->next = NULL;
             distance = 0;
             if (previous)
-            {
                 previous->next = newInstruction;
-            }
             else
-            {
                 start = newInstruction;
-            }
             previous = newInstruction;
         }
     }
+    fclose(file);
     return start;
 }
 
