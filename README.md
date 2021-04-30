@@ -32,5 +32,13 @@ node js/run.js INPUT_FILE
 ```
 ## C++
 ``` sh
-make -f cpp/MAKEFILE INPUT=INPUT_FILE
+make -f cpp/makefile INPUT=INPUT_FILE
+```
+## C
+``` sh
+make -f c/makefile INPUT=INPUT_FILE
+```
+## Go
+``` sh
+go run go/run.go INPUT=INPUT_FILE
 ```
