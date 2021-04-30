@@ -30,14 +30,17 @@ cargo run --quiet --manifest-path rs/Cargo.toml INPUT_FILE
 ``` sh
 node js/run.js INPUT_FILE
 ```
+
 ## C++
 ``` sh
 make -f cpp/makefile INPUT=INPUT_FILE
 ```
+
 ## C
 ``` sh
 make -f c/makefile INPUT=INPUT_FILE
 ```
+
 ## Go
 ``` sh
 go run go/run.go INPUT=INPUT_FILE
