@@ -13,14 +13,6 @@ typedef struct
     int part2;
 } Results;
 
-int sum(int *numbers, int length)
-{
-    int total = 0;
-    while (length--)
-        total += *numbers++;
-    return total;
-}
-
 int multiply(int *numbers, int length)
 {
     int total = 1;
@@ -29,23 +21,24 @@ int multiply(int *numbers, int length)
     return total;
 }
 
-int getCombination(Input numbers, int length)
+int getCombination(Input input, int length)
 {
-    int i;
+    int i, total;
     int combination[length];
     int indexes[length];
     for (i = 0; i < length; i++)
         indexes[i] = length - i;
     while (1)
     {
+        total = 0;
         for (i = length; i--;)
-            combination[i] = numbers.numbers[indexes[i] - 1];
-        if (sum(combination, length) == 2020)
+            total += combination[i] = input.numbers[indexes[i] - 1];
+        if (total == 2020)
             return multiply(combination, length);
         i = 0;
-        if (indexes[i]++ < numbers.count)
+        if (indexes[i]++ < input.count)
             continue;
-        for (; indexes[i] >= numbers.count - i;)
+        for (; indexes[i] >= input.count - i;)
             if (++i >= length)
                 return 0;
         for (indexes[i]++; i; i--)
@@ -66,17 +59,13 @@ Input getInput(char *filePath)
         perror("Error reading input file!\n");
         exit(1);
     }
-    fseek(file, 0, SEEK_END);
-    long length = ftell(file);
-    rewind(file);
     char *line = NULL;
     size_t len = 0;
-    size_t read;
     size_t size = 16;
     int count = 0;
     int *numbers = malloc(256 * sizeof(int));
     int *current = numbers;
-    while ((read = getline(&line, &len, file)) != EOF)
+    while (getline(&line, &len, file) != EOF)
     {
         count++;
         *current = atoi(line);
@@ -90,6 +79,7 @@ Input getInput(char *filePath)
 
 void freeInput(Input input)
 {
+    free(input.numbers);
 }
 
 int main(int argc, char **argv)
