@@ -53,17 +53,13 @@ Input getInput(char *filePath)
         perror("Error reading input file!\n");
         exit(1);
     }
-    fseek(file, 0, SEEK_END);
-    long length = ftell(file);
-    rewind(file);
     char *line = NULL;
     size_t len = 0;
-    size_t read;
     size_t size = 16;
     int count = 0;
     int *masses = malloc(128 * sizeof(int));
     int *current = masses;
-    while ((read = getline(&line, &len, file)) != EOF)
+    while (getline(&line, &len, file) != EOF)
     {
         count++;
         *current = atoi(line);
