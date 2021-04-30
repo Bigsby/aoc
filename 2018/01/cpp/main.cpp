@@ -19,9 +19,8 @@ int part2(vector<int> changes)
     int frequency = 0;
     unordered_set<int> previous;
     int index = 0;
-    while (previous.find(frequency) == previous.end())
+    while (previous.insert(frequency).second)
     {
-        previous.insert(frequency);
         frequency += changes[index];
         index = (index + 1) % changes_length;
     }
