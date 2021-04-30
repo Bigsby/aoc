@@ -37,7 +37,7 @@ vector<int> getInput(char *filePath)
     string content((istreambuf_iterator<char>(file)), (istreambuf_iterator<char>()));
     file.close();
     for (char c : content)
-        numbers.push_back((int)c - 48);
+        numbers.push_back((int)c - '0');
     return numbers;
 }
 
