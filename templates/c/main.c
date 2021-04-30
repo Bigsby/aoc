@@ -35,6 +35,7 @@ Input getInput(char *filePath)
     fseek(file, 0, SEEK_END);
     long length = ftell(file);
     rewind(file);
+    fclose(file);
     return length;
 }
 
