@@ -33,7 +33,7 @@ def get_input(file_path: str) -> str:
         raise FileNotFoundError(file_path)
     
     with open(file_path, "r") as file:
-        return file.read()
+        return file.read().strip()
 
 
 def main():
