@@ -5,7 +5,7 @@ fn solve(numbers: &Vec<u32>) -> (usize, usize) {
     let mut numbers = numbers.clone();
     loop {
         if let Some(index) = previous_lists.iter().position(|previous| previous == &numbers) {
-            return (cycles, index)
+            return (cycles, cycles - index)
         }
         cycles += 1;
         previous_lists.push(numbers.clone());
@@ -30,7 +30,7 @@ fn get_input(file_path: &String) -> Vec<u32> {
     std::fs::read_to_string(file_path)
         .expect("Error reading input file!")
         .split("\t")
-        .map(|split| split.parse().unwrap())
+        .map(|split| split.trim().parse().unwrap())
         .collect()
 }
 
