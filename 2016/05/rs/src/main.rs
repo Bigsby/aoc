@@ -34,7 +34,7 @@ fn solve(door_id: &str) -> (String, String) {
 }
 
 fn get_input(file_path: &String) -> String {
-    String::from(&std::fs::read_to_string(file_path).expect("Error reading input file!"))
+    String::from(std::fs::read_to_string(file_path).expect("Error reading input file!").trim())
 }
 
 fn main() {
