@@ -5,26 +5,29 @@ import os
 import time
 from typing import List, Set, Tuple
 import re
-from functools import reduce
-from itertools import product
-
 
 abba_regex = re.compile(r"([a-z])((?!\1)[a-z])\2\1")
+
+
 def supports_TLS(ip: List[str]) -> bool:
     return not any(abba_regex.search(hypernet) for hypernet in ip[1::2]) \
         and any(abba_regex.search(supernet) for supernet in ip[::2])
 
 
-def find_BABs(supernet: str) -> Set[str]:
-    return {"".join([supernet[i+1], supernet[i], supernet[i+1]])
-            for i in range(len(supernet) - 2)
-            if supernet[i] == supernet[i + 2]}
-
-
 def supports_SSL(ip: List[str]) -> bool:
-    babs: Set[str] = reduce(lambda soFar, supernet: soFar |
-                            find_BABs(supernet), ip[::2], set())
-    return any(bab in hypernet for bab, hypernet in product(babs, ip[1::2]))
+    abas: Set[Tuple[str, str]] = set()
+    babs: Set[Tuple[str, str]] = set()
+    for (hyper, part) in enumerate(ip):
+        for index in range(len(part) - 2):
+            if part[index] == part[index + 2] and part[index] != part[index + 1]:
+                if hyper % 2 == 0:
+                    babs.add((part[index + 1], part[index]))
+                else:
+                    abas.add((part[index], part[index + 1]))
+    for aba in abas:
+        if aba in babs:
+            return True
+    return False
 
 
 def solve(ips: List[List[str]]) -> Tuple[int, int]:
