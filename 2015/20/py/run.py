@@ -1,65 +1,49 @@
 #! /usr/bin/python3
 
-import sys, os, time
-from typing import Iterable, List, Tuple
-import math
+import sys
+import os
+import time
+from typing import Tuple
+import itertools
+
+DIVISORS = [2, 3, 5, 7, 11, 13]
 
 
-def get_divisors(number: int) -> Iterable[int]:
-    large_divisors: List[int] = []
-    for i in range(1, int(math.sqrt(number) + 1)):
-        if number % i == 0:
-            yield i
-            if i * i != number:
-                large_divisors.append(int(number / i))
-    for divisor in reversed(large_divisors):
-        yield divisor
+def sum_powers(powers: Tuple[int]) -> int:
+    total = 1
+    for k, j in zip(powers, DIVISORS):
+        total *= j ** k
+    return total
 
 
-def get_present_count_for_house(number: int) -> int:
-    return sum(get_divisors(number))
+MAX_POWERS = [7, 5, 3, 3,  3,  3]
 
 
-def part1(puzzle_input: int) -> int:
-    house_number = 0 
-    presents_received = 0
-    step = 2 * 3 * 5 * 7 * 11 
-    target_presents = puzzle_input / 10
-    while presents_received <= target_presents:
-        house_number += step
-        presents_received = get_present_count_for_house(house_number)
-    return house_number
+def get_house(target: int, multiplier: int, limit: int) -> int:
+    minimum_house = sys.maxsize
+    for powers in itertools.product(*[range(i) for i in MAX_POWERS]):
+        total = 0
+        elf = sum_powers(powers)
+        for j in itertools.product(*[range(k + 1) for k in powers]):
+            elf_count = sum_powers(j)
+            if elf // elf_count <= limit:
+                total += elf_count
+        if total * multiplier >= target and elf < minimum_house:
+            minimum_house = elf
+    return minimum_house
 
 
-def get_present_count_for_house2(number: int) -> int:
-    presents = 0
-    for divisor in get_divisors(number):
-        if number / divisor < 50:
-            presents += divisor * 11
-    return presents
-
-
-def part2(puzzle_input: int, house_number: int) -> int:
-    step = 1
-    presents_received = 0
-    while presents_received <= puzzle_input:
-        house_number += step
-        presents_received = get_present_count_for_house2(house_number)
-    return house_number
-
-
-def solve(puzzle_input: int) -> Tuple[int,int]:
-    part1_result = part1(puzzle_input)
+def solve(puzzle_input: int) -> Tuple[int, int]:
     return (
-        part1_result, 
-        part2(puzzle_input, part1_result)
+        get_house(puzzle_input, 10, sys.maxsize),
+        get_house(puzzle_input, 11, 50)
     )
 
 
 def get_input(file_path: str) -> int:
     if not os.path.isfile(file_path):
         raise FileNotFoundError(file_path)
-    
+
     with open(file_path, "r") as file:
         return int(file.read().strip())
 
