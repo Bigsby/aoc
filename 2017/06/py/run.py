@@ -13,7 +13,7 @@ def solve(numbers: List[int]) -> Tuple[int, int]:
     current_list = list(numbers)
     while True:
         if current_list in previous_lists:
-            return cycles, previous_lists.index(current_list)
+            return cycles, cycles - previous_lists.index(current_list)
         cycles += 1
         previous_lists.append(list(current_list))
         update_index = -1
@@ -24,8 +24,8 @@ def solve(numbers: List[int]) -> Tuple[int, int]:
                 update_index = index
         current_list[update_index] = 0
         while max_number:
-            update_index = update_index + 1 if update_index < numbers_length - 1 else 0
-            current_list[update_index] += 1
+            update_index += 1
+            current_list[update_index % numbers_length] += 1
             max_number -= 1
 
 
