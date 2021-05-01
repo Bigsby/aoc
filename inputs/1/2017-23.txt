@@ -1,4 +1,4 @@
-set b 84
+set b 57
 set c b
 jnz a 2
 jnz 1 5

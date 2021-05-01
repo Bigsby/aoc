@@ -14,8 +14,8 @@ jnz b -2
 cpy c b
 dec d
 jnz d -6
-cpy 18 c
-cpy 11 d
+cpy 13 c
+cpy 14 d
 inc a
 dec d
 jnz d -2
