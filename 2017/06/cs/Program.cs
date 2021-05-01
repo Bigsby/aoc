@@ -19,7 +19,7 @@ namespace AoC
             {
                 var currentListString = string.Join(",", currentList);
                 if (previousLists.Contains(currentListString))
-                    return (cycles, previousLists.IndexOf(currentListString));
+                    return (cycles, cycles - previousLists.IndexOf(currentListString));
                 cycles++;
                 previousLists.Add(currentListString);
                 var updateIndex = -1;
