@@ -103,7 +103,6 @@ def solve_floors(floors: Floors) -> int:
     radioisotopes_count = max(max(floor) if floor else 0 for floor in floors)
     while queue:
         state, moves_count = queue.pop()
-        print_state(state); input()
         for move in get_valid_moves(state):
             new_state = make_move(state[1], move)
             new_current, new_floors = new_state
