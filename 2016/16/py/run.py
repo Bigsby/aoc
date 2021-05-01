@@ -10,7 +10,6 @@ def get_checksum(data: str, disk_length: int) -> str:
     while len(data) < disk_length:
         data = "0".join(
             [data, "".join(["1" if c == "0" else "0" for c in data[::-1]])])
-        print(data); input()
     data = data[:disk_length]
     while len(data) % 2 == 0:
         data = "".join(["1" if data[index] == data[index + 1]
