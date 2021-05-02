@@ -301,14 +301,19 @@ namespace AoC
             var lastDirection = string.Empty;
             var pressureRoomWayIn = string.Empty;
             var inventory = new List<string>();
+            var security_doors = new List<string>();
             while (droid.Running)
             {
                 var output = RunCommand(droid, command);
                 var (room, doors, items) = ParseRoomOutput(output);
                 if (room == destination)
                     break;
-                if (room == PRESSURE_ROOM)
+                if (room == PRESSURE_ROOM) {
                     pressureRoomWayIn = lastDirection;
+                    room = SECURITY_CHECKPOINT;
+                    doors = security_doors;
+                } else if (room == SECURITY_CHECKPOINT)
+                    security_doors = doors.ToList();
                 if (!wayIn.ContainsKey(room))
                     wayIn[room] = lastDirection;
                 if (pickupItems)
