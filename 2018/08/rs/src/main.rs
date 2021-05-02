@@ -51,7 +51,7 @@ fn get_input(file_path: &String) -> Vec<u32> {
     std::fs::read_to_string(file_path)
         .expect("Error reading input file!")
         .split(" ")
-        .map(|split| split.parse().unwrap())
+        .map(|split| split.trim().parse().unwrap())
         .collect()
 }
 
