@@ -83,7 +83,7 @@ fn solve(memory: &Vec<i32>) -> (i32, i32) {
 fn get_input(file_path: &String) -> Vec<i32> {
     fs::read_to_string(file_path).expect("Error reading input file!")
         .split(',')
-        .map(|i| i.parse().unwrap())
+        .map(|i| i.trim().parse().unwrap())
         .collect()
 }
 
