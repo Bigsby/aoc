@@ -166,8 +166,7 @@ namespace AoC
                     }
                     else
                         trainLocations[train.Position] = train;
-                    var mapItem = mapItems[train.Position];
-                    switch (mapItem)
+                    switch (mapItems[train.Position])
                     {
                         case Intersection intersection:
                             train.Turn();
@@ -194,8 +193,12 @@ namespace AoC
         {
             { " /",  ( Direction.One, -Direction.ImaginaryOne) },
             { "-/",  (-Direction.One,  Direction.ImaginaryOne) },
+            { "</",  (-Direction.One,  Direction.ImaginaryOne) },
+            { ">/",  (-Direction.One,  Direction.ImaginaryOne) },
             { "+/",  (-Direction.One,  Direction.ImaginaryOne) },
             { "-\\", (-Direction.One, -Direction.ImaginaryOne) },
+            { "<\\", (-Direction.One, -Direction.ImaginaryOne) },
+            { ">\\", (-Direction.One, -Direction.ImaginaryOne) },
             { "+\\", (-Direction.One, -Direction.ImaginaryOne) },
             { " \\", ( Direction.One,  Direction.ImaginaryOne) }
         };
@@ -205,7 +208,7 @@ namespace AoC
             { '|', Orientation.Vertical }
         };
         const char INTERSECTION = '+';
-        static char[] TURN_PREVIOUS = new[] { '-', '+' };
+        static char[] TURN_PREVIOUS = new[] { '-', '+', '<', '>' };
         static (Map map, IEnumerable<Train> trains) GetInput(string filePath)
         {
             if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
