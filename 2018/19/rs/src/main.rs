@@ -1,5 +1,4 @@
 use regex::Regex;
-use std::collections::HashMap;
 
 type Registers = [i32; 6];
 type Operation = (String, usize, usize, usize);
@@ -96,7 +95,7 @@ fn get_divisors(number: i32) -> Vec<i32> {
 }
 
 fn part2(data: &(usize, Vec<Operation>)) -> i32 {
-    let value_register: HashMap<usize, usize> = vec![(4, 1), (3, 2)].into_iter().collect();
+    // let value_register: HashMap<usize, usize> = vec![(4, 1), (3, 2)].into_iter().collect();
     let (ip, operations) = data;
     let mut registers: Registers = [0; 6];
     registers[0] = 1;
@@ -104,7 +103,7 @@ fn part2(data: &(usize, Vec<Operation>)) -> i32 {
         registers = run_operation(&registers, &operations[registers[*ip] as usize]);
         registers[*ip] += 1;
     }
-    get_divisors(registers[*value_register.get(ip).unwrap()])
+    get_divisors(*registers.iter().filter(|register| **register > 1 && **register != 10550400).next().unwrap())
         .into_iter()
         .sum()
 }
