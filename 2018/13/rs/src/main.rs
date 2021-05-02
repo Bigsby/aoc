@@ -190,6 +190,7 @@ fn get_input(file_path: &String) -> (Map, Vec<Train>) {
     ]
     .into_iter()
     .collect();
+    let turn_previous = ['-', '+', '<', '>' ];
     let turns = vec!['/', '\\'];
     let turns_directions: HashMap<String, (Direction, Direction)> = vec![
         (
@@ -201,11 +202,27 @@ fn get_input(file_path: &String) -> (Map, Vec<Train>) {
             (Direction::new(-1, 0), Direction::new(0, 1)),
         ),
         (
+            String::from("</"),
+            (Direction::new(-1, 0), Direction::new(0, 1)),
+        ),
+        (
+            String::from(">/"),
+            (Direction::new(-1, 0), Direction::new(0, 1)),
+        ),
+        (
             String::from("+/"),
             (Direction::new(-1, 0), Direction::new(0, 1)),
         ),
         (
             String::from("-\\"),
+            (Direction::new(-1, 0), Direction::new(0, -1)),
+        ),
+        (
+            String::from("<\\"),
+            (Direction::new(-1, 0), Direction::new(0, -1)),
+        ),
+        (
+            String::from(">\\"),
             (Direction::new(-1, 0), Direction::new(0, -1)),
         ),
         (
@@ -239,7 +256,7 @@ fn get_input(file_path: &String) -> (Map, Vec<Train>) {
             } else if let Some(orientation) = straights.get(&c) {
                 map.insert(position, MapItem::Straight(*orientation));
             } else if turns.contains(&c) {
-                if previous_c != '-' && previous_c != '+' {
+                if !turn_previous.contains(&previous_c) {
                     previous_c = ' ';
                 }
                 let directions = turns_directions
