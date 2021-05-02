@@ -198,6 +198,7 @@ def navigate_rooms(droid: IntCodeComputer, command: str, destination: str, picku
     last_direction = ""
     pressure_room_way_in = ""
     inventory: List[str] = []
+    security_doors: List[str] = []
     while droid.running:
         output = run_command(droid, command)
         room, doors, items = parse_room_output(output)
@@ -205,6 +206,10 @@ def navigate_rooms(droid: IntCodeComputer, command: str, destination: str, picku
             break
         if room == PRESSURE_ROOM:
             pressure_room_way_in = last_direction
+            room = SECURITY_CHECKPOINT
+            doors = security_doors
+        if room == SECURITY_CHECKPOINT:
+            security_doors = doors
         if room not in way_in:
             way_in[room] = last_direction
         if pickup_items:
