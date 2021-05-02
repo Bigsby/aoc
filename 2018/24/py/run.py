@@ -117,7 +117,8 @@ def parse_army(text: str, army: int) -> List[Group]:
     split = text.split("\n")
     groups: List[Group] = []
     for index, group_text in enumerate(split[1:]):
-        groups.append(parse_group(group_text, army, index + 1))
+        if group_text:
+            groups.append(parse_group(group_text, army, index + 1))
     return groups
 
 
