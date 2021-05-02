@@ -128,7 +128,10 @@ namespace AoC
         }
 
         static IEnumerable<Group> ParseArmy(string text, int army)
-            => text.Split("\n").Skip(1).Select((groupText, index) => ParseGroup(groupText, army, index + 1));
+            => text.Split("\n")
+            .Skip(1)
+            .Where(text => !string.IsNullOrEmpty(text))
+            .Select((groupText, index) => ParseGroup(groupText, army, index + 1));
 
         static IEnumerable<Group> GetInput(string filePath)
         {
