@@ -71,12 +71,6 @@ def get_divisors(number: int) -> Iterable[int]:
         yield divisor
 
 
-VALUE_REGISTER = {
-    4: 1,
-    3: 2
-}
-
-
 def part2(data: Tuple[int, List[Operation]]) -> int:
     ip, operations = data
     registers = [0 for _ in range(6)]
@@ -84,7 +78,7 @@ def part2(data: Tuple[int, List[Operation]]) -> int:
     while registers[ip] != 1:
         registers = run_operation(registers, operations[registers[ip]])
         registers[ip] += 1
-    return sum(get_divisors(registers[VALUE_REGISTER[ip]]))
+    return sum(get_divisors(next(register for register in registers if register > 1 and register != 10550400)))
 
 
 def solve(data: Tuple[int, List[Operation]]) -> Tuple[int, int]:
