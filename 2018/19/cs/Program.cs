@@ -68,10 +68,6 @@ namespace AoC
                 yield return divisor;
         }
 
-        static Dictionary<int, int> VALUE_REGISTER = new Dictionary<int, int>() {
-            { 4, 1 },
-            { 3, 2 },
-        };
         static int Part2((int, Operation[]) data)
         {
             var (ip, operations) = data;
@@ -82,7 +78,7 @@ namespace AoC
                 registers = RunOperation(registers, operations[registers[ip]]);
                 registers[ip]++;
             }
-            return GetDivisors(registers[VALUE_REGISTER[ip]]).Sum();
+            return GetDivisors(registers.First(register => register > 1 && register != 10550400)).Sum();
         }
 
         static (int, int) Solve((int, Operation[]) data)
