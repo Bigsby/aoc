@@ -228,7 +228,7 @@ def navigate_rooms(droid: IntCodeComputer, command: str, destination: str, picku
                 break
         if not new_door:
             if way_in[room] == "":
-                # assume that first room only has 1 door
+                # in first room
                 command = doors[0]
                 break
             command = WAY_INVERSE[way_in[room]]
