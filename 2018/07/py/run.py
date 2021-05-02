@@ -7,7 +7,7 @@ from typing import Dict, List, Tuple
 import re
 
 
-def build_dependency_graph(pairs: List[Tuple[str, str]]) -> Dict[str, List[str]]:
+def build_dependency_graph(pairs: List[Tuple[str, ...]]) -> Dict[str, List[str]]:
     dependencies: Dict[str, List[str]] = {}
     for dependency, dependant in pairs:
         if dependant not in dependencies:
@@ -59,7 +59,7 @@ def part2(dependencies: Dict[str, List[str]]) -> int:
     return seconds - 1
 
 
-def solve(pairs: List[Tuple[str, str]]) -> Tuple[str, int]:
+def solve(pairs: List[Tuple[str, ...]]) -> Tuple[str, int]:
     dependencies = build_dependency_graph(pairs)
     return (
         part1({k: list(v) for k, v in dependencies.items()}),
@@ -67,7 +67,7 @@ def solve(pairs: List[Tuple[str, str]]) -> Tuple[str, int]:
     )
 
 
-def get_input(file_path: str) -> List[Tuple[str, str]]:
+def get_input(file_path: str) -> List[Tuple[str, ...]]:
     if not os.path.isfile(file_path):
         raise FileNotFoundError(file_path)
 
