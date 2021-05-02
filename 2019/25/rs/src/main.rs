@@ -209,6 +209,7 @@ struct Crawler<'a> {
     rooms: RefCell<Vec<String>>,
     directions: Vec<&'a str>,
     pressure_room: usize,
+    security_room: usize,
     items: RefCell<Vec<String>>,
     take: &'a str,
     drop: &'a str,
@@ -228,9 +229,13 @@ impl Crawler<'_> {
                 "giant electromagnet",
                 "escape pod",
             ],
-            rooms: RefCell::new(vec![String::from("Security Checkpoint")]),
+            rooms: RefCell::new(vec![
+                String::from("Pressure-Sensitive Floor"),
+                String::from("Security Checkpoint"),
+            ]),
             directions: vec!["north", "west", "south", "east"],
             pressure_room: 0,
+            security_room: 1,
             items: RefCell::new(Vec::new()),
             take: "take ",
             drop: "drop ",
@@ -345,6 +350,10 @@ impl Crawler<'_> {
         result
     }
 
+    fn _pause(&self) {
+        std::io::stdin().read_line(&mut String::default()).expect("");
+    }
+
     fn navigate_rooms(
         &mut self,
         command: &str,
@@ -357,14 +366,19 @@ impl Crawler<'_> {
         let mut last_direction = 5;
         let mut pressure_room_way_in = String::default();
         let mut inventory = Vec::new();
+        let mut security_doors = Vec::new();
         while self.droid.running {
             let output = self.run_command(&command);
-            let (room, doors, items) = self.parse_room_output(&output);
+            let (mut room, mut doors, items) = self.parse_room_output(&output);
             if room == destination {
                 break;
             }
             if room == self.pressure_room {
                 pressure_room_way_in = String::from(self.directions[last_direction]);
+                room = self.security_room;
+                doors = security_doors.clone();
+            } else if room == self.security_room {
+                security_doors = doors.clone();
             }
             if !way_in.contains_key(&room) {
                 way_in.insert(room, last_direction);
@@ -383,19 +397,20 @@ impl Crawler<'_> {
             for door in doors.iter() {
                 let room_door_pair = (room, *door);
                 if !visited.contains(&room_door_pair) {
-                    if *door == (*way_in.get(&room).unwrap() + 2) % 4 {
+                    let room_way_in = *way_in.get(&room).unwrap();
+                    if room_way_in != 5 && *door == (room_way_in + 2) % 4 {
                         continue;
                     }
                     new_door = true;
                     visited.push(room_door_pair);
-                    last_direction = door.clone();
+                    last_direction = *door;
                     command = String::from(self.directions[last_direction]);
                     break;
                 }
             }
             if !new_door {
                 if *way_in.get(&room).unwrap() == 5 {
-                    // assume that first room only has 1 door
+                    // in first room
                     command = String::from(self.directions[doors[0]]);
                     break;
                 }
@@ -413,7 +428,7 @@ impl Crawler<'_> {
             .map(|item| self.get_item_index(&item))
             .collect();
         // go to Security Checkpoint
-        self.navigate_rooms(&command, 0, false);
+        self.navigate_rooms(&command, 1, false);
         // test combinations of items
         let mut current_inventory = inventory.clone();
         let combinations: Vec<Vec<usize>> = inventory.into_iter().combinations(4).collect();
@@ -439,7 +454,6 @@ impl Crawler<'_> {
         panic!("Password not found")
     }
 }
-
 
 fn solve(memory: &Vec<i64>) -> (String, String) {
     let mut crawler = Crawler::new(memory);
