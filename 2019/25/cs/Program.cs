@@ -337,7 +337,7 @@ namespace AoC
                 {
                     if (string.IsNullOrEmpty(wayIn[room]))
                     {
-                        // assume that first room only has 1 door
+                        // in first room
                         command = doors.First();
                         break;
                     }
