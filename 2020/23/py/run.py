@@ -62,7 +62,6 @@ def part1(cups: List[int]) -> str:
 def part2(cups: List[int]) -> int:
     cups += [*range(10, 10**6 + 1)]
     one_node = play_game(cups, 10**7)
-    print(one_node.next.value, one_node.next.next.value)
     return one_node.next.value * one_node.next.next.value
 
 
