@@ -66,7 +66,7 @@ def run_computer(computer: Computer, puzzleInput: List[Instruction]) -> int:
 
 class ValueMaskComputer(Computer):
     def get_value(self, value: int) -> int:
-        return value | self.get_or_mask() & self.get_and_mask()
+        return (value | self.get_or_mask()) & self.get_and_mask()
 
 
 xRegex = re.compile("X")
