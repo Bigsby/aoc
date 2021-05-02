@@ -89,7 +89,6 @@ def find_shortest_path(maze: Maze, keys_doors: KeysDoors, entrances: List[Positi
     for index, position in enumerate(entrances):
         keys_paths[str(index)] = find_paths_from_position(
             maze, keys_doors, position)
-    print(keys_paths); input()
     return find_shortest_path_from_key_gragph(keys_paths, keys, [str(index) for index, _ in enumerate(entrances)])
 
 
