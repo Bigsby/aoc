@@ -126,7 +126,7 @@ def solve(data: Tuple[Map, List[Train]]) -> Tuple[str, str]:
             else:
                 train_locations[train.position] = train
             map_item = map_items[train.position]
-            if isinstance(map_item,  Intersection):
+            if isinstance(map_item, Intersection):
                 train.turn()
             elif isinstance(map_item, Turn):
                 train.direction = map_item.vertical if train.direction.real else map_item.horizontal
@@ -144,8 +144,12 @@ TURNS = ["/", "\\"]
 TURN_DIRECTIONS = {
     " /": (1, -1j),
     "-/": (-1, 1j),
+    ">/": (-1, 1j),
+    "</": (-1, 1j),
     "+/": (-1, 1j),
     "-\\": (-1, -1j),
+    ">\\": (-1, -1j),
+    "<\\": (-1, -1j),
     "+\\": (-1, -1j),
     " \\": (1, 1j),
 }
@@ -173,7 +177,7 @@ def get_input(file_path: str) -> Tuple[Map, List[Train]]:
                 elif c in STRAIGHTS:
                     map[position] = Straight(STRAIGHTS[c])
                 elif c in TURNS:
-                    if previous_c not in ["-", "+"]:
+                    if previous_c not in ["-", "+", "<", ">"]:
                         previous_c = " "
                     map[position] = Turn(TURN_DIRECTIONS[previous_c + c])
                 elif c in TRAINS:
