@@ -12,7 +12,7 @@ ChemicalPortion = Tuple[int, str]
 
 
 def calculate_required_ore(reactions: Dict[str, Tuple[int, List[ChemicalPortion]]], required_fuel: int) -> int:
-    required_chemicals = defaultdict(int, {'FUEL': required_fuel})
+    required_chemicals: Dict[str, int] = defaultdict(int, {"FUEL": required_fuel})
     produced_chemicals: Dict[str, int] = defaultdict(int)
     ore_count = 0
     while required_chemicals:
