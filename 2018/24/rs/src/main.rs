@@ -233,7 +233,9 @@ fn parse_army(text: &str, army: Unit, skills: &mut HashMap<String, usize>) -> Ve
     let split: Vec<&str> = text.split("\n").skip(1).collect();
     let mut groups = Vec::new();
     for (index, group_text) in split.iter().enumerate() {
-        groups.push(parse_group(group_text, army, index as Unit + 1, skills));
+        if !group_text.is_empty() {
+            groups.push(parse_group(group_text, army, index as Unit + 1, skills));
+        }
     }
     groups
 }
