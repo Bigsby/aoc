@@ -89,7 +89,7 @@ impl Computer {
         if !self.mask_value {
             value
         } else {
-            value | self.get_or_mask() & self.get_and_mask()
+            (value | self.get_or_mask()) & self.get_and_mask()
         }
     }
 }
