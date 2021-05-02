@@ -81,7 +81,6 @@ def solve(puzzle_input: Tuple[List[Record], List[Operation]]) -> Tuple[int, int]
     for before, operation, after in records:
         if test_record(before, operation, after, opcodes) >= 3:
             three_or_more += 1
-    print(opcodes)
     for mnemonic, valid in opcodes.items():
         opcodes[mnemonic] = {op for op in valid if op >= 0}
     while any(len(valid) > 1 for valid in opcodes.values()):
@@ -92,9 +91,7 @@ def solve(puzzle_input: Tuple[List[Record], List[Operation]]) -> Tuple[int, int]
                 for single in single_valid:
                     if single in valid:
                         valid.remove(single)
-    print(opcodes)
     ops = {next(iter(valid)): mnemonic for mnemonic, valid in opcodes.items()}
-    print(ops)
     registers = (0, 0, 0, 0)
     for op in program:
         registers = run_operation(registers, op, ops[op[0]])
