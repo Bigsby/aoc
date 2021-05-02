@@ -60,7 +60,7 @@ namespace AoC
 
     class ValueMaskComputer : Computer
     {
-        protected override long GetValue(long value) => value | GetOrMask() & GetAndMask();
+        protected override long GetValue(long value) => (value | GetOrMask()) & GetAndMask();
     }
 
     class MemoryMaskComputer : Computer
