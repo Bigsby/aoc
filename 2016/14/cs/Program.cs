@@ -21,7 +21,7 @@ namespace AoC
             var threes = "0123456789abcdef".ToDictionary(c => c, c => new List<int>());
             using (var md5 = MD5.Create())
             {
-                while (keys.Count < 64)
+                while (!((keys.Count > 64) && (index - keys.Last()) > 1000))
                 {
                     var value = salt + index.ToString();
                     foreach (var _ in Enumerable.Range(0, stretch + 1))
