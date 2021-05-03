@@ -9,66 +9,65 @@ namespace AoC
 {
     static class Program
     {
-        static IEnumerable<int> GetDivisors(int number)
+        static long[] DIVISORS = new[] { 2L, 3, 5, 7, 11, 13 };
+        static long CalculatePowers(long[] powers) =>
+            (long)powers.Zip(DIVISORS, (k, j) => Math.Pow(j, k))
+                .Aggregate(1.0, (acc, v) => acc * (double)v);
+
+        static IEnumerable<long[]> GetPowers(long[] limits)
         {
-            var largeDivisors = new List<int>();
-            var top = (int)Math.Sqrt(number) + 1;
-            for (var i = 1; i < top; i++)
-                if (number % i == 0)
+            var powers = new long[6];
+            yield return powers;
+            while (true)
+            {
+                bool all_equal = true;
+                for (var index = 0; index < 6; index++)
+                    all_equal &= powers[index] == limits[index];
+                if (all_equal)
+                    yield break;
+                for (var index = 5; index >= 0; index--)
+                    if (powers[index] < limits[index])
+                    {
+                        powers[index]++;
+                        for (var overflow = index + 1; overflow < 6; overflow++)
+                            powers[overflow] = 0;
+                        break;
+                    }
+                yield return powers;
+            }
+        }
+
+        static long[] MAX_POWERS = new[] { 6L, 4, 2, 2, 2, 2 };
+        static long GetHouse(long target, long multiplier, long limit)
+        {
+            var minimumHouse = long.MaxValue;
+            foreach (var housePowers in GetPowers(MAX_POWERS))
+            {
+                var house = CalculatePowers(housePowers);
+                var housePresents = 0L;
+                foreach (var elfPowers in GetPowers(housePowers))
                 {
-                    yield return i;
-                    if (i * i != number)
-                        largeDivisors.Add(number / i);
+                    var elfPresents = CalculatePowers(elfPowers);
+                    if (house / elfPresents <= limit)
+                        housePresents += elfPresents;
                 }
-            largeDivisors.Reverse();
-            foreach (var divisor in largeDivisors)
-                yield return divisor;
-        }
-
-        static int GetPresentCountForHouse(int number)
-            => GetDivisors(number).Sum();
-
-        static int Part1(int puzzleInput)
-        {
-            var houseNumber = 0;
-            var presentsReceived = 0;
-            var step = 2 * 3 * 5 * 7 * 11;
-            var targetPresents = puzzleInput / 10;
-            while (presentsReceived <= targetPresents)
-            {
-                houseNumber += step;
-                presentsReceived = GetPresentCountForHouse(houseNumber);
+                if (housePresents * multiplier >= target && house < minimumHouse)
+                    minimumHouse = house;
             }
-            return houseNumber;
+            return minimumHouse;
         }
 
-        static int GetPresentCountForHouse2(int number)
-            => GetDivisors(number).Where(divisor => number / divisor < 50).Select(divisor => divisor * 11).Sum();
-
-        static int Part2(int puzzleInput, int houseNumber)
+        static (long, long) Solve(long puzzleInput)
         {
-            var step = 1;
-            var presentsReceived = 0;
-            while (presentsReceived <= puzzleInput)
-            {
-                houseNumber += step;
-                presentsReceived = GetPresentCountForHouse2(houseNumber);
-            }
-            return houseNumber;
-        }
-
-        static (int, int) Solve(int puzzleInput)
-        {
-            var part1Result = Part1(puzzleInput);
             return (
-                part1Result,
-                Part2(puzzleInput, part1Result)
+                GetHouse(puzzleInput, 10, int.MaxValue),
+                GetHouse(puzzleInput, 11, 50)
             );
         }
 
-        static int GetInput(string filePath)
+        static long GetInput(string filePath)
             => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
-            : int.Parse(File.ReadAllText(filePath));
+            : long.Parse(File.ReadAllText(filePath));
 
         static void Main(string[] args)
         {
