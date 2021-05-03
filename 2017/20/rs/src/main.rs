@@ -11,19 +11,19 @@ fn get_manhatan_value(values: &Values) -> i32 {
 fn part1(particles: &Vec<Particle>) -> usize {
     let mut closest_particle = 0;
     let mut lowest_acceleration = i32::MAX;
-    let mut lowest_position = i32::MAX;
-    for (index, (position, _, acceleration)) in particles.into_iter().enumerate() {
+    let mut lowest_velocity = i32::MAX;
+    for (index, (_, velocity, acceleration)) in particles.into_iter().enumerate() {
         let acceleration_total = get_manhatan_value(acceleration);
         if acceleration_total < lowest_acceleration {
             lowest_acceleration = acceleration_total;
             closest_particle = index;
-            lowest_position = get_manhatan_value(position);
+            lowest_velocity = get_manhatan_value(velocity);
         }
         if acceleration_total == lowest_acceleration
-            && get_manhatan_value(position) < lowest_position
+            && get_manhatan_value(velocity) < lowest_velocity
         {
             closest_particle = index;
-            lowest_position = get_manhatan_value(position);
+            lowest_velocity = get_manhatan_value(velocity);
         }
     }
     closest_particle
