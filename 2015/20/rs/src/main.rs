@@ -1,63 +1,79 @@
-fn get_divisors(number: i32) -> Vec<i32> {
-    let mut result = Vec::new();
-    let mut large_divisors = Vec::new();
-    for i in 1..(number as f32).sqrt() as i32 + 1 {
-        if number % i == 0 {
-            result.push(i);
-            if i * i != number {
-                large_divisors.push(number / i);
+struct PowerIterator {
+    limits: [u64; 6],
+    powers: [u64; 6],
+    done: bool,
+}
+
+impl PowerIterator {
+    fn new(limits: [u64; 6]) -> PowerIterator {
+        PowerIterator {
+            limits,
+            powers: [0; 6],
+            done: false,
+        }
+    }
+}
+
+impl Iterator for PowerIterator {
+    type Item = [u64; 6];
+    fn next(&mut self) -> Option<<Self as Iterator>::Item> {
+        if self.done {
+            return None;
+        }
+        let mut all_equal = true;
+        for index in 0..6 {
+            all_equal &= self.powers[index] == self.limits[index];
+        }
+        self.done = all_equal;
+        let return_powers = Some(self.powers);
+        for index in (0..6).rev() {
+            if self.powers[index] < self.limits[index] {
+                self.powers[index] += 1;
+                for overflow in index + 1..6 {
+                    self.powers[overflow] = 0;
+                }
+                break;
             }
         }
+        return return_powers;
     }
-    large_divisors.reverse();
-    for divisor in large_divisors {
-        result.push(divisor);
-    }
-    result
 }
 
-fn get_present_count_for_house(number: i32) -> i32 {
-    get_divisors(number).iter().sum()
+static DIVISORS: [u64; 6] = [2, 3, 5, 7, 11, 13];
+fn calculate_powers(powers: [u64; 6]) -> u64 {
+    powers
+        .iter()
+        .zip(DIVISORS.iter())
+        .fold(1, |acc, (j, k)| acc * (k.pow(*j as u32)))
 }
 
-fn part1(puzzle_input: &i32) -> i32 {
-    let mut house_number = 0;
-    let mut presents_received = 0;
-    let step = 2 * 3 * 5 * 7 * 11;
-    let target_presents = puzzle_input / 10;
-    while presents_received <= target_presents {
-        house_number += step;
-        presents_received = get_present_count_for_house(house_number);
-    }
-    house_number
-}
-
-fn get_present_count_for_house2(number: i32) -> i32 {
-    let mut presents = 0;
-    for divisor in get_divisors(number) {
-        if number / divisor < 50 {
-            presents += divisor * 11;
+static MAX_POWERS: [u64; 6] = [6, 4, 2, 2, 2, 2];
+fn get_house(target: u64, multiplier: u64, limit: u64) -> u64 {
+    let mut minimum_house = u64::MAX;
+    for house_powers in PowerIterator::new(MAX_POWERS) {
+        let house = calculate_powers(house_powers);
+        let mut house_presents = 0;
+        for elf_powers in PowerIterator::new(house_powers) {
+            let elf_presents = calculate_powers(elf_powers);
+            if house / elf_presents <= limit {
+                house_presents += elf_presents;
+            }
+        }
+        if house_presents * multiplier >= target && house < minimum_house {
+            minimum_house = house;
         }
     }
-    presents
+    minimum_house
 }
 
-fn part2(puzzle_input: &i32, house_number: i32) -> i32 {
-    let mut house_number = house_number;
-    let mut presents_received = 0;
-    while presents_received <= *puzzle_input {
-        house_number += 1;
-        presents_received = get_present_count_for_house2(house_number);
-    }
-    house_number
+fn solve(puzzle_input: &u64) -> (u64, u64) {
+    (
+        get_house(*puzzle_input, 10, u64::MAX),
+        get_house(*puzzle_input, 11, 50),
+    )
 }
 
-fn solve(puzzle_input: &i32) -> (i32, i32) {
-    let part1_result = part1(puzzle_input);
-    (part1_result, part2(puzzle_input, part1_result))
-}
-
-fn get_input(file_path: &String) -> i32 {
+fn get_input(file_path: &String) -> u64 {
     std::fs::read_to_string(file_path)
         .expect("Error reading input file!")
         .trim()
