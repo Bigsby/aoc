@@ -12,7 +12,8 @@ ChemicalPortion = Tuple[int, str]
 
 
 def calculate_required_ore(reactions: Dict[str, Tuple[int, List[ChemicalPortion]]], required_fuel: int) -> int:
-    required_chemicals: Dict[str, int] = defaultdict(int, {"FUEL": required_fuel})
+    required_chemicals: Dict[str, int] = defaultdict(
+        int, {"FUEL": required_fuel})
     produced_chemicals: Dict[str, int] = defaultdict(int)
     ore_count = 0
     while required_chemicals:
@@ -34,18 +35,34 @@ def calculate_required_ore(reactions: Dict[str, Tuple[int, List[ChemicalPortion]
                 required_chemicals[chemical] += chemical_value
     return ore_count
 
-
-def part2(reactions: Dict[str, Tuple[int, List[ChemicalPortion]]]):
-    required_fuel = 1
-    last_needed = calculate_required_ore(reactions, required_fuel)
-    max_ore = 10 ** 12
+def find_range(reactions: Dict[str, Tuple[int, List[ChemicalPortion]]], max_ore: int) -> Tuple[int, int]:
+    low = 0
+    high = 1
     while True:
-        required_fuel = required_fuel * max_ore // last_needed
-        ore_needed = calculate_required_ore(reactions, required_fuel)
-        if last_needed == ore_needed:
-            return required_fuel
+        ore_cost = calculate_required_ore(reactions, high)
+        if ore_cost < max_ore:
+            low = high
+            high *= 2
+        elif ore_cost == max_ore:
+            return (high, high + 1)
         else:
-            last_needed = ore_needed
+            return (low, high)
+
+
+def part2(reactions: Dict[str, Tuple[int, List[ChemicalPortion]]]) -> int:
+    max_ore = 10 ** 12
+    low, high = find_range(reactions, max_ore)
+    while True:
+        if high - low < 2:
+            return low
+        mid_point: int = (high - low) // 2 + low
+        ore_cost = calculate_required_ore(reactions, mid_point)
+        if ore_cost < max_ore:
+            low = mid_point
+        elif ore_cost == max_ore:
+            return mid_point
+        else:
+            high = mid_point
 
 
 def solve(reactions: Dict[str, Tuple[int, List[ChemicalPortion]]]) -> Tuple[int, int]:
