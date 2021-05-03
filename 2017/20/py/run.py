@@ -19,16 +19,16 @@ def get_manhatan_value(values: Values) -> int:
 def part1(particles: List[Particle]) -> int:
     closest_particle = 0
     lowest_acceleration = sys.maxsize
-    lowest_position = sys.maxsize
-    for index, (position, _, acceleration) in enumerate(particles):
+    lowest_velocity = sys.maxsize
+    for index, (_, velocity, acceleration) in enumerate(particles):
         acceleration_total = get_manhatan_value(acceleration)
         if acceleration_total < lowest_acceleration:
             lowest_acceleration = acceleration_total
             closest_particle = index
-            lowest_position = get_manhatan_value(position)
-        if acceleration_total == lowest_acceleration and get_manhatan_value(position) < lowest_position:
+            lowest_velocity = get_manhatan_value(velocity)
+        if acceleration_total == lowest_acceleration and get_manhatan_value(velocity) < lowest_velocity:
             closest_particle = index
-            lowest_position = get_manhatan_value(position)
+            lowest_velocity = get_manhatan_value(velocity)
     return closest_particle
 
 
