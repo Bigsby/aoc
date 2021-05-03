@@ -13,7 +13,7 @@ fn find_key(salt: &str, stretch: usize) -> usize {
     let mut index = 0usize;
     let mut keys = Vec::new();
     let mut threes: Vec<(char, usize)> = Vec::new();
-    while keys.len() < 64 {
+    while !(keys.len() > 64 && (index - keys.last().unwrap()) > 1000) {
         let mut value = format!("{}{}", salt, index);
         for _ in 0..stretch + 1 {
             value = format!("{:x}", md5::compute(value));
