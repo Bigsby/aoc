@@ -61,20 +61,20 @@ namespace AoC
         {
             var closestParticle = 0;
             var lowestAcceleration = int.MaxValue;
-            var lowestPosition = int.MaxValue;
-            foreach (var ((position, _, acceleration), index) in particles.Select((particle, index) => (particle, index)))
+            var lowestVelocity = int.MaxValue;
+            foreach (var ((_, velocity, acceleration), index) in particles.Select((particle, index) => (particle, index)))
             {
                 var accelerationTotal = GetManhatanValue(acceleration);
                 if (accelerationTotal < lowestAcceleration)
                 {
                     lowestAcceleration = accelerationTotal;
                     closestParticle = index;
-                    lowestPosition = GetManhatanValue(position);
+                    lowestVelocity = GetManhatanValue(velocity);
                 }
-                if (accelerationTotal == lowestAcceleration && GetManhatanValue(position) < lowestPosition)
+                if (accelerationTotal == lowestAcceleration && GetManhatanValue(velocity) < lowestVelocity)
                 {
                     closestParticle = index;
-                    lowestPosition = GetManhatanValue(position);
+                    lowestVelocity = GetManhatanValue(velocity);
                 }
             }
             return closestParticle;
