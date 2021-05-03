@@ -21,8 +21,10 @@ def build_dependency_graph(pairs: List[Tuple[str, ...]]) -> Dict[str, List[str]]
 def part1(dependencies: Dict[str, List[str]]) -> str:
     path: List[str] = []
     while dependencies:
-        next_step: str = next(
-            step for step, step_dependencies in dependencies.items() if not step_dependencies)
+        next_steps = [step for step, step_dependencies
+                      in dependencies.items() if not step_dependencies]
+        next_steps = sorted(next_steps)
+        next_step = next_steps[0]
         del dependencies[next_step]
         path.append(next_step)
         for step_dependencies in dependencies.values():
