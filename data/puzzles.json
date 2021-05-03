@@ -4148,11 +4148,12 @@
           "description": "Optimize production of chemicals that require other chemicals",
           "tags": [
             "Maths",
-            "Optimizations"
+            "Optimizations",
+            "Binary Search"
           ],
           "gotchas": [
             "Keep record of already produced chemicals",
-            "Aproximate Max ORE until valu eis repeated"
+            "Binary search on part 2"
           ],
           "results": [
             {
@@ -4164,16 +4165,16 @@
               "p2": "3568888"
             },
             {
-              "p1": "",
-              "p2": ""
+              "p1": "443537",
+              "p2": "2910558"
             },
             {
               "p1": "1582325",
-              "p2": ""
+              "p2": "2267486"
             },
             {
               "p1": "522031",
-              "p2": ""
+              "p2": "3566577"
             },
             {
               "p1": "301997",
