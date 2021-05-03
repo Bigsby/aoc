@@ -1,4 +1,5 @@
 use regex::Regex;
+use std::cmp::Ordering;
 use std::collections::HashMap;
 
 type ChemicalPortion = (u64, u32);
@@ -45,17 +46,33 @@ fn calculate_required_ore(
     ore_count
 }
 
-fn part2(reactions: &HashMap<u32, (u64, Vec<ChemicalPortion>)>) -> u64 {
-    let mut required_fuel = 1;
-    let mut last_needed = calculate_required_ore(reactions, required_fuel);
-    let max_ore = u64::pow(10, 12);
+fn find_range(reactions: &HashMap<u32, (u64, Vec<ChemicalPortion>)>, max_ore: u64) -> (u64, u64) {
+    let mut low = 0;
+    let mut high = 1;
     loop {
-        required_fuel = required_fuel * max_ore / last_needed;
-        let ore_needed = calculate_required_ore(reactions, required_fuel);
-        if last_needed == ore_needed {
-            return required_fuel;
-        } else {
-            last_needed = ore_needed;
+        match calculate_required_ore(reactions, high).cmp(&max_ore) {
+            Ordering::Less => {
+                low = high;
+                high *= 2;
+            }
+            Ordering::Equal => break (high, high + 1),
+            Ordering::Greater => break (low, high),
+        }
+    }
+}
+
+fn part2(reactions: &HashMap<u32, (u64, Vec<ChemicalPortion>)>) -> u64 {
+    let max_ore = u64::pow(10, 12);
+    let (mut low, mut high) = find_range(reactions, max_ore);
+    loop {
+        if high - low < 2 {
+            break low;
+        }
+        let mid_point = (high - low) / 2 + low;
+        match calculate_required_ore(reactions, mid_point).cmp(&max_ore) {
+            Ordering::Less => low = mid_point,
+            Ordering::Equal => break mid_point,
+            Ordering::Greater => high = mid_point,
         }
     }
 }
