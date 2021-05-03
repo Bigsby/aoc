@@ -64,6 +64,7 @@ fn solve(puzzle_input: &Vec<i16>) -> (String, String) {
 fn get_input(file_path: &String) -> Vec<i16> {
     std::fs::read_to_string(file_path)
         .expect("Error reading input file!")
+        .trim()
         .chars()
         .map(|c| (c as i8 - 48) as i16)
         .collect()
