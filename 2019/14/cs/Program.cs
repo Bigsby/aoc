@@ -73,19 +73,38 @@ namespace AoC
             return oreCount;
         }
 
+        static (long, long) FindRange(Dictionary<string, Tuple<int, IEnumerable<ChemicalPortion>>> reactions, long maxOre) {
+            var low = 0;
+            var high = 1;
+            while (true) 
+            {
+                var oreCost = CalculateRequiredOre(reactions, high);
+                if (oreCost < maxOre) {
+                    low = high;
+                    high *= 2;
+                } else if (oreCost == maxOre)
+                    return (high, high + 1);
+                else
+                    return (low, high);
+            }
+        }
+
         static long Part2(Dictionary<string, Tuple<int, IEnumerable<ChemicalPortion>>> reactions)
         {
-            var requiredFuel = 1L;
-            var lastNeeded = CalculateRequiredOre(reactions, requiredFuel);
             var maxOre = 1_000_000_000_000;
+            var (low, high) = FindRange(reactions, maxOre);
             while (true)
             {
-                requiredFuel = requiredFuel * maxOre / lastNeeded;
-                var oreNeeded = CalculateRequiredOre(reactions, requiredFuel);
-                if (lastNeeded == oreNeeded)
-                    return requiredFuel;
+                if (high - low < 2)
+                    return low;
+                var midPoint = (high - low) / 2 + low;
+                var oreCost = CalculateRequiredOre(reactions, midPoint);
+                if (oreCost < maxOre) 
+                    low = midPoint;
+                else if (oreCost == maxOre)
+                    return midPoint;
                 else
-                    lastNeeded = oreNeeded;
+                    high = midPoint;
             }
         }
 
