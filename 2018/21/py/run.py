@@ -29,13 +29,12 @@ def solve(data: Tuple[int, List[Operation]]) -> Tuple[int, int]:
             if accumulator <= 0xFF:
                 if part1_result == 0:
                     part1_result = result
+                if result not in seen:
+                    seen.add(result)
+                    last_result = result
+                    break
                 else:
-                    if result not in seen:
-                        seen.add(result)
-                        last_result = result
-                        break
-                    else:
-                        return part1_result, last_result
+                    return part1_result, last_result
             else:
                 accumulator //= 0x100
 
