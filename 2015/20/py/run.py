@@ -9,7 +9,7 @@ import itertools
 DIVISORS = [2, 3, 5, 7, 11, 13]
 
 
-def sum_powers(powers: Tuple[int]) -> int:
+def calculate_powers(powers: Tuple[int]) -> int:
     total = 1
     for k, j in zip(powers, DIVISORS):
         total *= j ** k
@@ -21,15 +21,15 @@ MAX_POWERS = [7, 5, 3, 3,  3,  3]
 
 def get_house(target: int, multiplier: int, limit: int) -> int:
     minimum_house = sys.maxsize
-    for powers in itertools.product(*[range(i) for i in MAX_POWERS]):
-        total = 0
-        elf = sum_powers(powers)
-        for j in itertools.product(*[range(k + 1) for k in powers]):
-            elf_count = sum_powers(j)
-            if elf // elf_count <= limit:
-                total += elf_count
-        if total * multiplier >= target and elf < minimum_house:
-            minimum_house = elf
+    for house_powers in itertools.product(*[range(i) for i in MAX_POWERS]):
+        house = calculate_powers(house_powers)
+        house_presents = 0
+        for elf_powers in itertools.product(*[range(k + 1) for k in house_powers]):
+            elf_presents = calculate_powers(elf_powers)
+            if house // elf_presents <= limit:
+                house_presents += elf_presents
+        if house_presents * multiplier >= target and house < minimum_house:
+            minimum_house = house
     return minimum_house
 
 
