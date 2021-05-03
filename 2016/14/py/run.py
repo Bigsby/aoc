@@ -11,12 +11,11 @@ from hashlib import md5
 triplet_regex = re.compile(r"(.)\1{2}")
 quintet_regex = re.compile(r"(.)\1{4}")
 
-
 def find_key(salt: str, stretch: int) -> int:
     index = 0
     keys: List[int] = []
     threes: Dict[str, List[int]] = {digit: [] for digit in "0123456789abcdef"}
-    while len(keys) < 64:
+    while not (len(keys) > 64 and (index - keys[-1]) > 1000):
         value = salt + str(index)
         for _ in range(stretch + 1):
             value = md5(value.encode()).hexdigest()
@@ -27,7 +26,6 @@ def find_key(salt: str, stretch: int) -> int:
                 if (index - triplet_index) <= 1000:
                     keys.append(triplet_index)
             threes[digit] = []
-
         match = triplet_regex.search(value)
         if match:
             threes[match.group()[0]].append(index)
