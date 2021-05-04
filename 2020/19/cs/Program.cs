@@ -10,79 +10,61 @@ namespace AoC
 {
     using Rules = Dictionary<int, Rule>;
 
-    record Rule(string number);
+    record Rule();
 
     record LetterRule : Rule
     {
-        public string letter { get; init; }
-        public LetterRule(string number, string letter) : base(number)
-            => this.letter = letter;
+        public char letter { get; init; }
+        public LetterRule(string letter)
+            => this.letter = letter[0];
     }
 
     record SetRule : Rule
     {
         public IEnumerable<IEnumerable<int>> sets { get; init; }
-        public SetRule(string number, string definition) : base(number)
+        public SetRule(string definition)
             => sets = definition.Split("|").Select(set => set.Trim().Split(" ").Select(int.Parse).ToArray());
     }
 
     static class Program
     {
-        static string GenerateRegex(Rules rules, int ruleNumber)
+        static IEnumerable<int> FindMatchedIndexes(Rules rules, string message, int ruleNumber = 0, int index = 0)
         {
+            if (index == message.Length)
+                return new int[0];
             var rule = rules[ruleNumber];
-            return rule switch
+            if (rule is LetterRule letterRule)
             {
-                LetterRule letterRule => letterRule.letter,
-                SetRule setRule => "(?:" +
-                    string.Join("|",
-                        setRule.sets.Select(ruleSet => string.Join("", ruleSet.Select(innerRule => GenerateRegex(rules, innerRule))))
-                    ) + ")",
-                _ => throw new Exception("Unrecoginzed rule")
-            };
-        }
-
-        static (bool, int) isInnerMatch(string rule, string message, int position)
-        {
-            var match = Regex.Match(message[Range.StartAt(position)], rule);
-            if (match.Success)
-                return (true, position + match.Index + match.Length);
-            return (false, position);
-        }
-
-        static bool IsMatch(string firstRule, string secondRule, string message)
-        {
-            var count = 0;
-            var (matched, position) = isInnerMatch(firstRule, message, 0);
-            while (matched && position < message.Length)
-            {
-                var lastPosition = position;
-                foreach (var _ in Enumerable.Range(0, count))
-                {
-                    (matched, position) = isInnerMatch(secondRule, message, position);
-                    if (!matched)
-                    {
-                        position = lastPosition;
-                        break;
-                    }
-                    else if (position == message.Length)
-                        return true;
-                }
-                count++;
-                (matched, position) = isInnerMatch(firstRule, message, position);
+                if (message[index] == letterRule.letter)
+                    return new[] { index + 1 };
+                return new int[0];
             }
-            return false;
+            var matches = new List<int>();
+            var setRule = rule as SetRule;
+            foreach (var ruleSet in setRule.sets)
+            {
+                var subMatches = new List<int>(new[] { index });
+                foreach (var subRule in ruleSet)
+                {
+                    var newMatches = new List<int>();
+                    foreach (var sub_match_index in subMatches)
+                        newMatches.AddRange(FindMatchedIndexes(rules, message, subRule, sub_match_index));
+                    subMatches = newMatches;
+                }
+                matches.AddRange(subMatches);
+            }
+            return matches;
         }
 
         static (int, int) Solve((Rules, List<string>) puzzleInput)
         {
             var (rules, messages) = puzzleInput;
-            var rule0 = "^" + GenerateRegex(rules, 0) + "$";
-            var rule42 = "^" + GenerateRegex(rules, 42);
-            var rule31 = "^" + GenerateRegex(rules, 31);
+            var part1Result = messages.Count(message => FindMatchedIndexes(rules, message).Contains(message.Length));
+            rules[8] = new SetRule("42 | 42 8");
+            rules[11] = new SetRule("42 31 | 42 11 31");
             return (
-                messages.Count(message => Regex.IsMatch(message, rule0)),
-                messages.Count(message => IsMatch(rule42, rule31, message))
+                part1Result,
+                messages.Count(message => FindMatchedIndexes(rules, message).Contains(message.Length))
             );
         }
 
@@ -106,9 +88,9 @@ namespace AoC
                             var definition = ruleMatch.Groups["rule"].Value.Trim();
                             var letterMatch = letterRegex.Match(definition);
                             rules[int.Parse(ruleNumber)] = letterMatch.Success ?
-                                new LetterRule(ruleNumber, letterMatch.Groups["letter"].Value)
+                                new LetterRule(letterMatch.Groups["letter"].Value)
                                 :
-                                new SetRule(ruleNumber, definition);
+                                new SetRule(definition);
                         }
                         catch
                         {
