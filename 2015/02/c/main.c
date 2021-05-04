@@ -97,6 +97,7 @@ Input getInput(char *filePath)
 
 void freeInput(Input input)
 {
+    free(input.dimensions);
 }
 
 int main(int argc, char **argv)
