@@ -2,14 +2,14 @@ use regex::Regex;
 use std::collections::HashMap;
 
 enum Rule {
-    Letter(String),
+    Letter(char),
     Set(Vec<Vec<u32>>),
 }
 
 impl Rule {
-    fn parse(text: &str) -> Rule {
+    fn parse(text: &str) -> Self {
         if let Some(cap) = Regex::new("^\"(?P<letter>a|b)\"$").unwrap().captures(text) {
-            Rule::Letter(String::from(cap.name("letter").unwrap().as_str()))
+            Rule::Letter(cap.name("letter").unwrap().as_str().chars().next().unwrap())
         } else {
             Rule::Set(
                 text.split("|")
@@ -23,90 +23,72 @@ impl Rule {
             )
         }
     }
+
+    fn clone(&self) -> Self {
+        match self {
+            Rule::Letter(letter) => Rule::Letter(*letter),
+            Rule::Set(sets) => Rule::Set(sets.clone()),
+        }
+    }
 }
 
-fn generate_regex(
+fn find_matched_indexes(
     rules: &HashMap<u32, Rule>,
+    message: &str,
     rule_number: u32,
-    prefix: bool,
-    sufix: bool,
-) -> String {
-    let rule = rules.get(&rule_number).unwrap();
-    match rule {
-        Rule::Letter(letter) => String::from(letter),
+    index: usize,
+) -> Vec<usize> {
+    if index == message.len() {
+        return vec![];
+    }
+    match rules.get(&rule_number).unwrap() {
+        Rule::Letter(letter) => {
+            if message.chars().nth(index).unwrap() == *letter {
+                vec![index + 1]
+            } else {
+                vec![]
+            }
+        }
         Rule::Set(sets) => {
-            let mut result = String::new();
-            if prefix {
-                result.push('^');
+            let mut matches = Vec::new();
+            for rule_set in sets {
+                let mut sub_matches = vec![index];
+                for sub_rule in rule_set {
+                    let mut new_matches = Vec::new();
+                    for sub_match_index in sub_matches.iter() {
+                        new_matches.append(&mut find_matched_indexes(
+                            rules,
+                            message,
+                            *sub_rule,
+                            *sub_match_index,
+                        ));
+                    }
+                    sub_matches = new_matches;
+                }
+                matches.append(&mut sub_matches);
             }
-            result.push_str("(?:");
-            result.push_str(
-                sets.iter()
-                    .map(|rule_set| {
-                        rule_set
-                            .iter()
-                            .map(|inner_number| generate_regex(rules, *inner_number, false, false))
-                            .collect::<Vec<String>>()
-                            .join("")
-                    })
-                    .collect::<Vec<String>>()
-                    .join("|")
-                    .as_str(),
-            );
-            result.push(')');
-            if sufix {
-                result.push('$');
-            }
-            result
+            matches
         }
     }
-}
-
-fn is_inner_match(rule: &Regex, message: &str, position: usize) -> (bool, usize) {
-    if let Some(cap) = rule.captures(&message[position..]) {
-        (true, position + cap.get(0).unwrap().end())
-    } else {
-        (false, position)
-    }
-}
-
-fn is_match(first_rule: &Regex, second_rule: &Regex, message: &str) -> bool {
-    let mut count = 0;
-    let (mut matched, mut position) = is_inner_match(first_rule, message, 0);
-    while matched && position < message.len() {
-        let last_position = position;
-        for _ in 0..count {
-            let (new_matched, new_position) = is_inner_match(second_rule, message, position);
-            matched = new_matched;
-            position = new_position;
-            if !matched {
-                position = last_position;
-                break;
-            } else if position == message.len() {
-                return true;
-            }
-        }
-        count += 1;
-        let (new_matched, new_position) = is_inner_match(first_rule, message, position);
-        matched = new_matched;
-        position = new_position;
-    }
-    false
 }
 
 fn solve(puzzle_input: &(HashMap<u32, Rule>, Vec<String>)) -> (usize, usize) {
     let (rules, messages) = puzzle_input;
-    let rule_0 = Regex::new(&generate_regex(rules, 0, true, true)).unwrap();
-    let rule_42 = Regex::new(&generate_regex(rules, 42, true, false)).unwrap();
-    let rule_31 = Regex::new(&generate_regex(rules, 31, true, false)).unwrap();
+    let part1_result = messages
+        .iter()
+        .filter(|message| find_matched_indexes(rules, message, 0, 0).contains(&message.len()))
+        .count();
+    let mut rules: HashMap<u32, Rule> = rules
+        .into_iter()
+        .map(|(rule_number, rule)| (*rule_number, rule.clone()))
+        .collect();
+    *rules.get_mut(&8).unwrap() = Rule::parse("42 | 42 8");
+    *rules.get_mut(&11).unwrap() = Rule::parse("42 31 | 42 11 31");
     (
+        part1_result,
         messages
             .iter()
-            .filter(|message| rule_0.is_match(message))
-            .count(),
-        messages
-            .iter()
-            .filter(|message| is_match(&rule_42, &rule_31, message))
+            .filter(|message| find_matched_indexes(&rules, message, 0, 0).contains(&message.len()))
             .count(),
     )
 }
