@@ -1,7 +1,6 @@
-use itertools::Itertools;
 use num::complex::Complex;
 use std::cell::RefCell;
-use std::collections::{HashMap, HashSet, VecDeque};
+use std::collections::{HashMap, VecDeque};
 
 static DIRECTIONS: &'static [(u8, Complex<i32>)] = &[
     (b'v', Complex::new(0, 1)),
@@ -271,13 +270,6 @@ fn part1(scafolds: &Scafolds) -> i32 {
     alignment
 }
 
-fn _pause() {
-    let mut input: String = String::new();
-    std::io::stdin()
-        .read_line(&mut input)
-        .expect("error inputing");
-}
-
 fn find_path(scafolds: &Scafolds, robot: &Robot) -> Path {
     let mut robot = *robot;
     const TURNS: [(Complex<i32>, &str); 2] =
@@ -311,61 +303,54 @@ fn find_path(scafolds: &Scafolds, robot: &Robot) -> Path {
     path
 }
 
-fn get_repeats_in_path(path: &Path, segment: &Path) -> Vec<(usize, usize)> {
-    (0..path.len() - segment.len() + 1)
-        .into_iter()
-        .filter(|start| path[*start..start + segment.len()] == segment[..])
-        .map(|start| (start, start + segment.len()))
-        .collect()
-}
-
-fn is_permutation_valid(path: &Path, permutation: &Vec<(usize, usize)>) -> bool {
-    let mut path = path.clone();
-    for (length, repeat_count) in permutation {
-        let segment: Vec<String> = path.iter().take(*length).map(|s| s.clone()).collect();
-        if segment.len() * 2 - 1 > 20 {
-            return false;
+fn find_routines(path: &Path) -> Vec<String> {
+    let mut stack: Vec<(Vec<String>, Vec<Vec<String>>, usize)> = vec![(vec![], vec![], 0)];
+    let routine_ids = "ABC".chars().collect::<Vec<char>>();
+    while let Some((main, programs, index)) = stack.pop() {
+        if index >= path.len() {
+            let mut result = vec![main.join(",")];
+            result.append(&mut programs.iter().map(|program| program.join(",")).collect());
+            return result;
         }
-        let mut repeat_indexes = get_repeats_in_path(&path, &segment);
-        if repeat_indexes.len() != *repeat_count {
-            return false;
-        }
-        repeat_indexes.reverse();
-        for (start, _) in repeat_indexes {
-            for _ in 0..*length {
-                path.remove(start);
-            }
-        }
-    }
-    return path.is_empty();
-}
-
-fn get_routines(path: &Path) -> HashMap<char, (Vec<String>, Vec<(usize, usize)>)> {
-    let mut routines = HashMap::new();
-    let lenghts_repeats: Vec<(usize, usize)> = vec![(6, 4), (10, 3), (8, 3), (6, 3)];
-    for permutation in lenghts_repeats.into_iter().permutations(3) {
-        if is_permutation_valid(path, &permutation) {
-            let mut indexes_to_group: HashSet<usize> = (0..path.len()).collect();
-            for (c, (length, _)) in permutation.into_iter().enumerate() {
-                let index = indexes_to_group.iter().min().unwrap();
-                let segment: Vec<String> = path
-                    .iter()
-                    .skip(*index)
-                    .take(length)
-                    .map(|c| c.clone())
-                    .collect();
-                let repeat_indexes = get_repeats_in_path(path, &segment);
-                routines.insert((c as u8 + b'A') as char, (segment, repeat_indexes.clone()));
-                for (start, end) in repeat_indexes {
-                    for i in start..end {
-                        indexes_to_group.remove(&i);
-                    }
+        if main.len() < 10 {
+            for (id, program) in routine_ids.iter().zip(&programs) {
+                if index + program.len() <= path.len()
+                    && path[index..index + program.len()] == *program
+                {
+                    stack.push((
+                        vec![main.clone(), vec![id.to_string()]].concat(),
+                        programs.iter().map(|p| p.clone()).collect(),
+                        index + program.len(),
+                    ));
                 }
             }
-            break;
+        }
+        if programs.len() < 3 {
+            for end in index + 1..path.len() {
+                if path[index..end]
+                    .iter()
+                    .map(|segment| segment.len())
+                    .sum::<usize>()
+                    + end
+                    - index
+                    - 1
+                    > 20
+                {
+                    break;
+                }
+                stack.push((
+                    vec![main.clone(), vec![routine_ids[programs.len()].to_string()]].concat(),
+                    vec![
+                        programs.clone(),
+                        vec![path[index..end].iter().map(|s| s.clone()).collect()],
+                    ]
+                    .concat(),
+                    end,
+                ));
+            }
         }
     }
-    routines
+    panic!("Routines not found")
 }
 
 fn part2(memory: &Vec<i64>, scafolds: &Scafolds, robot: &Robot) -> i64 {
@@ -373,34 +358,11 @@ fn part2(memory: &Vec<i64>, scafolds: &Scafolds, robot: &Robot) -> i64 {
     memory[0] = 2;
     let mut ascii_computer = IntCodeComputer::new(&memory, vec![]);
     let path = find_path(scafolds, robot);
-    let routines = get_routines(&path);
-    let mut main_routine_segments = Vec::new();
-    let mut inputs = Vec::new();
-    for (routine, (segments, indexes)) in routines {
-        let mut input = segments.join(",");
-        input.push(10 as char);
-        inputs.push(input);
-        for index_group in indexes {
-            main_routine_segments.push((index_group.0, routine));
-        }
-    }
-    main_routine_segments.sort_by_key(|mrs| mrs.0);
-    let mut main_routine_letters: Vec<char> = main_routine_segments
-        .into_iter()
-        .map(|(_, routine)| routine)
-        .collect();
-    for index in (1..main_routine_letters.len()).rev() {
-        main_routine_letters.insert(index, ',');
-    }
-    main_routine_letters.push(10 as char);
-    inputs.insert(0, main_routine_letters.into_iter().collect::<String>());
-    let mut no = String::from("n");
-    no.push(10 as char);
-    inputs.push(no);
-    for input_line in inputs {
-        for c in input_line.chars() {
-            ascii_computer.add_input((c as u8) as i64);
-        }
+    let routines = find_routines(&path);
+    let routines_text = routines.join("\n");
+    let inputs = format!("{}\nn\n", routines_text);
+    for c in inputs.chars() {
+        ascii_computer.add_input((c as u8) as i64);
     }
     ascii_computer.run()
 }
