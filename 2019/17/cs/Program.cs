@@ -12,7 +12,7 @@ namespace AoC
         public Memory(long[] memory)
             => _memory = memory.Select((value, index) => (value, index))
                 .ToDictionary(pair => (long)pair.index, pair => (long)pair.value);
-        
+
         public static Memory FromMemory(Memory memory)
         {
             var result = new Memory(new long[0]);
@@ -39,7 +39,7 @@ namespace AoC
         public bool Running { get; private set; } = true;
         public bool Polling { get; private set; }
         public bool Outputing { get; private set; }
-        
+
         public IntCodeComputer(long[] memory, IEnumerable<long> input = default(List<long>))
         {
             _memory = new Memory(memory);
@@ -282,7 +282,7 @@ namespace AoC
             return alignment;
         }
 
-        static (Coordinate, string)[] TURNS = new [] {
+        static (Coordinate, string)[] TURNS = new[] {
             ( -Coordinate.YOne, "L" ),
             ( Coordinate.YOne, "R" )
         };
@@ -324,92 +324,52 @@ namespace AoC
         static bool AreSegmentsEqual(string[] a, string[] b)
             => Enumerable.Range(0, a.Length).All(index => a[index] == b[index]);
 
-        static (int, int)[] GetRepeatsInPath(string[] path, string[] segment)
-            => Enumerable.Range(0, path.Length - segment.Length + 1)
-                .Where(start => AreSegmentsEqual(path[new Range(start, start + segment.Length)], segment))
-                .Select(start => (start, start + segment.Length)).ToArray();
-        
-        static bool IsPermutationValid(string[] path, IEnumerable<(int, int)> permutation)
+        static IEnumerable<string> FindRoutines(string[] path)
         {
-            var pathList = path.ToList();
-            foreach (var (length, repeatCount) in permutation)
-            {
-                var segment = pathList.Take(length).ToArray();
-                if (segment.Length * 2 - 1 > 20)
-                    return false;
-                var repeatIndexes = GetRepeatsInPath(pathList.ToArray(), segment);
-                if (repeatIndexes.Length != repeatCount)
-                    return false;
-                foreach (var (start, _) in repeatIndexes.Reverse())
-                    foreach (var _ in Enumerable.Range(0, length))
-                        pathList.RemoveAt(start);
-            }
-            return !pathList.Any();
-        }
-
-        static IEnumerable<T[]> Permutations<T>(IEnumerable<T> source, int length) where T: IEquatable<T>
-        {
-            var stack = new Stack<List<T>>(source.Select(item => new List<T>(new [] { item })));
+            const string ROUTINES = "ABC";
+            var stack = new Stack<(IEnumerable<string>, IEnumerable<IEnumerable<string>>, int)>();
+            stack.Push((new string[0], new IEnumerable<string>[0], 0));
             while (stack.Any())
             {
-                var current = stack.Pop();
-                foreach (var item in source.Where(item => !current.Contains(item)))
-                {
-                    var newCurrent = current.ToList();
-                    newCurrent.Add(item);
-                    if (newCurrent.Count == length)
-                        yield return newCurrent.ToArray();
-                    else
-                        stack.Push(newCurrent);
-                }
-            }
-        }
-
-        static Dictionary<int, (string[] segment, IEnumerable<(int, int)> indexes)> GetRoutines(string[] path)
-        {
-            var routines = new Dictionary<int, (string[], IEnumerable<(int, int)>)>();
-            foreach (var permutation in Permutations(new [] { (6, 4), (10, 3), (8, 3), (6, 3) }, 3)) // possible (length, repeat counts)
-            {
-                if (IsPermutationValid(path, permutation))
-                {
-                    var indexesToGroup = Enumerable.Range(0, path.Length).ToList();
-                    foreach (var ((length, _), c) in permutation.Select((p, index) => (p, index)))
+                var (main, routines, index) = stack.Pop();
+                if (index == path.Length)
+                    return new[] {
+                        string.Join(",", main)
+                    }.Concat(routines.Select(program => string.Join(",", program)));
+                if (main.Count() < 10)
+                    foreach (var (id, routine) in ROUTINES.Zip(routines))
+                        if (index + routine.Count() <= path.Length &&
+                            AreSegmentsEqual(path[new Range(index, index + routine.Count())], routine.ToArray()))
+                            stack.Push((
+                                main.Concat(new[] { id.ToString() }).ToList(),
+                                routines,
+                                index + routine.Count()
+                            ));
+                if (routines.Count() < 3)
+                    foreach (var end in Enumerable.Range(index + 1, path.Length - index - 1))
                     {
-                        var index = indexesToGroup.Min();
-                        var segment = path[new Range(index, index + length)];
-                        var repeatIndexes = GetRepeatsInPath(path, segment);
-                        routines[c + (int)'A'] = (segment, repeatIndexes);
-                        foreach (var (start, end) in repeatIndexes)
-                            for (var i = start; i < end; i++)
-                                indexesToGroup.Remove(i);
+                        if (path[new Range(index, end)].Select(segment => segment.Length).Sum() + end - index - 1 > 20)
+                            break;
+                        stack.Push((
+                            main.Concat(new[] { (ROUTINES[routines.Count()]).ToString() }).ToList(),
+                            routines.Concat(new[] { path[new Range(index, end)].ToList() }).ToList(),
+                            end
+                        ));
                     }
-                }
             }
-            return routines;
+            throw new Exception("Routines not found");
         }
 
         static long Part2(long[] memory, IEnumerable<Coordinate> scafolds, (Coordinate, Coordinate) robot)
         {
             var path = FindPath(scafolds, robot);
-            var routines = GetRoutines(path);
-            var mainRoutineSegments = new Dictionary<int, int>();
-            var inputs = new List<string>();
-            foreach (var (routine, (segments, indexes)) in routines.Select(pair => (pair.Key, pair.Value)))
-            {
-                inputs.Add(string.Join(",", segments) + (char)10);
-                foreach (var indexGroup in indexes)
-                    mainRoutineSegments[indexGroup.Item1] = routine;
-            }
-            inputs.Insert(0, string.Join(",", 
-                mainRoutineSegments
-                    .OrderBy(pair => pair.Key)
-                    .Select(pair => (char)pair.Value)) + (char)10);
-            inputs.Add("n" + (char)10);
+            var routines = FindRoutines(path);
+            var routinesText = string.Join("\n", routines);
+            var inputs = $"{routinesText}\nn\n".Select(c => (int)c);
             memory[0] = 2;
             var asciiComputer = new IntCodeComputer(memory);
-            foreach (var inputLine in inputs)
-                foreach (var c in inputLine)
-                    asciiComputer.AddInput((int)c);
+            foreach (var c in inputs)
+                asciiComputer.AddInput(c);
             return asciiComputer.Run();
         }
 
