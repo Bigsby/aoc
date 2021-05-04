@@ -197,63 +197,41 @@ def find_path(scafolds: Scafolds, robot: Robot) -> Path:
     return path
 
 
-def get_repeats_in_path(path: Path, segment: Path) -> List[Tuple[int, int]]:
-    return [(start, start + len(segment))
-            for start in range(len(path) - len(segment) + 1)
-            if path[start:start + len(segment)] == segment]
-
-
-def is_permutation_valid(path: Path, permutation: Tuple[Tuple[int, int], ...]) -> bool:
-    path = list(path)
-    for length, repeat_count in permutation:
-        segment = path[:length]
-        if len(segment) * 2 - 1 > 20:
-            return False
-        repeat_indexes = get_repeats_in_path(path, segment)
-        if len(repeat_indexes) != repeat_count:
-            return False
-        repeat_indexes.reverse()
-        for start, _ in repeat_indexes:
-            for _ in range(length):
-                del path[start]
-    return not path
-
-
-def get_routines(path: Path) -> Dict[int, Tuple[Path, List[Tuple[int, int]]]]:
-    routines: Dict[int, Tuple[Path, List[Tuple[int, int]]]] = {}
-    # possible (length, repeat counts)
-    for permutation in permutations([(6, 4), (10, 3), (8, 3), (6, 3)], 3):
-        if is_permutation_valid(path, permutation):
-            indexes_to_group = [i for i in range(len(path))]
-            for c, (length, _) in enumerate(permutation):
-                index = min(indexes_to_group)
-                segment = path[index:index + length]
-                repeat_indexes = get_repeats_in_path(path, segment)
-                routines[c + ord("A")] = segment, repeat_indexes
-                for start, end in repeat_indexes:
-                    for i in range(start, end):
-                        indexes_to_group.remove(i)
-            break
-    return routines
+def find_routines(path: Path) -> List[str]:
+    stack: List[Tuple[List[str], List[List[str]], int]] = [([], [], 0)]
+    while stack:
+        main, programs, index = stack.pop()
+        if index >= len(path):
+            return [
+                ",".join(main), *(",".join(program) for program in programs)
+            ]
+        if len(main) < 10:
+            for id, program in zip("ABC", programs):
+                if path[index:index + len(program)] == program:
+                    stack.append(
+                        (main + [id],
+                         programs,
+                         index + len(program)))
+        if len(programs) < 3:
+            for end in range(index + 1, len(path)):
+                if sum(map(len, path[index:end])) + end - index - 1 > 20:
+                    break
+                stack.append(
+                    (main + ["ABC"[len(programs)]],
+                     programs + [path[index:end]],
+                     end))
+    raise Exception("Routines not found")
 
 
 def part2(memory: List[int], scafolds: Scafolds, robot: Robot) -> int:
     ascii_computer = IntCodeComputer(memory)
     ascii_computer.memory[0] = 2
     path = find_path(scafolds, robot)
-    routines = get_routines(path)
-    main_routine_segments: Dict[int, int] = {}
-    inputs: List[str] = []
-    for routine, (segements, indexes) in routines.items():
-        inputs.append(",".join(segements) + chr(10))
-        for index_group in indexes:
-            main_routine_segments[index_group[0]] = routine
-    inputs.insert(0, ",".join([chr(routine) for _, routine in sorted(
-        main_routine_segments.items())]) + chr(10))
-    inputs.append("n" + chr(10))
-    for input_line in inputs:
-        for c in input_line:
-            ascii_computer.inputs.append(ord(c))
+    routines = find_routines(path)
+    routines_text = "\n".join(routines)
+    inputs = [ord(c) for c in f"{routines_text}\nn\n"]
+    for c in inputs:
+        ascii_computer.inputs.append(c)
     return ascii_computer.run().pop()
 
 
