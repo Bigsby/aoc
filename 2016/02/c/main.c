@@ -55,12 +55,9 @@ Position positionAdd(Position a, Position b)
 #define KEYPAD_OUT 0
 char getDigit(Position position, Key *keypad, int size)
 {
-    while (size--)
-    {
+    for (; --size; keypad++)
         if (positionEquals(keypad->position, position))
             return keypad->digit;
-        keypad++;
-    }
     return KEYPAD_OUT;
 }
 
