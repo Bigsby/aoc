@@ -23,15 +23,16 @@ typedef struct
 } Key;
 
 #define CODE_MAXSIZE 10
-
+#define KEYPAD_OUT 0
 #define KEYPAD1_SIZE 9
+#define KEYPAD2_SIZE 13
+
 Key KEYPAD1[] = {
     {{-1, -1}, '1'}, {{0, -1}, '2'}, {{1, -1}, '3'},
     {{-1,  0}, '4'}, {{0,  0}, '5'}, {{1,  0}, '6'},
     {{-1,  1}, '7'}, {{0,  1}, '8'}, {{1,  1}, '9'},
 };
 
-#define KEYPAD2_SIZE 13
 Key KEYPAD2[] = {
                                      {{0, -2}, '1'},
                     {{-1, -1}, '2'}, {{0, -1}, '3'}, {{1, -1}, '4'},
@@ -52,7 +53,6 @@ Position positionAdd(Position a, Position b)
         a.y + b.y};
 }
 
-#define KEYPAD_OUT 0
 char getDigit(Position position, Key *keypad, int size)
 {
     for (; --size; keypad++)
