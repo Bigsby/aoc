@@ -130,6 +130,7 @@ Input getInput(char *filePath)
     char *content = malloc(length);
     fread(content, 1, length, file);
     int targetNumber = atoi(content);
+    free(content);
     fclose(file);
     return targetNumber;
 }
