@@ -39,7 +39,6 @@ typedef struct
 
 void addItem(Grid *grid, Lattice lattice, int value)
 {
-    int index = grid->count;
     if (grid->size == grid->count)
     {
         GridItem *oldItems = grid->items;
@@ -47,8 +46,7 @@ void addItem(Grid *grid, Lattice lattice, int value)
         grid->items = newItems;
         grid->size += 10;
     }
-    grid->items[index] = (GridItem){lattice, value};
-    grid->count++;
+    grid->items[grid->count++] = (GridItem){lattice, value};
 }
 
 Grid createGrid()
