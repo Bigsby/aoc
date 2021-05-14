@@ -82,7 +82,6 @@ Input getInput(char *filePath)
         while (!regexec(&regexCompiled, cursor, MAX_COUNT, groupArray, 0))
         {
             int group = 0;
-            int offset = 0;
             for (group = 0; group <= 4 && groupArray[group].rm_so != -1; group++)
             {
                 char cursorCopy[strlen(cursor) + 1];
@@ -90,9 +89,6 @@ Input getInput(char *filePath)
                 cursorCopy[groupArray[group].rm_eo] = 0;
                 switch (group)
                 {
-                case 0:
-                    offset = groupArray[group].rm_eo;
-                    break;
                 case 1:
                     first = atoi(cursorCopy + groupArray[group].rm_so);
                     break;
@@ -107,7 +103,7 @@ Input getInput(char *filePath)
                     break;
                 }
             }
-            cursor += offset;
+            cursor += groupArray[0].rm_eo;
         }
         lines[count++] = (Line){first, second, letter, password};
     }
