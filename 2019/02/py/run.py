@@ -23,9 +23,9 @@ class IntCodeComputer():
         return self.memory[self.pointer + offset]
     
     def tick(self):
-        opcode = self.memory[self.pointer]
         if not self.running:
             return
+        opcode = self.memory[self.pointer]
         if opcode == 1: # ADD
             self.memory[self.get_address(3)] = self.get_parameter(1) + self.get_parameter(2)
             self.pointer += 4
@@ -46,7 +46,7 @@ def run_program(memory: List[int], noun: int, verb: int) -> int:
 
 TARGET_VALUE = 19690720
 def part2(memory: List[int]) -> int:
-    for noun, verb in product([ i for i in range(100) ], repeat=2):
+    for noun, verb in product(range(100), repeat=2):
         if run_program(memory, noun, verb) == TARGET_VALUE:
             return 100 * noun + verb
     raise Exception("Target value not found")
