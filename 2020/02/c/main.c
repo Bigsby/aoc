@@ -70,7 +70,7 @@ Input getInput(char *filePath)
         exit(1);
     }
     Line *lines = calloc(MAX_COUNT, sizeof(Line));
-    int count = 0;
+    int count = 0, group;
     size_t lineLength;
     char *line = NULL, *cursor = NULL;
     while (getline(&line, &lineLength, file) != EOF)
@@ -81,7 +81,6 @@ Input getInput(char *filePath)
         char *password = malloc(32);
         while (!regexec(&regexCompiled, cursor, MAX_COUNT, groupArray, 0))
         {
-            int group = 0;
             for (group = 0; group <= 4 && groupArray[group].rm_so != -1; group++)
             {
                 char cursorCopy[strlen(cursor) + 1];
