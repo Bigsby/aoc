@@ -7,7 +7,7 @@ typedef double complex Lattice;
 
 typedef struct
 {
-    Lattice *direction;
+    Lattice *directions;
     int count;
 } Input;
 
@@ -57,7 +57,7 @@ int part1(Input input)
     visitedHouses->next = NULL;
     visitedHouses->count = 1;
     while (input.count--)
-        position = processDirection(visitedHouses, position, *(input.direction++));
+        position = processDirection(visitedHouses, position, *(input.directions++));
     return visitedHouses->count;
 }
 
@@ -73,10 +73,10 @@ int part2(Input input)
     while (input.count--)
     {
         if (index++ % 2 == 0)
-            santaPosition = processDirection(visitedHouses, santaPosition, *input.direction);
+            santaPosition = processDirection(visitedHouses, santaPosition, *input.directions);
         else 
-            robotPosition = processDirection(visitedHouses, robotPosition, *input.direction);
-        input.direction++;
+            robotPosition = processDirection(visitedHouses, robotPosition, *input.directions);
+        input.directions++;
     }
     return visitedHouses->count;
 }
@@ -130,6 +130,7 @@ Input getInput(char *filePath)
 
 void freeInput(Input input)
 {
+    free(input.directions);
 }
 
 int main(int argc, char **argv)
