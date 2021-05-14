@@ -21,7 +21,6 @@ namespace AoC
         public void Tick()
         {            
             if (!Running) return;
-
             var opCode = _memory[_pointer];
             switch (opCode)
             {
