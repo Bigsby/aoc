@@ -104,6 +104,7 @@ Input getInput(char *filePath)
         }
         lineCount++;
     }
+    regfree(&regexCompiled);
     fclose(file);
     return (Input){
         lines,
