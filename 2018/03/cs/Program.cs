@@ -12,14 +12,14 @@ namespace AoC
 
     class Program
     {
-        static Dictionary<Tuple<int, int>, int> GetCoveredPoints(Claim[] claims)
+        static Dictionary<(int, int), int> GetCoveredPoints(Claim[] claims)
         {
-            var coveredPoints = new Dictionary<Tuple<int, int>, int>();
+            var coveredPoints = new Dictionary<(int, int), int>();
             foreach (var (_, left, top, width, height) in claims)
                 foreach (var x in Enumerable.Range(left, width))
                     foreach (var y in Enumerable.Range(top, height))
                     {
-                        var point = Tuple.Create(x, y);
+                        var point = (x, y);
                         if (coveredPoints.ContainsKey(point))
                             coveredPoints[point]++;
                         else
@@ -28,14 +28,14 @@ namespace AoC
             return coveredPoints;
         }
         
-        static int Part2(Claim[] claims, Dictionary<Tuple<int, int>, int> coveredPoints)
+        static int Part2(Claim[] claims, Dictionary<(int, int), int> coveredPoints)
         {
             foreach (var (id, left, top, width, height) in claims)
             {
                 var allOne = true;
                 foreach (var x in Enumerable.Range(left, width))
                     foreach (var y in Enumerable.Range(top, height))
-                        allOne &= coveredPoints[Tuple.Create(x, y)] == 1;
+                        allOne &= coveredPoints[(x, y)] == 1;
                 if (allOne)
                     return id;
             }
