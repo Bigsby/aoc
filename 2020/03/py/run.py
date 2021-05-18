@@ -10,12 +10,12 @@ Trees = List[complex]
 
 
 def calculate_trees(trees: Trees, step: complex) -> int:
-    yLimit = max(p.imag for p in trees) + 1
-    xLimit = max(p.real for p in trees) + 1
+    y_limit = max(p.imag for p in trees) + 1
+    x_limit = max(p.real for p in trees) + 1
     position = 0j
     tree_count = 0
-    while position.imag < yLimit:
-        tree_count += (position.real % xLimit) + position.imag * 1j in trees
+    while position.imag < y_limit:
+        tree_count += (position.real % x_limit) + position.imag * 1j in trees
         position += step
     return tree_count
 
@@ -32,8 +32,8 @@ STEPS = [
 def solve(trees: Trees) -> Tuple[int, int]:
     return (
         calculate_trees(trees, 3 + 1j),
-        reduce(lambda current, step: current *
-               calculate_trees(trees, step), STEPS, 1)
+        int(reduce(lambda current, step: current *
+               calculate_trees(trees, step), STEPS, 1))
     )
 
 
