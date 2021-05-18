@@ -12,13 +12,13 @@ Position = complex
 
 STEPS = {
     "R": 1,
-    "U": -1j,
+    "U": 1j,
     "L": -1,
-    "D": 1j
+    "D": -1j
 }
 
 
-def get_wire_oositions(wire: Wire) -> Iterable[Position]:
+def get_wire_positions(wire: Wire) -> Iterable[Position]:
     position = 0j
     for direction, distance in wire:
         for _ in range(distance):
@@ -28,20 +28,20 @@ def get_wire_oositions(wire: Wire) -> Iterable[Position]:
 
 def part1(wires: Tuple[Wire, Wire]) -> int:
     wire_a, wire_b = wires
-    wire_a_points = set(get_wire_oositions(wire_a))
+    wire_a_points = set(get_wire_positions(wire_a))
     return int(min([abs(position.real) + abs(position.imag)
-                    for position in get_wire_oositions(wire_b)
+                    for position in get_wire_positions(wire_b)
                     if position in wire_a_points]))
 
 
 def part2(wires: Tuple[Wire, Wire]) -> int:
     wire_a, wire_b = wires
     wire_a_points: Dict[Position, int] = {}
-    for steps, position in enumerate(get_wire_oositions(wire_a)):
+    for steps, position in enumerate(get_wire_positions(wire_a)):
         if position not in wire_a_points:
             wire_a_points[position] = steps + 1
     return min([wire_a_points[position] + steps + 1
-                for steps, position in enumerate(get_wire_oositions(wire_b))
+                for steps, position in enumerate(get_wire_positions(wire_b))
                 if position in wire_a_points])
 
 
