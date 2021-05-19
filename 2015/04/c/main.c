@@ -158,11 +158,12 @@ void md5HexDigest(const char *msg, char *result)
     }
 }
 
+const char *DIGITS = "0123456789abcdef";
 char* itoa(int val, int base){
 	static char buf[32] = {0};
 	int i = 30;
 	for(; val && i ; --i, val /= base)
-		buf[i] = "0123456789abcdef"[val % base];	
+		buf[i] = DIGITS[val % base];	
 	return &buf[i+1];
 	
 }
