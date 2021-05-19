@@ -4,6 +4,13 @@
 #include <math.h>
 #include <string.h>
 
+typedef char *Input;
+typedef struct
+{
+    int part1;
+    int part2;
+} Results;
+
 typedef union uwb
 {
     unsigned w;
@@ -149,23 +156,6 @@ void md5HexDigest(const char *msg, char *result)
             cursor += 2;
         }
     }
-}
-
-typedef char *Input;
-typedef struct
-{
-    int part1;
-    int part2;
-} Results;
-
-int part1(Input input)
-{
-    return 1;
-}
-
-int part2(Input input)
-{
-    return 2;
 }
 
 char* itoa(int val, int base){
