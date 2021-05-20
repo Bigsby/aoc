@@ -52,14 +52,12 @@ def part1(guards: Dict[int,GuardRecord]) -> int:
         if total > max_total:
             max_total = total
             guardId = id
-    print(max_total, "", end="")
     max_total = 0
     max_minute = -1
     for minute, total in guards[guardId][1].items():
         if total > max_total:
             max_total = total
             max_minute = minute
-    print(guardId, max_minute)
     return guardId * max_minute
 
 
