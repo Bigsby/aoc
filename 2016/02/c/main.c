@@ -43,14 +43,14 @@ Key KEYPAD2[] = {
 
 int positionEquals(Position a, Position b)
 {
-    return a.x == b.x && a.y == b.y;
+    return (a.x == b.x) && (a.y == b.y);
 }
 
-Position positionAdd(Position a, Position b)
+Position positionAdd(Position a, int x, int y)
 {
     return (Position){
-        a.x + b.x,
-        a.y + b.y};
+        a.x + x,
+        a.y + y};
 }
 
 char getDigit(Position position, Key *keypad, int size)
@@ -63,9 +63,9 @@ char getDigit(Position position, Key *keypad, int size)
 
 void getCode(char *code, Input paths, Key *keypad, int size)
 {
+    size++;
     int index = 0;
-    Position position = {0, 0};
-    Position oldPosition;
+    Position position = {0, 0}, oldPosition;
     char digit, lastDigit;
     while (*paths)
     {
@@ -73,20 +73,19 @@ void getCode(char *code, Input paths, Key *keypad, int size)
         switch (*paths)
         {
         case 'D':
-            position = positionAdd(position, (Position){0, 1});
+            position = positionAdd(position, 0, 1);
             break;
         case 'U':
-            position = positionAdd(position, (Position){0, -1});
+            position = positionAdd(position, 0, -1);
             break;
         case 'L':
-            position = positionAdd(position, (Position){-1, 0});
+            position = positionAdd(position, -1, 0);
             break;
         case 'R':
-            position = positionAdd(position, (Position){1, 0});
+            position = positionAdd(position, 1, 0);
             break;
         }
-        digit = getDigit(position, keypad, size);
-        if (digit == KEYPAD_OUT)
+        if ((digit = getDigit(position, keypad, size)) == KEYPAD_OUT)
             position = oldPosition;
         else
             lastDigit = digit;
