@@ -16,10 +16,12 @@ typedef struct
     TreesNode *trees;
     int width, height;
 } Input;
+
+#define PART2_FORMAT "%ld"
 typedef struct
 {
-    int part1;
-    int part2;
+    long part1;
+    long part2;
 } Results;
 
 int comparePositions(int aX, int aY, int bX, int bY)
@@ -62,10 +64,10 @@ int containsTree(TreesNode *node, int x, int y)
     return compare == 1 ? containsTree(node->left, x, y) : containsTree(node->right, x, y);
 }
 
-int calculateTrees(Input input, Lattice step)
+long calculateTrees(Input input, Lattice step)
 {
     Lattice position = 0;
-    int treeCount = 0;
+    long treeCount = 0L;
     while (cimag(position) < input.height)
     {
         treeCount += containsTree(input.trees, (int)creal(position) % input.width, cimag(position));
@@ -75,14 +77,14 @@ int calculateTrees(Input input, Lattice step)
 }
 
 const Lattice steps[] = {
-        1 + I,
-        3 + I,
-        5 + I,
-        7 + I,
-        1 + 2 * I};
-int part2(Input input)
+    1 + I,
+    3 + I,
+    5 + I,
+    7 + I,
+    1 + 2 * I};
+long part2(Input input)
 {
-    int product = 1, index;
+    long product = 1UL, index;
     for (index = 0; index < 5; index++)
         product *= calculateTrees(input, steps[index]);
     return product;
@@ -144,7 +146,13 @@ int main(int argc, char **argv)
     gettimeofday(&ends, NULL);
     freeInput(input);
     printf("P1: %d\n", results.part1);
-    printf("P2: %d\n\n", results.part2);
+    printf("P2: "
+    #ifdef PART2_FORMAT
+        PART2_FORMAT
+    #else
+        "%d"
+    #endif
+     "\n\n", results.part2);
     printf("Time: %.7f\n", (double)((ends.tv_sec - starts.tv_sec) * 1000000 + ends.tv_usec - starts.tv_usec) / 1000000);
     return 0;
 }
