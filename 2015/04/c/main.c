@@ -198,6 +198,22 @@ Results solve(Input input)
     return (Results){part1Result, findHash(input, 6, part1Result)};
 }
 
+char *rtrim(char *str, const char *seps)
+{
+    int i;
+    if (seps == NULL)
+    {
+        seps = "\t\n\v\f\r ";
+    }
+    i = strlen(str) - 1;
+    while (i >= 0 && strchr(seps, str[i]) != NULL)
+    {
+        str[i] = '\0';
+        i--;
+    }
+    return str;
+}
+
 Input getInput(char *filePath)
 {
     FILE *file;
@@ -212,7 +228,7 @@ Input getInput(char *filePath)
     char *key = calloc(length, length + 1);
     fread(key, length, 1, file);
     fclose(file);
-    return key;
+    return rtrim(key, NULL);
 }
 
 void freeInput(Input input)
