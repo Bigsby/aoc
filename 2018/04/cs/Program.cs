@@ -107,7 +107,6 @@ namespace AoC
                         if (!guards.ContainsKey(guardId))
                             guards[guardId] = GuardRecord.New();
                     }
-
                 }
             }
             return guards;
