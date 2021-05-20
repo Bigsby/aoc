@@ -15,7 +15,7 @@ def is_anagram(word1: str, word2: str) -> bool:
 
 def has_no_anagram(passphrase: List[str]) -> bool:
     for index, word in enumerate(passphrase):
-        for other_word in passphrase[:index] + passphrase[index + 1:]:
+        for other_word in passphrase[index + 1:]:
             if is_anagram(word, other_word):
                 return False
     return True
