@@ -11,7 +11,7 @@ fn is_anagram(word1: &str, word2: &str) -> bool {
 
 fn has_no_anagram(passphrase: &Vec<String>) -> bool {
     !(0..passphrase.len()).any(|index| {
-        (0..passphrase.len()).any(|other_index| {
+        (index + 1..passphrase.len()).any(|other_index| {
             index != other_index && is_anagram(&passphrase[index], &passphrase[other_index])
         })
     })
