@@ -44,7 +44,10 @@ Input getInput(char *filePath)
     int *current = numbers;
     int c;
     while ((c = getc(file)) != EOF)
-        *current++ =  c - '0';
+        if (c >= '0' && c <= '9')
+            *current++ = c - '0';
+        else
+            length--;
     fclose(file);
     return (Input){numbers, length};
 }
