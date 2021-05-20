@@ -164,7 +164,7 @@ void freeInput(Input input)
     {
         while (passphrases->count--)
         {
-            free((*input.passphrases->passwords));
+            free(*(passphrases->passwords));
             passphrases->passwords++;
         }
         passphrases++;
