@@ -15,7 +15,7 @@ namespace AoC
         static bool HasNoAnagram(string[] passphrase)
             => !Enumerable.Range(0, passphrase.Length)
                 .Any(index => 
-                    Enumerable.Range(0, passphrase.Length)
+                    Enumerable.Range(index + 1, passphrase.Length - index - 1)
                         .Any(otherIndex => 
                             index != otherIndex && IsAnagram(passphrase[index], passphrase[otherIndex])));
 
