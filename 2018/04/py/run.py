@@ -9,7 +9,7 @@ LogRecord = Tuple[DateTime,str]
 GuardRecord = Tuple[int,Dict[int,int]]
 
 
-def record_guard_times(id: int, guard_record: GuardRecord, last_asleep: int, woke: int) -> GuardRecord:
+def record_guard_times(guard_record: GuardRecord, last_asleep: int, woke: int) -> GuardRecord:
     total, minutes = guard_record
     for minute in range(last_asleep, woke):
         total += 1
@@ -32,12 +32,12 @@ def build_guard_records(log: List[LogRecord]) -> Dict[int,GuardRecord]:
             guard_asleep = True
         elif message == WAKE_UP:
             guard_asleep = False
-            guards[guard_id] = record_guard_times(guard_id, guards[guard_id], last_asleep, minutes)
+            guards[guard_id] = record_guard_times(guards[guard_id], last_asleep, minutes)
         else:
             match = shift_start_regex.match(message)
             if match:
                 if guard_asleep:
-                    guards[guard_id] = record_guard_times(guard_id, guards[guard_id], last_asleep, 60)
+                    guards[guard_id] = record_guard_times(guards[guard_id], last_asleep, 60)
                     guard_asleep = False
                 guard_id = int(match.group("id"))
                 if guard_id not in guards:
@@ -48,17 +48,18 @@ def build_guard_records(log: List[LogRecord]) -> Dict[int,GuardRecord]:
 def part1(guards: Dict[int,GuardRecord]) -> int:
     max_total = 0
     guardId = -1
-    for id, guard_record in guards.items():
-        total, _ = guard_record
+    for id, (total, _) in guards.items():
         if total > max_total:
             max_total = total
             guardId = id
+    print(max_total, "", end="")
     max_total = 0
     max_minute = -1
     for minute, total in guards[guardId][1].items():
         if total > max_total:
             max_total = total
             max_minute = minute
+    print(guardId, max_minute)
     return guardId * max_minute
 
 
