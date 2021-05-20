@@ -5,7 +5,7 @@ use std::time::Instant;
 
 type Trees = Vec<Complex<i32>>;
 
-fn print_trees(trees: &Trees) {
+fn _print_trees(trees: &Trees) {
     let max_x = trees.iter().map(|p| p.re).max().unwrap() + 1;
     let max_y = trees.iter().map(|p| p.im).max().unwrap() + 1;
     println!("{} {}", max_x, max_y);
@@ -25,7 +25,7 @@ fn print_trees(trees: &Trees) {
     println!("")
 }
 
-fn calculate_trees(trees: &Trees, step: Complex<i32>) -> u32 {
+fn calculate_trees(trees: &Trees, step: Complex<i32>) -> u64 {
     let mut tree_count = 0;
     let max_x = trees.iter().map(|p| p.re).max().unwrap() + 1;
     let max_y = trees.iter().map(|p| p.im).max().unwrap() + 1;
@@ -39,7 +39,7 @@ fn calculate_trees(trees: &Trees, step: Complex<i32>) -> u32 {
     tree_count
 }
 
-fn solve(trees: &Trees) -> (u32, u32) {
+fn solve(trees: &Trees) -> (u64, u64) {
     (
         calculate_trees(trees, Complex::new(3, 1)), 
         vec![
@@ -48,7 +48,7 @@ fn solve(trees: &Trees) -> (u32, u32) {
             Complex::new(5, 1),
             Complex::new(7, 1),
             Complex::new(1, 2),
-        ].iter().fold(1u32, |acc, step| acc * calculate_trees(&trees, *step))
+        ].iter().fold(1u64, |acc, step| acc * calculate_trees(&trees, *step))
     )
 }
 
