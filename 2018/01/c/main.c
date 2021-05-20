@@ -6,6 +6,7 @@ typedef struct
 {
     int *changes;
     int count;
+    int size;
 } Input;
 typedef struct
 {
@@ -21,18 +22,18 @@ int part1(Input input)
     return total;
 }
 
-struct BinaryNode
+typedef struct BinaryNode
 {
     int value;
     struct BinaryNode *lesser;
     struct BinaryNode *greater;
-};
+} BinaryNode;
 
-struct BinaryNode *insert(struct BinaryNode *node, int value, int *inserted)
+struct BinaryNode *insert(BinaryNode *node, int value, int *inserted)
 {
     if (node == NULL)
     {
-        node = malloc(sizeof(struct BinaryNode));
+        node = malloc(sizeof(BinaryNode));
         node->value = value;
         node->lesser = node->greater = NULL;
         *inserted = 1;
@@ -46,7 +47,7 @@ struct BinaryNode *insert(struct BinaryNode *node, int value, int *inserted)
     return node;
 }
 
-void freeTree(struct BinaryNode *node)
+void freeTree(BinaryNode *node)
 {
     if (node != NULL)
     {
@@ -59,7 +60,7 @@ void freeTree(struct BinaryNode *node)
 int part2(Input input)
 {
     int frequency = 0;
-    struct BinaryNode *previous = NULL;
+    BinaryNode *previous = NULL;
     int inserted = 0;
     int index = 0;
     previous = insert(previous, frequency, &inserted);
@@ -78,6 +79,18 @@ Results solve(Input input)
     return (Results){part1(input), part2(input)};
 }
 
+void addToInput(Input *input, int change)
+{
+    if (input->count == input->size)
+    {
+        int *oldChanges = input->changes;
+        int *newChanges = realloc(oldChanges, (input->size + 10) * (sizeof(int)));
+        input->changes = newChanges;
+        input->size += 10;
+    }
+    input->changes[input->count++] = change;
+}
+
 Input getInput(char *filePath)
 {
     FILE *file;
@@ -92,28 +105,20 @@ Input getInput(char *filePath)
     char *line = NULL;
     size_t len = 0;
     size_t read;
-    size_t size = 16;
-    int count = 0;
-    int *changes = malloc(1024 * sizeof(int));
-    int *current = changes;
-    while ((read = getline(&line, &len, file)) != EOF)
-    {
-        count++;
-        *current = atoi(line);
-        current++;
-    }
-    if (line)
-        free(line);
+    Input input = {
+        malloc(10 * sizeof(int)),
+        0,
+        10
+    };
+    while (getline(&line, &len, file) != EOF)
+        addToInput(&input, atoi(line));
     fclose(file);
-    return (Input){changes, count};
+    return input;
 }
 
 void freeInput(Input input)
 {
-    if (input.changes)
-    {
-        free(input.changes);
-    }
+    free(input.changes);
 }
 
 int main(int argc, char **argv)
