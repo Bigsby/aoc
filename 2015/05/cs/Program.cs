@@ -22,8 +22,7 @@ namespace AoC
         static bool HasRepeatingPair(string word)
             =>  Enumerable.Range(0, word.Length - 2).Any(pairStart => {
                 var pairToTest = word[new Range(pairStart, pairStart + 2)];
-                return word[Range.EndAt(pairStart)].Contains(pairToTest) 
-                    || word[Range.StartAt(pairStart + 2)].Contains(pairToTest);
+                return word[Range.StartAt(pairStart + 2)].Contains(pairToTest);
             });
 
         static bool HasRepeatingLetter(string word)
