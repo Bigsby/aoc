@@ -21,7 +21,7 @@ fn part1(words: &Vec<String>) -> usize {
 fn has_repeating_pair(word: &str) -> bool {
     (0..(word.len() - 2)).any(|pair_start| {
         let pair_to_test: &str = &word[pair_start..pair_start + 2];
-        word[..pair_start].contains(pair_to_test) || word[pair_start + 2..].contains(pair_to_test)
+        word[pair_start + 2..].contains(pair_to_test)
     })
 }
 
