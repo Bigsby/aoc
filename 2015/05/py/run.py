@@ -17,7 +17,7 @@ def is_word_nice(word: str) -> bool:
 def has_repeating_pair(word: str) -> bool:
     for pair_start in range(len(word) - 2):
         pair_to_test = word[pair_start : pair_start + 2]
-        if pair_to_test in word[:pair_start] or pair_to_test in word[pair_start + 2:]:
+        if pair_to_test in word[pair_start + 2:]:
             return True
     return False
 
