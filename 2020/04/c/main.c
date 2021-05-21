@@ -163,7 +163,7 @@ Results solve(Input input)
     }
     if (regcomp(&pidRegex, "^[0-9]{9}$", REG_EXTENDED))
     {
-        perror("Error compiling hgt regex.");
+        perror("Error compiling pid regex.");
         exit(1);
     }
     return (Results){countValidPasswords(input, &part1), countValidPasswords(input, &part2)};
