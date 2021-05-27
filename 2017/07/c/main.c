@@ -51,6 +51,12 @@ int allNonZero(int *weights, int count)
     return 1;
 }
 
+void printCombinedWeights(Input input, int *combinedWeights)
+{
+    for (int index = 0; index < input.count; index++)
+        printf("%s %d\n", input.names[index], combinedWeights[index]);
+}
+
 int part2(Input input, const char *topTower)
 {
     int *combinedWeights = calloc(input.count, sizeof(int));
@@ -107,7 +113,7 @@ int part2(Input input, const char *topTower)
         if (firstWeightCount && secondWeightCount)
         {
             currentTower = firstWeightCount == 1 ? firstWeightIndex : secondWeightIndex;
-            weightDifference = firstWeight > secondWeightIndex ? firstWeight - secondWeight : secondWeight - firstWeight;
+            weightDifference = firstWeightCount == 1 ? secondWeight - firstWeight : firstWeight - secondWeight;
         }
         else
             return record.weight + weightDifference;
