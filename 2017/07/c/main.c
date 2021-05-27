@@ -37,10 +37,8 @@ const char *part1(Input input)
                 childrenLog[*(record.children++)] |= 1;
     }
     for (index = 0; index < input.count; index++)
-    {
         if (!childrenLog[index])
             break;
-    }
     free(childrenLog);
     return input.names[index];
 }
