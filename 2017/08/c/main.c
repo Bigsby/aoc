@@ -63,14 +63,16 @@ Results solve(Input input)
     while (input.instructionCount--)
     {
         instruction = input.instructions++;
-        if (!isConditionValid(memory[instruction->source], instruction->comparator, instruction->value))
-            continue;
-        memory[instruction->target] += instruction->amount * (instruction->direction == INCREMENT ? 1 : -1);
-        maxValue = memory[instruction->target] > maxValue ? memory[instruction->target] : maxValue;
+        if (isConditionValid(memory[instruction->source], instruction->comparator, instruction->value))
+        {
+            memory[instruction->target] += instruction->amount * (instruction->direction == INCREMENT ? 1 : -1);
+            maxValue = memory[instruction->target] > maxValue ? memory[instruction->target] : maxValue;
+        }
     }
     int currentMax = 0;
     for (int index = 0; index < input.registerCount; index++)
         currentMax = memory[index] > currentMax ? memory[index] : currentMax;
+    free(memory);
     return (Results){currentMax, maxValue};
 }
 
