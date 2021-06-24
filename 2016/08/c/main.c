@@ -23,21 +23,11 @@ typedef struct
     char *part2;
 } Results;
 
-typedef char **Screen;
-
-int part1(Input input)
-{
-    return 1;
-}
-
-int part2(Input input)
-{
-    return 2;
-}
-
 #define SCREEN_WIDTH 50
 #define SCREEN_HEIGHT 6
 #define CHARACTER_WIDTH 5
+typedef char **Screen;
+
 Screen initializeScreen()
 {
     Screen screen = calloc(SCREEN_WIDTH, sizeof(char*));
@@ -97,6 +87,7 @@ int countPixels(Screen screen)
             total += screen[x][y];
     return total;
 }
+
 #define A \
     (0b01100 << CHARACTER_WIDTH * 0) + \
     (0b10010 << CHARACTER_WIDTH * 1) + \
@@ -243,7 +234,8 @@ char getLetter(int value)
     for (int index = 0; index < 26; index++)
         if (LETTERS[index] == value)
             return 'A' + index;
-    return '_';
+    perror("Unknow character");
+    exit(1);
 }
 
 char *getCode(Screen screen)
@@ -318,6 +310,7 @@ Input getInput(char *filePath)
 
 void freeInput(Input input)
 {
+    free(input.instructions);
 }
 
 int main(int argc, char **argv)
