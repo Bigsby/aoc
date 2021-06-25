@@ -35,8 +35,8 @@ def run_boot(boot: List[Instruction]) -> Tuple[bool, int]:
 
 def switch_and_test(index: int, boot: List[Instruction]) -> Tuple[bool, int]:
     boot = list(boot)
-    mnemonic, argumant = boot[index]
-    boot[index] = (NOP if mnemonic == JMP else NOP, argumant)
+    mnemonic, argument = boot[index]
+    boot[index] = (NOP if mnemonic == JMP else NOP, argument)
     return run_boot(boot)
 
 
