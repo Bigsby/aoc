@@ -24,34 +24,28 @@ typedef struct {
     int *nodes;
 } Path;
 
-Path *addToPath(Path *path, int newNode)
+Path addToPath(Path path, int newNode)
 {
-    Path *newPath = malloc(sizeof(Path*));
-    newPath->size = path == NULL ? 1 : path->size + 1;
-    newPath->lastNode = newNode;
-    newPath->nodes = malloc(newPath->size * sizeof(int));
-    if (path != NULL)
-        memcpy(newPath->nodes, path->nodes, path->size * sizeof(int));
-    newPath->nodes[newPath->size - 1] = newNode;
+    Path newPath;
+    newPath.size = path.size + 1;
+    newPath.lastNode = newNode;
+    newPath.nodes = malloc(newPath.size * sizeof(int));
+    if (path.size)
+        memcpy(newPath.nodes, path.nodes, path.size * sizeof(int));
+    newPath.nodes[newPath.size - 1] = newNode;
     return newPath;
 }
 
-int pathContains(Path *path, int node)
+int pathContains(Path path, int node)
 {
-    for (int index = 0; index < path->size; index++)
-        if (path->nodes[index] == node)
+    for (int index = 0; index < path.size; index++)
+        if (path.nodes[index] == node)
             return 1;
     return 0;
 }
 
-void freePath(Path *path)
-{
-    free(path->nodes);
-    free(path);
-}
-
 typedef struct {
-    Path *path;
+    Path path;
     int distance;
 } StackItem;
 
@@ -61,7 +55,7 @@ typedef struct {
     StackItem *items;
 } Stack;
 
-void pushToStack(Stack *stack, Path *previousPath, int newNode, int distance)
+void pushToStack(Stack *stack, Path previousPath, int newNode, int distance)
 {
     if (stack->head == stack->capacity - 1)
     {
@@ -70,8 +64,7 @@ void pushToStack(Stack *stack, Path *previousPath, int newNode, int distance)
         StackItem *newItems = realloc(oldItems, stack->capacity * sizeof(StackItem));
         stack->items = newItems;
     }
-    stack->head++;
-    stack->items[stack->head] = (StackItem){
+    stack->items[++stack->head] = (StackItem){
         addToPath(previousPath, newNode),
         distance
     };
@@ -87,8 +80,8 @@ int getBestPathDistance(Input input, int longest)
         malloc(STACK_INCREMENT * sizeof(StackItem))
     };
     for (int node = 0; node < input.nodeCount; node++)
-        pushToStack(&stack, NULL, node, 0);
-    Path *path;
+        pushToStack(&stack, (Path){0, 0, NULL}, node, 0);
+    Path path;
     int distance, bestDistance = longest ? 0 : INT_MAX, newDistance;
     int currentNode, edgeIndex, nextNode;
     Edge edge;
@@ -98,7 +91,7 @@ int getBestPathDistance(Input input, int longest)
         item = stack.items[stack.head--];
         path = item.path;
         distance = item.distance;
-        currentNode = path->lastNode;
+        currentNode = path.lastNode;
         for (edgeIndex = 0; edgeIndex < input.count; edgeIndex++)
         {
             edge = input.edges[edgeIndex];
@@ -110,25 +103,16 @@ int getBestPathDistance(Input input, int longest)
                 newDistance = distance + edge.distance;
                 if (!longest && newDistance > bestDistance)
                     continue;
-                if (path->size == input.nodeCount - 1)
+                if (path.size == input.nodeCount - 1)
                     bestDistance = longest ? MAX(bestDistance, newDistance) : MIN(bestDistance, newDistance);
                 else 
                     pushToStack(&stack, path, nextNode, newDistance);
             }
         }
-        freePath(path);
+        free(path.nodes);
     }
     free(stack.items);
     return bestDistance;
-}
-
-void printInput(Input input)
-{
-    while (input.count--)
-    {
-        printf("%d %d = %d\n", input.edges->nodeA, input.edges->nodeB, input.edges->distance);
-        input.edges++;
-    }
 }
 
 Results solve(Input input)
@@ -204,6 +188,7 @@ Input getInput(char *filePath)
             exit(1);
         }
     }
+    free(names.names);
     fclose(file);
     return input;
 }
