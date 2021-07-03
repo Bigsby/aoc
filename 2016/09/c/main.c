@@ -78,6 +78,7 @@ Input getInput(char *filePath)
 
 void freeInput(Input input)
 {
+    free(input);
 }
 
 int main(int argc, char **argv)
