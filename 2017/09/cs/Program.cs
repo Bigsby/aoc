@@ -34,10 +34,7 @@ namespace AoC
                 else if (c == GROUP_START)
                     depth++;
                 else if (c == GROUP_END)
-                {
-                    groupScore += depth;
-                    depth--;
-                }
+                    groupScore += depth--;
             return (groupScore, garbageCount);
         }
 
