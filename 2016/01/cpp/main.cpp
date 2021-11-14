@@ -37,7 +37,7 @@ Results solve(vector<Instruction> instructions)
     complex<double> heading = 1i;
     int part2 = 0;
     vector<complex<double>> visited;
-    for (Instruction instruction : instructions)
+    for (auto instruction : instructions)
     {
         heading *= instruction.direction == 'L' ? 1i : -1i;
         for (auto i = 0; i < instruction.distance; i++)
