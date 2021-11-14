@@ -25,7 +25,7 @@ int getCombination(Input numbers, int length)
     {
         for (i = length; i--;)
             combination[i] = numbers[indexes[i] - 1];
-        if (accumulate(begin(combination), end(combination), 0) == 2020)
+        if (accumulate(combination.begin(), combination.end(), 0) == 2020)
             return accumulate(begin(combination), end(combination), 1, multiplies<int>());
         i = 0;
         if (indexes[i]++ < numbers.size())
