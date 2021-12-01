@@ -1,6 +1,6 @@
 declare -A languages=(
     ["py"]="|py/run.py "
-    ["cs"]="dotnet run -p|cs/run.csproj " 
+    ["cs"]="dotnet run --project|cs/run.csproj " 
     ["rs"]="cargo run --quiet --manifest-path|rs/Cargo.toml "
     ["cpp"]="make -f |cpp/makefile INPUT="
     ["js"]="node|js/run.js "
