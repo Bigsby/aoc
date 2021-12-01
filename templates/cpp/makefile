@@ -8,4 +8,4 @@ run: build
 	@./a.out "$(INPUT)"
 
 build: $(mkfile_dir)main.cpp
-	@g++ $<
+	@g++ -std=c++11 $<
