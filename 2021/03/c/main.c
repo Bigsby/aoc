@@ -59,19 +59,18 @@ void addToInput(Input *input, int number)
 
 void filterNumbers(Input *input, int mask, int match)
 {
+    Input oldState = *input;
     int *oldNumbers = input->numbers;
-    int *oldStart = input->numbers;
-    int oldCount = input->count;
     input->count = 0;
     input->capacity = INPUT_INCREMENT;
     input->numbers = malloc(INPUT_INCREMENT * sizeof(int));
-    while (oldCount--)
+    while (oldState.count--)
     {
-        if ((*oldNumbers & mask) == match)
-            addToInput(input, *oldNumbers);
-        oldNumbers++;
+        if ((*oldState.numbers & mask) == match)
+            addToInput(input, *oldState.numbers);
+        oldState.numbers++;
     }
-    free(oldStart);
+    free(oldNumbers);
 }
 
 void processBit(Input *input, int index, int mostCommon)
