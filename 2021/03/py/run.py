@@ -4,19 +4,19 @@ import sys, os, time
 from typing import Tuple, List
 from collections import Counter
 
-Data = List[str]
+Data = List[int]
+Input = (int, Data)
 
 def get_nth_bits_1_count(data: Data, index: int) -> int:
-    nth_bits = map(lambda number: number[index], data)
-    return Counter(nth_bits)['1']
+    mask = 1 << index
+    return len([1 for number in data if number & mask == mask])
 
-def part1(data: Data) -> int:
+def part1(puzzle_input: Input) -> int:
+    bit_length, data = puzzle_input
     gamma = 0
     epsilon = 0
     half = len(data) / 2
-    for index in range(len(data[0])):
-        nth_bits = map(lambda number: number[index], data)
-        counts = Counter(nth_bits)
+    for index in range(bit_length - 1, -1, -1):
         if get_nth_bits_1_count(data, index) > half:
             gamma = (gamma << 1) + 1
             epsilon <<= 1
@@ -25,37 +25,39 @@ def part1(data: Data) -> int:
             epsilon = (epsilon << 1) + 1
     return gamma * epsilon
 
-def process_bit(data: Data, index: int, most_common: bool,  preferred_bit: chr) -> Data:
+def process_bit(data: Data, index: int, most_common: bool,  preferred_bit: int) -> Data:
     if len(data) == 1:
         return data
     half = len(data) / 2
     ones_count = get_nth_bits_1_count(data, index) 
+    mask = 1 << index
     if most_common:
         if ones_count > half:
-            return list(filter(lambda number: number[index] == '1', data))
+            return list(filter(lambda number: number & mask == mask, data))
         if ones_count < half:
-            return list(filter(lambda number: number[index] == '0', data))
-        return list(filter(lambda number: number[index] == preferred_bit, data))
+            return list(filter(lambda number: number & mask == 0, data))
+        return list(filter(lambda number: number & mask == (mask if preferred_bit else 0), data))
     else:
         if ones_count < half:
-            return list(filter(lambda number: number[index] == '1', data))
+            return list(filter(lambda number: number & mask == mask, data))
         if ones_count > half:
-            return list(filter(lambda number: number[index] == '0', data))
-        return list(filter(lambda number: number[index] == preferred_bit, data))
+            return list(filter(lambda number: number & mask == 0, data))
+        return list(filter(lambda number: number & mask == (mask if preferred_bit else 0), data))
 
 
-def part2(data: Data) -> int:
+def part2(puzzle_input: Input) -> int:
+    bit_length, data = puzzle_input
     oxygen = list(data)
     co2 = list(data)
-    index = 0
+    index = bit_length - 1
     while len(oxygen) > 1 or len(co2) > 1:
-        oxygen = process_bit(oxygen, index, True,  '1')
-        co2 = process_bit(co2, index, False,  '0')
-        index += 1
-    return int(oxygen[0], 2) * int(co2[0], 2)
+        oxygen = process_bit(oxygen, index, True,  1)
+        co2 = process_bit(co2, index, False,  0)
+        index -= 1
+    return oxygen[0] * co2[0]
 
 
-def solve(puzzle_input: str) -> Tuple[int,int]:
+def solve(puzzle_input: Input) -> Tuple[int,int]:
     return (part1(puzzle_input), part2(puzzle_input))
 
 
@@ -64,7 +66,8 @@ def get_input(file_path: str) -> str:
         raise FileNotFoundError(file_path)
     
     with open(file_path) as file:
-        return [ line.strip() for line in file.readlines() ]
+        lines = [ line.strip() for line in file.readlines() ]
+        return len(lines[0]), [ int(line, 2) for line in lines ]
 
 
 def main():
