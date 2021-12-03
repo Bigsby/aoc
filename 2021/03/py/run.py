@@ -22,7 +22,7 @@ def part1(puzzle_input: Input) -> int:
         epsilon = (epsilon << 1) + (ones_count < half)
     return gamma * epsilon
 
-def process_bit(data: Data, index: int, most_common: bool, preferred_bit: int) -> Data:
+def process_bit(data: Data, index: int, most_common: bool) -> Data:
     if len(data) == 1:
         return data
     ones_count = get_nth_bits_1_count(data, index) 
@@ -38,8 +38,8 @@ def part2(puzzle_input: Input) -> int:
     co2 = list(data)
     index = bit_length - 1
     while len(oxygen) > 1 or len(co2) > 1:
-        oxygen = process_bit(oxygen, index, True,  1)
-        co2 = process_bit(co2, index, False,  0)
+        oxygen = process_bit(oxygen, index, True)
+        co2 = process_bit(co2, index, False)
         index -= 1
     return oxygen[0] * co2[0]
 
