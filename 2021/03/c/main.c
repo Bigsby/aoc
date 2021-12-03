@@ -27,28 +27,19 @@ int part1(Input input)
 {
     int gamma = 0, epsilon = 0, half = input.count / 2;
     for (int index = input.bitLength - 1; index >= 0; index--)
-        if (getNthBit1Count(input, index) > half)
-        {
-            gamma = (gamma << 1) + 1;
-            epsilon <<= 1;
-        }
-        else 
-        {
-            gamma <<= 1;
-            epsilon = (epsilon <<  1) + 1;
-        }
+    {
+        int onesCount = getNthBit1Count(input, index);
+        gamma = (gamma << 1) + (onesCount > half);
+        epsilon = (epsilon << 1) + (onesCount < half);
+    }
     return gamma * epsilon;
 }
 
 Input copyInput(Input input)
 {
     size_t numbersSize = sizeof(int) * input.count;
-    Input newInput = {
-        malloc(numbersSize),
-        input.bitLength,
-        input.count,
-        input.capacity
-    };
+    Input newInput = input;
+    newInput.numbers = malloc(numbersSize);
     memcpy(newInput.numbers, input.numbers, numbersSize);
     return newInput;
 }
