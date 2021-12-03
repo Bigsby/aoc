@@ -17,32 +17,19 @@ def part1(puzzle_input: Input) -> int:
     epsilon = 0
     half = len(data) / 2
     for index in range(bit_length - 1, -1, -1):
-        if get_nth_bits_1_count(data, index) > half:
-            gamma = (gamma << 1) + 1
-            epsilon <<= 1
-        else:
-            gamma <<= 1
-            epsilon = (epsilon << 1) + 1
+        ones_count = get_nth_bits_1_count(data, index)
+        gamma = (gamma << 1) + (ones_count > half)
+        epsilon = (epsilon << 1) + (ones_count < half)
     return gamma * epsilon
 
-def process_bit(data: Data, index: int, most_common: bool,  preferred_bit: int) -> Data:
+def process_bit(data: Data, index: int, most_common: bool, preferred_bit: int) -> Data:
     if len(data) == 1:
         return data
-    half = len(data) / 2
     ones_count = get_nth_bits_1_count(data, index) 
+    zeros_count = len(data) - ones_count
     mask = 1 << index
-    if most_common:
-        if ones_count > half:
-            return list(filter(lambda number: number & mask == mask, data))
-        if ones_count < half:
-            return list(filter(lambda number: number & mask == 0, data))
-        return list(filter(lambda number: number & mask == (mask if preferred_bit else 0), data))
-    else:
-        if ones_count < half:
-            return list(filter(lambda number: number & mask == mask, data))
-        if ones_count > half:
-            return list(filter(lambda number: number & mask == 0, data))
-        return list(filter(lambda number: number & mask == (mask if preferred_bit else 0), data))
+    match = mask if most_common ^ (ones_count < zeros_count) else 0
+    return list(filter(lambda number: number & mask == match, data))
 
 
 def part2(puzzle_input: Input) -> int:
