@@ -18,31 +18,6 @@ typedef struct
     int part2;
 } Results;
 
-int part1(Input input)
-{
-    return 1;
-}
-
-int part2(Input input)
-{
-    return 2;
-}
-void printCard(Card card)
-{
-    for (int row = 0; row < 5; row++)
-    {
-        for (int column = 0; column < 5; column++)
-            printf("%-2d ", card.numbers[row][column]);
-        printf("\n");
-    }
-    printf("\n");
-}
-
-void printNumbers(int *numbers, int count)
-{
-    while (count--)
-        printf("%d, ", *numbers++);
-}
 int isCardComplete(Card card)
 {
     for (int row = 0; row < 5; row++)
@@ -141,8 +116,6 @@ void addCardToInput(Input *input, Card card)
     }
     input->cards[input->cardsCount++] = card;
 }
-
-
 
 Input getInput(char *filePath)
 {
