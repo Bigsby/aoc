@@ -6,7 +6,7 @@ from typing import Tuple, List
 Card = List[List[int]]
 Input = (List[int], List[Card])
 
-def copyCards(cards: List[Card]) -> List[Card]:
+def copy_cards(cards: List[Card]) -> List[Card]:
     result = []
     for card in cards:
         copy = list()
@@ -16,75 +16,72 @@ def copyCards(cards: List[Card]) -> List[Card]:
     return result
 
 
-def isCardComplete(card: Card) -> bool:
+def is_card_complete(card: Card) -> bool:
     for row in range(5):
-        rowComplete = True
+        row_complete = True
         for column in range(5):
-            rowComplete &= card[row][column] < 0
-        if rowComplete:
+            row_complete &= card[row][column] < 0
+        if row_complete:
             return True
     for column in range(5):
-        columnComplete = True
+        column_complete = True
         for row in range(5):
-            columnComplete &= card[row][column] < 0
-        if columnComplete:
+            column_complete &= card[row][column] < 0
+        if column_complete:
             return True
     return False
 
 
-def getCardUnmarkedSum(card: Card) -> int:
-    return sum(map(lambda row: sum([ cardNumber for cardNumber in row if cardNumber > 0]), card))
+def get_card_unmarked_sum(card: Card) -> int:
+    return sum(map(lambda row: sum([ card_number for card_number in row if card_number > 0]), card))
 
 
-def playGame(puzzle_input: Input, first: bool) -> int:
+def play_game(puzzle_input: Input, first: bool) -> int:
     numbers, cards = puzzle_input
-    cards = copyCards(cards)
+    cards = copy_cards(cards)
     for number in numbers:
-        toRemove = []
+        to_remove = []
         for card in cards:
             for row in card:
                 if number in row:
                     row[row.index(number)] = -100
-                    if isCardComplete(card):
+                    if is_card_complete(card):
                         if first:
-                            return getCardUnmarkedSum(card) * number
-                        toRemove.append(card)
-        for card in toRemove:
+                            return get_card_unmarked_sum(card) * number
+                        to_remove.append(card)
+        for card in to_remove:
             cards.remove(card)
             if len(cards) == 0:
-                return getCardUnmarkedSum(card) * number
+                return get_card_unmarked_sum(card) * number
 
 
 def solve(puzzle_input: Input) -> Tuple[int,int]:
-    return (playGame(puzzle_input, True), playGame(puzzle_input, False))
+    return (play_game(puzzle_input, True), play_game(puzzle_input, False))
 
 
 def get_input(file_path: str) -> Input:
     if not os.path.isfile(file_path):
         raise FileNotFoundError(file_path)
-    numbers = []
-    firstLine = True
-    cards = []
     
     with open(file_path) as file:
         numbers = []
-        firstLine = True
+        first_line = True
         cards = []
-        cardRow = 0
+        card_row = 0
         card = []
         for line in file.readlines():
-            if firstLine:
-                firstLine = False
+            if first_line:
+                first_line = False
                 numbers = [ int(number) for number in line.split(',') ]
             else:
-                cardRow += 1
-                if cardRow == 1:
+                card_row += 1
+                if card_row == 1:
                     continue
                 card.append([ int(number) for number in line.strip().split(' ') if number ])
-                if cardRow == 6:
+                if card_row == 6:
                     cards.append(card)
                     card = []
-                    cardRow = 0
+                    card_row = 0
 
         return numbers, cards 
 
