@@ -58,9 +58,7 @@ void addToInput(Input *input, Lattice direction, int units)
     if (input->count == input->capacity)
     {
         input->capacity += INPUT_INCREMENT;
-        Command *oldCommands = input->commands;
-        Command *newCommands = realloc(oldCommands, input->capacity * sizeof(Command));
-        input->commands = newCommands;
+        input->commands = realloc(input->commands, input->capacity * sizeof(Command));
     }
     input->commands[input->count++] = (Command){
         direction,

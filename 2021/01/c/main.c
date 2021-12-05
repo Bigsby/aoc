@@ -52,9 +52,7 @@ void addToInput(Input *input, int depth)
     if (input->count == input->capacity)
     {
         input->capacity += INPUT_INCREMENT;
-        int *oldDepths = input->depths;
-        int *newDepths = realloc(oldDepths, input->capacity * sizeof(int));
-        input->depths = newDepths;
+        input->depths = realloc(input->depths, input->capacity * sizeof(int));
     }
     input->depths[input->count++] = depth;
 }
