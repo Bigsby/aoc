@@ -17,17 +17,13 @@ def copy_cards(cards: List[Card]) -> List[Card]:
 
 
 def is_card_complete(card: Card) -> bool:
-    for row in range(5):
-        row_complete = True
-        for column in range(5):
-            row_complete &= card[row][column] < 0
-        if row_complete:
-            return True
-    for column in range(5):
-        column_complete = True
-        for row in range(5):
-            column_complete &= card[row][column] < 0
-        if column_complete:
+    for x in range(5):
+        x_complete = True
+        y_complete = True
+        for y in range(5):
+            x_complete &= card[x][y] < 0
+            y_complete &= card[y][x] < 0
+        if x_complete or y_complete:
             return True
     return False
 
@@ -67,7 +63,7 @@ def get_input(file_path: str) -> Input:
         numbers = []
         first_line = True
         cards = []
-        card_row = 0
+        card_row = -2
         card = []
         for line in file.readlines():
             if first_line:
@@ -75,13 +71,13 @@ def get_input(file_path: str) -> Input:
                 numbers = [ int(number) for number in line.split(',') ]
             else:
                 card_row += 1
-                if card_row == 1:
+                if card_row == -1:
                     continue
                 card.append([ int(number) for number in line.strip().split(' ') if number ])
-                if card_row == 6:
+                if card_row == 4:
                     cards.append(card)
                     card = []
-                    card_row = 0
+                    card_row = -2
 
         return numbers, cards 
 
