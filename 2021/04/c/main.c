@@ -20,20 +20,15 @@ typedef struct
 
 int isCardComplete(Card card)
 {
-    for (int row = 0; row < 5; row++)
+    for (int x = 0; x < 5; x++)
     {
-        int rowComplete = 1;
-        for (int column = 0; column < 5; column++)
-            rowComplete &= card.numbers[row][column] < 0;
-        if (rowComplete)
-            return 1;
-    }
-    for (int column = 0; column < 5; column++)
-    {
-        int columnComplete = 1;
-        for (int row = 0; row < 5; row++)
-            columnComplete &= card.numbers[row][column] < 0;
-        if (columnComplete)
+        int xComplete = 1, yComplete = 1;
+        for (int y = 0; y < 5; y++)
+        {
+            xComplete &= card.numbers[x][y] < 0;
+            yComplete &= card.numbers[y][x] < 0;
+        }
+        if (xComplete || yComplete)
             return 1;
     }
     return 0;
@@ -98,9 +93,7 @@ void addNumberToInput(Input *input, int number)
     if (input->numbersCount == input->numbersCapacity)
     {
         input->numbersCapacity += INPUT_INCREMENT;
-        int *oldNumbers = input->numbers;
-        int *newNumbers = realloc(oldNumbers, sizeof(int) * input->numbersCapacity);
-        input->numbers = newNumbers;
+        input->numbers = realloc(input->numbers, sizeof(int) * input->numbersCapacity);
     }
     input->numbers[input->numbersCount++] = number;
 }
@@ -110,9 +103,7 @@ void addCardToInput(Input *input, Card card)
     if (input->cardsCount == input->cardsCapacity)
     {
         input->cardsCapacity += INPUT_INCREMENT;
-        Card *oldCards = input->cards;
-        Card *newCards = realloc(oldCards, sizeof(Card) * input->cardsCapacity);
-        input->cards = newCards;
+        input->cards = realloc(input->cards, sizeof(Card) * input->cardsCapacity);
     }
     input->cards[input->cardsCount++] = card;
 }
@@ -129,10 +120,9 @@ Input getInput(char *filePath)
         malloc(sizeof(int) * INPUT_INCREMENT), 0, INPUT_INCREMENT,
         malloc(sizeof(Card) * INPUT_INCREMENT), 0, INPUT_INCREMENT
     };
-    int firstLine = 1, cardRow = 0;
+    int firstLine = 1, cardRow = -2;
     size_t len;
     char *line;
-    int n0, n1, n2, n3, n4;
     Card card;
     while (getline(&line, &len, file) != EOF)
     {
@@ -148,18 +138,19 @@ Input getInput(char *filePath)
         } else
         {
             cardRow++;
-            if (cardRow == 1)
+            if (cardRow == -1)
                 continue;
-            sscanf(line, "%d%*[ ]%d%*[ ]%d%*[ ]%d%*[ ]%d", &n0, &n1, &n2, &n3, &n4);
-            card.numbers[cardRow - 2][0] = n0;
-            card.numbers[cardRow - 2][1] = n1;
-            card.numbers[cardRow - 2][2] = n2;
-            card.numbers[cardRow - 2][3] = n3;
-            card.numbers[cardRow - 2][4] = n4;
-            if (cardRow == 6)
+            sscanf(line, "%d%*[ ]%d%*[ ]%d%*[ ]%d%*[ ]%d", 
+                &card.numbers[cardRow][0], 
+                &card.numbers[cardRow][1], 
+                &card.numbers[cardRow][2], 
+                &card.numbers[cardRow][3], 
+                &card.numbers[cardRow][4]
+            );
+            if (cardRow == 4)
             {
                 addCardToInput(&input, card);
-                cardRow = 0;
+                cardRow = -2;
             }
         }
     }
@@ -169,6 +160,8 @@ Input getInput(char *filePath)
 
 void freeInput(Input input)
 {
+    free(input.numbers);
+    free(input.cards);
 }
 
 int main(int argc, char **argv)
