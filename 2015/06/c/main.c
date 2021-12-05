@@ -113,9 +113,7 @@ void addToInput(Input *input, Instruction instruction)
     if (input->count == input->capacity)
     {
         input->capacity += INPUT_INCREMENT;
-        Instruction *oldInstructions = input->instructions;
-        Instruction *newInstructions = realloc(oldInstructions, input->capacity * sizeof(Instruction));
-        input->instructions = newInstructions;
+        input->instructions = realloc(input->instructions, input->capacity * sizeof(Instruction));
     }
     input->instructions[input->count++] = instruction;
 }

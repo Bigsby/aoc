@@ -60,9 +60,7 @@ void pushToStack(Stack *stack, Path previousPath, int newNode, int distance)
     if (stack->head == stack->capacity - 1)
     {
         stack->capacity += STACK_INCREMENT;
-        StackItem *oldItems = stack->items;
-        StackItem *newItems = realloc(oldItems, stack->capacity * sizeof(StackItem));
-        stack->items = newItems;
+        stack->items = realloc(stack->items, stack->capacity * sizeof(StackItem));
     }
     stack->items[++stack->head] = (StackItem){
         addToPath(previousPath, newNode),
@@ -134,9 +132,7 @@ int getNodeIndex(Names *names, const char *name)
     if (names->count == names->capacity)
     {
         names->capacity += INPUT_INCREMENT;
-        char **oldNames = names->names;
-        char **newNames = realloc(oldNames, names->capacity * sizeof(char*));
-        names->names = newNames;
+        names->names = realloc(names->names, names->capacity * sizeof(char*));
     }
     names->names[names->count] = malloc(strlen(name) + 1);
     strcpy(names->names[names->count], name);
@@ -148,9 +144,7 @@ void addToInput(Input *input, Names *names, const char *nodeA, const char *nodeB
     if (input->count == input->capacity)
     {
         input->capacity += INPUT_INCREMENT;
-        Edge *oldEdges = input->edges;
-        Edge *newEdges = realloc(oldEdges, input->capacity * sizeof(Edge));
-        input->edges = newEdges;
+        input->edges = realloc(input->edges, input->capacity * sizeof(Edge));
     }
     input->edges[input->count] = (Edge){
         getNodeIndex(names, nodeA),
@@ -180,7 +174,7 @@ Input getInput(char *filePath)
     int distance;
     while (getline(&line, &lineLength, file) != EOF)
     {
-        if (sscanf(line, "%[^ ] to %[^ ] = %d", &nodeA, &nodeB, &distance) == 3)
+        if (sscanf(line, "%[^ ] to %[^ ] = %d", nodeA, nodeB, &distance) == 3)
             addToInput(&input, &names, nodeA, nodeB, distance);
         else {
             perror("Bad format line.");

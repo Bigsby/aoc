@@ -166,12 +166,8 @@ int getWireIndex(Input *input, const char *wire)
     if (input->count == input->capacity)
     {
         input->capacity += INPUT_INCREMENT;
-        char **oldWires = input->wires;
-        char **newWires = realloc(oldWires, input->capacity * sizeof(char *));
-        input->wires = newWires;
-        Connection *oldConnections = input->connections;
-        Connection *newConnections = realloc(oldConnections, input->capacity * sizeof(Connection));
-        input->connections = newConnections;
+        input->wires = realloc(input->wires, input->capacity * sizeof(char *));
+        input->connections = realloc(input->connections, input->capacity * sizeof(Connection));
     }
     input->wires[input->count] = malloc(strlen(wire) + 1);
     strcpy(input->wires[input->count], wire);

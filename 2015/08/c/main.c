@@ -79,9 +79,7 @@ void addToInput(Input *input, char *string)
     if (input->count == input->capacity)
     {
         input->capacity += INPUT_INCREMENT;
-        char **oldStrings = input->strings;
-        char **newStrings = realloc(oldStrings, input->capacity * sizeof(char*));
-        input->strings = newStrings;
+        input->strings = realloc(input->strings, input->capacity * sizeof(char *));
     }
     input->strings[input->count] = malloc(strlen(string) + 1);
     strcpy(input->strings[input->count], string);

@@ -99,10 +99,8 @@ void addToInput(Input *input, char *word)
 {
     if (input->count == input->size)
     {
-        char **oldWords = input->words;
-        char **newWords = realloc(oldWords, (input->size + INPUT_INCREMENT) * sizeof(char *));
-        input->words = newWords;
         input->size += INPUT_INCREMENT;
+        input->words = realloc(input->words, input->size * sizeof(char *));
     }
     input->words[input->count] = malloc(strlen(word) + 1);
     strcpy(input->words[input->count], word);
