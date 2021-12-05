@@ -14,20 +14,16 @@ namespace AoC
        
         static bool IsCardComplete(Card card)
         {
-            for (var row = 0; row < 5; row++)
+            for (var x = 0; x < 5; x++)
             {
-                var rowComplete = true;
-                for (var column = 0; column < 5; column++)
-                    rowComplete &= card.numbers[row, column] < 0;
-                if (rowComplete)
-                    return true;
-            }
-            for (var column = 0; column < 5; column++)
-            {
-                var columnComplete = true;
-                for (var row = 0; row < 5; row++)
-                    columnComplete &= card.numbers[row, column] < 0;
-                if (columnComplete)
+                var xComplete = true;
+                var yComplete = true;
+                for (var y = 0; y < 5; y++)
+                {
+                    xComplete &= card.numbers[x, y] < 0;
+                    yComplete &= card.numbers[y, x] < 0;
+                }
+                if (xComplete || yComplete)
                     return true;
             }
             return false;
@@ -48,7 +44,6 @@ namespace AoC
             {
                 var toRemove = new List<Card>();
                 foreach (var card in cards)
-                {
                     for (var row = 0; row < 5; row++)
                         for (var column = 0; column < 5; column++)
                             if (card.numbers[row, column] == number)
@@ -61,7 +56,6 @@ namespace AoC
                                     toRemove.Add(card);
                                 }
                             }
-                }
                 foreach (var card in toRemove)
                 {
                     cards.Remove(card);
@@ -81,7 +75,7 @@ namespace AoC
             var cards = new List<Card>();
             var firstLine = true;
             var cardNumbers = new int[5, 5];
-            var cardRow = 0;
+            var cardRow = -2;
             foreach (var line in File.ReadAllLines(filePath))
             {
                 if (firstLine)
@@ -91,17 +85,17 @@ namespace AoC
                 } else 
                 {
                     cardRow++;
-                    if (cardRow == 1)
+                    if (cardRow == -1)
                         continue;
 
                     var columnIndex = 0;
                     foreach (var number in line.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse))
-                        cardNumbers[cardRow - 2, columnIndex++] = number;
-                    if (cardRow == 6)
+                        cardNumbers[cardRow, columnIndex++] = number;
+                    if (cardRow == 4)
                     {
                         cards.Add(new Card(cardNumbers));
                         cardNumbers = new int[5, 5];
-                        cardRow = 0;
+                        cardRow = -2;
                     }
                 }
             }
