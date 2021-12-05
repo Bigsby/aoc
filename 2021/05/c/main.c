@@ -124,10 +124,14 @@ Input getInput(char *filePath)
     char *line;
     int x1, y1, x2, y2;
     while (getline(&line, &len, file) != EOF)
-    {
-        sscanf(line, "%d,%d -> %d,%d", &x1, &y1, &x2, &y2);
-        addToInput(&input, x1, y1, x2, y2);
-    }
+        if (sscanf(line, "%d,%d -> %d,%d", &x1, &y1, &x2, &y2) == 4)
+            addToInput(&input, x1, y1, x2, y2);
+        else
+        {
+            perror("Bad line: ");
+            perror(line);
+            exit(1);
+        }
     fclose(file);
     return input;
 }
