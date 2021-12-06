@@ -15,20 +15,6 @@ def runGenerations(fishes: List[int], generations: int) -> int:
         fishCounts[8] = fishesAtZero
         fishCounts[6] += fishesAtZero
     return sum(fishCounts)
-#    fishes = list(fishes)
-#    print(fishes)
-#    day = 0
-#    for _ in range(generations):
-#        day += 1
-#        print(day)
-#        for index in range(len(fishes)):
-#            if fishes[index]:
-#                fishes[index] -= 1
-#            else:
-#                fishes[index] = 6
-#                fishes.append(8)
-#        print(fishes); input()
-#    return len(fishes)
 
 
 def solve(puzzle_input: str) -> Tuple[int,int]:
