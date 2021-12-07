@@ -4,6 +4,7 @@
 #include <vector>
 #include <regex>
 #include <map>
+#include <cmath>
 
 using namespace std;
 
@@ -44,7 +45,7 @@ int getCoveredPoints(Input lines, const bool diagonals)
         {
             int xDirection = line.x2 > line.x1 ? 1 : -1;
             int yDirection = line.y2 > line.y1 ? 1 : -1;
-            int count = line.x2 > line.x1 ? line.x2 - line.x1 : line.x1 - line.x2;
+            int count = abs(line.x2 - line.x1);
             for (auto xy = 0; xy <= count; xy++)
                 addToDiagram(Point { line.x1 + xy * xDirection, line.y1 + xy * yDirection });
         }
