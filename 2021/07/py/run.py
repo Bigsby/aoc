@@ -3,17 +3,6 @@
 import sys, os, time
 from typing import Tuple, List, Callable
 
-
-def test_cost_in_direction(crabs: List[int], position: int, direction: int, cost: int, cost_func: Callable[[List[int],int],int]) -> int:
-    position += direction
-    last_cost = cost
-    current_cost = cost_func(crabs, position)
-    while current_cost <= last_cost:
-        last_cost = current_cost
-        position += direction
-        current_cost = cost_func(crabs, position)
-    return last_cost
-    
     
 def get_cost1(crabs: List[int], mean: int) -> int:
     return sum([ abs(position - mean) for position in crabs])
@@ -23,14 +12,6 @@ def part1(crabs: List[int]) -> int:
     crabs.sort()
     mean = crabs[int(len(crabs) / 2)]
     return get_cost1(crabs, mean)
-
-    mean_cost = get_cost1(crabs, mean)
-    print(mean_cost)
-    mean_cost = min(mean_cost, test_cost_in_direction(crabs, mean, -1, mean_cost, get_cost1))
-    print(mean_cost)
-    mean_cost = min(mean_cost, test_cost_in_direction(crabs, mean, 1, mean_cost, get_cost1))
-    print(mean_cost)
-    return mean_cost
 
 
 def get_distance_cost(pos_a: int, pos_b: int) -> int:
@@ -45,13 +26,6 @@ def get_cost2(crabs: List[int], average: int) -> int:
 def part2(crabs: List[int]) -> int:
     avg = int(sum(crabs) / len(crabs))
     return get_cost2(crabs, avg)
-    avg_cost = get_cost2(crabs, avg)
-    print(avg_cost)
-    avg_cost = min(avg_cost, test_cost_in_direction(crabs, avg, -1, avg_cost, get_cost2))
-    print(avg_cost)
-    avg_cost = min(avg_cost, test_cost_in_direction(crabs, avg, 1, avg_cost, get_cost2))
-    print(avg_cost)
-    return avg_cost
 
 
 def solve(puzzle_input: List[int]) -> Tuple[int,int]:
