@@ -13,7 +13,7 @@ typedef struct
     unsigned long part2;
 } Results;
 
-long long runGenerations(Input input, int generations)
+unsigned long runGenerations(Input input, int generations)
 {
     unsigned long fishCounts[9] = {0};
     while (input.count--)
@@ -28,7 +28,7 @@ long long runGenerations(Input input, int generations)
     }
     unsigned long fishes = 0;
     for (int day = 0; day < 9; day++)
-        fishes += (unsigned long)fishCounts[day];
+        fishes += fishCounts[day];
     return fishes;
 }
 
