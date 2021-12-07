@@ -29,33 +29,20 @@ void bubbleSort(Input input)
                 swap(&input.crabs[j], &input.crabs[j + 1]);
 }
 
-int getCost1(Input input, int mean)
+int part1(Input input)
 {
+    bubbleSort(input);
+    int mean = input.crabs[input.count / 2];
     int total = 0;
     while (input.count--)
         total += abs(mean - *input.crabs++);
     return total;
 }
 
-int part1(Input input)
-{
-    bubbleSort(input);
-    int mean = input.crabs[input.count / 2];
-    return getCost1(input, mean);
-}
-
 int getDistanceCost(int posA, int posB)
 {
     int distance = abs(posA - posB);
     return (distance * (distance + 1)) / 2;
-}
-
-int getCost2(Input input, int average)
-{
-    int total = 0;
-    while (input.count--)
-        total += getDistanceCost(average, *input.crabs++);
-    return total;
 }
 
 int getAverage(Input input)
@@ -70,7 +57,10 @@ int getAverage(Input input)
 int part2(Input input)
 {
     int average = getAverage(input);
-    return getCost2(input, average);
+    int total = 0;
+    while (input.count--)
+        total += getDistanceCost(average, *input.crabs++);
+    return total;
 }
 
 Results solve(Input input)
