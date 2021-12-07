@@ -141,7 +141,7 @@ Input getInput(char *filePath)
         perror("Error reading input file!\n");
         exit(1);
     }
-    char *line;
+    char *line = NULL;
     size_t lineLength;
     Input input = {
         0, INPUT_INCREMENT,

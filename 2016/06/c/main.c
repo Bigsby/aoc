@@ -108,7 +108,7 @@ Input getInput(char *filePath)
         0, INPUT_INCREMENT,
         calloc(INPUT_INCREMENT, sizeof(char*))
     };
-    char *line, *message;
+    char *line = NULL, *message;
     size_t lineLength;
     while (getline(&line, &lineLength, file) != EOF)
     {

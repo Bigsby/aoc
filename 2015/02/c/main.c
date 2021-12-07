@@ -81,7 +81,7 @@ Input getInput(char *filePath)
     Dimensions *dimensions = calloc(1024, sizeof(Dimensions));
     Dimensions *current = dimensions;
     size_t len = 0;
-    char *line;
+    char *line = NULL;
     int width, length, height;
     int count = 0;
     while (getline(&line, &len, file) != EOF)

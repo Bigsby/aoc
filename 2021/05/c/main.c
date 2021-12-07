@@ -121,7 +121,7 @@ Input getInput(char *filePath)
         0, INPUT_INCREMENT
     };
     size_t len;
-    char *line;
+    char *line = NULL;
     int x1, y1, x2, y2;
     while (getline(&line, &len, file) != EOF)
         if (sscanf(line, "%d,%d -> %d,%d", &x1, &y1, &x2, &y2) == 4)

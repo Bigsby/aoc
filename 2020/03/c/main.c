@@ -17,7 +17,6 @@ typedef struct
     int width, height;
 } Input;
 
-#define PART2_FORMAT "%ld"
 typedef struct
 {
     long part1;
@@ -105,7 +104,7 @@ Input getInput(char *filePath)
     }
     size_t lineLength;
     TreesNode *trees = NULL;
-    char *line, *cursor, c;
+    char *line = NULL, *cursor, c;
     int width = 0, height = 0, x;
     while (getline(&line, &lineLength, file) != EOF)
     {
@@ -145,14 +144,8 @@ int main(int argc, char **argv)
     Results results = solve(input);
     gettimeofday(&ends, NULL);
     freeInput(input);
-    printf("P1: %d\n", results.part1);
-    printf("P2: "
-    #ifdef PART2_FORMAT
-        PART2_FORMAT
-    #else
-        "%d"
-    #endif
-     "\n\n", results.part2);
+    printf("P1: %ld\n", results.part1);
+    printf("P2: %ld\n\n", results.part2);
     printf("Time: %.7f\n", (double)((ends.tv_sec - starts.tv_sec) * 1000000 + ends.tv_usec - starts.tv_usec) / 1000000);
     return 0;
 }

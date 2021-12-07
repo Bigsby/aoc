@@ -75,7 +75,7 @@ Input getInput(char *filePath)
         exit(1);
     }
     size_t len = 0;
-    char *line;
+    char *line = NULL;
     char command[10];
     int units;
     Lattice direction;

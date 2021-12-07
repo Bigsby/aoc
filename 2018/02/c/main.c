@@ -86,7 +86,7 @@ Input getInput(char *filePath)
         exit(1);
     }
     char **ids = calloc(256, sizeof(char *));
-    char *line;
+    char *line = NULL;
     size_t length = 0, count = 0;
     while (getline(&line, &length, file) != EOF)
     {

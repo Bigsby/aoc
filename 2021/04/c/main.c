@@ -67,7 +67,7 @@ int playGame(Input input, int first)
                 {
                     if (cards[cardIndex].numbers[row][column] == number)
                     {
-                        cards[cardIndex].numbers[row][column] = -100;
+                        cards[cardIndex].numbers[row][column] = -1;
                         if (isCardComplete(cards[cardIndex]))
                         {
                             if (first)
@@ -80,6 +80,8 @@ int playGame(Input input, int first)
                 }
         }
     }
+    perror("Game did not finish");
+    return 0;
 }
 
 Results solve(Input input)
@@ -122,7 +124,7 @@ Input getInput(char *filePath)
     };
     int firstLine = 1, cardRow = -2;
     size_t len;
-    char *line;
+    char *line = NULL;
     Card card;
     while (getline(&line, &len, file) != EOF)
     {

@@ -203,7 +203,7 @@ Input getInput(char *filePath)
          malloc(INPUT_INCREMENT * sizeof(char *))},
         {0, INPUT_INCREMENT,
          malloc(INPUT_INCREMENT * sizeof(struct Orbit))}};
-    char *line, *cursor, orbited[4], orbiter[4];
+    char *line = NULL, *cursor, orbited[4], orbiter[4];
     size_t lineLength;
     regmatch_t groupArray[INPUT_REGEX_GROUP_COUNT];
     int group;

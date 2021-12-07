@@ -238,7 +238,7 @@ Input getInput(char *filePath)
         malloc(INPUT_INCREMENT * sizeof(char *)),
         malloc(INPUT_INCREMENT * sizeof(Connection))};
 #define REGEX_GROUP_COUNT 7
-    char *line, *cursor, source[16], target[8];
+    char *line = NULL, *cursor, source[16], target[8];
     size_t lineLength;
     regmatch_t groupArray[REGEX_GROUP_COUNT];
     Operand operand1, operand2;

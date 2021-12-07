@@ -116,7 +116,7 @@ Input getInput(char *filePath)
         0, INPUT_INCREMENT
     };
     size_t len = 0;
-    char *line;
+    char *line = NULL;
     while (getline(&line, &len, file) != EOF)
     {
         addToInput(&input, strtol(line, NULL, 2));
