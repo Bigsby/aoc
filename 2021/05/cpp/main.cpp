@@ -19,14 +19,6 @@ typedef vector<Line> Input;
 
 struct Point {
     int x, y;
-    bool operator < (const Point &other)
-    {
-        if (x < other.x)
-            return true;
-        if (x > other.x)
-            return false;
-        return y < other.y;
-    }
 };
 
 int getCoveredPoints(Input lines, const bool diagonals)
