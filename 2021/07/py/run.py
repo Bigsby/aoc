@@ -4,14 +4,10 @@ import sys, os, time
 from typing import Tuple, List, Callable
 
     
-def get_cost1(crabs: List[int], mean: int) -> int:
-    return sum([ abs(position - mean) for position in crabs ])
-       
-
 def part1(crabs: List[int]) -> int:
     crabs.sort()
     mean = crabs[int(len(crabs) / 2)]
-    return get_cost1(crabs, mean)
+    return sum([ abs(position - mean) for position in crabs ])
 
 
 def get_distance_cost(pos_a: int, pos_b: int) -> int:
@@ -19,13 +15,9 @@ def get_distance_cost(pos_a: int, pos_b: int) -> int:
     return int((distance * (distance + 1)) / 2)
 
 
-def get_cost2(crabs: List[int], average: int) -> int:
-    return sum([ get_distance_cost(average, position) for position in crabs ])
-
-
 def part2(crabs: List[int]) -> int:
-    avg = int(sum(crabs) / len(crabs))
-    return get_cost2(crabs, avg)
+    average = int(sum(crabs) / len(crabs))
+    return sum([ get_distance_cost(average, position) for position in crabs ])
 
 
 def solve(puzzle_input: List[int]) -> Tuple[int,int]:
