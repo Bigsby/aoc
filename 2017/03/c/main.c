@@ -37,14 +37,13 @@ typedef struct
     int size;
 } Grid;
 
+#define ITEM_INCREMENT 10
 void addItem(Grid *grid, Lattice lattice, int value)
 {
     if (grid->size == grid->count)
     {
-        GridItem *oldItems = grid->items;
-        GridItem *newItems = realloc(oldItems, sizeof(GridItem) * (grid->size + 10));
-        grid->items = newItems;
-        grid->size += 10;
+        grid->size += ITEM_INCREMENT;
+        grid->items = realloc(grid->items, grid->size * sizeof(GridItem));
     }
     grid->items[grid->count++] = (GridItem){lattice, value};
 }
@@ -52,9 +51,9 @@ void addItem(Grid *grid, Lattice lattice, int value)
 Grid createGrid()
 {
     return (Grid){
-        calloc(10, sizeof(GridItem)),
+        calloc(ITEM_INCREMENT, sizeof(GridItem)),
         0,
-        10};
+        ITEM_INCREMENT};
 }
 
 int getValueForPosition(Grid *grid, Lattice position)

@@ -78,12 +78,8 @@ int getColorIndex(Input *input, const char *color)
     if (input->count == input->capacity)
     {
         input->capacity += INPUT_INCREMENT;
-        char **oldColors = input->colors;
-        char **newColors = realloc(oldColors, input->capacity * sizeof(char *));
-        input->colors = newColors;
-        RuleSet *oldRuleSets = input->ruleSets;
-        RuleSet *newRuleSets = realloc(oldRuleSets, input->capacity * sizeof(RuleSet));
-        input->ruleSets = newRuleSets;
+        input->colors = realloc(input->colors, input->capacity * sizeof(char *));
+        input->ruleSets = realloc(input->ruleSets, input->capacity * sizeof(RuleSet));
     }
     input->colors[input->count] = malloc(strlen(color) + 1);
     strcpy(input->colors[input->count], color);
@@ -99,9 +95,7 @@ void addToRuleSet(Input *input, RuleSet *ruleSet, int index, int count)
     if (ruleSet->count == ruleSet->capacity)
     {
         ruleSet->capacity += INPUT_INCREMENT;
-        Rule *oldRules = ruleSet->rules;
-        Rule *newRules = realloc(oldRules, ruleSet->capacity * sizeof(Rule));
-        ruleSet->rules = newRules;
+        ruleSet->rules = realloc(ruleSet->rules, ruleSet->capacity * sizeof(Rule));
     }
     ruleSet->rules[ruleSet->count++] = (Rule){index, count};
 }

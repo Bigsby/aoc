@@ -144,7 +144,7 @@ PathNode *getWirePositionSet(Wire wire)
 
 int getManhatanDistance(Lattice position)
 {
-    return abs(creal(position)) + abs(cimag(position));
+    return fabs(creal(position)) + fabs(cimag(position));
 }
 
 Results solve(Input input)
@@ -172,22 +172,21 @@ Results solve(Input input)
     return (Results){shortestManhatan, shortestSteps};
 }
 
+#define WIRE_INCREMENT 10
 Wire createWire()
 {
     return (Wire){
-        calloc(10, sizeof(Direction)),
+        calloc(WIRE_INCREMENT, sizeof(Direction)),
         0,
-        10};
+        WIRE_INCREMENT};
 }
 
 void addToWire(Wire *wire, Lattice direction, int distance)
 {
     if (wire->count == wire->size)
     {
-        Direction *oldDirections = wire->directions;
-        Direction *newDirections = realloc(oldDirections, (wire->size + 10) * sizeof(Direction));
-        wire->directions = newDirections;
-        wire->size += 10;
+        wire->size += WIRE_INCREMENT;
+        wire->directions = realloc(wire->directions, wire->size * sizeof(Direction));
     }
     wire->directions[wire->count].direction = direction;
     wire->directions[wire->count].distance = distance;

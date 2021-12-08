@@ -82,28 +82,26 @@ Results solve(Input input)
     return (Results){runTests(input, &noRepeatedPassords), runTests(input, &noAnagrams)};
 }
 
+#define PASSPHRASE_INCREMENT 2
 void addToPassphrase(Passphrase *passphrase, char *password)
 {
     if (passphrase->count == passphrase->size)
     {
-        char **oldPasswords = passphrase->passwords;
-        char **newPasswords = realloc(oldPasswords, (passphrase->size + 2) * sizeof(char *));
-        passphrase->passwords = newPasswords;
-        passphrase->size += 2;
+        passphrase->size += PASSPHRASE_INCREMENT;
+        passphrase->passwords = realloc(passphrase->passwords, passphrase->size * sizeof(char *));
     }
     passphrase->passwords[passphrase->count] = malloc(strlen(password) + 1);
     strcpy(passphrase->passwords[passphrase->count], password);
     passphrase->count++;
 }
 
+#define INPUT_INCREMENT 10
 void addToInput(Input *input, Passphrase passphrase)
 {
     if (input->count == input->size)
     {
-        Passphrase *oldPassphrases = input->passphrases;
-        Passphrase *newPassphrases = realloc(oldPassphrases, (input->size + 10) * sizeof(Passphrase));
-        input->passphrases = newPassphrases;
-        input->size += 10;
+        input->size += INPUT_INCREMENT;
+        input->passphrases = realloc(input->passphrases, input->size * sizeof(Passphrase));
     }
     input->passphrases[input->count++] = passphrase;
 }
@@ -135,9 +133,9 @@ Input getInput(char *filePath)
     size_t lineLength;
     char *line = NULL;
     Input input = {
-        malloc(10 * sizeof(Passphrase)),
+        malloc(INPUT_INCREMENT * sizeof(Passphrase)),
         0,
-        10};
+        INPUT_INCREMENT};
     while (getline(&line, &lineLength, file) != EOF)
     {
         Passphrase passphrase = {

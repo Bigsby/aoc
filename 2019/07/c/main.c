@@ -293,10 +293,8 @@ void addToInput(Input *input, int value)
 {
     if (input->size == input->capacity)
     {
-        int *oldMemory = input->memory;
-        int *newMemory = realloc(oldMemory, (input->capacity + INPUT_INCREMENT) * sizeof(int));
-        input->memory = newMemory;
         input->capacity += INPUT_INCREMENT;
+        input->memory = realloc(input->memory, input->capacity * sizeof(int));
     }
     input->memory[input->size++] = value;
 }

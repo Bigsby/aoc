@@ -126,9 +126,7 @@ void addToInput(Input *input, char dependant, char dependency)
     if (input->count == input->capacity)
     {
         input->capacity += INPUT_INCREMENT;
-        DependencyPair *oldPairs = input->pairs;
-        DependencyPair *newPairs = realloc(oldPairs, input->capacity * sizeof(DependencyPair));
-        input->pairs = newPairs;
+        input->pairs = realloc(input->pairs, input->capacity * sizeof(DependencyPair));
     }
     input->pairs[input->count++] = (DependencyPair){dependant, dependency};
 }

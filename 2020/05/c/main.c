@@ -60,9 +60,7 @@ void addToInput(Input *input, int seat)
     if (input->count == input->capacity)
     {
         input->capacity += INPUT_INCREMENT;
-        int *oldSeats = input->seats;
-        int *newSeats = realloc(oldSeats, input->capacity * sizeof(int));
-        input->seats = newSeats;
+        input->seats = realloc(input->seats, input->capacity * sizeof(int));
     }
     input->seats[input->count++] = seat;
 }

@@ -123,6 +123,7 @@ int part2(Input input, const char *topTower)
 Results solve(Input input)
 {
     const char *part1Result = part1(input);
+    printf("Part1: %s\n", part1Result);
     return (Results){part1Result, part2(input, part1Result)};
 }
 
@@ -135,12 +136,8 @@ int getRecordIndex(Input *input, const char *name)
     if (input->count == input->capacity)
     {
         input->capacity += INPUT_INCREMENT;
-        char **oldNames = input->names;
-        char **newNames = realloc(oldNames, input->capacity * sizeof(char *));
-        input->names = newNames;
-        Record *oldRecords = input->records;
-        Record *newRecords = realloc(oldRecords, input->capacity * sizeof(Record));
-        input->records = newRecords;
+        input->names = realloc(input->names, input->capacity * sizeof(char *));
+        input->records = realloc(input->records, input->capacity * sizeof(Record));
     }
     input->names[input->count] = malloc(strlen(name) + 1);
     strcpy(input->names[input->count], name);
@@ -159,9 +156,7 @@ void addToRecord(Record *record, Input *input, char *child)
     if (record->count == record->capacity)
     {
         record->capacity += RECORD_INCREMENT;
-        int *oldChildren = record->children;
-        int *newChildren = realloc(oldChildren, record->capacity * sizeof(int));
-        record->children = newChildren;
+        record->children = realloc(record->children, record->capacity * sizeof(int));
     }
     record->children[record->count++] = getRecordIndex(input, child);
 }
@@ -196,7 +191,7 @@ Input getInput(char *filePath)
         0, 10,
         malloc(INPUT_INCREMENT * sizeof(char *)),
         malloc(INPUT_INCREMENT * sizeof(Record))};
-    char *line = NULL, *cursor = NULL, *child;
+    char *line = NULL, *cursor = NULL, *child = NULL;
     size_t lineLength;
     Record record;
     int group, recordIndex;
@@ -209,7 +204,7 @@ Input getInput(char *filePath)
             malloc(RECORD_INCREMENT * sizeof(int))};
         if (!regexec(&inputRegex, cursor, INPUT_REGEX_GROUP_COUNT, groupArray, 0))
         {
-            for (group = 0; group <= INPUT_REGEX_GROUP_COUNT && groupArray[group].rm_so != -1; group++)
+            for (group = 0; group < INPUT_REGEX_GROUP_COUNT && groupArray[group].rm_so != -1; group++)
             {
                 char cursorCopy[strlen(cursor) + 1];
                 strcpy(cursorCopy, cursor);
@@ -252,7 +247,7 @@ Input getInput(char *filePath)
 
 void freeInput(Input input)
 {
-    for (int index; index < input.count; index)
+    for (int index; index < input.count; index++)
         free(input.names[index]);
     free(input.records);
     free(input.names);
@@ -270,9 +265,9 @@ int main(int argc, char **argv)
     Input input = getInput(argv[1]);
     Results results = solve(input);
     gettimeofday(&ends, NULL);
-    freeInput(input);
     printf("P1: %s\n", results.part1);
     printf("P2: %d\n\n", results.part2);
+    freeInput(input);
     printf("Time: %.7f\n", (double)((ends.tv_sec - starts.tv_sec) * 1000000 + ends.tv_usec - starts.tv_usec) / 1000000);
     return 0;
 }

@@ -73,9 +73,7 @@ void addToABSet(ABSet *set, char a, char b)
     if (set->count == set->capacity)
     {
         set->capacity += SET_INCREMENT;
-        AB *oldABs = set->abs;
-        AB *newABs = realloc(oldABs, set->capacity * (sizeof(AB)));
-        set->abs = newABs;
+        set->abs = realloc(set->abs, set->capacity * sizeof(AB));
     }
     set->abs[set->count++] = (AB){a, b};
 }
@@ -95,11 +93,15 @@ int supportsSSL(IP ip)
         part = ip.parts[partIndex];
         partLength = strlen(part);
         for (index = 0; index < partLength - 2; index++)
+        {
             if (part[index] == part[index + 2] && part[index] != part[index + 1])
+            {
                 if (partIndex % 2)
                     addToABSet(&abas, part[index], part[index + 1]);
                 else
                     addToABSet(&babs, part[index + 1], part[index]);
+            }
+        }
     }
     AB ab;
     while (abas.count--)
@@ -131,9 +133,7 @@ void addToIp(IP *ip, char *part)
     if (ip->count == ip->capacity)
     {
         ip->capacity += IP_INCREMENT;
-        char **oldParts = ip->parts;
-        char **newParts = realloc(oldParts, ip->capacity * sizeof(char *));
-        ip->parts = newParts;
+        ip->parts = realloc(ip->parts, ip->capacity * sizeof(char *));
     }
     int partLength = strlen(part);
     ip->parts[ip->count] = malloc(partLength + 1);
@@ -151,9 +151,7 @@ void addToInput(Input *input, IP ip)
     if (input->count == input->capacity)
     {
         input->capacity += INPUT_INCREMENT;
-        IP *oldIps = input->ips;
-        IP *newIps = realloc(oldIps, input->capacity * sizeof(IP));
-        input->ips = newIps;
+        input->ips = realloc(input->ips, input->capacity * sizeof(IP));
     }
     input->ips[input->count++] = ip;
 }

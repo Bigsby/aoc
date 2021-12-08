@@ -40,9 +40,7 @@ int addToPreviousLists(PreviousLists *lists, int *list, int size)
     if (lists->count == lists->capacity)
     {
         lists->capacity += LISTS_INCREMENT;
-        List *oldLists = lists->lists;
-        List *newLists = realloc(oldLists, lists->capacity * (sizeof(List)));
-        lists->lists = newLists;
+        lists->lists = realloc(lists->lists, lists->capacity * sizeof(List));
     }
     lists->lists[lists->count] = calloc(size, sizeof(int));
     memcpy(lists->lists[lists->count++], list, size * sizeof(int));
@@ -97,9 +95,7 @@ void addToInput(Input *input, int number)
     if (input->count == input->capacity)
     {
         input->capacity += INPUT_INCREMENT;
-        int *oldNumbers = input->numbers;
-        int *newNumbers = realloc(oldNumbers, input->capacity * sizeof(int));
-        input->numbers = newNumbers;
+        input->numbers = realloc(input->numbers, input->capacity * sizeof(int));
     }
     input->numbers[input->count++] = number;
 }

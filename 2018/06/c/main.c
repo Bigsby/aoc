@@ -135,9 +135,7 @@ void addToInput(Input *input, int x, int y)
     if (input->count == input->capacity)
     {
         input->capacity += INPUT_INCREMENT;
-        Lattice *oldPositions = input->positions;
-        Lattice *newPositions = realloc(oldPositions, input->capacity * sizeof(Lattice));
-        input->positions = newPositions;
+        input->positions = realloc(input->positions, input->capacity * sizeof(Lattice));
     }
     input->positions[input->count++] = (Lattice){x, y};
 }

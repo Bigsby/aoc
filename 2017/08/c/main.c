@@ -86,9 +86,7 @@ int getRegister(Input *input, const char *name)
     if (input->registerCount == input->registerCapacity)
     {
         input->registerCapacity += INPUT_INCREMENT;
-        char **oldNames = input->names;
-        char **newNames = realloc(oldNames, input->registerCapacity * sizeof(char*));
-        input->names = newNames;
+        input->names = realloc(input->names, input->registerCapacity * sizeof(char*));
     }
     input->names[input->registerCount] = malloc(strlen(name) + 1);
     strcpy(input->names[input->registerCount], name);
@@ -130,9 +128,7 @@ void addToInput(Input *input, const char *target, const char *source, const char
     if (input->instructionCount == input->instructionCapacity)
     {
         input->instructionCapacity += INPUT_INCREMENT;
-        Instruction *oldInstructions = input->instructions;
-        Instruction *newInstructions = realloc(oldInstructions, input->instructionCapacity * sizeof(Instruction));
-        input->instructions = newInstructions;
+        input->instructions = realloc(input->instructions, input->instructionCapacity * sizeof(Instruction));
     }
     input->instructions[input->instructionCount] = (Instruction) {
         getRegister(input, target),
@@ -164,7 +160,7 @@ Input getInput(char *filePath)
     };
     while (getline(&line, &lineLength, file) != EOF)
     {
-        if (sscanf(line, "%[^ ] %[^ ] %d if %[^ ] %[^ ] %d", &target, &direction, &amount, &source, &comparator, &value) == 6)
+        if (sscanf(line, "%[^ ] %[^ ] %d if %[^ ] %[^ ] %d", target, direction, &amount, source, comparator, &value) == 6)
             addToInput(&input, target, source, comparator, direction, amount, value);
     }
     fclose(file);

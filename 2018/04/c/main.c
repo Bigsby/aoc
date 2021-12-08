@@ -199,14 +199,13 @@ Results solve(Input input)
     return (Results){part1(guards), part2(guards)};
 }
 
+#define INPUT_INCREMENT 10
 void addToInput(Input *input, LogRecord record)
 {
     if (input->count == input->size)
     {
-        LogRecord *oldRecords = input->records;
-        LogRecord *newRecords = realloc(oldRecords, (input->size + 10) * sizeof(LogRecord));
-        input->records = newRecords;
-        input->size += 10;
+        input->size += INPUT_INCREMENT;
+        input->records = realloc(input->records, input->size * sizeof(LogRecord));
     }
     input->records[input->count++] = record;
 }
@@ -238,9 +237,9 @@ Input getInput(char *filePath)
         exit(1);
     }
     Input input = {
-        calloc(10, sizeof(LogRecord)),
+        calloc(INPUT_INCREMENT, sizeof(LogRecord)),
         0,
-        10};
+        INPUT_INCREMENT};
     char *line = NULL, *cursor = NULL, *message;
     size_t lineLength;
     int group, groupLength, year, month, day, hour, minute;

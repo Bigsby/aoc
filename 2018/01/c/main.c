@@ -79,14 +79,13 @@ Results solve(Input input)
     return (Results){part1(input), part2(input)};
 }
 
+#define INPUT_INCREMENT 10
 void addToInput(Input *input, int change)
 {
     if (input->count == input->size)
     {
-        int *oldChanges = input->changes;
-        int *newChanges = realloc(oldChanges, (input->size + 10) * (sizeof(int)));
-        input->changes = newChanges;
-        input->size += 10;
+        input->size += INPUT_INCREMENT;
+        input->changes = realloc(input->changes, input->size * sizeof(int));
     }
     input->changes[input->count++] = change;
 }
@@ -106,9 +105,9 @@ Input getInput(char *filePath)
     size_t len = 0;
     size_t read;
     Input input = {
-        malloc(10 * sizeof(int)),
+        malloc(INPUT_INCREMENT * sizeof(int)),
         0,
-        10
+        INPUT_INCREMENT
     };
     while (getline(&line, &len, file) != EOF)
         addToInput(&input, atoi(line));

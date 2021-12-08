@@ -41,9 +41,7 @@ int getPlanetIndex(Input *input, const char *planet)
     if (input->planets.count == input->planets.capacity)
     {
         input->planets.capacity += INPUT_INCREMENT;
-        char **oldPlanets = input->planets.list;
-        char **newPlanets = realloc(oldPlanets, input->planets.capacity * sizeof(char *));
-        input->planets.list = newPlanets;
+        input->planets.list = realloc(input->planets.list, input->planets.capacity * sizeof(char *));
     }
     input->planets.list[input->planets.count] = malloc(4);
     strcpy(input->planets.list[input->planets.count], planet);

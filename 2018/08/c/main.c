@@ -71,9 +71,7 @@ void addToInput(Input *input, int value)
     if (input->count == input->capacity)
     {
         input->capacity += INPUT_INCREMENT;
-        int *oldData = input->data;
-        int *newData = realloc(oldData, input->capacity * sizeof(int));
-        input->data = newData;
+        input->data = realloc(input->data, input->capacity * sizeof(int));
     }
     input->data[input->count++] = value;
 }

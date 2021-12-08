@@ -30,7 +30,7 @@ int isRoomValid(const char *name, const char *checksum)
     for (letterIndex = 0; letterIndex < 26; letterIndex++)
         counts[letterIndex] = 0;
     char c;
-    while (c = *(name++))
+    while ((c = *(name++)))
         if (c >= 'a')
             counts[c - 'a']++;
     char processed[5];
@@ -121,14 +121,13 @@ Results solve(Input input)
     return (Results){part1(input), part2(input)};
 }
 
+#define INPUT_INCREMENT 10
 void addToInput(Input *input, char *name, int id, char *checksum)
 {
     if (input->count == input->size)
     {
-        Room *oldRooms = input->rooms;
-        Room *newRooms = realloc(oldRooms, sizeof(Room) * (input->size + 10));
-        input->rooms = newRooms;
-        input->size++;
+        input->size += INPUT_INCREMENT;
+        input->rooms = realloc(input->rooms, input->size * sizeof(Room));
     }
     input->rooms[input->count++] = (Room){name, id, checksum};
 }
@@ -151,9 +150,9 @@ Input getInput(char *filePath)
     size_t lineLength;
     char *line = NULL, *cursor = NULL;
     Input input = {
-        calloc(10, sizeof(Room)),
+        calloc(INPUT_INCREMENT, sizeof(Room)),
         0,
-        10};
+        INPUT_INCREMENT};
     char *name, *checksum;
     int id, group, groupLength;
     while (getline(&line, &lineLength, file) != EOF)

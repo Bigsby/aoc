@@ -89,9 +89,7 @@ void addToInput(Input *input, char *message)
     if (input->count == input->capacity)
     {
         input->capacity += INPUT_INCREMENT;
-        char **oldMessages = input->messages;
-        char **newMessages = realloc(oldMessages, input->capacity * sizeof(char*));
-        input->messages = newMessages;
+        input->messages = realloc(input->messages, input->capacity * sizeof(char *));
     }
     input->messages[input->count++] = message;
 }

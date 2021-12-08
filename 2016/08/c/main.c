@@ -265,9 +265,7 @@ void addToInput(Input *input, InstructionType type, int a, int b)
     if (input->count == input->capacity)
     {
         input->capacity += INPUT_INCREMENT;
-        Instruction *oldInstructions = input->instructions;
-        Instruction *newInstructions = realloc(oldInstructions, input->capacity * sizeof(Instruction));
-        input->instructions = newInstructions;
+        input->instructions = realloc(input->instructions, input->capacity * sizeof(Instruction));
     }
     input->instructions[input->count++] = (Instruction){type, a, b};
 }

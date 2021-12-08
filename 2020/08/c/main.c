@@ -100,9 +100,7 @@ void addToInput(Input *input, char *mnemonic, int argument)
     if (input->count == input->capacity)
     {
         input->capacity += INPUT_INCREMENT;
-        Instruction *oldInstructions = input->instructions;
-        Instruction *newInstructions = realloc(oldInstructions, input->capacity * sizeof(Instruction));
-        input->instructions = newInstructions;
+        input->instructions = realloc(input->instructions, input->capacity * sizeof(Instruction));
     }
     input->instructions[input->count++] = (Instruction){getType(mnemonic), argument};
 }
@@ -122,7 +120,7 @@ Input getInput(char *filePath)
         malloc(INPUT_INCREMENT * sizeof(Instruction))
     };
     while (getline(&line, &lineLength, file) != EOF)
-        if (sscanf(line, "%[^ ] %[^ \n]", &mnemonic, &argument) == 2)
+        if (sscanf(line, "%[^ ] %[^ \n]", mnemonic, argument) == 2)
             addToInput(&input, mnemonic, atoi(argument));
     fclose(file);
     return input;

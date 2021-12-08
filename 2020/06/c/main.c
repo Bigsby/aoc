@@ -55,9 +55,7 @@ void addToInput(Input *input, Group group)
     if (input->count == input->capacity)
     {
         input->capacity += INPUT_INCREMENT;
-        Group *oldGroups = input->groups;
-        Group *newGroups = realloc(oldGroups, input->capacity * sizeof(Group));
-        input->groups = newGroups;
+        input->groups = realloc(input->groups, input->capacity * sizeof(Group));
     }
     input->groups[input->count++] = group;
 }

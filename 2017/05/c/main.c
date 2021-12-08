@@ -49,10 +49,8 @@ void addToInput(Input *input, int jump)
 {
     if (input->count == input->size)
     {
-        int *oldJumps = input->jumps;
-        int *newJumps = realloc(oldJumps, (input->size + INPUT_INCREMENT) * sizeof(int));
-        input->jumps = newJumps;
         input->size += INPUT_INCREMENT;
+        input->jumps = realloc(input->jumps, input->size * sizeof(int));
     }
     input->jumps[input->count++] = jump;
 }
