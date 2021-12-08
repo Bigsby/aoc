@@ -34,6 +34,7 @@ int getFieldIndex(char *field)
     for (int index = 0; index < FIELD_COUNT; index++)
         if (strcmp(field, MANDATORY_FIELDS[index]) == 0)
             return index;
+    perror("field not found");
     return -1;
 }
 
@@ -182,12 +183,21 @@ void addToInput(Input *input, Passport passport)
 {
     if (input->count == input->size)
     {
-        Passport *oldPassports = input->passports;
-        Passport *newPassports = realloc(oldPassports, (input->size + INPUT_INCREMENT) * sizeof(Passport));
-        input->passports = newPassports;
         input->size += INPUT_INCREMENT;
+        input->passports = realloc(input->passports, input->size * sizeof(Passport));
     }
     input->passports[input->count++] = passport;
+}
+
+char *rtrim(char *str, const char *seps)
+{
+    int i;
+    if (seps == NULL)
+        seps = "\t\n\v\f\r ";
+    i = strlen(str) - 1;
+    while (i >= 0 && strchr(seps, str[i]) != NULL)
+        str[i--] = '\0';
+    return str;
 }
 
 Input getInput(char *filePath)
@@ -201,17 +211,17 @@ Input getInput(char *filePath)
 #define INPUT_GROUP_COUNT 3
     regmatch_t groupArray[INPUT_GROUP_COUNT];
     regex_t regexCompiled;
-    if (regcomp(&regexCompiled, "(byr|iyr|eyr|hgt|hcl|ecl|pid):([^ \n]+)", REG_EXTENDED))
+    if (regcomp(&regexCompiled, "(byr|iyr|eyr|hgt|hcl|ecl|pid):([^ $]+)", REG_EXTENDED))
     {
         perror("Error compiling regex.");
         exit(1);
     }
-    char *line = NULL, *cursor = NULL, *field, *value;
+    char *line = NULL, *cursor = NULL, field[4], value[20];
     size_t lineLength;
     Input input = {
-        calloc(10, sizeof(Passport)),
+        calloc(INPUT_INCREMENT, sizeof(Passport)),
         0,
-        10};
+        INPUT_INCREMENT};
     int group, groupLength;
     Passport passport = initializePassport();
     while (getline(&line, &lineLength, file) != EOF)
@@ -225,26 +235,26 @@ Input getInput(char *filePath)
         cursor = line;
         while (!regexec(&regexCompiled, cursor, INPUT_GROUP_COUNT, groupArray, 0))
         {
-            for (group = 0; group <= INPUT_GROUP_COUNT && groupArray[group].rm_so != -1; group++)
+            char cursorCopy[strlen(cursor) + 1];
+            strcpy(cursorCopy, cursor);
+            for (group = 1; group < INPUT_GROUP_COUNT && groupArray[group].rm_so != -1; group++)
             {
-                groupLength = strlen(cursor) + 1;
-                char cursorCopy[groupLength];
-                strcpy(cursorCopy, cursor);
                 cursorCopy[groupArray[group].rm_eo] = 0;
                 switch (group)
                 {
                 case 1:
-                    field = malloc(groupLength);
                     strcpy(field, cursorCopy + groupArray[group].rm_so);
                     break;
                 case 2:
-                    value = malloc(groupLength);
                     strcpy(value, cursorCopy + groupArray[group].rm_so);
                     break;
                 }
             }
             cursor += groupArray[0].rm_eo;
-            passport.fields[getFieldIndex(field)] = value;
+            int fieldIndex = getFieldIndex(field);
+            passport.fields[fieldIndex] = malloc(strlen(value) + 1);
+            strcpy(passport.fields[fieldIndex],rtrim(value, NULL));
+            //passport.fields[getFieldIndex(field)] = value;
         }
     }
     addToInput(&input, passport);
