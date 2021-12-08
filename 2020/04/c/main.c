@@ -133,13 +133,13 @@ int validatePID(char *value)
 }
 
 int (*VALIDATIONS[])(char *) = {
-    &validateBYR,
-    &validateIYR,
-    &validateEYR,
-    &validateHGT,
-    &validateHCL,
-    &validateECL,
-    &validatePID,
+    validateBYR,
+    validateIYR,
+    validateEYR,
+    validateHGT,
+    validateHCL,
+    validateECL,
+    validatePID,
 };
 
 int part2(Passport passport)
@@ -167,7 +167,7 @@ Results solve(Input input)
         perror("Error compiling pid regex.");
         exit(1);
     }
-    return (Results){countValidPasswords(input, &part1), countValidPasswords(input, &part2)};
+    return (Results){countValidPasswords(input, part1), countValidPasswords(input, part2)};
 }
 
 Passport initializePassport()
