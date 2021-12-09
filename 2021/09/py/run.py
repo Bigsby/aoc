@@ -26,7 +26,7 @@ def get_position_risk(puzzle_input: Map, position: complex) -> int:
     return height + 1
     
 
-def get_basin_size(puzzle_input: Map, position) -> int:
+def get_basin_size(puzzle_input: Map, position: complex) -> int:
     height_map, max_x, max_y = puzzle_input
     to_visit = [position]
     visited = [] 
