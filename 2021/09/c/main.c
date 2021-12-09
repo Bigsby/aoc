@@ -71,17 +71,6 @@ void addToSizes(int *sizes, int size)
         }
 }
 
-void printMap(Input input)
-{
-    for (int y = 0; y < input.maxY; y++)
-    {
-        for (int x = 0; x < input.maxX; x++)
-            printf("%d", input.map[y][x]);
-        printf("\n");
-    }
-    printf("\n");
-}
-
 #define LIST_INCREMENT 10
 int isQueueEmpty(Queue queue)
 {
@@ -119,7 +108,7 @@ void addToVisited(Visited *visited, Position position)
     if (visited->size == visited->capacity)
     {
         visited->capacity += LIST_INCREMENT;
-        visited->positions = realloc(visited->positions, LIST_INCREMENT * sizeof(Position));
+        visited->positions = realloc(visited->positions, visited->capacity * sizeof(Position));
     }
     visited->positions[visited->size++] = position;
 }
@@ -159,7 +148,6 @@ int getBasinSize(Input input, Position position)
 
 Results solve(Input input)
 {
-    //printMap(input);
     int lowestSum = 0;
     int sizes[3] = { 0 };
     for (int y = 0; y < input.maxY; y++)
