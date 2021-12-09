@@ -38,7 +38,7 @@ def get_basin_size(puzzle_input: Map, position: complex) -> int:
         visited.append(current)
         for neighbor in get_neighbors(puzzle_input, current):
             neighbor_height = height_map[neighbor]
-            if neighbor_height == 9 or neighbor in visited or neighbor_height <= current_height:
+            if neighbor_height == 9 or neighbor_height <= current_height or neighbor in visited:
                 continue
             to_visit.append(neighbor)
     return len(visited)
@@ -66,7 +66,6 @@ def get_input(file_path: str) -> Map:
     with open(file_path) as file:
         height_map = dict()
         max_x = 0
-        max_y = 0
         position = 0j
         for line in file.readlines():
             for height in line:
