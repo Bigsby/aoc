@@ -4,21 +4,21 @@ import sys, os, time
 from typing import Tuple, List
 from queue import LifoQueue
 
-matches = {
+MATCHES = {
     '(': ')',
     '[': ']',
     '{': '}',
     '<': '>'
 }
 
-illegal_closing_points = {
+ILLEGAL_POINTS = {
     ')': 3,
     ']': 57,
     '}': 1197,
     '>': 25137
 }
 
-closing_points = {
+CLOSING_POINTS = {
     ')': 1,
     ']': 2,
     '}': 3,
@@ -33,15 +33,15 @@ def solve(lines: List[str]) -> Tuple[int,int]:
         illegal = False
         for c in line:
             if c == '(' or c == '[' or c == '{' or c == '<':
-                expected_closing.put(matches[c])
+                expected_closing.put(MATCHES[c])
             elif c != expected_closing.get():
                 illegal = True
-                illegal_points += illegal_closing_points[c]
+                illegal_points += ILLEGAL_POINTS[c]
                 break
         if not illegal:
             points = 0
             while not expected_closing.empty():
-                points = points * 5 + closing_points[expected_closing.get()]
+                points = points * 5 + CLOSING_POINTS[expected_closing.get()]
             incomplete_points.append(points)
     incomplete_points.sort()
     return illegal_points, incomplete_points[int(len(incomplete_points) / 2)]
