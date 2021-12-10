@@ -188,9 +188,10 @@ Input getInput(char *filePath)
 
 void freeInput(Input input)
 {
+    char **lines = input.lines;
     while (input.size--)
-        free(*input.lines++);
-    free(input.lines);
+        free(*(input.lines++));
+    free(lines);
 }
 
 int main(int argc, char **argv)
