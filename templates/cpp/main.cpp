@@ -9,16 +9,16 @@ struct Results
     int part1;
     int part2;
 };
-typedef string Input;
+typedef int Input;
 
 int part1(Input puzzleInput)
 {
-    return puzzleInput.length();
+    return 1;
 }
 
 int part2(Input puzzleInput)
 {
-    return puzzleInput.length();
+    return 2;
 }
 
 Results solve(Input puzzleInput)
@@ -34,7 +34,7 @@ Input getInput(char *filePath)
 
     string content((istreambuf_iterator<char>(file)), (istreambuf_iterator<char>()));
     file.close();
-    return content;
+    return 0;
 }
 
 int main(int argc, char *argv[])

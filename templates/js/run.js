@@ -1,12 +1,12 @@
 "use strict";
 const fs = require("fs");
 
-function part2(puzzleInput) {
-    return puzzleInput.length
+function part1(puzzleInput) {
+    return 1
 }
 
-function part1(puzzleInput) {
-    return puzzleInput.length
+function part2(puzzleInput) {
+    return 2
 }
 
 function solve(puzzleInput) {

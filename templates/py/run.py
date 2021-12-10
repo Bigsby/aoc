@@ -3,20 +3,21 @@
 import sys, os, time
 from typing import Tuple
 
+Input = str
 
-def part1(puzzle_input: str) -> int:
+def part1(Input: str) -> int:
     return 1
 
 
-def part2(puzzle_input: str) -> int:
+def part2(Input: str) -> int:
     return 2
 
 
-def solve(puzzle_input: str) -> Tuple[int,int]:
+def solve(puzzle_input: Input) -> Tuple[int,int]:
     return (part1(puzzle_input), part2(puzzle_input))
 
 
-def get_input(file_path: str) -> str:
+def get_input(file_path: str) -> Input:
     if not os.path.isfile(file_path):
         raise FileNotFoundError(file_path)
     

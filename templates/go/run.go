@@ -8,12 +8,12 @@ import (
 	"time"
 )
 
-func part2(puzzleInput string) int {
-	return len(puzzleInput)
+func part1(puzzleInput string) int {
+	return 1
 }
 
-func part1(puzzleInput string) int {
-	return len(puzzleInput)
+func part2(puzzleInput string) int {
+	return 2
 }
 
 func solve(puzzleInput string) (int, int) {
