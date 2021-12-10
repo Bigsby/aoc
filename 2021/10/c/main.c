@@ -48,7 +48,6 @@ int getIllegalPoints(char closing)
         case '}': return 1197;
         case '>': return 25137;
     }
-    printf("c: '%c': ", closing);
     perror("Unexpected illegal closing character");
     exit(1);
 }
