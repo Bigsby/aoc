@@ -1,5 +1,5 @@
 "use strict";
-const fs = require("fs");
+const fs = require("fs")
 
 function part1(puzzleInput) {
     return 1
