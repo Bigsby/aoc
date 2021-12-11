@@ -29,7 +29,7 @@ def solve(octopuses: Input) -> Tuple[int, int]:
     flashes = 0
     all_flashes = 0
     step = 0
-    while not all_flashes or step < 100:
+    while not all_flashes or step <= 100:
         step += 1
         step_flashes = 0
         to_process = []
@@ -50,7 +50,7 @@ def solve(octopuses: Input) -> Tuple[int, int]:
                 octopuses[neighbor_y][neighbor_x] += 1
                 if octopuses[neighbor_y][neighbor_x] > 9:
                     to_process.append((neighbor_x, neighbor_y))
-        if step < 100:
+        if step <= 100:
             flashes += step_flashes
         if step_flashes == 100:
             all_flashes = step
