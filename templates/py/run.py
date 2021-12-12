@@ -5,11 +5,11 @@ from typing import Tuple
 
 Input = str
 
-def part1(Input: str) -> int:
+def part1(input: Input) -> int:
     return 1
 
 
-def part2(Input: str) -> int:
+def part2(input: Input) -> int:
     return 2
 
 
