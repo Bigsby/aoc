@@ -37,8 +37,6 @@ async function getInput(filePath) {
         let split = line.split("-")
         edges.push([ split[0], split[1] ])
     }
-
-
     return edges
 }
 
