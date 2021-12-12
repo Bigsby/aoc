@@ -8,9 +8,9 @@ from typing import List, Tuple
 
 def get_next_value(value: str) -> str:
     sequences: List[str] = []
-    last_digit = "\0"
-    length = 0
-    for c in value:
+    last_digit = value[0]
+    length = 1
+    for c in value[1:]:
         if c == last_digit:
             length += 1
         else:
@@ -20,7 +20,7 @@ def get_next_value(value: str) -> str:
             length = 1
     sequences.append(str(length))
     sequences.append(last_digit)
-    return "".join(sequences[2:])
+    return "".join(sequences)
 
 
 def solve(puzzle_input: str) -> Tuple[int, int]:
