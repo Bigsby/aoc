@@ -148,7 +148,6 @@ void addToInput(Input *input, char *nodeA, char *nodeB, Edges *edges)
     if (input->size == input->capacity)
         input->edges = realloc(input->edges, (input->capacity += INPUT_INCREMENT) * sizeof(Edge));
     input->edges[input->size++] = (Edge) { getEdge(edges, nodeA), getEdge(edges, nodeB) };
-    Edge edge = input->edges[input->size - 1];
 }
 
 char *rtrim(char *str, const char *seps)
