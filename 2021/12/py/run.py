@@ -17,9 +17,10 @@ def find_paths(edges: Input, repeat: bool) -> int:
             continue
         for edge in filter(lambda edge: edge[0] == node or edge[1] == node, edges):
             other = edge[0] if edge[1] == node else edge[1]
-            if not(other == "start" or (small_repeat and other.lower() == other and other in path)):
+            small_included = other.lower() == other and other in path
+            if not(other == "start" or (small_repeat and small_included)):
                 new_path = f"{path},{other}"
-                queue.append((other, new_path, small_repeat or (other == other.lower() and other in path)))
+                queue.append((other, new_path, small_repeat or small_included))
     return complete_paths_count
     
 
