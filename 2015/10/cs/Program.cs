@@ -11,9 +11,9 @@ namespace AoC
         static string GetNextValue(string value)
         {
             var sequences = new StringBuilder();
-            var last_digit = '\0';
-            var length = 0;
-            foreach (var c in value)
+            var last_digit = value[0];
+            var length = 1;
+            foreach (var c in value[1..])
             {
                 if (c == last_digit)
                     length++;
@@ -27,7 +27,7 @@ namespace AoC
             }
             sequences.Append(length);
             sequences.Append(last_digit);
-            return sequences.ToString()[2..];
+            return sequences.ToString();
         }
 
         static (int, int) Solve(string puzzleInput)
