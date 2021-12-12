@@ -55,12 +55,13 @@ int findPaths(Input edges, bool repeat)
             for (auto edge: getNextEdges(edges, queueNode.node))
             {
                 string other = edge.nodeA == queueNode.node ? edge.nodeB : edge.nodeA;
-                if (!(other == "start" || (queueNode.smallRepeat && isLowercase(other) && queueNode.path.find(other) != string::npos)))
+                bool smallIncluded = isLowercase(other) && queueNode.path.find(other) != string::npos;
+                if (!(other == "start" || (queueNode.smallRepeat && smallIncluded)))
                     toCheck.push((QueueNode) { 
                         other, 
                         queueNode.path + "," + other, 
-                        queueNode.smallRepeat || (isLowercase(other) && queueNode.path.find(other) != string::npos)}
-                    );
+                        queueNode.smallRepeat || smallIncluded 
+                    });
             }
     }
     return completePathCount;
