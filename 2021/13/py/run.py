@@ -147,18 +147,15 @@ LETTERS: Dict[int, str] = {
 
 def fold_paper(paper: List[complex], folding: Tuple[str,int]) -> List[complex]:
     direction, coordinate = folding
-    include_func = (lambda point: point.real < coordinate) \
+    include_func = (lambda point: point.real) \
                     if direction == "x" else \
-                    (lambda point: point.imag < coordinate)
+                    (lambda point: point.imag)
     new_point_func = (lambda point: coordinate - (point.real - coordinate) + point.imag * 1j) \
                     if direction == "x" else  \
                     (lambda point: point.real + 1j * (coordinate - (point.imag - coordinate)))
     new_paper = []
     for point in paper:
-        if include_func(point):
-            new_paper.append(point)
-        else:
-            new_paper.append(new_point_func(point))
+        new_paper.append(point if include_func(point) < coordinate else new_point_func(point))
     return list(set(new_paper))
 
 
