@@ -228,12 +228,12 @@ int includeY(Point point)
 
 Point newPointX(Point point, int coordinate)
 {
-    return coordinate - (creal(point) - coordinate) + cimag(point) * I;
+    return 2 * coordinate - creal(point) + cimag(point) * I;
 }
 
 Point newPointY(Point point, int coordinate)
 {
-    return creal(point) + I * (coordinate - (cimag(point) - coordinate));
+    return creal(point) + I * (2 * coordinate - cimag(point));
 }
 
 Paper fold(Paper paper, Folding folding)
