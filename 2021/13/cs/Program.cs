@@ -165,9 +165,9 @@ namespace AoC
                 :
                 (point => point.Imaginary);
             Func<Complex, int, Complex> newPointFunc = folding.direction == 'x' ?
-                ((point, coordinate) => new Complex(coordinate - (point.Real - coordinate), point.Imaginary))
+                ((point, coordinate) => new Complex(2 * coordinate - point.Real, point.Imaginary))
                 :
-                ((point, coordinate) => new Complex(point.Real, coordinate - (point.Imaginary - coordinate)));
+                ((point, coordinate) => new Complex(point.Real, 2 * coordinate - point.Imaginary));
             var newPoints = new List<Complex>();
             foreach (var point in points)
             {
