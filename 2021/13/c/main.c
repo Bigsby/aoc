@@ -166,10 +166,13 @@ typedef struct {
     (0b01000 << CHARACTER_WIDTH * 3) + \
     (0b10000 << CHARACTER_WIDTH * 4) + \
     (0b11110 << CHARACTER_WIDTH * 5)
+
 #define SCREEN_WIDTH 40
 #define SCREEN_HEIGHT 6
 #define CHARACTER_WIDTH 5
+
 const int LETTERS[] = { A,B,C,D,E,F,G,H,LETTER_I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z };
+
 char getLetter(int value)
 {
     for (int index = 0; index < 26; index++)
@@ -201,7 +204,6 @@ char *getCode(Paper paper)
     }
     return code;
 }
-
 
 #define PAPER_INCREMENT 10
 void addToPaper(Paper *paper, Point point)
@@ -236,6 +238,7 @@ Point newPointY(Point point, int coordinate)
 
 Paper fold(Paper paper, Folding folding)
 {
+    Point *points = paper.points;
     int (*includeFunc)(Point) = folding.direction ? includeX : includeY;
     Point (*newPointFunc)(Point, int) = folding.direction ? newPointX : newPointY;
     Paper newPaper = {
@@ -244,9 +247,10 @@ Paper fold(Paper paper, Folding folding)
     };
     while (paper.size--)
     {
-        Point point = *paper.points++;
+        Point point = *points++;
         addToPaper(&newPaper, includeFunc(point) < folding.coordinate ? point : newPointFunc(point, folding.coordinate));
     }
+    free(paper.points);
     return newPaper;
 }
 
@@ -324,7 +328,6 @@ Input getInput(char *filePath)
 
 void freeInput(Input input)
 {
-    free(input.points);
     free(input.foldings);
 }
 
