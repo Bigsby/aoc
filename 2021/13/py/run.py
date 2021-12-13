@@ -150,9 +150,9 @@ def fold_paper(paper: List[complex], folding: Tuple[str,int]) -> List[complex]:
     include_func = (lambda point: point.real) \
                     if direction == "x" else \
                     (lambda point: point.imag)
-    new_point_func = (lambda point: coordinate - (point.real - coordinate) + point.imag * 1j) \
+    new_point_func = (lambda point: 2 * coordinate - point.real + point.imag * 1j) \
                     if direction == "x" else  \
-                    (lambda point: point.real + 1j * (coordinate - (point.imag - coordinate)))
+                    (lambda point: point.real + 1j * (2 * coordinate - point.imag))
     new_paper = []
     for point in paper:
         new_paper.append(point if include_func(point) < coordinate else new_point_func(point))
