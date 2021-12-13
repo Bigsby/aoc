@@ -5928,6 +5928,42 @@
                         "p2": ""
                     }
                 ]
+            },
+            {
+                "day": 13,
+                "name": "Transparent Origami",
+                "description": "2D folding paper",
+                "tags": [
+                    "2D",
+                    "Characters",
+                    "Complex"
+                ],
+                "results": [
+                    {
+                        "p1": "763",
+                        "p2": "RHALRCRA"
+                    },
+                    {
+                        "p1": "737",
+                        "p2": "ZUJUAFHP"
+                    },
+                    {
+                        "p1": "724",
+                        "p2": "CPJBERUL"
+                    },
+                    {
+                        "p1": "689",
+                        "p2": "RLBCJGLU"
+                    },
+                    {
+                        "p1": "818",
+                        "p2": "LRGPRECB"
+                    },
+                    {
+                        "p1": "",
+                        "p2": ""
+                    }
+                ]
             }
         ]
     }
