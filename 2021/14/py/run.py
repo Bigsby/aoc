@@ -26,9 +26,8 @@ def count_insertions(puzzle_input: Input, steps: int) -> int:
         first, secode = pair
         distinct_occurences[first] += occurences
     distinct_occurences[polymer[-1]] += 1
-    maximum = max(distinct_occurences, key=distinct_occurences.get)
-    minimum = min(distinct_occurences, key=distinct_occurences.get)
-    return distinct_occurences[maximum] - distinct_occurences[minimum]
+    occurences = distinct_occurences.values()
+    return max(occurences) - min(occurences)
 
 
 def solve(puzzle_input: Input) -> Tuple[int,int]:
