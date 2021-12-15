@@ -20,8 +20,8 @@ namespace AoC
         }
 
         public PriorityNode Next { get; set; }
-        public int Distance { get; private set; }
-        public Point Point { get; private set; }
+        public int Distance { get; init; }
+        public Point Point { get; init; }
         public void Deconstruct(out Point point, out int distance)
         {
             point = Point;
