@@ -23,12 +23,6 @@ def get_position_risk(risk_levels: Dict[Position,int], position: Position, width
     return risk if risk < 10 else risk - 9
 
 
-def expand_risk_levels(risk_levels: Dict[Position,int], width: int, height: int, expansion: int) -> Dict[Position,int]:
-    for y in range(height * expansion):
-        for x in range(width * expansion):
-            risk_levels[(x, y)] = get_position_risk(risk_levels, (x, y), width, height, expansion)
-
-
 def get_lowest_risk(puzzle_input: Input, expansion: int) -> int:
     risk_levels, width, height = puzzle_input
     expanded_width = width * expansion
