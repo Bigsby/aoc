@@ -40,7 +40,7 @@ def get_lowest_risk(puzzle_input: Input, expansion: int) -> int:
             new_neighbor_risk_level = current_risk + get_position_risk(risk_levels, neighbor, width, height, expansion)
             if distances[neighbor] > new_neighbor_risk_level:
                 distances[neighbor] = new_neighbor_risk_level
-                heappush(to_check, (distances[neighbor], neighbor))
+                heappush(to_check, (new_neighbor_risk_level, neighbor))
     raise Exception("Shortest not found")
 
 
