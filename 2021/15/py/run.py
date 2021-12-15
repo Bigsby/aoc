@@ -55,13 +55,12 @@ def get_input(file_path: str) -> Input:
     with open(file_path) as file:
         cavern = dict()
         y = 0
-        max_x = 0
+        x = 0
         for line in file.readlines():
             x = 0
             for c in line.strip():
                 cavern[(x, y)] = int(c)
                 x += 1
-            max_x = x
             y += 1
         return cavern, x, y
 
