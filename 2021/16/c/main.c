@@ -48,15 +48,14 @@ char *getSubPackets(char *message, int *count, Packet **subPackets)
     int lengthId;
     message = getNBits(message, 1, &lengthId);
     Packet packet;
-    Packet *packets;
     if (lengthId)
     {
         message = getNBits(message, 11, count);
-        packets = malloc((*count) * sizeof(Packet));
+        *subPackets = malloc((*count) * sizeof(Packet));
         for (int index = 0; index < *count; index++)
         {
             message = getPacket(message, &packet);
-            packets[index] = packet;
+            (*subPackets)[index] = packet;
         }
     } else
     {
@@ -64,17 +63,16 @@ char *getSubPackets(char *message, int *count, Packet **subPackets)
         int capacity = 2;
         int size = 0;
         int startingLength = strlen(message);
-        packets = malloc(capacity * sizeof(Packet));
+        *subPackets = malloc(capacity * sizeof(Packet));
         while (startingLength - strlen(message) < *count - 1)
         {
             if (size == capacity)
-                packets = realloc(packets, (capacity += 2) * sizeof(Packet));
+                *subPackets = realloc(*subPackets, (capacity += 2) * sizeof(Packet));
             message = getPacket(message, &packet); 
-            packets[size++] = packet;
+            (*subPackets)[size++] = packet;
         }
         *count = size;
     }
-    *subPackets = packets;
     return message;
 }
 
@@ -103,7 +101,7 @@ char *getPacket(char *message, Packet *packet)
         }
         packet->value = value;
     } else
-        message = getSubPackets(message, &(packet->packetCount), &(packet->subPackets));
+        message = getSubPackets(message, &packet->packetCount, &packet->subPackets);
     return message;
 }
 
@@ -162,9 +160,9 @@ unsigned long getPacketValue(Packet packet)
 
 Results solve(Input message)
 {
-    Packet *packet = malloc(sizeof(packet));
-    message = getPacket(message, packet);
-    return (Results){getPacketVersionSum(*packet), getPacketValue(*packet)};
+    Packet packet;
+    message = getPacket(message, &packet);
+    return (Results){getPacketVersionSum(packet), getPacketValue(packet)};
 }
 
 Input getInput(char *filePath)
