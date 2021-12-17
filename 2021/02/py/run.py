@@ -24,7 +24,7 @@ def part2(commands: List[Command]) -> int:
     return int(position.real * position.imag)
 
 
-def solve(commands: List[Command]) -> Tuple[int,int]:
+def solve(commands: List[Command]) -> Tuple[int, int]:
     return (part1(commands), part2(commands))
 
 
@@ -43,9 +43,9 @@ def parse_line(line: str) -> Command:
 def get_input(file_path: str) -> List[Command]:
     if not os.path.isfile(file_path):
         raise FileNotFoundError(file_path)
-    
+
     with open(file_path) as file:
-        return [ parse_line(line) for line in file.readlines() ] 
+        return [parse_line(line) for line in file.readlines()]
 
 
 def main():
