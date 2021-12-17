@@ -4,7 +4,8 @@
 #include <string.h>
 #include <limits.h>
 
-typedef struct {
+typedef struct
+{
     char **riskLevels;
     int size, capacity;
     int width, height;
@@ -15,17 +16,20 @@ typedef struct
     int part2;
 } Results;
 
-typedef struct {
+typedef struct
+{
     int x, y;
 } Point;
 
-typedef struct PriorityNode {
+typedef struct PriorityNode
+{
     Point point;
     int distance;
     struct PriorityNode *next;
 } PriorityNode;
 
-typedef struct {
+typedef struct
+{
     Point points[4];
     int count;
 } Neighbors;
@@ -37,7 +41,7 @@ int pointEquals(Point a, Point b)
 
 int **createDistances(int width, int height)
 {
-    int **distances = malloc(height * sizeof(int*));
+    int **distances = malloc(height * sizeof(int *));
     for (int y = 0; y < height; y++)
     {
         distances[y] = malloc(width * sizeof(int));
@@ -59,13 +63,13 @@ Neighbors getNeighbors(Point point, int width, int height)
     Neighbors neighbors;
     neighbors.count = 0;
     if (point.x)
-        neighbors.points[neighbors.count++] = (Point){ point.x - 1, point.y };
+        neighbors.points[neighbors.count++] = (Point){point.x - 1, point.y};
     if (point.y)
-        neighbors.points[neighbors.count++] = (Point){ point.x, point.y - 1 };
+        neighbors.points[neighbors.count++] = (Point){point.x, point.y - 1};
     if (point.x < width - 1)
-        neighbors.points[neighbors.count++] = (Point){ point.x + 1, point.y };
+        neighbors.points[neighbors.count++] = (Point){point.x + 1, point.y};
     if (point.y < height - 1)
-        neighbors.points[neighbors.count++] = (Point){ point.x, point.y + 1};
+        neighbors.points[neighbors.count++] = (Point){point.x, point.y + 1};
     return neighbors;
 }
 
@@ -112,10 +116,10 @@ int getLowestRisk(Input input, int expansion)
     int expandedWidth = input.width * expansion;
     int expandedHeight = input.height * expansion;
     int **distances = createDistances(expandedWidth, expandedHeight);
-    Point target = (Point){ expandedWidth - 1, expandedHeight - 1 };
+    Point target = (Point){expandedWidth - 1, expandedHeight - 1};
     distances[0][0] = 0;
     PriorityNode *queue = NULL;
-    queue = addToPriorityQueue(queue, (Point){ 0, 0 }, 0);
+    queue = addToPriorityQueue(queue, (Point){0, 0}, 0);
     Point current;
     int currentDistance;
     while (1)
@@ -150,7 +154,7 @@ Results solve(Input input)
 void addRowToInput(Input *input, char *row)
 {
     if (input->size == input->capacity)
-        input->riskLevels = realloc(input->riskLevels, (input->capacity += INPUT_INCREMENT) * sizeof(char*));
+        input->riskLevels = realloc(input->riskLevels, (input->capacity += INPUT_INCREMENT) * sizeof(char *));
     input->riskLevels[input->size++] = row;
 }
 
@@ -165,8 +169,7 @@ Input getInput(char *filePath)
     Input input = {
         .riskLevels = malloc(INPUT_INCREMENT * sizeof(char *)),
         .size = 0,
-        .capacity = INPUT_INCREMENT
-    };
+        .capacity = INPUT_INCREMENT};
     char *line = NULL, *row, c;
     size_t len;
     int x, y = 0;
