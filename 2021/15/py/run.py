@@ -1,23 +1,29 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from typing import Tuple, List, Dict, Iterable
+from typing import Tuple, Dict, Iterable
 from collections import defaultdict
 from heapq import heappop, heappush
 
-Position = Tuple[int,int]
-Input = Tuple[Dict[Position,int],int,int]
+Position = Tuple[int, int]
+Input = Tuple[Dict[Position, int], int, int]
 
 
 def get_neighbors(position: Position, width: int, height: int) -> Iterable[Position]:
     x, y = position
-    if x: yield (x - 1, y)
-    if y: yield (x, y - 1)
-    if x < width - 1: yield (x + 1, y)
-    if y < height - 1: yield (x, y + 1)
+    if x:
+        yield (x - 1, y)
+    if y:
+        yield (x, y - 1)
+    if x < width - 1:
+        yield (x + 1, y)
+    if y < height - 1:
+        yield (x, y + 1)
 
 
-def get_position_risk(risk_levels: Dict[Position,int], position: Position, width: int, height: int, expansion: int) -> int:
+def get_position_risk(
+    risk_levels: Dict[Position, int], position: Position, width: int, height: int
+) -> int:
     x, y = position
     risk = risk_levels[(x % width, y % height)] + x // width + y // height
     return risk if risk < 10 else risk - 9
@@ -27,33 +33,33 @@ def get_lowest_risk(puzzle_input: Input, expansion: int) -> int:
     risk_levels, width, height = puzzle_input
     expanded_width = width * expansion
     expanded_height = height * expansion
-    distances = dict()
     target = (expanded_width - 1, expanded_height - 1)
-    distances = defaultdict(lambda: sys.maxsize)
+    distances: Dict[Position, int] = defaultdict(lambda: sys.maxsize)
     distances[(0, 0)] = 0
-    to_check = [ (0, (0,0)) ]
+    to_check = [(0, (0, 0))]
     while True:
         current_risk, current = heappop(to_check)
         if current == target:
             return current_risk
         for neighbor in get_neighbors(current, expanded_width, expanded_height):
-            new_neighbor_risk_level = current_risk + get_position_risk(risk_levels, neighbor, width, height, expansion)
+            new_neighbor_risk_level = current_risk + get_position_risk(
+                risk_levels, neighbor, width, height
+            )
             if distances[neighbor] > new_neighbor_risk_level:
                 distances[neighbor] = new_neighbor_risk_level
                 heappush(to_check, (new_neighbor_risk_level, neighbor))
-    raise Exception("Shortest not found")
 
 
-def solve(puzzle_input: Input) -> Tuple[int,int]:
+def solve(puzzle_input: Input) -> Tuple[int, int]:
     return (get_lowest_risk(puzzle_input, 1), get_lowest_risk(puzzle_input, 5))
 
 
 def get_input(file_path: str) -> Input:
     if not os.path.isfile(file_path):
         raise FileNotFoundError(file_path)
-    
+
     with open(file_path) as file:
-        cavern = dict()
+        cavern: Dict[Position, int] = dict()
         y = 0
         x = 0
         for line in file.readlines():
