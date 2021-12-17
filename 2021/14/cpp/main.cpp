@@ -11,14 +11,15 @@ struct Results
     unsigned long part1;
     unsigned long part2;
 };
-struct Input {
+struct Input
+{
     string polymer;
-    map<pair<char,char>,char> rules;
+    map<pair<char, char>, char> rules;
 };
 
 unsigned long runInsertions(Input input, int steps)
 {
-    map<pair<char,char>,unsigned long> pairOccurrences;
+    map<pair<char, char>, unsigned long> pairOccurrences;
     for (int index = 0; index < input.polymer.length() - 1; index++)
     {
         auto letterPair = make_pair(input.polymer[index], input.polymer[index + 1]);
@@ -29,8 +30,8 @@ unsigned long runInsertions(Input input, int steps)
     }
     while (steps--)
     {
-        map<pair<char,char>,unsigned long> newPairOccurrences;
-        for (auto keyValue: pairOccurrences)
+        map<pair<char, char>, unsigned long> newPairOccurrences;
+        for (auto keyValue : pairOccurrences)
         {
             char first = keyValue.first.first;
             char second = keyValue.first.second;
@@ -49,7 +50,7 @@ unsigned long runInsertions(Input input, int steps)
         pairOccurrences = newPairOccurrences;
     }
     map<char, unsigned long> letterOccurrences;
-    for (auto keyValue: pairOccurrences)
+    for (auto keyValue : pairOccurrences)
         if (letterOccurrences.count(keyValue.first.second))
             letterOccurrences[keyValue.first.second] += keyValue.second;
         else
@@ -57,7 +58,7 @@ unsigned long runInsertions(Input input, int steps)
     letterOccurrences[input.polymer[0]]++;
     unsigned long max = 0;
     unsigned long min = letterOccurrences[input.polymer[0]];
-    for (auto keyValue: letterOccurrences)
+    for (auto keyValue : letterOccurrences)
     {
         max = keyValue.second > max ? keyValue.second : max;
         min = keyValue.second < min ? keyValue.second : min;
