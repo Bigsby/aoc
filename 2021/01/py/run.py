@@ -17,23 +17,22 @@ def part2(depths: List[int]) -> int:
     increments = 0
     last_depth = sys.maxsize
     for index in range(len(depths) - 2):
-        depth = sum(depths[index:index + 3])
+        depth = sum(depths[index : index + 3])
         increments += depth > last_depth
         last_depth = depth
     return increments
 
 
-def solve(puzzle_input: str) -> Tuple[int,int]:
+def solve(puzzle_input: List[int]) -> Tuple[int, int]:
     return (part1(puzzle_input), part2(puzzle_input))
 
 
 def get_input(file_path: str) -> List[int]:
     if not os.path.isfile(file_path):
         raise FileNotFoundError(file_path)
-    
+
     with open(file_path) as file:
-        return [ int(line) for line in file.readlines() ]
-        return file.read().strip()
+        return [int(line) for line in file.readlines()]
 
 
 def main():
@@ -51,3 +50,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+2
