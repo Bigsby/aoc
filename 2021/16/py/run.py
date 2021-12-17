@@ -22,15 +22,9 @@ def get_n_bits(message: str, count: int) -> Tuple[int, str]:
     return int(message[:count], 2), message[count:]
 
 
-def get_version_type(message: str) -> Tuple[int, str]:
-    version, message = get_n_bits(message, 3)
-    type, message = get_n_bits(message, 3)
-    return version, type, message
-
-
 def get_sub_packets(message: str) -> Tuple[List[Packet], str]:
     length_id, message = get_n_bits(message, 1)
-    sub_packets = []
+    sub_packets: List[Packet] = []
     if length_id:
         packet_count, message = get_n_bits(message, 11)
         for _ in range(packet_count):
@@ -46,7 +40,8 @@ def get_sub_packets(message: str) -> Tuple[List[Packet], str]:
     
 
 def get_packet(message: str) -> Tuple[Packet, str]:
-    version, type, message = get_version_type(message)
+    version, message = get_n_bits(message, 3)
+    type, message = get_n_bits(message, 3)
     if type == 4:
         value = 0
         while True:
@@ -93,6 +88,7 @@ def get_packet_value(packet: Packet) -> int:
         return 1 if get_packet_value(sub_packets[0]) < get_packet_value(sub_packets[1]) else 0
     if type == PacketTypes.Equal:
         return 1 if get_packet_value(sub_packets[0]) == get_packet_value(sub_packets[1]) else 0
+    raise Exception(f"Unknow type {type}")
 
 
 def get_packet_version_sum(packet: Packet) -> int:
