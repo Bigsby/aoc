@@ -4,21 +4,9 @@ import sys, os, time
 from typing import Tuple, List
 OPEN = -1
 CLOSE = -2
-COMMA = -3
 
 Number = List[int]
 Input = List[Number]
-
-
-def print_number(number: Number):
-    for n in number:
-        c = str(n)
-        if n == OPEN:
-            c = "["
-        if n == CLOSE:
-            c = "]"
-        print(c, end="")
-    print()
 
 
 def get_next_number(number: Number, index: int, direction:int) -> int:
@@ -111,8 +99,6 @@ def encode_character(c: str) -> int:
         return OPEN
     if c == ']':
         return CLOSE
-    #if c == ',':
-        #return COMMA
     raise Exception(f"Unexpected character '{c}'")
 
 
