@@ -2,8 +2,10 @@
 
 import sys, os, time
 from typing import Tuple, List
+
 OPEN = -1
 CLOSE = -2
+NO_NEXT = -1
 
 Number = List[int]
 Input = List[Number]
@@ -14,7 +16,7 @@ def get_next_number(number: Number, index: int, direction:int) -> int:
         if number[index] >= 0:
             return index
         index += direction
-    return -1
+    return NO_NEXT
 
 
 def explode(number: Number) -> Tuple[Number, bool]:
@@ -25,9 +27,9 @@ def explode(number: Number) -> Tuple[Number, bool]:
             if nest == 5:
                 left_number_index = get_next_number(number, index, -1)
                 right_number_index = get_next_number(number, index + 3, 1)
-                if left_number_index > 0:
+                if left_number_index != NO_NEXT:
                     number[left_number_index] += number[index + 1]
-                if right_number_index > 0:
+                if right_number_index != NO_NEXT:
                     number[right_number_index] += number[index + 2]
                 number = number[:index] + [0] + number[index + 4:]
                 return number, True
@@ -47,7 +49,6 @@ def split(number: Number) -> Tuple[Number, bool]:
 
 
 def reduce(number: Number) -> Number:
-    nest = 0
     changed = True
     while changed:
         changed = False
