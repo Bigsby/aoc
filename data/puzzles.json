@@ -6378,6 +6378,41 @@
                 ]
             }
         ]
+        },
+        {
+            "year": 2022,
+            "days": [
+                {
+                    "day": 1,
+                    "name": "Calorie Counting",
+                    "description": "Summing lists of integers and findings maximum values",
+                    "tags": [
+                        "Math"
+                    ],
+                    "results": [
+                        {
+                            "p1": "68775",
+                            "p2": "202585"
+                        },
+                        {
+                            "p1": "69310",
+                            "p2": "206104"
+                        },
+                        {
+                            "p1": "72511",
+                            "p2": "212117"
+                        },
+                        {
+                            "p1": "66719",
+                            "p2": "198551"
+                        },
+                        {
+                            "p1": "67450",
+                            "p2": "199357"
+                        }
+                    ]
+                }
+            ]
     }
   ]
 }
