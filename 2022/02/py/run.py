@@ -28,8 +28,7 @@ def solve(puzzle_input: Input) -> Tuple[int, int]:
 
 
 def process_line(line: str) -> Tuple[int, int]:
-    split = line.strip().split()
-    return (ord(split[0]) - ord('A'), ord(split[1]) - ord('X'))
+    return (ord(line[0]) - ord('A'), ord(line[2]) - ord('X'))
 
 
 def get_input(file_path: str) -> Input:
