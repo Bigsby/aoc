@@ -10,12 +10,9 @@ namespace AoC
     using Elf = List<int>;
     static class Program
     {
-        static int Part1(List<Elf> elves) =>
-            elves.Aggregate(0, (currentMax, elf) => Math.Max(currentMax, elf.Sum()));
-
-        static int Part2(List<Elf> elves)
+        static (int, int) Solve(List<Elf> elves)
         {
-            int[] topElves = new [] { 0, 0, 0 };
+            int[] topElves = new[] { 0, 0, 0 };
             foreach (var elf in elves)
             {
                 var elfSum = elf.Sum();
@@ -29,11 +26,8 @@ namespace AoC
                     }
                 }
             }
-            return topElves.Sum();
+            return (topElves[0], topElves.Sum());
         }
-
-        static (int, int) Solve(List<Elf> elves)
-            => (Part1(elves), Part2(elves));
 
         static List<Elf> GetInput(string filePath)
         {
@@ -45,7 +39,7 @@ namespace AoC
                 if (string.IsNullOrEmpty(line))
                 {
                     elves.Add(currentElf);
-                    currentElf = new Elf();    
+                    currentElf = new Elf();
                 }
                 else
                     currentElf.Add(int.Parse(line));
