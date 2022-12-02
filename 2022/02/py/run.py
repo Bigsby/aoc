@@ -4,7 +4,6 @@ import sys
 import os
 import time
 from typing import Tuple, List
-from functools import reduce
 
 Input = List[Tuple[int, int]]
 
@@ -16,11 +15,11 @@ def hand_result(elf: int, me: int) -> int:
 
 
 def part1(puzzle_input: Input) -> int:
-    return reduce(lambda score, hand: score + 3 * hand_result(hand[0], hand[1]) + hand[1] + 1, puzzle_input, 0)
+    return sum(map(lambda hand: 3 * hand_result(hand[0], hand[1]) + hand[1] + 1, puzzle_input))
 
 
 def part2(puzzle_input: Input) -> int:
-    return reduce(lambda score, hand: score + 1 + hand[1] * 3 + (hand[0] + hand[1] - 1) % 3, puzzle_input, 0)
+    return sum(map(lambda hand: 1 + hand[1] * 3 + (hand[0] + hand[1] - 1) % 3, puzzle_input))
 
 
 def solve(puzzle_input: Input) -> Tuple[int, int]:
