@@ -6411,6 +6411,37 @@
                             "p2": "199357"
                         }
                     ]
+                },
+                {
+                    "day": 2,
+                    "name": "Rock Paper Scissors",
+                    "description": "Rock, paper, scissors tournament",
+                    "tags": [
+                        "Maths"
+                    ],
+                    "gotchas": [ "Modulus 3 to find hand winner" ],
+                    "results": [
+                        {
+                            "p1": "13526",
+                            "p2": "14204"
+                        },
+                        {
+                            "p1": "8392",
+                            "p2": "10116"
+                        },
+                        {
+                            "p1": "13675",
+                            "p2": "14184"
+                        },
+                        {
+                            "p1": "12645",
+                            "p2": "11756"
+                        },
+                        {
+                            "p1": "11386",
+                            "p2": "13600"
+                        }
+                    ]
                 }
             ]
         }
