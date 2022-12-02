@@ -2,32 +2,24 @@
 
 import sys, os, time
 from typing import Tuple, List
-from functools import reduce
 
 Input = List[List[int]]
 
-def part1(elves: Input) -> int:
-    return reduce(lambda current_max, elve: max(current_max, sum(elve)), elves, 0)
 
-
-def part2(elves: Input) -> int:
-    top_elves = [ 0, 0, 0 ]
+def solve(elves: Input) -> Tuple[int, int]:
+    top_elves = [0, 0, 0]
     for elf in elves:
         elf_sum = sum(elf)
         for index in range(3):
             if elf_sum > top_elves[index]:
                 top_elves[index], elf_sum = elf_sum, top_elves[index]
-    return sum(top_elves)
-
-
-def solve(puzzle_input: Input) -> Tuple[int,int]:
-    return (part1(puzzle_input), part2(puzzle_input))
+    return (top_elves[0], sum(top_elves))
 
 
 def get_input(file_path: str) -> Input:
     if not os.path.isfile(file_path):
         raise FileNotFoundError(file_path)
-    
+
     with open(file_path) as file:
         elves: List[List[int]] = []
         current_elf: List[int] = []
