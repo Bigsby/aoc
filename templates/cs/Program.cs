@@ -7,22 +7,24 @@ using System.Collections.Generic;
 
 namespace AoC
 {
+    using Input = String;
+
     static class Program
     {
-        static int Part1(string puzzleInput)
+        static int Part1(Input puzzleInput)
         { 
             return 1;
         }
 
-        static int Part2(string puzzleInput)
+        static int Part2(Input puzzleInput)
         {
             return 2;
         }
 
-        static (int, int) Solve(object puzzleInput)
+        static (int, int) Solve(Input puzzleInput)
             => (Part1(puzzleInput), Part2(puzzleInput));
 
-        static string GetInput(string filePath)
+        static Input GetInput(string filePath)
             => !File.Exists(filePath) ? throw new FileNotFoundException(filePath)
             : File.ReadAllText(filePath).Trim();
 
