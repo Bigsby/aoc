@@ -7,11 +7,11 @@ Input = List[str]
 
 
 def get_item_priority(item: str) -> int:
-    return (ord(item) - ord('A')) + 27 if item < 'a' else ord(item) - ord('a') + 1
+    return (ord(item) - ord('A') + 26 if item < 'a' else ord(item) - ord('a')) + 1
 
 
 def get_repeated_item_priority(ruckstack: str) -> int:
-    cut = int(len(ruckstack) / 2)
+    cut = len(ruckstack) // 2
     first, second = ruckstack[:cut], ruckstack[cut:]
     for item in first:
         if item in second:
