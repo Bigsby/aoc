@@ -41,11 +41,6 @@ def solve(puzzle_input: Input) -> Tuple[int, int]:
     return (part1(puzzle_input), part2(puzzle_input))
 
 
-def process_line(line: str) -> Tuple[str, str]:
-    cut = int(len(line) / 2)
-    return line[:cut], line[cut:]
-
-
 def get_input(file_path: str) -> Input:
     if not os.path.isfile(file_path):
         raise FileNotFoundError(file_path)
