@@ -20,10 +20,7 @@ def get_repeated_item_priority(ruckstack: str) -> int:
 
 
 def part1(rucksacks: Input) -> int:
-    total = 0
-    for rucksack in rucksacks:
-        total += get_repeated_item_priority(rucksack)
-    return total
+    return sum(map(get_repeated_item_priority, rucksacks))
 
 
 def part2(rucksacks: Input) -> int:
