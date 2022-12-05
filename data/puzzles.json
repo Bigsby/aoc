@@ -6502,6 +6502,37 @@
                             "p2": "911"
                         }
                     ]
+                },
+                {
+                    "day": 5,
+                    "name": "Supply Stacks",
+                    "description": "Move items between stacks",
+                    "tags": [
+                        "Lists",
+                        "Stacks"
+                    ],
+                    "results": [
+                        {
+                            "p1": "ZWHVFWQWW",
+                            "p2": "HZFZCCWWV"
+                        },
+                        {
+                            "p1": "SHMSDGZVC",
+                            "p2": "VRZGHDFBQ"
+                        },
+                        {
+                            "p1": "FWSHSPJWM",
+                            "p2": "PWPWHGFZS"
+                        },
+                        {
+                            "p1": "RFFFWBPNS",
+                            "p2": "CQQBBJFCS"
+                        },
+                        {
+                            "p1": "QMBMJDFTD",
+                            "p2": "NBTVTJNFJ"
+                        }
+                    ]
                 }
             ]
         }
