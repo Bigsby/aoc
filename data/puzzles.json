@@ -6533,6 +6533,36 @@
                             "p2": "NBTVTJNFJ"
                         }
                     ]
+                },
+                {
+                    "day": 6,
+                    "name": "Tuning Trouble",
+                    "description": "Find distinct characters sequence in string",
+                    "tags": [
+                        "Strings"
+                    ],
+                    "results": [
+                        {
+                            "p1": "1804",
+                            "p2": "2508"
+                        },
+                        {
+                            "p1": "1929",
+                            "p2": "3298"
+                        },
+                        {
+                            "p1": "1480",
+                            "p2": "2746"
+                        },
+                        {
+                            "p1": "1855",
+                            "p2": "3256"
+                        },
+                        {
+                            "p1": "1582",
+                            "p2": "3588"
+                        }
+                    ]
                 }
             ]
         }
