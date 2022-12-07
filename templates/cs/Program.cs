@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace AoC
 {
-    using Input = string;
+    using Input = String;
 
     static class Program
     {
