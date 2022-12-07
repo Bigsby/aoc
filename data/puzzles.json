@@ -6563,6 +6563,37 @@
                             "p2": "3588"
                         }
                     ]
+                },
+                {
+                    "day": 7,
+                    "name": "No Space Left On Device",
+                    "description": "Build file system from terminal output and get directory sizes",
+                    "tags": [
+                        "File System",
+                        "Recursion"
+                    ],
+                    "results": [
+                        {
+                            "p1": "2104783",
+                            "p2": "5883165"
+                        },
+                        {
+                            "p1": "1453349",
+                            "p2": "2948823"
+                        },
+                        {
+                            "p1": "1086293",
+                            "p2": "366028"
+                        },
+                        {
+                            "p1": "1432936",
+                            "p2": "272298"
+                        },
+                        {
+                            "p1": "1743217",
+                            "p2": "8319096"
+                        }
+                    ]
                 }
             ]
         }
