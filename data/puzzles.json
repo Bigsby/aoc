@@ -6656,6 +6656,37 @@
                             "p2": "2619"
                         }
                     ]
+                },
+                {
+                    "day": 10,
+                    "name": "Cathode-Ray Tube",
+                    "description": "Characters in screen",
+                    "tags": [
+                        "LCD",
+                        "Characters"
+                    ],
+                    "results": [
+                        {
+                            "p1": "15140",
+                            "p2": "BPJAZGAP"
+                        },
+                        {
+                            "p1": "13920",
+                            "p2": "EGLHBLFJ"
+                        },
+                        {
+                            "p1": "11780",
+                            "p2": "PZULBAUA"
+                        },
+                        {
+                            "p1": "12540",
+                            "p2": "FECZELHE"
+                        },
+                        {
+                            "p1": "17840",
+                            "p2": "EALGULPG"
+                        }
+                    ]
                 }
             ]
         }
