@@ -6718,6 +6718,37 @@
                         }
                     ]
                 },
+                {
+                    "day": 12,
+                    "name": "Hill Climbing Algorithm",
+                    "description": "Shortest path in height map",
+                    "tags": [
+                        "2D",
+                        "Matrix",
+                        "BFS"
+                    ],
+                    "results": [
+                        {
+                            "p1": "350",
+                            "p2": "349"
+                        },
+                        {
+                            "p1": "394",
+                            "p2": "388"
+                        },
+                        {
+                            "p1": "504",
+                            "p2": "500"
+                        },
+                        {
+                            "p1": "412",
+                            "p2": "402"
+                        },
+                        {
+                            "p1": "462",
+                            "p2": "451"
+                        }
+                    ]
                 }
             ]
         }
