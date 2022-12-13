@@ -6749,6 +6749,33 @@
                             "p2": "451"
                         }
                     ]
+                },
+                {
+                    "day": 13,
+                    "name": "Distress Signal",
+                    "description": "Compare lists and embedded lists of integers",
+                    "results": [
+                        {
+                            "p1": "6395",
+                            "p2": "24921"
+                        },
+                        {
+                            "p1": "6101",
+                            "p2": "21909"
+                        },
+                        {
+                            "p1": "4643",
+                            "p2": "21614"
+                        },
+                        {
+                            "p1": "5390",
+                            "p2": "19261"
+                        },
+                        {
+                            "p1": "",
+                            "p2": ""
+                        }
+                    ]
                 }
             ]
         }
