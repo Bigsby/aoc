@@ -35,16 +35,6 @@ namespace AoC
             { "nine", 9 }
         }.Concat(VALUES).ToDictionary(pair => pair.Key, pair => pair.Value);
 
-        static int Part1(Input puzzleInput)
-        {
-            return 1;
-        }
-
-        static int Part2(Input puzzleInput)
-        {
-            return 2;
-        }
-
         static int GetSum(Input puzzleInput, IDictionary<string, int> values)
         {
             var sum = 0;
