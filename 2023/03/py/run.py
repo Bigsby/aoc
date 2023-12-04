@@ -1,16 +1,19 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from typing import Tuple, List
+from typing import Tuple, List, Dict
+from collections import defaultdict
 
 Input = List[str]
+EngineData = Tuple[Dict[Tuple[int,int],List[int]],List[int]]
 
 def is_symbol(c: str) -> bool:
-    return not c.isnumeric() and c != "."
+    return c != "." and not c.isnumeric()
 
 
-def part1(puzzle_input: Input) -> int:
-    sum = 0
+def parse_engine(puzzle_input: Input) -> EngineData:
+    gears: Dict[Tuple[int,int],List[int]] = defaultdict(list)
+    parts: List[int] = []
     for line_index in range(len(puzzle_input)):
         line = puzzle_input[line_index].strip()
         line_len = len(line)
@@ -26,41 +29,50 @@ def part1(puzzle_input: Input) -> int:
                 search_start = max(0, start_index - 1)
                 search_end = min(line_len, start_index + length)
                 is_part = False
+                symbol = ""
+                coord = (0, 0)
                 if line_index > 0:
-                    for c in puzzle_input[line_index - 1][search_start:search_end]:
+                    for x, c in enumerate(puzzle_input[line_index - 1][search_start:search_end]):
                         if is_symbol(c):
                             is_part = True
+                            symbol = c
+                            coord = search_start + x, line_index - 1
                             break;
-                is_part |= (start_index > 0 and is_symbol(line[search_start])) | (start_index + length < line_len and is_symbol(line[search_end - 1]))
+                if start_index > 0 and is_symbol(line[search_start]):
+                    is_part = True
+                    symbol = line[search_start]
+                    coord = search_start, line_index
+                if start_index + length < line_len and is_symbol(line[search_end - 1]):
+                    is_part = True
+                    symbol = line[search_end - 1]
+                    coord = search_end - 1, line_index
                 if not is_part and line_index < len(puzzle_input) - 1:
-                    for c in puzzle_input[line_index + 1][search_start:search_end]:
+                    for x, c in enumerate(puzzle_input[line_index + 1][search_start:search_end]):
                         if is_symbol(c):
                             is_part = True
+                            symbol = c
+                            coord = search_start + x, line_index + 1
                             break;
                 if is_part:
-                    sum += int(segment)
+                    part_number = int(segment)
+                    parts.append(part_number)
+                    if symbol == "*":
+                        gears[coord].append(part_number)
             start_index += length 
-    return sum
+    return gears, parts
 
 
-def find_adjacent_parts(puzzle_input: Input, line: int, gear: int) -> List[int]:
-    print(puzzle_input[line][gear], line, gear)
-    return []
-
-
-def part2(puzzle_input: Input) -> int:
+def part2(engine_data: EngineData) -> int:
     sum = 0
-    for line_index, line in enumerate(puzzle_input):
-        for gear_index, c in enumerate(line.strip()):
-            if c == "*":
-                find_adjacent_parts(puzzle_input, line_index, gear_index)
-
-
+    for parts in engine_data[0].values():
+        if len(parts) == 2:
+            sum += parts[0] * parts[1]
     return sum
 
 
 def solve(puzzle_input: Input) -> Tuple[int,int]:
-    return (part1(puzzle_input), part2(puzzle_input))
+    engine_data = parse_engine(puzzle_input)
+    return (sum(engine_data[1]), part2(engine_data))
 
 
 def get_input(file_path: str) -> Input:
