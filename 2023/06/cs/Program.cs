@@ -12,40 +12,16 @@ namespace AoC
 
     static class Program
     {
-        static int Part1(Input puzzleInput)
-        { 
-            var (times, distances) = puzzleInput;
-            var count = times.Count();
-            var result = 1;
-            for (var index = 0; index < count; index++)
-            {
-                var (time, distance) = (times.ElementAt(index), distances.ElementAt(index));
-                var winningWays = 0;
-                for (var press = 1; press <= time / 2; press++)
-                {
-                    var testDistance = (time - press) * press;
-                    if (testDistance > distance)
-                        winningWays++;
-                }
-                result *= (winningWays * 2) - (time % 2 == 1 ? 0 : 1);
-            }
-            return result;
-        }
-
-        static BigInteger Part2(Input puzzleInput)
+        static BigInteger GetWinningWaysCount(BigInteger time, BigInteger distance)
         {
-            var (times, distances) = puzzleInput;
-            var time = BigInteger.Parse(string.Join("", times.Select(t => t.ToString())));
-            var distance = BigInteger.Parse(string.Join("", distances.Select(t => t.ToString())));
-            Console.WriteLine($"{time}, {distance}");
             BigInteger middle = time / 2;
             var current = middle;
             BigInteger min = 0;
             BigInteger max = current;
 
-            while (true) {
-                var testDistance = (time  - current) * current;
-                // Console.WriteLine($"{distance} = {testDistance} {max} {current} {min}"); Console.ReadLine();
+            while (true)
+            {
+                var testDistance = (time - current) * current;
                 if (testDistance > distance)
                 {
                     max = current;
@@ -55,19 +31,38 @@ namespace AoC
                 {
                     min = current;
                     current = min + (max - min) / 2;
-                    // Console.WriteLine($"top {top} bottom {bottom}");
                 }
-                if (current == max || current == min)
+                if (current == max || current == min || testDistance == distance)
                 {
-                    Console.WriteLine($"{current} {time - current} ... {min} {max}");
-                    return time - (current * 2) - (time % 2 == 1 ? 0 : 1) * 2 - (max - min);
+                    if (testDistance == distance)
+                        current += 1;
+                    if (testDistance > distance && time % 2 == 1)
+                        current -= 1;
+                    var result = time - (current * 2) + (time % 2 == 1 ? -1 : 1);
+                    return time - (current * 2) + (time % 2 == 1 ? -1 : 1);
                 }
             }
         }
 
-        static (int, BigInteger) Solve(Input puzzleInput)
+        static BigInteger Part1(Input puzzleInput)
+        {
+            var (times, distances) = puzzleInput;
+            return Enumerable.Range(0, times.Count())
+                .Aggregate(new BigInteger(1), (soFar, index) => soFar * GetWinningWaysCount(times.ElementAt(index), distances.ElementAt(index)));
+        }
+
+        static BigInteger IntsToBigInteger(IEnumerable<int> values)
+            => BigInteger.Parse(string.Join("", values.Select(v => v.ToString())));
+
+        static BigInteger Part2(Input puzzleInput)
+        {
+            var (times, distances) = puzzleInput;
+            return GetWinningWaysCount(IntsToBigInteger(times), IntsToBigInteger(distances));
+        }
+
+        static (BigInteger, BigInteger) Solve(Input puzzleInput)
             => (Part1(puzzleInput), Part2(puzzleInput));
-        
+
         static IEnumerable<int> GetValues(string line)
             => line.Split(':')[1].Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse);
 
