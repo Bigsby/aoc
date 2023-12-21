@@ -26,16 +26,6 @@ namespace AoC
             return edgeNumbers.Aggregate(0, (soFar, next) => next - soFar);
         }
 
-        static int Part1(Input puzzleInput)
-        { 
-            return puzzleInput.Sum(history => GetNextValue(history));
-        }
-
-        static int Part2(Input puzzleInput)
-        {
-            return puzzleInput.Sum(history => GetNextValue(history, false));
-        }
-
         static (int, int) Solve(Input puzzleInput)
             => (puzzleInput.Sum(history => GetNextValue(history)), puzzleInput.Sum(history => GetNextValue(history, false)));
 
