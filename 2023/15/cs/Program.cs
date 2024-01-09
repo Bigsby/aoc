@@ -9,6 +9,8 @@ namespace AoC
 {
     using Input = IEnumerable<string>;
 
+    record struct Lens(string Label, int FocalLength);
+
     static class Program
     {
         static int GetHashValue(string step)
@@ -22,14 +24,44 @@ namespace AoC
             }
             return currentValue;
         }
-        static int Part1(Input puzzleInput)
-        { 
-            return puzzleInput.Sum(step => GetHashValue(step));
-        }
 
         static int Part2(Input puzzleInput)
         {
-            return 2;
+            var boxes = new List<Lens>[256];
+            for (var index = 0; index < 256; index++)
+                boxes[index] = new List<Lens>();
+            foreach (var step in puzzleInput)
+            {
+                var oparationIndex = -1;
+                var label = "";
+                var length = -1;
+                if ((oparationIndex = step.IndexOf("=", 0, step.Length)) != -1)
+                {
+                    label = step.Substring(0, oparationIndex);
+                    length = int.Parse(step.Substring(oparationIndex + 1));
+                }
+                else 
+                    label = step.Substring(0, step.Length - 1);
+                var box = boxes[GetHashValue(label)];
+                var existingLensIndex = box.FindIndex(lens => lens.Label == label);
+                if (oparationIndex == -1)
+                {
+                    if (existingLensIndex != -1)
+                        box.RemoveAt(existingLensIndex);
+                }
+                else 
+                {
+                    var newLens = new Lens(label, length);
+                    if (existingLensIndex == -1)
+                        box.Add(newLens);
+                    else
+                        box[existingLensIndex] = newLens;
+                }
+            }
+            var result = 0;
+            for (var index = 0; index < 256; index++)
+                result += boxes[index].Select((lens, slot) => (index + 1) * (slot  + 1) * lens.FocalLength).Sum();
+            return result;
         }
 
         static (int, int) Solve(Input puzzleInput)
