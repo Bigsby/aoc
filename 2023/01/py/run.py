@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 import sys, os, time
-from typing import Tuple, List, Dict
+from typing import Tuple, List, Dict, Callable
 
 Input = List[str]
 
@@ -31,20 +31,20 @@ ALPHA_VALUES: Dict[str,int] = {
     "nine": 9
 }
 
+def get_value(line: str, values: Dict[str,int], indexFunc: Callable[[int],int], multiplier: int) -> int:
+    line = line.strip()
+    for index in range(len(line)):
+        key = next((key for key in values.keys() if line[indexFunc(index):].startswith(key)), "")
+        if key:
+            return values[key] * multiplier
+    raise Exception(f"Value not found in {line}")
+
+
 def get_sum(lines: Input, values: Dict[str,int]) -> int:
     sum = 0
     for line in lines:
-        line = line.strip()
-        for index in range(len(line)):
-            key = next((key for key in values.keys() if line[index:].startswith(key)), "")
-            if key:
-                sum += values[key] * 10
-                break
-        for index in range(len(line)):
-            key = next((key for key in values.keys() if line[-(index + 1):].startswith(key)), "")
-            if key:
-                sum += values[key]
-                break
+        sum += get_value(line, values, lambda index: index, 10)
+        sum += get_value(line, values, lambda index: -(index + 1), 1)
     return sum
 
 
