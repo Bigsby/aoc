@@ -36,11 +36,11 @@ namespace AoC
             { "nine", 9 }
         }.Concat(VALUES).ToDictionary(pair => pair.Key, pair => pair.Value);
 
-        static int GetValue(string line, IDictionary<string, int> values, int multiplier, Func<int,Range> rangeFunc)
+        static int GetValue(string line, IDictionary<string, int> values, int multiplier, Func<int,Index> rangeFunc)
         {
             foreach (var index in Enumerable.Range(0, line.Length))
             {
-                var key = values.Keys.FirstOrDefault(key => line[rangeFunc(index)].StartsWith(key));
+                var key = values.Keys.FirstOrDefault(key => line[rangeFunc(index)..].StartsWith(key));
                 if (!string.IsNullOrEmpty(key))
                     return values[key] * multiplier;
             }
@@ -49,7 +49,7 @@ namespace AoC
 
 
         static int GetSum(Input puzzleInput, IDictionary<string, int> values)
-            => puzzleInput.Sum(line => GetValue(line, values, 10, index => index..) + GetValue(line, values, 1, index => ^(index + 1)..));
+            => puzzleInput.Sum(line => GetValue(line, values, 10, index => index) + GetValue(line, values, 1, index => ^(index + 1)));
 
         static (int, int) Solve(Input puzzleInput)
             => (GetSum(puzzleInput, VALUES), GetSum(puzzleInput, ALPHA_VALUES));
