@@ -4,6 +4,7 @@ using System.IO;
 using System.Diagnostics;
 using System.Linq;
 using System.Collections.Generic;
+using System.Net;
 
 namespace AoC
 {
@@ -35,32 +36,20 @@ namespace AoC
             { "nine", 9 }
         }.Concat(VALUES).ToDictionary(pair => pair.Key, pair => pair.Value);
 
-        static int GetSum(Input puzzleInput, IDictionary<string, int> values)
+        static int GetValue(string line, IDictionary<string, int> values, int multiplier, Func<int,Range> rangeFunc)
         {
-            var sum = 0;
-            foreach (var line in puzzleInput)
+            foreach (var index in Enumerable.Range(0, line.Length))
             {
-                foreach (var index in Enumerable.Range(0, line.Length))
-                {
-                    var key = values.Keys.FirstOrDefault(key => line[index..].StartsWith(key));
-                    if (!string.IsNullOrEmpty(key))
-                    {
-                        sum += values[key] * 10;
-                        break;
-                    }
-                }
-                foreach (var index in Enumerable.Range(0, line.Length))
-                {
-                    var key = values.Keys.FirstOrDefault(key => line[^(index + 1)..].StartsWith(key));
-                    if (!string.IsNullOrEmpty(key))
-                    {
-                        sum += values[key];
-                        break;
-                    }
-                }
+                var key = values.Keys.FirstOrDefault(key => line[rangeFunc(index)].StartsWith(key));
+                if (!string.IsNullOrEmpty(key))
+                    return values[key] * multiplier;
             }
-            return sum;
+            throw new Exception($"Value not found in {line}");
         }
+
+
+        static int GetSum(Input puzzleInput, IDictionary<string, int> values)
+            => puzzleInput.Sum(line => GetValue(line, values, 10, index => index..) + GetValue(line, values, 1, index => ^(index + 1)..));
 
         static (int, int) Solve(Input puzzleInput)
             => (GetSum(puzzleInput, VALUES), GetSum(puzzleInput, ALPHA_VALUES));
