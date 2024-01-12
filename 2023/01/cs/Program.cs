@@ -42,7 +42,7 @@ namespace AoC
             {
                 foreach (var index in Enumerable.Range(0, line.Length))
                 {
-                    var key = values.Keys.FirstOrDefault(key => line.Substring(index).StartsWith(key));
+                    var key = values.Keys.FirstOrDefault(key => line[index..].StartsWith(key));
                     if (!string.IsNullOrEmpty(key))
                     {
                         sum += values[key] * 10;
@@ -51,7 +51,7 @@ namespace AoC
                 }
                 foreach (var index in Enumerable.Range(0, line.Length))
                 {
-                    var key = values.Keys.FirstOrDefault(key => line.Substring(line.Length - 1 - index).StartsWith(key));
+                    var key = values.Keys.FirstOrDefault(key => line[^(index + 1)..].StartsWith(key));
                     if (!string.IsNullOrEmpty(key))
                     {
                         sum += values[key];
