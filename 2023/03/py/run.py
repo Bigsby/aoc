@@ -37,7 +37,7 @@ def parse_engine(puzzle_input: Input) -> EngineData:
                             is_part = True
                             symbol = c
                             coord = search_start + x, line_index - 1
-                            break;
+                            break
                 if start_index > 0 and is_symbol(line[search_start]):
                     is_part = True
                     symbol = line[search_start]
@@ -52,7 +52,7 @@ def parse_engine(puzzle_input: Input) -> EngineData:
                             is_part = True
                             symbol = c
                             coord = search_start + x, line_index + 1
-                            break;
+                            break
                 if is_part:
                     part_number = int(segment)
                     parts.append(part_number)
