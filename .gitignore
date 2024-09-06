@@ -7,3 +7,4 @@ target/
 .mypy_cache/
 
 a.out
+*.class
