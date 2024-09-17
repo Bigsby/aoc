@@ -1,10 +1,23 @@
-__pycache__/
 .vscode/
+
+# C#
 bin/
 obj/
+
+# Rust
 target/
 
+# Python
+__pycache__/
 .mypy_cache/
 
+# C, C++
 a.out
+
+# Java, Kotlin
 *.class
+*.jar
+
+# Scala
+.bsp/
+.scala-build/
