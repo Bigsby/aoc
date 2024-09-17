@@ -38,6 +38,10 @@ languages[8]="kt"
 prefix[8]="make -f "
 sufix[8]="kt/makefile INPUT="
 
+languages[8]="scala"
+prefix[8]="scala run -q "
+sufix[8]="scala/Program.scala -- "
+
 get_language_index() {
     required="$1"
     index=0
