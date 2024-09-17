@@ -34,6 +34,10 @@ languages[8]="java"
 prefix[8]="make -f "
 sufix[8]="java/makefile INPUT="
 
+languages[8]="kt"
+prefix[8]="make -f "
+sufix[8]="kt/makefile INPUT="
+
 get_language_index() {
     required="$1"
     index=0
