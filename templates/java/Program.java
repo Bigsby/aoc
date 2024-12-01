@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 public class Program
 {
-	record Result(Integer part1, Integer part2) { }
+	record Result(Integer Part1, Integer Part2) { }
 
 	private static Integer part1(List<String> input)
 	{
@@ -41,8 +41,8 @@ public class Program
 		long start = System.nanoTime();
 		Result result = solve(input);
 		long end = System.nanoTime();
-		System.out.println("P1: " + result.part1);
-		System.out.println("P2: " + result.part2);
+		System.out.println("P1: " + result.Part1);
+		System.out.println("P2: " + result.Part2);
 		System.out.println(String.format("\nTime: %.7f", (end - start) * 1e-9));
 	}
 }
