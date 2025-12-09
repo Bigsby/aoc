@@ -27,14 +27,6 @@ def max_joltage_sum(puzzle_input: Input, battery_count: int) -> int:
     return sum(max_joltage(bank, battery_count) for bank in puzzle_input)
 
 
-def part1(puzzle_input: Input) -> int:
-    return sum(max_joltage(bank, 2) for bank in puzzle_input)
-
-
-def part2(puzzle_input: Input) -> int:
-    return sum(max_joltage(bank, 12) for bank in puzzle_input)
-
-
 def solve(puzzle_input: Input) -> Tuple[int,int]:
     return (max_joltage_sum(puzzle_input, 2), max_joltage_sum(puzzle_input, 12))
 
