@@ -43,7 +43,6 @@ def part2(puzzle_input: Input) -> int:
     aggregated_ranges = aggregate_ranges(ranges)
     ingredients = 0
     for start, end in aggregated_ranges:
-        print(start, end)
         ingredients += end - start + 1
     return ingredients
 
